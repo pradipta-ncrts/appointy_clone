@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Crypt;
 use Validator;
 use Session;
 use Cookie;
+use Excel;
 
 use DateTime;
 
@@ -314,7 +315,7 @@ class UsersController extends ApiController {
 
 	}
 
-	public function staff_details()
+	public function staff_details($staff_search_text="")
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -324,6 +325,8 @@ class UsersController extends ApiController {
 		// Call API //
 		$post_data = $authdata;
 		$post_data['page_no']=1;
+		$post_data['staff_search_text']=$staff_search_text;
+
 		$data=array(
 			'staff_list'=>array(),
 			'authdata'=>$authdata
@@ -335,6 +338,7 @@ class UsersController extends ApiController {
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['staff_list'] = $return->staff_list;
+				$data['staff_search_text'] = $staff_search_text;
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.staff.staff-details')->with($data);
@@ -344,6 +348,62 @@ class UsersController extends ApiController {
 		}
 		//return view('website.staff.staff-details');
 	}
+
+
+	// Staff Export //
+	public function staff_export(){
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+			return redirect('/login');
+		}
+		
+
+		$user_no = $authdata['user_no'];
+		$findCond=array(
+						array('user_id','=',$user_no),
+						array('is_deleted','=','0'),
+						array('is_blocked','=','0'),
+					);
+			
+		$selectFields=array('full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','addess','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
+		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectFields);
+			
+		if(!empty($staff_list)){
+			//$exportData = array('Product Name','Product Description','Regular Price','Sale Price','Product Code','Floor Location','Product Stock','Product Lot','Vendor Code','Second Language Value','Third Language Value','Tags');
+			foreach($staff_list as $staff){
+				$exportData[] = array(
+					'Staff Name'   => ($staff->full_name) ? $staff->full_name : '',
+					'Username'    => ($staff->username) ? $staff->username : '',
+					'Email'  => ($staff->email) ? $staff->email : '',
+					'Mobile'   => ($staff->mobile) ? $staff->mobile : '',
+					'Description'   => ($staff->description) ? $staff->description : '',
+					'Home Phone'   => ($staff->home_phone) ? $staff->home_phone : '',
+					'Work Phone'   => ($staff->work_phone) ? $staff->work_phone : '',
+					'Expertise'   => ($staff->expertise) ? $staff->expertise : '',
+					'Category Id'   => ($staff->category_id) ? $staff->category_id : '',
+					'Address'   => ($staff->addess) ? $staff->addess : '',
+					'Profile Picture'   => ($staff->staff_profile_picture) ? $staff->staff_profile_picture : '',
+					'Is Internal Staff'   => ($staff->is_internal_staff) ? $staff->is_internal_staff : '0',
+					'Booking URL'   => ($staff->booking_url) ? $staff->booking_url : '',
+					'Is Login Allowed'   => ($staff->is_login_allowed) ? $staff->is_login_allowed : '0',
+					'Is Email Verified'   => ($staff->is_email_verified) ? $staff->is_email_verified : '0',
+					'Is Blocked'   => ($staff->is_blocked) ? $staff->is_blocked : '0',
+					'Created On'   => ($staff->created_on) ? $staff->created_on : ''
+				);
+			}
+			//echo "<pre>";print_r($exportData);exit;
+			$type = 'xls';
+			return Excel::create('staff_list', function($excel) use ($exportData) {
+			$excel->sheet('mySheet', function($sheet) use ($exportData)
+			{
+				$sheet->fromArray($exportData, null, 'A1', false, false);
+			});
+			})->download('xls');
+			
+		}
+	}
+
 
 	public function services($type,$category=false)
 	{

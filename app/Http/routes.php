@@ -119,7 +119,8 @@ Route::group(['prefix'=>''],function(){
     Route::get('/offers','Website\UsersController@offers');
     Route::get('/reports','Website\UsersController@reports');
     Route::get('/client-database','Website\UsersController@client_database');
-    Route::get('/staff-details','Website\UsersController@staff_details');
+    Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
+    Route::get('/staff-export','Website\UsersController@staff_export');
     Route::get('/settings-membership','Website\UsersController@settings_membership');
     Route::get('/integration','Website\UsersController@integration');
     Route::get('/settings-business-hours','Website\UsersController@settings_business_hours');

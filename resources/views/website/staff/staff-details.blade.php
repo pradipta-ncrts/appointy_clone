@@ -8,7 +8,7 @@ Squeedr
    <div class="container-custm">
       <div class="upper-cmnsection">
          <div class="heading-uprlft" style="padding-bottom:8px">Staff Details</div>
-         <div class="upr-rgtsec">
+         <!--<div class="upr-rgtsec">
             <div class="col-md-5">
             </div>
             <div class="col-md-7">
@@ -24,16 +24,16 @@ Squeedr
                   <div class="filter-option"><a href="#">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div>
                </div>
             </div>
-         </div>
+         </div>-->
       </div>
       <div class="leftpan">
          <div class="left-menu">
             <div id="custom-search-input">
-               <a href="#" class="imp-st" data-toggle="tooltip" title="Import Staff"><i class="fa fa-download"></i> </a> <a href="#" class="exp-st"  data-toggle="tooltip" title="Export Staff"><i class="fa fa-external-link "></i> </a>
+               <a href="#" class="imp-st" data-toggle="tooltip" title="Import Staff"><i class="fa fa-download"></i> </a> <a href="{{url('staff-export')}}" class="exp-st"  data-toggle="tooltip" title="Export Staff"><i class="fa fa-external-link "></i> </a>
                <div class="input-group col-md-12">
-                  <input type="text" class="search-staff form-control" placeholder="Search Staff" />
+                  <input type="text" name="staff_search_text" id="staff_search_text" class="search-staff form-control" placeholder="Search Staff" <?php if(!empty($staff_search_text)) { ?> value="<?php echo $staff_search_text;?>" <?php } ?> />
                   <span class="input-group-btn">
-                  <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
+                  <button class="btn btn-danger" id="staff_search_btn" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
                   </span>
                </div>
             </div>
@@ -58,7 +58,7 @@ Squeedr
             <?php 
                 } } else { 
             ?>
-                <a>No Staff created yet</a>
+                <a>No staff found</a>
             <?php 
                 }   
             ?>
@@ -319,6 +319,16 @@ $('.stafflistitem').click(function(){
     }
 });
 $(document).ready(function(){
+    $("#staff_search_btn").click(function(){
+        var url = "<?php echo url('staff-details')?>";
+        var staff_search_text = $("#staff_search_text").val();
+        if(staff_search_text!=""){
+            window.location.replace(url+'/'+staff_search_text);
+        } else {
+            window.location.replace(url);
+        }
+    });
+
     $('.stafflistitem').eq(0).trigger('click');
 });
 </script>
