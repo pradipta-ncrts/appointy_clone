@@ -286,7 +286,9 @@ class StaffsController extends ApiController {
 
 		$other_user_no = $request->input('other_user_no');
 
-		$pageNo = $request->input('page_no');
+        $pageNo = $request->input('page_no');
+        
+        $search_text = $request->input('staff_search_text');
 
 		$pageNo = ($pageNo>1)?$pageNo:1;
 
@@ -310,7 +312,7 @@ class StaffsController extends ApiController {
 
         
 
-        $serch_text = $request->input('staff_search_text');
+        
 
 		$findCond=array(
 
@@ -340,7 +342,7 @@ class StaffsController extends ApiController {
 
 		$this->json_output($response_data);
 
-	}
+    }
 
 
     public function add_new_location(Request $request)
