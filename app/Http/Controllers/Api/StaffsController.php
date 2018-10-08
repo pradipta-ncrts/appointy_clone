@@ -355,78 +355,94 @@ class StaffsController extends ApiController {
         $this->validate_parameter(1);
         $user_id = $this->logged_user_no;
 
-        $validate = Validator::make($request->all(),[
-                                 'location_name'=>'required',
-                                 'location_username'=>'required',
-                                 'location_password'=>'required',
-                                 'location_full_name'=>'required',
-                                 'location_email'=>'required|email'
-                                             ]);
-
-        if ($validate->fails())
+        $staff_id = $request->input('staff_id');
+        if($staff_id)
         {
-            $this->response_message = $this->decode_validator_error($validate->errors());
-            $this->json_output($response_data);
+            $staff_data['addess'] = $request->input('location_name');;
+
+            $updateCond=array(
+                array('staff_id','=',$staff_id),
+            );
+
+            $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$updateCond,$staff_data);
+
+            $this->response_status='1';
+            $this->response_message="Location successfully updated.";
         }
         else
         {
-            $full_name = $request->input('location_full_name');
-            $email = $request->input('location_email');
-            $username = $request->input('location_username');
+            $validate = Validator::make($request->all(),[
+                                     'location_name'=>'required',
+                                     'location_username'=>'required',
+                                     'location_password'=>'required',
+                                     'location_full_name'=>'required',
+                                     'location_email'=>'required|email'
+                                                 ]);
 
-            $location = $request->input('location_name');
-            $password = $request->input('location_password');
-            
-
-            $conditions = array(
-                'or'=>array('email'=>$email,'username'=>$username)
-            );       
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-            //echo '<pre>'; print_r($result); exit;
-            if(!empty($result))
+            if ($validate->fails())
             {
-                $this->response_message = "This username or email is already exist.";
+                $this->response_message = $this->decode_validator_error($validate->errors());
+                $this->json_output($response_data);
             }
             else
             {
-                /*$token1 = md5($email);
-                $token2 = md5($username);
-                $token = $token1.$token2;
-                $digits = 8;*/
-                $password = $password;
-
-                $staff_data['user_id'] = $user_id;
-                $staff_data['username'] = $username;
-                $staff_data['full_name'] = $full_name;
-                $staff_data['email'] = $email;
-                $staff_data['password'] = md5($password);
-                $staff_data['addess'] = $location;
+                $full_name = $request->input('location_full_name');
+                $email = $request->input('location_email');
+                $username = $request->input('location_username');
+                $location = $request->input('location_name');
+                $password = $request->input('location_password');
                 
-                
-                //$staff_data['email_verification_code'] = $token;
 
-                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
+                $conditions = array(
+                    'or'=>array('email'=>$email,'username'=>$username)
+                );       
 
-                if($insertdata > 0)
+                $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
+                //echo '<pre>'; print_r($result); exit;
+                if(!empty($result))
                 {
-
-                    $emailData['username'] = $username;
-                    $emailData['password'] = $password;
-                    $emailData['toName'] = $full_name;
-                    $this->sendmail(5,$email,$emailData);
-
-                    $this->response_status='1';
-                    $this->response_message = "Location successfully added.";
+                    $this->response_message = "This username or email is already exist.";
                 }
                 else
                 {
-                    $this->response_message = "Something went wrong. Please try agian later.";
-                }
-            }
+                    /*$token1 = md5($email);
+                    $token2 = md5($username);
+                    $token = $token1.$token2;
+                    $digits = 8;*/
+                    $password = $password;
 
-            $this->json_output($response_data);
+                    $staff_data['user_id'] = $user_id;
+                    $staff_data['username'] = $username;
+                    $staff_data['full_name'] = $full_name;
+                    $staff_data['email'] = $email;
+                    $staff_data['password'] = md5($password);
+                    $staff_data['addess'] = $location;
+                    
+                    
+                    //$staff_data['email_verification_code'] = $token;
+
+                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
+
+                    if($insertdata > 0)
+                    {
+
+                        $emailData['username'] = $username;
+                        $emailData['password'] = $password;
+                        $emailData['toName'] = $full_name;
+                        $this->sendmail(5,$email,$emailData);
+
+                        $this->response_status='1';
+                        $this->response_message = "Location successfully added.";
+                    }
+                    else
+                    {
+                        $this->response_message = "Something went wrong. Please try agian later.";
+                    }
+                }
+            }  
         }
+        
+        $this->json_output($response_data);
 
     }
 

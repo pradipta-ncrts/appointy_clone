@@ -1955,6 +1955,56 @@ $('#add-new-location').validate({
     }
 });
 
+$("#add-location-exist-user").click(function (event) {
+    event.preventDefault();
+    $("#staffListModalForAddLocation").modal('show');
+  
+});
+
+
+$(document).ready(function(){
+  $("#staffFilterAddLOcation").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".break20px").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+$(document).ready(function(){
+  $("#staffFilterAddLOcation").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".break20px").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+$(".add-location-exist-user").click(function (event) {
+    event.preventDefault();
+    $('.animationload').show();
+
+    $("#location_staff_id").val($(this).data('staffid'));
+
+    $("#location_password").parent().parent().parent().hide();
+   
+    $("#location_name").val($(this).data('location'));
+    
+    $("#location_username").val($(this).data('username'));
+    $("#location_username").prop("readonly", true);
+
+    $("#location_full_name").val($(this).data('fullname'));
+    $("#location_full_name").prop("readonly", true);
+
+    $("#location_email").val($(this).data('email'));
+    $("#location_email").prop("readonly", true);
+
+    $("#staffListModalForAddLocation").modal('hide');
+    $('.animationload').hide();
+
+});
+
+
 
 
 //==============Add Loaction End===========================================

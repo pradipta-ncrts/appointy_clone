@@ -62,7 +62,7 @@ Squeedr
                         <table id="example" class="table table-striped break10px" style="width:100%">
                            <thead>
                               <tr>
-                                 <th >Location</th>
+                                 <!-- <th >Location</th> -->
                                  <th >Name</th>
                                  <th >Admin Email</th>
                                  <th>Admin User name</th>
@@ -72,7 +72,7 @@ Squeedr
                            </thead>
                            <tbody>
                               <tr>
-                                 <td><?php echo $staff->addess;?></td>
+                                 <!-- <td><?php echo $staff->addess;?></td> -->
                                  <td>
                                     <div class="custm-tblebx"> 
                                        <?php if($staff->staff_profile_picture != ''){ ?>
@@ -115,13 +115,14 @@ Squeedr
             <h4 class="modal-title">New Location</h4>
          </div>
          <form class="form-horizontal" action="{{ url('api/add-new-location') }}" method="post" autocomplete="off" id="add-new-location">
+          <input type="hidden" name="staff_id" id="location_staff_id">
            <div class="modal-body clr-modalbdy">
               <div class="row">
                  <div class="col-md-12">
                     <div class="form-group">
                        <div class="input-group"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
                          <!-- <div id="locationField"> -->
-                            <input id="" placeholder="Enter your address" type="text" class="form-control" name="location_name"></input>
+                            <input id="location_name" placeholder="Enter your address" type="text" class="form-control" name="location_name"></input>
                           <!-- </div> -->
                        </div>
                     </div>
@@ -161,7 +162,7 @@ Squeedr
                      <div class="input-group"> <span class="input-group-addon"><i class="fa fa-envelope "></i></span>
                         <input id="location_email" type="text" class="form-control" name="location_email" placeholder="Email">
                      </div>
-                    <!--  <small>Need to link existing Appointy account? <a href="#">Click here</a></small> -->
+                     <small>Need to link existing account? <a href="JavaScript:Void(0);" id="add-location-exist-user">Click here</a></small>
                   </div>
                </div>
             </div>

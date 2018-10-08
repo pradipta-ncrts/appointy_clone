@@ -118,7 +118,7 @@ Squeedr
 </div>
 @endsection
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&libraries=places&callback=initAutocomplete"
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&libraries=places&callback=initAutocomplete"
         async defer></script>
 <script>
 // This example displays an address form, using the autocomplete feature
@@ -199,7 +199,7 @@ function countChar(val) {
     $('#specialnote_count').text('HTML Tags not allowed, '+count+' characters remaining');
   }
 };
-</script>
+</script> -->
 
 
 

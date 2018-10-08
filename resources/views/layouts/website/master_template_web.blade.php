@@ -59,6 +59,8 @@
       $stuffs_list = App\Http\Controllers\BaseApiController::stuffs_list(); 
       $currency_list = App\Http\Controllers\BaseApiController::currency_list(); 
       $user_new_category = App\Http\Controllers\BaseApiController::user_new_category(); 
+      /*echo "<pre>";
+      print_r($stuffs_list); die();*/
       ?> 
       <div class="animationload" style="display: none;">
          <div class="osahanloading"></div>
@@ -1735,6 +1737,57 @@
       </div>
    </div>
    <!--Block date modal for user end-->
+   <!--Block date modal for user start-->
+   <div class="modal fade" id="staffListModalForAddLocation" role="dialog">
+      <div class="modal-dialog add-pop">
+         <!-- Modal content--> 
+        <div class="modal-content new-modalcustm">
+            <form name="" id="" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">×</button>
+                   <h4 class="modal-title">Staff List</h4>
+                </div>
+                
+                <div class="modal-body clr-modalbdy">
+                   <div class="notify" >
+                      <input type="text" id="staffFilterAddLOcation" class="input-block-level form-control search-ap" placeholder="Search Staff" >
+                      <?php
+                      foreach ($stuffs_list['stuff_list'] as $key => $value)
+                      {   
+                      ?>
+                          <div class="user-bkd break20px">
+                           <?php
+                            if($value->staff_profile_picture)
+                            {
+                            ?>
+                                <img src="<?=$value->staff_profile_picture;?>" class="thumbnail rounded">
+                            <?php
+                            }
+                            else
+                            {
+                            ?>
+                                <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded">
+                            <?php
+                            }
+                            ?>
+                           <h2><a class="add-location-exist-user" href="JavaScript:Void(0);" data-username="<?=$value->username;?>" data-fullname="<?=$value->full_name;?>" data-email="<?=$value->email;?>" data-location="<?=$value->addess;?>" data-staffid="<?=$value->staff_id;?>"><?=$value->full_name;?></a>
+                              <br><a href="mailto:<?=$value->email;?>"><i class="fa fa-envelope-o"></i> <?=$value->email;?></a>
+                           </h2>
+                         </div>
+                      <?php
+                      }
+                      ?>
+                   </div>
+                    <div class="clearfix"></div>
+                   <!-- <div class="butt-pop-ft">
+                       <a href="JavaScript:Void(0);" class="btn btn-primary butt-next" style="margin-bottom: -20px;">Cancel</a> 
+                    </div> -->
+                </div>
+            </form>
+          </div>
+      </div>
+   </div>
+   <!--Block date modal for user end-->
    <!--======================booking payment=====================================-->
    <div class="modal fade in" id="myModalPayment" role="dialog">
       <div class="modal-dialog add-pop">
@@ -2025,6 +2078,15 @@
 
          $('#myModalServices').on('hidden.bs.modal', function (e) {
             $(this).find('form').trigger('reset');
+         });
+
+         $('#myModal').on('hidden.bs.modal', function (e) {
+            $(this).find('form').trigger('reset');
+            $("#location_staff_id").val('');
+            $("#location_password").parent().parent().parent().show();
+            $("#location_username").prop("readonly", false);
+            $("#location_full_name").prop("readonly", false);
+            $("#location_email").prop("readonly", false);
          });
          
       });
