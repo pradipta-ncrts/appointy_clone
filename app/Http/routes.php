@@ -87,6 +87,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/payment_settings', 'Api\UsersController@payment_settings');
 
     Route::post('/add-new-location','Api\StaffsController@add_new_location');
+    Route::post('/import-invite-contact','Api\UsersController@import_invite_contact');
+
 });
 
 

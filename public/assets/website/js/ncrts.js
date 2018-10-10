@@ -174,7 +174,6 @@ $("#profile-image-remove").click(function (e) {
 $("#update-social-logo").on('submit', (function(e) {
     e.preventDefault();
     //data = addCommonParams(data);
-
     var data = $('#update-social-logo').serializeArray();
     data = addCommonParams(data);
     var files = $("#update-social-logo input[type='file']")[0].files;
@@ -1988,7 +1987,7 @@ $(".add-location-exist-user").click(function (event) {
 
     $("#location_password").parent().parent().parent().hide();
    
-    $("#location_name").val($(this).data('location'));
+    $("#autocomplete").val($(this).data('location'));
     
     $("#location_username").val($(this).data('username'));
     $("#location_username").prop("readonly", true);
@@ -2005,7 +2004,59 @@ $(".add-location-exist-user").click(function (event) {
 });
 
 
-
-
 //==============Add Loaction End===========================================
+
+//==============Invite Contact & dicount===================================
+
+$("#import-invite-contact").on('submit', (function(e) {
+    e.preventDefault();
+    //data = addCommonParams(data);
+    var data = $('#import-invite-contact').serializeArray();
+    data = addCommonParams(data);
+    var files = $("#import-invite-contact input[type='file']")[0].files;
+    var form_data = new FormData();
+    if(files.length>0){
+        for(var i=0;i<files.length;i++){
+            form_data.append('contacts_excel_file',files[i]);
+        }
+    }
+    // append all data in form data 
+    $.each(data, function( ia, l ){
+        form_data.append(l.name, l.value);
+    });
+
+    $.ajax({
+        url: baseUrl+"/api/import-invite-contact", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: form_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false, // The content type used when sending data to the server.
+        cache: false, // To unable request pages to be cached
+        processData: false, // To send DOMDocument or non processed data file it is set to false
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            console.log(response);
+            //$('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal("Success!", response.message, "success")
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            //$('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+}));
+
+
+//==============Invite & dicount end======================================
 

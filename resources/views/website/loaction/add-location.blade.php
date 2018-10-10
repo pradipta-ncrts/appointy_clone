@@ -121,9 +121,9 @@ Squeedr
                  <div class="col-md-12">
                     <div class="form-group">
                        <div class="input-group"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-                         <!-- <div id="locationField"> -->
-                            <input id="location_name" placeholder="Enter your address" type="text" class="form-control" name="location_name"></input>
-                          <!-- </div> -->
+                         <div id="locationField">
+                            <input id="location_name" placeholder="Enter your address" type="text" class="form-control autocomplete" name="location_name"></input>
+                          </div> 
                        </div>
                     </div>
                  </div>

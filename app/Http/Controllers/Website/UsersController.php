@@ -404,6 +404,18 @@ class UsersController extends ApiController {
 		}
 	}
 
+	public function invite_contacts()
+	{
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+
+		$user_no = $authdata['user_no'];
+		return view('website.invite-contacts');
+	}
+
 
 	public function services($type,$category=false)
 	{
@@ -602,16 +614,6 @@ class UsersController extends ApiController {
 		}
 
 		return view('website.invoice-details');
-	}
-
-	public function invite_contacts()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.invite-contacts');
-		}
-
-		return view('website.invite-contacts');
 	}
 
 	public function add_location()

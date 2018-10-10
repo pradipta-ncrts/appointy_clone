@@ -1901,7 +1901,7 @@
                   <h4 class="modal-title">Add Service</h4>
                </div>
                <div class="modal-body clr-modalbdy">
-                  <form class="form-horizontal" action="{{ url('api/add-new-service') }}" method="post" autocomplete="off" id="add-new-service">
+                  <form class="form-horizontal" action="{{ url('api/add-new-service') }}" method="post" autocomplete="off" id="add-new-service" enctype="multipart/form-data">
                      <input type="hidden" name="update_service_id" id="update_service_id" value="">
                      <input type="hidden" name="checkGroup" id="checkGroup" value="">
                      <div class="clone-div">

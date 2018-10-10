@@ -13,6 +13,7 @@ use App\Http\Controllers\BaseApiController as ApiController;
 use Illuminate\Http\Request;
 use Validator;
 use Session;
+use Excel;
 
 class UsersController extends ApiController {
 	function __construct(Request $input){
@@ -1312,8 +1313,85 @@ class UsersController extends ApiController {
         $this->json_output($response_data);
     }
 
+  
+    public function import_invite_contact(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $other_user_no = $request->input('other_user_no');
+        $pageNo = $request->input('page_no');
+        $pageNo = ($pageNo>1)?$pageNo:1;
+        $limit=$this->limit;
+        $offset=($pageNo-1)*$limit;
 
+        if(!empty($other_user_no) && $other_user_no!=0)
+        {
+            $user_no = $other_user_no;
+        }
+        else
+        {
+            $user_no = $this->logged_user_no;
+        }
 
+        $file = $request->file('contacts_excel_file');
+        $discount = $request->file('discount'); 
+        //print_r($file); die();
+        $type = $file->extension();
+        $productInputs = array();
+        //echo $type;exit;
+        if($type == 'xls' || $type == 'xlsx')
+        {
+			$existingCompanyPrd = array();
+			$fileName = $file->getClientOriginalName();
+			$destinationPath = public_path() . '/import_invite_excel/';
+			$file->move($destinationPath, $fileName);
+			$excelData = Excel::load('/public/import_invite_excel/'.$fileName, function($reader) {})->get();
 
+			//get data from client table
+			$condition = array(
+	                array('is_deleted', '=', 0),
+	            );
+            $selectField = array('client_email');
+            $check_client = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$condition,$selectField);
+
+            $exist_client_array = array();
+        	foreach ($check_client as $key => $value)
+            {
+            	$exist_client_array[] = $value->client_email;
+            }
+
+            $exist = 0;
+            $notExit = 0;
+			if(!empty($excelData) && count($excelData) > 0)
+			{
+				$excel_rows = $excelData->toArray();
+				foreach ($excel_rows as $row)
+				{
+					$updateMasterData = array();
+					//echo "<pre>";print_r($row);exit;
+					foreach($row as $key=>$val)
+					{
+						//echo "<pre>";print_r($val);exit;
+						if(in_array($val['email'],$exist_client_array))
+						{
+							$exist++;
+						}
+						else
+						{
+							$notExit++;
+						}
+					}
+				}
+			}
+        }
+        else
+        {
+        	$this->response_message = "Only excel file can import.";
+        }
+
+        echo 'e'.$exist.'/ne'.$notExit; die();
+        $this->json_output($response_data);
+    }
 
 }
