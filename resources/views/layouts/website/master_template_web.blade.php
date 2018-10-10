@@ -101,7 +101,7 @@
             <li class="c-menu__item"><a href="{{ url('booking-options') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/booking.png')}}" alt=""> Booking Options </a> <span> Add, edit or disable booking</span> </li>
             <li class="c-menu__item"><a href="{{ url('settings-membership') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/membership.png')}}" alt=""> Membership</a> <span>Add, edit or disable booking...</span> </li>
             <li class="c-menu__item"><a href="{{ url('integration') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/integration.png')}}" alt=""> Integration</a> <span>Google Calender, Facebook... </span> </li>
-            <li class="c-menu__item"><a href="{{ url('privacy-settings') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/privacy.png')}}" alt=""> Privacy Settings</a> <span>Control your information is... </span> </li>
+            <!--<li class="c-menu__item"><a href="{{ url('privacy-settings') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/privacy.png')}}" alt=""> Privacy Settings</a> <span>Control your information is... </span> </li>-->
             <li class="c-menu__item"><a href="{{ url('reports') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/statistics.png')}}" alt=""> Reports</a> <span>Add, edit or delete statistics</span> </li>
             <li class="c-menu__item"><a href="{{ url('settings-business-hours') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/business.png')}}" alt=""> Business Hours</a> <span>Link service to business hours</span> </li>
             <li class="c-menu__item"><a href="{{ url('business-contact-info') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/businessdetails.png')}}" alt=""> Business Details</a> <span>Address, Timezone, Currency </span> </li>
@@ -756,7 +756,7 @@
                            <div class="add-gly">
                               <div class="add-picture"><img id="blah" src="#" alt="" style="display:none;" width="60px" height="60px" /></div>
                               <!--<div class="add-picture-text">UPLOAD PICTURE</div>-->
-                              <input type="file" name="staff_profile_picture" id="staff_profile_picture" style="margin: 30px 0; padding: 0 4px;">
+                              <input type="file" name="staff_profile_picture" id="staff_profile_picture" style="margin: 30px 0; padding: 0 4px;" accept="image/*">
                            </div>
                         </div>
                      </div>
