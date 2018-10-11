@@ -11,9 +11,9 @@
        ignore: ":hidden:not(.selectpicker)",
 
        rules: {
-           profession: {
+           /*profession: {
                required: true
-           },
+           },*/
            business_name: {
                required: true
            },
@@ -51,13 +51,19 @@
            business_description: {
                required: true,
            },
+           transport: {
+               required: true
+           },
+           parking: {
+               required: true
+           },
            
        },
        
        messages: {
-           profession: {
+           /*profession: {
                required: 'Please select profession'
-           },
+           },*/
            business_name: {
                required: 'Please enter business name'
            },
@@ -93,6 +99,12 @@
            },
            business_description: {
                required: 'Please enter business description'
+           },
+           transport: {
+               required: 'Please enter transport'
+           },
+           parking: {
+               required: 'Please enter parking'
            },
        },
 

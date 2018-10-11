@@ -33,20 +33,18 @@ Squeedr
                      <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                            <div class="form-details">
-                              <label for="Profession">Profession</label>
-                              <input type="text" class="form-control" name="profession" id="profession" placeholder="Profession" value="<?=$profession_name;?>">
+                             <!--  <label for="Profession">Profession</label>
+                              <input type="text" class="form-control" name="profession" id="profession" placeholder="Profession" value="<?=$profession_name;?>"> -->
                               <label for="Business Name">Business Name</label>
                               <input class="form-control" type="text" name="business_name" placeholder="Business name" value="<?=$userDetails->business_name ? $userDetails->business_name : "";?>" />
                               <label for="Business Location">Business Location</label>
-                              <div id="locationField">
-                                <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control" name="business_location" value="<?=$userDetails->business_location ? $userDetails->business_location : "";?>"></input>
-                              </div>
+                                <input id="business_location" placeholder="Enter your address" type="text" class="form-control" name="business_location" value="<?=$userDetails->business_location ? $userDetails->business_location : "";?>" onClick="codeAddress();"></input>
                               <div class="row">
-                                 <div class="col-lg-6 col-md-6 col-sm-6">
+                                 <div class="col-lg-6 col-md-6 col-sm-6" style="display: none;">
                                     <label for="Country">Street</label>
                                     <input placeholder="Street" id="street_number" class="form-control" name="street_number" value="<?=$userDetails->street_number ? $userDetails->street_number : "";?>"></input>
                                  </div>
-                                 <div class="col-lg-6 col-md-6 col-sm-6">
+                                 <div class="col-lg-6 col-md-6 col-sm-6" style="display: none;">
                                     <label for="Region">Route</label>
                                     <input id="route" placeholder="Route" name="route" class="form-control" value="<?=$userDetails->route ? $userDetails->route : "";?>"></input>
                                  </div>
@@ -77,13 +75,18 @@ Squeedr
                               </div>
                               <label for="Phone">Skype ID</label>
                               <input class="form-control" type="text" placeholder="Skype ID" name="skype_id" value="<?=$userDetails->skype_id ? $userDetails->skype_id : "";?>" />
+                              <label for="Phone">Transport</label>
+                              <input class="form-control" type="text" placeholder="Transport" name="transport" value="<?=$userDetails->transport ? $userDetails->transport : "";?>" />
+                              <label for="Phone">Parking</label>
+                              <input class="form-control" type="text" placeholder="Parking" name="parking" value="<?=$userDetails->parking ? $userDetails->parking : "";?>" />
                               <label for="Business Description">Business Description</label>
                               <textarea class="form-control" rows="4" name="business_description" placeholder="Business Description" onkeyup="countChar(this)"><?=$userDetails->business_description ? $userDetails->business_description : "";?></textarea>
-                              <span class="specialnote" id="specialnote_count">HTML Tags not allowed, 1000 characters remaining</span>
+                              <span class="specialnote" id="specialnote_count">HTML Tags not allowed, <?php echo 1000-strlen($userDetails->business_description); ?> characters remaining</span>
                            </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                           <iframe class="img-thumbnail" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14743.31409025346!2d88.39881!3d22.510616!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd9bfd73a5d056f32!2sNCR+Technosolutions+%7C+Mobile+App+Development+Company!5e0!3m2!1sen!2sin!4v1531414309030" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                           <!-- <iframe class="img-thumbnail" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14743.31409025346!2d88.39881!3d22.510616!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd9bfd73a5d056f32!2sNCR+Technosolutions+%7C+Mobile+App+Development+Company!5e0!3m2!1sen!2sin!4v1531414309030" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> -->
+                           <div id="map"></div>
                         </div>
                         <div class="clearfix"></div>
                         <!-- <input type="submit" value="Update" name="Update" class="btn btn-primary butt-next" style="margin: 30px auto 0; width: 150px; display: block" id="update"> -->
@@ -97,111 +100,31 @@ Squeedr
       </div>
    </div>
 </div>
-<div id="popup">
-   <div id="selectstaff">
-      <div class="container-fluid">
-         <div class="popupInside">
-            <h3>Select Staff</h3>
-            <ul>
-               <li><a onclick="staffcheck(this)"><img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}"/>
-                  <label>Douglas N</label>
-                  </a> 
-               </li>
-               <li><a onclick="staffcheck(this)"><img src="{{asset('public/assets/website/images/business-hours/grey-user.png')}}"/>
-                  <label>Janice D</label>
-                  </a> 
-               </li>
-            </ul>
-         </div>
-      </div>
-   </div>
-</div>
+
 @endsection
+ 
+<script type="text/javascript">
+function initMap() {
+   var myLatLng = {lat: -25.363, lng: 131.044};
 
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&libraries=places&callback=initAutocomplete"
-        async defer></script>
-<script>
-// This example displays an address form, using the autocomplete feature
-// of the Google Places API to help users fill in the information.
+   var map = new google.maps.Map(document.getElementById('map'), {
+     zoom: 4,
+     center: myLatLng
+   });
 
-// This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-var placeSearch, autocomplete;
-var componentForm = {
-  street_number: 'short_name',
-  route: 'long_name',
-  locality: 'long_name',
-  administrative_area_level_1: 'short_name',
-  country: 'long_name',
-  postal_code: 'short_name'
-};
-
-function initAutocomplete() {
-  // Create the autocomplete object, restricting the search to geographical
-  // location types.
-  autocomplete = new google.maps.places.Autocomplete(
-      /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
-      {types: ['geocode']});
-
-  // When the user selects an address from the dropdown, populate the address
-  // fields in the form.
-  autocomplete.addListener('place_changed', fillInAddress);
-}
-
-function fillInAddress() {
-  // Get the place details from the autocomplete object.
-  var place = autocomplete.getPlace();
-
-  for (var component in componentForm) {
-    document.getElementById(component).value = '';
-    document.getElementById(component).disabled = false;
-  }
-
-  // Get each component of the address from the place details
-  // and fill the corresponding field on the form.
-  for (var i = 0; i < place.address_components.length; i++) {
-    var addressType = place.address_components[i].types[0];
-    if (componentForm[addressType]) {
-      var val = place.address_components[i][componentForm[addressType]];
-      document.getElementById(addressType).value = val;
-    }
-  }
-}
-
-// Bias the autocomplete object to the user's geographical location,
-// as supplied by the browser's 'navigator.geolocation' object.
-function geolocate() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var geolocation = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      var circle = new google.maps.Circle({
-        center: geolocation,
-        radius: position.coords.accuracy
-      });
-      autocomplete.setBounds(circle.getBounds());
-    });
-  }
-} 
+   var marker = new google.maps.Marker({
+     position: myLatLng,
+     map: map,
+     title: 'Hello World!'
+   });
+ }
 </script>
 
-<script>
-function countChar(val) {
-  var len = val.value.length;
-  if (len >= 1000) {
-    val.value = val.value.substring(0, 1000);
-  } else {
-   var count = 1000 - len;
-    $('#specialnote_count').text('HTML Tags not allowed, '+count+' characters remaining');
+<style>
+  /* Always set the map height explicitly to define the size of the div
+   * element that contains the map. */
+  #map {
+    height: 600px;
   }
-};
-</script> -->
-
-
-
-
+</style>
 

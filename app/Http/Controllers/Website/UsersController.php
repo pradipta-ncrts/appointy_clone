@@ -159,13 +159,16 @@ class UsersController extends ApiController {
             $prof_data = $this->common_model->fetchData($this->tableObj->tableNameProfession, $prof_conditions);
 
 			$country_key = array_search($userDetails->country, array_column($country, 'country_no'));
+
+			$business_location = $userDetails->business_location;
 			$data['country_name'] = $country[$country_key]->country_name;
 			$data['profession_name'] = $prof_data->profession;
 			$data['country'] = $country;
 			$data['professions'] = $professions;
 			$data['userDetails'] = $userDetails;
+
 			//$this->remove_all_cookies(); // for manualy cookie remove testing
-			return view('website.business-contact-info', $data);
+			return view('website.business.business-contact-info', $data);
 		}
         return view('website.user.login.login');
 	}

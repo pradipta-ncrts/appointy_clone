@@ -607,10 +607,27 @@ class UsersController extends ApiController {
 		$skype_id = $request->input('skype_id');
 		$zip_code = $request->input('zip_code');
 		$business_description = $request->input('business_description');
-		$profession = $request->input('profession');
+		$transport = $request->input('transport');
+		$parking = $request->input('parking');
+		
+
+		//find latitute & longitude
+		/*$googleKey = 'AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE'; 
+		$search = $business_location;
+		$geoData = $this->google_maps_search($search, $googleKey);
+		print_r($geoData); die();
+		if (!$geoData) {
+		    echo "Error: " . $id . "\n";
+		    exit;
+		}
+
+		$mapData = $this->map_google_search_result($geoData);
+		print_r($mapData); die();*/
+
+		//$profession = $request->input('profession');
 
 		//check profession 
-		$profession_condition = array(
+		/*$profession_condition = array(
 						array('profession', '=', $profession), 
 						array('is_blocked', '=', '0'),
 					);
@@ -624,7 +641,7 @@ class UsersController extends ApiController {
 			$profession_param = array('profession' => $profession, 'is_blocked' => '1');
 			$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameProfession, $profession_param);
 			$profession = $profession_id;
-		}
+		}*/
 
 		$updateData = array(
 				'business_name' => $business_name,
@@ -634,7 +651,8 @@ class UsersController extends ApiController {
 				'city' => $city,
 				'state' => $state,
 				'mobile' => $mobile,
-				'profession' => $profession,
+				'transport' => $transport,
+				'parking' => $parking,
 				'office_phone' => $office_phone,
 				'skype_id' => $skype_id,
 				'zip_code' => $zip_code,
@@ -1393,5 +1411,41 @@ class UsersController extends ApiController {
         echo 'e'.$exist.'/ne'.$notExit; die();
         $this->json_output($response_data);
     }
+
+
+    function google_maps_search($address, $key = '')
+	{
+	    $url = sprintf('https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s', urlencode($address), urlencode($key));
+	    $response = file_get_contents($url);
+	    $data = json_decode($response, 'true');
+	    return $data;
+	}
+
+	function map_google_search_result($geo)
+	{
+	    if (empty($geo['status']) || $geo['status'] != 'OK' || empty($geo['results'][0])) {
+	        return null;
+	    }
+	    $data = $geo['results'][0];
+	    $postalcode = '';
+	    foreach ($data['address_components'] as $comp) {
+	        if (!empty($comp['types'][0]) && ($comp['types'][0] == 'postal_code')) {
+	            $postalcode = $comp['long_name'];
+	            break;
+	        }
+	    }
+	    $location = $data['geometry']['location'];
+	    $formatAddress = !empty($data['formated_address']) ? $data['formated_address'] : null;
+	    $placeId = !empty($data['place_id']) ? $data['place_id'] : null;
+
+	    $result = [
+	        'lat' => $location['lat'],
+	        'lng' => $location['lng'],
+	        'postal_code' => $postalcode,
+	        'formated_address' => $formatAddress,
+	        'place_id' => $placeId,
+	    ];
+	    return $result;
+	}
 
 }

@@ -40,7 +40,7 @@ Squeedr
             <li><a href="{{ url('profile-picture') }}"> Picture</a> </li>
             <li><a href="{{ url('profile-link') }}"> My Link</a></li>
             <!--<li><a href="profile-services.html"> Services</a></li>-->
-             <li><a href="{{ url('profile-payment') }}"> Payment Mode</a> </li>
+            <li><a href="{{ url('profile-payment') }}"> Payment Mode</a> </li>
             <li><a href="{{ url('profile-login') }}" > Login</a> </li>
           </ul>
         </div>
