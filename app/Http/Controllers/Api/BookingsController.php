@@ -378,7 +378,7 @@ class BookingsController extends ApiController {
                     'join_type'=>'left',
                     'join_on'=>array('staff_id','=','staff_id'),
                     'join_on_more'=>array(),
-                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'join_conditions' => array(array('is_deleted','=','0')),
                     'select_fields' => $stuff_fields,
                 ),
         );

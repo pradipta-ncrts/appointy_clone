@@ -336,12 +336,18 @@ class UsersController extends ApiController {
 		);
 		$url_func_name="staff_list";
 		$return = $this->curl_call($url_func_name,$post_data);
+
+		$service_post_data = $authdata;
+		$service_url_func_name="service_list";
+		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
 		
 		// Check response status. If success return data //		
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['staff_list'] = $return->staff_list;
 				$data['staff_search_text'] = $staff_search_text;
+				$data['category_list'] = $service_return->category_list;
+
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.staff.staff-details')->with($data);
@@ -372,6 +378,7 @@ class UsersController extends ApiController {
 		$selectFields=array('full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','addess','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
 		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectFields);
 			
+		$exportData[] = ['Staff Name', 'Username','Email','Mobile','Description','Home Phone','Work Phone','Expertise','Category Id','Address','Profile Picture','Is Internal Staff','Booking URL','Is Login Allowed','Is Email Verified','Is Blocked','Created On'];
 		if(!empty($staff_list)){
 			//$exportData = array('Product Name','Product Description','Regular Price','Sale Price','Product Code','Floor Location','Product Stock','Product Lot','Vendor Code','Second Language Value','Third Language Value','Tags');
 			foreach($staff_list as $staff){
@@ -402,7 +409,7 @@ class UsersController extends ApiController {
 			{
 				$sheet->fromArray($exportData, null, 'A1', false, false);
 			});
-			})->download('xls');
+			})->download('xlsx');
 			
 		}
 	}
