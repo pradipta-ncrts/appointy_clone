@@ -2461,13 +2461,12 @@
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&libraries=places&callback=initMap"
         async defer></script>
       <script>
-   $(window).load(function(){
-         var autocomplete = new google.maps.places.Autocomplete($("#business_location")[0], {});
-
-         google.maps.event.addListener(autocomplete, 'place_changed', function() {
-         var place = autocomplete.getPlace();
-         console.log(place);
-         });
+      $(window).load(function(){
+      var autocomplete = new google.maps.places.Autocomplete($("#business_location")[0], {});
+      google.maps.event.addListener(autocomplete, 'place_changed', function() {
+      var place = autocomplete.getPlace();
+      console.log(place);
+      });
       });
       </script>
       <!-- <script async defer

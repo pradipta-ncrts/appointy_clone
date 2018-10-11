@@ -91,7 +91,10 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/add-new-location','Api\StaffsController@add_new_location');
     Route::post('/import-invite-contact','Api\UsersController@import_invite_contact');
-
+    Route::post('/profile_settings','Api\ProfileController@profile_settings');
+    Route::post('/update-profile-settings','Api\ProfileController@update_profile_settings');
+    Route::post('/delete-account','Api\ProfileController@delete_account');
+    
 });
 
 
@@ -144,13 +147,9 @@ Route::group(['prefix'=>''],function(){
     Route::get('/invite-contacts','Website\UsersController@invite_contacts');
     Route::get('/add-location','Website\UsersController@add_location');
     Route::get('/privacy-settings','Website\UsersController@privacy_settings');
-    Route::get('/profile-settings','Website\UsersController@profile_settings');
-    Route::get('/profile-picture','Website\UsersController@profile_picture');
-    Route::get('/profile-link','Website\UsersController@profile_link');
-    Route::get('/profile-payment','Website\UsersController@profile_payment');
-    Route::get('/profile-login','Website\UsersController@profile_login');
     Route::post('/email_customisation','Website\BookingsController@email_customisation');
     Route::get('/help','Website\UsersController@help');
+
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
@@ -161,6 +160,13 @@ Route::group(['prefix'=>''],function(){
     Route::get('/cancel_appointent_url','Website\UsersController@cancel_appointent_url');
     Route::get('/business-provider/{uesrname?}','Website\ClientsController@business_provider');
     Route::get('/client-service-details/{service?}','Website\ClientsController@client_service_details');
+
+
+    Route::get('/profile-settings','Website\ProfileController@profile_settings');
+    Route::get('/profile-picture','Website\ProfileController@profile_picture');
+    Route::get('/profile-link','Website\ProfileController@profile_link');
+    Route::get('/profile-payment','Website\ProfileController@profile_payment');
+    Route::get('/profile-login','Website\ProfileController@profile_login');
 });
 
 

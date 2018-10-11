@@ -188,7 +188,7 @@ class UsersController extends ApiController {
 			
 			$data['userDetails'] = $userDetails;
 			//$this->remove_all_cookies(); // for manualy cookie remove testing
-			return view('website.business-logo-social-network', $data);
+			return view('website.business.business-logo-social-network', $data);
 		}
         return view('website.user.login.login');
 	}
@@ -668,67 +668,7 @@ class UsersController extends ApiController {
 
 	}
 
-	public function profile_settings()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.profile-settings');
-		}
-
-		return view('website.profile-settings');
-	}
-
-	public function profile_picture()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.profile-picture');
-		}
-
-		return view('website.profile-picture');
-	}
-
-	public function profile_link()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.profile-link');
-		}
-
-		return view('website.profile-link');
-	}
-
-	public function profile_payment()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.profile-payment');
-		}
-
-		return view('website.profile-payment');
-	}
-
-	public function profile_login()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.profile-login');
-		}
-
-		return view('website.profile-login');
-	}
-
-	public function help()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.help');
-		}
-
-		return view('website.help');
-	}
-
-	
+		
 
 	public function cancel_appointent_url()
 	{

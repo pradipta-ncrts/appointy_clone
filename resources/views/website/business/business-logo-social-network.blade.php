@@ -37,16 +37,20 @@ Squeedr
                                  <img id="image_upload_preview" src="{{asset('public/'.$image)}}" height="60px" width="80px"><br>
                                  <span>Upload Business Logo</span>
                               </div>
-                              
-                              
-                              <!-- <div class="upload-logo">
-                                 <img src="{{asset('public/assets/website/images/picture.png')}}"><br>
-                                 <span>Upload Other Photos</span>
-                              </div> -->
+                              <a href="" id="timeline-image-remove" <?=$userDetails->timeline_image ? '' : 'style="display: none;"'; ?>><i class="fa fa-close"></i></a>
+                              <div class="upload-logo" id="timeline-image-upload">
+                                 <?php
+                                 $image = $userDetails->timeline_image ? 'image/timeline_image/'.$userDetails->timeline_image : "assets/website/images/picture.png";
+                                 ?>
+                                 <img id="timeline_image_preview" src="{{asset('public/'.$image)}}" height="60px" width="80px"><br>
+                                 <span>Upload Business Logo</span>
+                              </div>
                            </div>
                         </div>
                         <input accept="image/*" type="file" id="profile-image" name="profile_image" style="display: none;">
+                        <input accept="image/*" type="file" id="timeline-image" name="timeline_image" style="display: none;">
                         <input type="hidden" name="old_profile_image" id="old_profile_image" value="<?=$userDetails->profile_image?>">
+                        <input type="hidden" name="old_timeline_image" id="old_timeline_image" value="<?=$userDetails->timeline_image?>">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                            <div class="form-details">
                               <label for="Phone">Facebook Link</label>

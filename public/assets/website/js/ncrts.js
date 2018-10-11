@@ -149,6 +149,11 @@ $("#profile-image-upload").on('click',function(e){
    $( "#profile-image" ).trigger( "click" );
 });
 
+$("#timeline-image-upload").on('click',function(e){
+   e.preventDefault();
+   $( "#timeline-image" ).trigger( "click" );
+});
+
 
 function readURL(input)
 {
@@ -163,11 +168,27 @@ function readURL(input)
     }
 }
 
-
+function readURL2(input)
+{
+    if (input.files && input.files[0])
+    {
+        var reader = new FileReader();
+        reader.onload = function (e) 
+        {
+            $('#timeline_image_preview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 $("#profile-image").change(function () {
     readURL(this);
     $('#profile-image-remove').show();
+});
+
+$("#timeline-image").change(function () {
+    readURL2(this);
+    $('#timeline-image-remove').show();
 });
 
 $("#profile-image-remove").click(function (e) {
@@ -181,6 +202,17 @@ $("#profile-image-remove").click(function (e) {
 
 });
 
+$("#timeline-image-remove").click(function (e) {
+    e.preventDefault();
+    $('.animationload').show();
+    $('#timeline-image-remove').hide();
+    $('#old_timeline_image').val('');
+    $('#timeline-image').val('');
+    $('#timeline_image_preview').attr('src', baseUrl+'/public/assets/website/images/picture.png');
+    $('.animationload').hide();
+
+});
+
 //==================social & logo update=====================
 
 $("#update-social-logo").on('submit', (function(e) {
@@ -188,17 +220,29 @@ $("#update-social-logo").on('submit', (function(e) {
     //data = addCommonParams(data);
     var data = $('#update-social-logo').serializeArray();
     data = addCommonParams(data);
-    var files = $("#update-social-logo input[type='file']")[0].files;
+    //var files = $("#profile-image input[type='file']")[0].files;
+    var profile_image = document.getElementById('profile-image');
+    var timeline_image = document.getElementById('timeline-image');
+
     var form_data = new FormData();
-    if(files.length>0){
-        for(var i=0;i<files.length;i++){
-            form_data.append('profile_image',files[i]);
+
+    if(profile_image.files.length>0){
+        for(var i=0;i<profile_image.files.length;i++){
+            form_data.append('profile_image',profile_image.files[0]);
         }
     }
-    // append all data in form data 
+
+    if(timeline_image.files.length>0){
+        for(var i=0;i<timeline_image.files.length;i++){
+            form_data.append('timeline_image',timeline_image.files[0]);
+        }
+    }
+   
     $.each(data, function( ia, l ){
         form_data.append(l.name, l.value);
     });
+
+    //console.log(form_data);
 
     $.ajax({
         url: baseUrl+"/api/update-logo-social", // Url to which the request is send
@@ -2071,4 +2115,143 @@ $("#import-invite-contact").on('submit', (function(e) {
 
 
 //==============Invite & dicount end======================================
+
+//===============Profile section start====================================
+$("#branding").click(function (event) {
+    event.preventDefault();
+    let bval = $("#profile_branding").val();
+    if(bval==1)
+    {
+        $("#profile_branding").val(0);
+    }
+    else
+    {
+        $("#profile_branding").val(1);
+    }
+});
+
+
+$('#update-profile-settings').validate({
+    ignore: ":hidden:not(.selectpicker)",
+    //ignore: [],
+    rules: {
+       
+        'profile_name': {
+            required: true
+        },
+        'profile_profession': {
+            required: true
+        },
+        'presentation': {
+            required: true
+        },
+        'expertise': {
+            required: true
+        },
+      },
+
+    messages: {
+        
+        'profile_name': {
+            required: "Name is required"
+        },
+        'profile_profession': {
+            required: "Profession is required"
+        },
+        'presentation': {
+            required: "Presentation is required"
+        },
+        'expertise': {
+            required: "Expertise is required"
+        },
+    },
+
+    submitHandler: function(form) {
+      var data = $(form).serializeArray();
+      data = addCommonParams(data);
+      console.log(data);
+      $.ajax({
+          url: form.action,
+          type: form.method,
+          data:data ,
+          dataType: "json",
+          success: function(response) {
+               console.log(response);
+               $('.animationload').hide();
+               if(response.result=='1')
+               {
+                  $('#myModalServices').modal('hide');
+                  swal({title: "Success", text: response.message, type: "success"});
+               }
+               else
+               {
+                   swal("Error", response.message , "error");
+               }
+          },
+          beforeSend: function(){
+              $('.animationload').show();
+          },
+          complete: function(){
+              $('.animationload').hide();
+          }
+      });
+    }
+});
+
+
+$("#delete-account").click(function (event) {
+  event.preventDefault();
+  let serviceid = '';
+  swal({
+    title: "Are you sure?",
+    text: "Once cancelled, you will loose all the details of the appointment!",
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: '#DD6B55',
+    confirmButtonText: 'Yes, I am sure!',
+    cancelButtonText: "No, not now!",
+    closeOnConfirm: false,
+    closeOnCancel: true
+    },function(isConfirm){
+
+        if (isConfirm){
+            let data = addCommonParams([]);
+            //alert(serviceid);
+            data.push({name:'service_id', value:serviceid});
+            $.ajax({
+                url: baseUrl+"/api/delete-account", 
+                type: "POST", 
+                data: data, 
+                dataType: "json",
+                success: function(response) 
+                {
+                    console.log(response);
+                    $('.animationload').hide();
+                    if(response.result=='1')
+                    {
+                        swal({title: "Success", text: response.message, type: "success"},
+                         function(){ 
+                             location.reload();
+                         }
+                      );
+                    }
+                    else
+                    {
+                        swal("Error", response.message , "error");
+                    }
+                },
+                beforeSend: function()
+                {
+                    $('.animationload').show();
+                },
+                complete: function()
+                {
+                    //$('.animationload').hide();
+                }
+            });
+        }
+    });
+});
+
+//===============Profile section end====================================
 
