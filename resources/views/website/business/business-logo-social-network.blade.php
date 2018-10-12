@@ -43,7 +43,7 @@ Squeedr
                                  $image = $userDetails->timeline_image ? 'image/timeline_image/'.$userDetails->timeline_image : "assets/website/images/picture.png";
                                  ?>
                                  <img id="timeline_image_preview" src="{{asset('public/'.$image)}}" height="60px" width="80px"><br>
-                                 <span>Upload Business Logo</span>
+                                 <span>Upload Timeline Image</span>
                               </div>
                            </div>
                         </div>

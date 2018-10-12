@@ -94,6 +94,13 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/profile_settings','Api\ProfileController@profile_settings');
     Route::post('/update-profile-settings','Api\ProfileController@update_profile_settings');
     Route::post('/delete-account','Api\ProfileController@delete_account');
+    Route::post('/profile-payment','Api\ProfileController@profile_payment');
+    Route::post('/profile-url','Api\ProfileController@profile_url');
+    Route::post('/profile-personal-image','Api\ProfileController@profile_personal_image');
+    Route::post('/change-password','Api\ProfileController@change_password');
+
+    Route::post('/client_login','Api\ClientsController@client_login');
+
     
 });
 
@@ -167,6 +174,8 @@ Route::group(['prefix'=>''],function(){
     Route::get('/profile-link','Website\ProfileController@profile_link');
     Route::get('/profile-payment','Website\ProfileController@profile_payment');
     Route::get('/profile-login','Website\ProfileController@profile_login');
+
+    Route::get('/client-login','Website\ClientsController@client_login');
 });
 
 

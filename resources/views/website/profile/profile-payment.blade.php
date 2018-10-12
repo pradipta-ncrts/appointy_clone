@@ -34,9 +34,12 @@ Squeedr
                         <div class="col-md-12">
                           <div class="form-group">
                           <label>Cheques, Cash and Credit Cards </label>
+                          <form action="{{ url('api/profile-payment') }}" method="post" id="update-profile-payment">
                             <div class="input-group"> <span class="input-group-addon"></span>
-                              <input id="name" type="text" class="form-control" name="name" placeholder="Cheques, Cash and Credit Cards">
+                              <input id="payment_mode" type="text" class="form-control" name="payment_mode" placeholder="Cheques, Cash and Credit Cards" value="<?=isset($user_details->payment_mode) && $user_details->payment_mode ? $user_details->payment_mode : '';?>">
                             </div>
+                            <button type="submit" class="btn btn-primary btn-md" style="margin-top:15px;">Save Changes</button>
+                          </form>
                           </div>
                         </div>
                       </div>

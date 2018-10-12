@@ -6,33 +6,6 @@ Squeedr
 @section('content')
 <div class="body-part">
     <div class="container-custm">
-      <div class="upper-cmnsection">
-        <div class="heading-uprlft">Profile</div>
-        <div class="upr-rgtsec" style="display:none;">
-          <div class="col-md-5">
-            <div id="custom-search-input">
-              <div class="input-group col-md-12">
-                <input type="text" class="  search-query form-control" placeholder="Search" />
-                <span class="input-group-btn">
-                <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
-                </span> </div>
-            </div>
-          </div>
-          <div class="col-md-7">
-            <div class="full-rgt">
-              <div class="dropdown custm-uperdrop">
-                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Upcoming Dates <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button>
-                <ul class="dropdown-menu">
-                  <li><a href="#">JAN</a></li>
-                  <li><a href="#">FEB</a></li>
-                  <li><a href="#">MARCH</a></li>
-                </ul>
-              </div>
-              <div class="filter-option"><a href="/">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="leftpan">
         <div class="left-menu">
           <ul>
@@ -51,17 +24,26 @@ Squeedr
       <!--<h2 class="profile-title">Upload Picture</h2>-->
         <div class="row">
           <div class="profile-bx"> 
-          <div style="width:100%;float:left;">
-          <!--<div class="profile-picbx"  data-toggle="modal" data-target="#myModapic-upload"><i class="fa fa-picture-o" aria-hidden="true"></i><span class="ng-tns-c3-3">Upload Picture</span></div>-->
-          <p class="profile-p">Uploaded pictures will display at the top of your profile page (maximum file size of 5MB)</p>
-          <div class="add-logo" data-toggle="modal" data-target="#myModapic-upload" style="float:left;margin-top:0;">
-          <img src="{{asset('public/assets/website/images/picture.png')}}" alt="" style="height:60px !important;width:auto !important"><br>
-          <span>Upload Picture</span>
+            <form action="{{ url('api/profile-personal-image') }}" method="post" id="profile-personal-image">
+              <div style="width:100%;float:left;">
+              <p class="profile-p">Uploaded pictures will display at the top of your profile page (maximum file size of 5MB)</p>
+                  <div data-toggle="modal" style="float:left;margin-top:0;">
+                  <a href="" id="profile_perosonal-image-remove" <?=$user_details->profile_perosonal_image ? '' : 'style="display: none;"'; ?>><i class="fa fa-close"></i></a>
+                      <div class="upload-logo" id="profile_perosonal-image-upload">
+                         <?php
+                         $image = $user_details->profile_perosonal_image ? 'image/profile_perosonal_image/'.$user_details->profile_perosonal_image : "assets/website/images/picture.png";
+                         ?>
+                         <img id="profile_perosonal_image_preview" src="{{asset('public/'.$image)}}" height="60px" width="80px"><br>
+                         <span>Upload Profile Picture</span>
+                      </div>
+                  </div>
+                  <input accept="image/*" type="file" id="profile_perosonal-image" name="profile_perosonal_image" style="display: none;">
+                  <input type="hidden" name="old_profile_perosonal_image" value="<?=$user_details->profile_perosonal_image;?>">
+                  <div class="clearfix"></div>
+                     <button type="submit" id="profile-personal-image-update-button" class="btn btn-primary butt-next">Update</button>
+              </div>
+            </form>
           </div>
-          
-          </div>
-          </div>
-
         </div>
       </div>
     </div>
