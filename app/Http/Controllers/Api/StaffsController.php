@@ -600,9 +600,9 @@ class StaffsController extends ApiController {
                 array('is_blocked','=','0'),
             );
 
-            //$selectField = array('service_id','GROUP_CONCAT(block_date)');
+            //$selectField = array('block_id','GROUP_CONCAT(block_date)');
             //$block_dates = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="YEAR(block_date), MONTH(block_date)",$havings=array(),$limit=0,$offset=0,$is_count=0);
-            $query = "select `squ_block_date_time`.`service_id`, MONTHNAME(`squ_block_date_time`.`block_date`) AS month, YEAR(`squ_block_date_time`.`block_date`) AS year, GROUP_CONCAT(squ_block_date_time.block_date) AS block_dates 
+            $query = "select `squ_block_date_time`.`block_id`, MONTHNAME(`squ_block_date_time`.`block_date`) AS month, YEAR(`squ_block_date_time`.`block_date`) AS year, GROUP_CONCAT(squ_block_date_time.block_date) AS block_dates 
             from `squ_block_date_time` 
             where `squ_block_date_time`.`user_id` = ".$user_no." 
                 and `squ_block_date_time`.`staff_id` = ".$staff_id."
@@ -647,7 +647,7 @@ class StaffsController extends ApiController {
                     array('is_blocked','=','0'),
                 );
                 
-                $selectField = array('service_id','start_time','end_time');
+                $selectField = array('block_id','start_time','end_time');
                 $block_date_times = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="",$havings=array(),$limit=0,$offset=0,$is_count=0);
                 
                 $block_times[$i]->block_date = date('F d, Y',strtotime($block_times[$i]->block_date));
