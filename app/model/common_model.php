@@ -266,7 +266,13 @@ class common_model extends Model {
         // group by
         if(!empty($groupBy)){
             if(empty($joins)){
-                $this->query->groupBy($groupBy);
+                //$this->query->groupBy($groupBy);
+                if(strpos($groupBy,"(")!==false){
+                    $this->query->groupBy(DB::raw($groupBy));
+                }
+                else{
+                    $this->query->groupBy($groupBy);
+                }
             }
             else{
                 if(strpos($groupBy,".")!==false){

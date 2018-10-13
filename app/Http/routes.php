@@ -53,9 +53,12 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/service-details', 'Api\UsersController@service_details');
     Route::post('/add_staff','Api\StaffsController@add_staff');
     Route::post('/edit_staff','Api\StaffsController@edit_staff');
+    Route::post('/change-status-staff','Api\StaffsController@change_status_staff');
     Route::post('/staff_list','Api\StaffsController@staff_list');
+    Route::post('/staff_import','Api\StaffsController@staff_import');
     Route::post('/staff-details','Api\StaffsController@staff_details');
     Route::post('/delete-staff','Api\StaffsController@staff_delete');
+    Route::post('/block-times','Api\StaffsController@block_times');
     Route::post('/add_client','Api\ClientsController@add_client');
     Route::post('/client_list','Api\ClientsController@client_list');
     Route::post('/email_customisation_data','Api\BookingsController@email_customisation_data');

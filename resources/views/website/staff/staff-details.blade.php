@@ -29,7 +29,11 @@ Squeedr
       <div class="leftpan">
          <div class="left-menu">
             <div id="custom-search-input">
-               <a href="#" class="imp-st" data-toggle="tooltip" title="Import Staff"><i class="fa fa-download"></i> </a> <a href="{{url('staff-export')}}" class="exp-st"  data-toggle="tooltip" title="Export Staff"><i class="fa fa-external-link "></i> </a>
+               <a href="javascript:void(0);" id="import_staff_icon" class="imp-st" data-toggle="tooltip" title="Import Staff"><i class="fa fa-download"></i> </a> 
+               <form name="staff_import_form" id="staff_import_form" action="{{url('api/staff_import')}}" method="post">
+               <input type="file" name="staff_import_excel" id="staff_import_excel" style="display:none;" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+               </form>
+               <a href="{{url('staff-export')}}" class="exp-st"  data-toggle="tooltip" title="Export Staff"><i class="fa fa-external-link "></i> </a>
                <div class="input-group col-md-12">
                   <input type="text" name="staff_search_text" id="staff_search_text" class="search-staff form-control" placeholder="Search Staff" <?php if(!empty($staff_search_text)) { ?> value="<?php echo $staff_search_text;?>" <?php } ?> />
                   <span class="input-group-btn">
@@ -92,100 +96,100 @@ Squeedr
                         <ul class="nav nav-tabs">
                             <li class="active"><a data-toggle="tab" id="detailsTab" href="#tab1">Details</a></li>
                             <li><a data-toggle="tab" href="#tab2">Availability</a></li>
-                            <li><a data-toggle="tab" href="#tab3">Block Time</a></li>
+                            <li><a data-toggle="tab" href="#tab3" id="block_time" >Block Time</a></li>
                             <li><a data-toggle="tab" href="#tab4">Postal Codes</a></li>
                         </ul>
                         <div class="tab-content">
                             <div id="tab1" class="tab-pane fade in active">
-                            <div class="staff-detailtab-bx">
-                                <ul>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Staff Description</h4>
-                                            <p id="staffDesc">No Description</p>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Active</h4>
-                                            <p>Disable this to temporarily suspend this staff's account. The staff details will not be deleted from the
-                                                system
-                                            </p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button type="button" id="isBlocked" class="btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
-                                                <div class="handle"></div>
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Internal Staff</h4>
-                                            <p>Internal staff cannot be viewed or booked by customers.</p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button id="isInternalStaff" type="button" class="btn btn-sm btn-secondary btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                                <div class="handle"></div>
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Login Allowed</h4>
-                                            <p id="loginAllowedMsg">Restrict Jason to login next time. Allow Jason to view/manage/block dates and times for their schedule
-                                                only. Staff can also search customers but cannot export the customer list
-                                            </p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button   id="isLoginAllowed" type="button" class="btn btn-sm btn-secondary btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                                <div class="handle"></div>
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Booking URL</h4>
-                                            <p id="bookingUrl">https://booking.appointy.com/</p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button type="button" class="btn btn-default pull-right"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Integrations</h4>
-                                            <p>No Integrations</p>
-                                        </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="row">
-                                        <div class="col-sm-10">
-                                            <h4>Email Verification</h4>
-                                            <p id="staffEmail">lamie74@gmail.com <span class="label label-danger"><i>Not Verified</i></span></p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button type="button" class="btn btn-default pull-right"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> SEND EMAIL</button>
-                                        </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                <div class="staff-detailtab-bx">
+                                    <ul>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Staff Description</h4>
+                                                <p id="staffDesc">No Description</p>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Active</h4>
+                                                <p>Disable this to temporarily suspend this staff's account. The staff details will not be deleted from the
+                                                    system
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" id="isBlocked" class="isBlocked btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                                    <div class="handle"></div>
+                                                </button>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Internal Staff</h4>
+                                                <p>Internal staff cannot be viewed or booked by customers.</p>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button id="isInternalStaff" type="button" class="btn btn-sm btn-secondary btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                                    <div class="handle"></div>
+                                                </button>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Login Allowed</h4>
+                                                <p id="loginAllowedMsg">Restrict Jason to login next time. Allow Jason to view/manage/block dates and times for their schedule
+                                                    only. Staff can also search customers but cannot export the customer list
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button   id="isLoginAllowed" type="button" class="btn btn-sm btn-secondary btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                                    <div class="handle"></div>
+                                                </button>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Booking URL</h4>
+                                                <p id="bookingUrl">https://booking.appointy.com/</p>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-default pull-right"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Integrations</h4>
+                                                <p>No Integrations</p>
+                                            </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Email Verification</h4>
+                                                <p id="staffEmail">lamie74@gmail.com <span class="label label-danger"><i>Not Verified</i></span></p>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-default pull-right"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> SEND EMAIL</button>
+                                            </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             <div id="tab2" class="tab-pane fade">
-                            <!--<h3>Menu 2</h3>-->
-                            <!--<p>No record found</p>-->
+                                <!--<h3>Menu 2</h3>-->
+                                <!--<p>No record found</p>-->
                                 <ul class="nav nav-tabs staff-inertab">
                                     <li class="active"><a data-toggle="tab" href="#regulariner1" aria-expanded="false">REGULAR</a></li>
                                     <li ><a data-toggle="tab" href="#irregulariner1" aria-expanded="true">IRREGULAR</a></li>
@@ -365,8 +369,37 @@ Squeedr
                                 </div>
                             </div>
                             <div id="tab3" class="tab-pane fade">
-                            <!--<h3>Menu 3</h3>-->
-                            <p>No record found</p>
+
+                                <ul class="nav nav-tabs tabnew-staff">
+                                    <li class="active"><a data-toggle="tab" href="#tabnewadd" aria-expanded="true">Date</a></li>
+                                    <li><a data-toggle="tab" href="#tabnewadd1" aria-expanded="true">Time of Date</a></li>
+                                    <!--<li><a data-toggle="tab" href="#tabnewadd2" aria-expanded="true">Calender</a></li>-->
+                                    <li class="pull-right"> 
+                                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalblockdate">Block Date</button>
+                                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalblocktime">Block Time</button>
+                                    </li>
+                                </ul>
+                            
+                                <div class="tab-content">
+                                    <div id="tabnewadd" class="tab-pane fade in active">
+                                        <h3 class="tabnewtxt">Unavailable Dates</h3>
+                                        <div id="blockedDates">
+                                            
+                                        </div>
+                                    </div>
+                                    <div id="tabnewadd1" class="tab-pane fade">
+                                        <h3 class="tabnewtxt">Unavailable Times</h3>
+                                        <div id="blockedTimes">
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    <!--<div id="tabnewadd2" class="tab-pane fade">
+                                    <h3>Calendar</h3>
+                                    <p>Some content in menu 2.</p>
+                                    </div>-->
+                                </div>
+
                             </div>
                             <div id="tab4" class="tab-pane fade">
                             <!--<h3>Menu 4</h3>-->
@@ -378,6 +411,7 @@ Squeedr
                </div>
             </div>
          </div>
+
          <div class="custm-tab team-memtab">
             <ul class="nav nav-tabs">
                <li class="active"><a data-toggle="tab" href="#tabmenu1">Active</a></li>
@@ -419,6 +453,7 @@ Squeedr
                </div>
             </div>
          </div>
+         
       </div>
    </div>
 </div>
@@ -570,6 +605,7 @@ $('.stafflistitem').click(function(){
     if(data.description !== undefined){
         $('#staffDesc').html(data.description);
     }
+    
     $('#loginAllowedMsg').html("");
     if(data.full_name !== undefined){
         $('#loginAllowedMsg').html("Restrict "+data.full_name+" to login next time. Allow "+data.full_name+" to view/manage/block dates and times for their schedule only. Staff can also search customers but cannot export the customer list");
@@ -599,6 +635,8 @@ $('.stafflistitem').click(function(){
 
     $('#isBlocked').removeClass('active');
     if(data.is_blocked !== undefined){
+        $('#isBlocked').attr('data-block-status',data.is_blocked);
+        $('#isBlocked').attr('data-staff-id',data.staff_id);
         if(data.is_blocked == 1){
             $('#isBlocked').removeClass('active');
         }else{
@@ -608,6 +646,8 @@ $('.stafflistitem').click(function(){
 
     $('#isInternalStaff').removeClass('active');
     if(data.is_internal_staff !== undefined){
+        $('#isInternalStaff').attr('data-internal-staff',data.is_internal_staff);
+        $('#isInternalStaff').attr('data-staff-id',data.staff_id);
         if(data.is_internal_staff == 0){
             $('#isInternalStaff').removeClass('active');
         }else{
@@ -617,6 +657,8 @@ $('.stafflistitem').click(function(){
 
     $('#isLoginAllowed').removeClass('active');
     if(data.is_login_allowed !== undefined){
+        $('#isLoginAllowed').attr('data-login-allowed',data.is_login_allowed);
+        $('#isLoginAllowed').attr('data-staff-id',data.staff_id);
         if(data.is_login_allowed == 0){
             $('#isLoginAllowed').removeClass('active');
         }else{
@@ -633,6 +675,143 @@ $('.stafflistitem').click(function(){
         }
     }
 });
+
+    
+$(document).on('click','#isBlocked',function(){
+    var staff_id = '';
+    var blocked_status = '';
+    var staff_id = $(this).attr('data-staff-id');
+    var blocked_status = $(this).attr('data-block-status');
+    //alert(staff_id); return false;
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id},{name:'status_value', value:blocked_status},{name:'type', value:'blocked'});
+    $.ajax({
+        url: baseUrl+"/api/change-status-staff", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            //console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal({title: "Success", text: response.message, type: "success"});
+                if (blocked_status == '0') {
+                    $('#isBlocked').attr('data-block-status','1');
+                    $('#isBlocked').removeClass('active');
+                } else {
+                    $('#isBlocked').attr('data-block-status','0');
+                    $('#isBlocked').addClass('active');
+                }
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+
+});
+
+$(document).on('click','#isInternalStaff',function(){
+    var staff_id = '';
+    var internal_staff = '';
+    var staff_id = $(this).attr('data-staff-id');
+    var internal_staff = $(this).attr('data-internal-staff');
+    //alert(staff_id); return false;
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id},{name:'status_value', value:internal_staff},{name:'type', value:'internal_staff'});
+    $.ajax({
+        url: baseUrl+"/api/change-status-staff", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            //console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal({title: "Success", text: response.message, type: "success"});
+                if (internal_staff == '0') {
+                    $('#isInternalStaff').attr('data-internal-staff','1');
+                    $('#isInternalStaff').addClass('active');
+                } else {
+                    $('#isInternalStaff').attr('data-internal-staff','0');
+                    $('#isInternalStaff').removeClass('active');
+                }
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+
+});
+
+$(document).on('click','#isLoginAllowed',function(){
+    var staff_id = '';
+    var login_allowed = '';
+    var staff_id = $(this).attr('data-staff-id');
+    var login_allowed = $(this).attr('data-login-allowed');
+    //alert(login_allowed); return false;
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id},{name:'status_value', value:login_allowed},{name:'type', value:'login_allowed'});
+    $.ajax({
+        url: baseUrl+"/api/change-status-staff", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            //console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal({title: "Success", text: response.message, type: "success"});
+                if (login_allowed == '0') {
+                    $('#isLoginAllowed').attr('data-login-allowed','1');
+                    $('#isLoginAllowed').addClass('active');
+                } else {
+                    $('#isLoginAllowed').attr('data-login-allowed','0');
+                    $('#isLoginAllowed').removeClass('active');
+                }
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+
+});
+
 
 $(document).ready(function(){
     $("#staff_search_btn").click(function(){
@@ -849,7 +1028,7 @@ $(document).ready(function(){
                     }
                 });
             }
-        });
+    });
 
     /*function readURLstaff(input) {
         if (input.files && input.files[0]) {
@@ -868,7 +1047,139 @@ $(document).ready(function(){
         readURLstaff(this);
     });*/
 
+    $('#block_time').click(function(){
+        var staff_id = $('#editStaff').attr('data-staff-id');
+        var data = addCommonParams([]);
+        data.push({name:'staff_id', value:staff_id});
+        $.ajax({
+            url: "<?php echo url('api/block-times')?>",
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function(response) {
+                console.log(response); //Success//
+                if (response.response_status == 1) {
+                    
+                    var date_html = "";
+                    if(response.block_dates.length > 0){
+                        for(i = 0;i<response.block_dates.length;i++){
+                            
+                            date_html += '<div class="tabnewrow">';
+                            date_html += '<div class="row">';
+                            date_html += '<div class="col-md-4"><input name="staff_send_email" type="checkbox" value="1"> '+response.block_dates[i].month+' '+response.block_dates[i].year+'</div>';
+                            date_html += '<div class="col-md-8">';
+                            date_html += '<div class="tabnewdt">';
+                            date_html += '<ul>';
+                            for(j = 0;j<response.block_dates[i].block_dates.length;j++){
+                                date_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_dates[i].block_dates[j]+'<i class="fa fa-trash" aria-hidden="true" title="Delete!"></i></a></li>';
+                            }
+                            date_html += '</ul>';
+                            date_html += '</div>';
+                            date_html += '</div>';
+                            date_html += '</div>';
+                            date_html += '</div>';
+                        }
+                    } else {
+                        date_html += '<div class="tabnewrow">';
+                        date_html += '<div class="row">';
+                        date_html += 'No records found';
+                        date_html += '</div>';
+                        date_html += '</div>';
+                    }
+
+
+                    var time_html = "";
+                    if(response.block_times.length > 0){
+                        for(i = 0;i<response.block_times.length;i++){
+                            
+                            time_html += '<div class="tabnewrow">';
+                            time_html += '<div class="row">';
+                            time_html += '<div class="col-md-4"><input name="" type="checkbox" value="1">'+response.block_times[i].block_date+'</div>';
+                            time_html += '<div class="col-md-8">';
+                            time_html += '<div class="tabnewdt">';
+                            time_html += '<ul>';
+                            for(j = 0;j<response.block_times[i].block_date_time.length;j++){
+                                time_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_times[i].block_date_time[j].start_time+' - '+response.block_times[i].block_date_time[j].end_time+'<i class="fa fa-trash" aria-hidden="true" title="Delete!"></i></a></li>';
+                            }
+                            time_html += '</ul>';
+                            time_html += '</div>';
+                            time_html += '</div>';
+                            time_html += '</div>';
+                            time_html += '</div>';
+                        }
+                    } else {
+                        time_html += '<div class="tabnewrow">';
+                        time_html += '<div class="row">';
+                        time_html += 'No records found';
+                        time_html += '</div>';
+                        time_html += '</div>';
+                    }
+					
+                    $('#blockedDates').html(date_html);
+                    $('#blockedTimes').html(time_html);
+                    
+                } else {
+                    swal('Sorry!', response.response_message, 'error');
+                }
+            },
+            beforeSend: function() {
+                $('.animationload').show();
+            },
+            complete: function() {
+                $('.animationload').hide();
+            }
+        });
+    })
 });
+
+
+$(document).on('click', '#import_staff_icon', function(){
+    $('#staff_import_excel').trigger('click');
+});
+
+$(document).on('change','#staff_import_excel',function(e){
+    e.preventDefault();
+    data = addCommonParams([]);
+    var files = $("#staff_import_form input[type='file']")[0].files;
+    var form_data = new FormData();
+    if(files.length>0){
+        for(var i=0;i<files.length;i++){
+            form_data.append('staff_excel_file',files[i]);
+        }
+    }
+    // append all data in form data 
+    $.each(data, function( ia, l ){
+        form_data.append(l.name, l.value);
+    });
+
+    $.ajax({
+        url: baseUrl+"/api/staff_import", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: form_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false, // The content type used when sending data to the server.
+        cache: false, // To unable request pages to be cached
+        processData: false, // To send DOMDocument or non processed data file it is set to false
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal("Success!", response.message, "success")
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+});
+
 </script>
 
 @endsection
