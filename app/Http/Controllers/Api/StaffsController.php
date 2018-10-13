@@ -528,16 +528,18 @@ class StaffsController extends ApiController {
 			$condition = array(
 	                array('is_deleted', '=', 0),
 	            );
-            $selectField = array('email');
+            $selectField = array('email','username');
             $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$condition,$selectField);
 
-            $exist_staff_array = array();
+            $exist_staff_email = array();
+            $exist_staff_username = array();
         	foreach ($check_staff as $key => $value)
             {
-            	$exist_staff_array[] = $value->email;
+            	$exist_staff_email[] = $value->email;
+            	$exist_staff_username[] = $value->username;
             }
 
-            //echo "<pre>";print_r($exist_staff_array);exit;
+            //echo "<pre>";print_r($exist_staff_email);exit;
             $exist = 0;
             $notExit = 0;
 			if(!empty($excelData) && count($excelData) > 0)
@@ -547,16 +549,47 @@ class StaffsController extends ApiController {
 				{
 					$updateMasterData = array();
 					//echo "<pre>";print_r($row);exit;
-					if(in_array($row['email'],$exist_staff_array))
+					if(in_array($row['email'],$exist_staff_email) && in_array($row['username'],$exist_staff_username))
                     {
                         $exist++;
                     }
                     else
                     {
+                    	$token1 = md5($row['email']);
+						$token2 = md5($row['username']);
+						$token = $token1.$token2;
+						$digits = 8;
+						$password = rand(pow(10, $digits-1), pow(10, $digits)-1);
+
+      					$staff_data['user_id'] = $user_id;
+                    	$staff_data['full_name'] = $row['staff_name']; 
+			            $staff_data['username'] = $row['username'];
+			            $staff_data['password'] = md5($password); 
+			            $staff_data['email'] = $row['email'];
+			            $staff_data['mobile'] = $row['mobile'];
+			            $staff_data['description'] = $row['description'];
+			            //$staff_data['home_phone'] = $row['home_phone']; 
+			            //$staff_data['work_phone'] = $row['work_phone']; 
+			            $staff_data['expertise'] = $row['expertise']; 
+			            //$staff_data['address'] = $row['address'] ? $row['address'] : ''; 
+			            $staff_data['email_verification_code'] = $token;
+			            //print_r($staff_data); die();
+			          
+			          	$insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
+			          	if($insertdata)
+			          	{
+							$emailData['username'] = $row['username'];
+							$emailData['password'] = $password;
+							$emailData['toName'] = $row['staff_name'];
+							$this->sendmail(10,$row['email'],$emailData);
+			          	}
                         $notExit++;
                     }
 				}
 			}
+
+			$this->response_status='1';
+            $this->response_message = $exist .'row exist <br>'.$notExit. 'row successfully insert';
         }
         else
         {

@@ -445,6 +445,14 @@ class BaseApiController extends BaseController
                     $mail_body = $emailData['verification_code'];
                     $emailData['mailBody']=$mail_body;
                 break;
+                case 10: // Stuff username & password
+                    $mail_subject = "Stuff Created";
+                    $mail_body="Dear <br> ".$emailData['toName'].", Here is the Login Credentails of your accont. Username : ".$emailData['username']." Password : ".$emailData['password'];
+                    $emailData['mailBody']=$mail_body;
+                break;
+
+                
+
                 default:
 
                     $is_email_send=false;
