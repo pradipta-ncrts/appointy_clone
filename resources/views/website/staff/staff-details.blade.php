@@ -402,8 +402,96 @@ Squeedr
 
                             </div>
                             <div id="tab4" class="tab-pane fade">
-                            <!--<h3>Menu 4</h3>-->
-                            <p>No record found</p>
+                                <h3 class="tabnewtxt1">Area codes</h3>
+                                <div class="dropdown custm-uperdrop">
+                                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">All<img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">All</a></li>
+                                        <li><a href="#">Active<span class="badge">15</span></a></li>
+                                        <li><a href="#">Inactive<span class="badge">5</span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-5">
+                                    <div id="custom-search-input">
+                                        <div class="input-group col-md-12">
+                                            <input type="text" class="  search-query form-control" placeholder="Search">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-primary btn-xs">Save</button>
+                                    <button type="button" class="btn btn-xs">Cancle</button>
+                                </div>
+                                <p class="tabnewp">Area codes are defined geographical boundaries within a location. Staff can be assigned to these area codes. Customers will only be shown staff members in the area code they select</p>
+
+                                <!--<div class="alert alert-warning mt-20"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Postal Code is a premium feature available in Growth and above membership. <a class="text-danger pull-right" href="javascript:void(0)"><small>Upgrade</small></a></div>-->
+
+                                <div class="staff-detailtab-bx">
+                                    <ul>
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-sm-10">
+                                                    <p>Show area codes on customer interface</p>
+                                                </div>
+
+                                                <div class="col-sm-2">
+                                                    <button type="button" id="isBlocked" class="btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                                        <div class="handle"></div>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="postal-cdbx">
+                                    <div class="dropdown stff-drp">
+                                        <button class="btn dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-expanded="false" title="Select"><i class="fa fa-minus-circle" aria-hidden="true"></i><img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">All</a></li>
+                                            <li><a href="#">None</a></li>
+                                        </ul>
+                                    </div>
+                                    <button type="button" class="btn btn-default btn-xs" title="Set Inactive"><i class="fa fa-ban" aria-hidden="true"></i></button>
+                                </div>
+
+                                <div class="tableBH-table stfftable">
+                                    <table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Area</th>
+                                                <th>Assigned Staffs</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="custm-tblebx">
+                                                        <input name="staff_send_email" type="checkbox" value="1"> 700091
+                                                    </div>
+                                                </td>
+                                                <td>India</td>
+                                                <td>0</td>
+                                                <td>Active</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="custm-tblebx">
+                                                        <input name="staff_send_email" type="checkbox" value="1"> 700081
+                                                    </div>
+                                                </td>
+                                                <td>India</td>
+                                                <td>0</td>
+                                                <td>Active</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -814,6 +902,13 @@ $(document).on('click','#isLoginAllowed',function(){
 
 
 $(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip(); 
+
+    $('#example').DataTable( {
+        "paging":   false,
+        "info":     false
+    } );
+
     $("#staff_search_btn").click(function(){
         var url = "<?php echo url('staff-details')?>";
         var staff_search_text = $("#staff_search_text").val();
@@ -1099,7 +1194,7 @@ $(document).ready(function(){
                             time_html += '<div class="tabnewdt">';
                             time_html += '<ul>';
                             for(j = 0;j<response.block_times[i].block_date_time.length;j++){
-                                time_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_times[i].block_date_time[j].start_time+' - '+response.block_times[i].block_date_time[j].end_time+'<i class="fa fa-trash" aria-hidden="true" title="Delete!"></i></a></li>';
+                                time_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_times[i].block_date_time[j].start_time+' - '+response.block_times[i].block_date_time[j].end_time+'<i class="fa fa-trash delete_block_time" aria-hidden="true" data-block-time-id="'+response.block_times[i].block_date_time[j].block_id+'" title="Delete!"></i></a></li>';
                             }
                             time_html += '</ul>';
                             time_html += '</div>';
@@ -1178,6 +1273,38 @@ $(document).on('change','#staff_import_excel',function(e){
             $('.animationload').show();
         }
     });
+});
+
+
+$(document).on('click','.delete_block_time',function(e){
+    e.preventDefault();
+    data = addCommonParams([]);
+    var block_time_id = $(this).attr('data-block-time-id');
+    data.push({name:'block_time_id', value:block_time_id});
+    //alert(block_time_id);
+    /*$.ajax({
+        url: baseUrl+"/api/delete_block_time", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal("Success!", response.message, "success")
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });*/
 });
 
 </script>

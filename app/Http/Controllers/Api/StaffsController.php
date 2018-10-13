@@ -591,17 +591,6 @@ class StaffsController extends ApiController {
         $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectField);
         if($check_staff){
             // Block Date //
-            $findCond=array(
-                array('user_id','=',$user_no),
-                array('staff_id','=',$staff_id),
-                array('start_time','=',""),
-                array('end_time','=',""),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-            );
-
-            //$selectField = array('block_id','GROUP_CONCAT(block_date)');
-            //$block_dates = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="YEAR(block_date), MONTH(block_date)",$havings=array(),$limit=0,$offset=0,$is_count=0);
             $query = "select `squ_block_date_time`.`block_id`, MONTHNAME(`squ_block_date_time`.`block_date`) AS month, YEAR(`squ_block_date_time`.`block_date`) AS year, GROUP_CONCAT(squ_block_date_time.block_date) AS block_dates 
             from `squ_block_date_time` 
             where `squ_block_date_time`.`user_id` = ".$user_no." 
@@ -643,6 +632,8 @@ class StaffsController extends ApiController {
                     array('user_id','=',$user_no),
                     array('staff_id','=',$staff_id),
                     array('block_date','=',$block_times[$i]->block_date),
+                    array('start_time','!=',''),
+                    array('end_time','!=',''),
                     array('is_deleted','=','0'),
                     array('is_blocked','=','0'),
                 );
