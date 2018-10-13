@@ -696,6 +696,19 @@ class UsersController extends ApiController {
         	$profile_image = $request->input('old_profile_image');
         }
 
+        if($request->file('timeline_image'))
+        {
+			$image = $request->file('timeline_image');
+			$name = time().'.'.$image->getClientOriginalExtension();
+			$destinationPath = public_path('/image/timeline_image');
+			$image->move($destinationPath, $name);
+			$timeline_image = $name;
+        }
+        else
+        {
+        	$timeline_image = $request->input('old_timeline_image');
+        }
+
 
 		$updateData = array(
 				'facebook_link' => $facebook_link,
@@ -703,6 +716,7 @@ class UsersController extends ApiController {
 				'linked_in_link' => $linked_in_link,
 				'user_wesite_link' => $user_wesite_link,
 				'profile_image' => $profile_image,
+				'timeline_image' => $timeline_image,
 		);
 
 		$user_no = $_COOKIE['sqd_user_no'];

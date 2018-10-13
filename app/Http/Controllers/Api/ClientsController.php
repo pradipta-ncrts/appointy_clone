@@ -712,6 +712,46 @@ class ClientsController extends ApiController {
         $this->json_output($response_data);
     }
 
+    
+    public function client_login(Request $request)
+    {
+        $response_data=array();
+        // validated the parameters
+        $validator = Validator::make($request->all(), [
+            'email' => 'bail|required',
+            'password' => 'bail|required',
+        ]);
+        if(!$validator->fails())
+        {
+            //validate the user details
+
+            $table_name = $this->tableObj->tableNameStaff;
+            $password = $request->input('password');
+            $email = $request->input('email');
+            $conditions = array(
+                array('password','=',md5($password)),
+                'or'=>array('email'=>$email,'username'=>$email)
+            );
+            $selectFields=array();
+            $user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
+            if(empty($user))
+            {
+                $this->response_message="Email/Username and password does not match.";
+            }
+            else
+            {
+                $this->response_status='1';
+            }
+        }
+        else
+        {
+            // if parameter validation checked faild
+            $errors = $validator->errors()->messages();
+            $this->response_message = $this->forErrorMessage($errors);
+        }
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
 
 
 }

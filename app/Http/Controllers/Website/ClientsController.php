@@ -142,12 +142,85 @@ class ClientsController extends ApiController {
 
 	function business_provider($parameter=NULL)
 	{
-	return view('website.client.my-squeeder-page');
+		$username = $parameter; 
+		$findCond = array(
+            array('username','=',$username),
+			array('is_deleted','=','0'),
+		);
+		$selectFields = array();
+		$profession_select_field = array('profession as prof');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameProfession,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableNameUser,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('profession','=','profession_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $profession_select_field,
+		            ),
+        );
+		$user_details = $this->common_model->fetchData($this->tableObj->tableNameUser, $findCond, $selectFields,$joins);
+
+		//staff list
+		$staffCondition = array(
+            array('user_id','=',$user_details->id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+		$staffFields = array();
+		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff, $staffCondition, $staffFields);
+
+		//service list
+		$servCond = array(
+            array('user_id','=',$user_details->id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+		$serviceFields = array();
+		$currency_field = array('currency');
+		$category_select_field = array('category as cat');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameCurrency,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('currency_id','=','currency_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $currency_field,
+		            ),
+		            array(
+		                'join_table'=>$this->tableObj->tableNameCategory,
+		                'join_table_alias'=>'servTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                'join_type'=>'left',
+		                'join_on'=>array('category_id','=','category_id'),
+		                'join_on_more'=>array(),
+		                //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+		                'select_fields' => $category_select_field,
+	            	),
+        );
+
+		$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
+
+		
+		$data['user_details'] = $user_details;
+		$data['staff_list'] = $staff_list;
+		$data['service_list'] = $service_list;
+		return view('website.client.my-squeeder-page',$data);
 	}
 	
 	function client_service_details($parameter=NULL)
 	{
-	return view('website.client.client-service-details');
+		return view('website.client.client-service-details');
+	}
+
+	function client_login($parameter=NULL)
+	{
+		return view('website.client.client-login');
 	}
 	
 }
