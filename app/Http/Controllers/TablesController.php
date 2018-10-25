@@ -61,7 +61,7 @@ class TablesController {
 
         $this->tableNamePaymentOptions = config('constants.tables.payment_option');
 
-        
+        $this->tableNameStaffServiceAvailability = config('constants.tables.staff_service_availability');
 
 
 

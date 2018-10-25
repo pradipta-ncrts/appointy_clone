@@ -544,59 +544,78 @@ class StaffsController extends ApiController {
             $notExit = 0;
 			if(!empty($excelData) && count($excelData) > 0)
 			{
-				$excel_rows = $excelData->toArray();
-				foreach ($excel_rows as $row)
-				{
-					$updateMasterData = array();
-					//echo "<pre>";print_r($row);exit;
-					if(in_array($row['email'],$exist_staff_email) && in_array($row['username'],$exist_staff_username))
-                    {
-                        $exist++;
-                    }
-                    else
-                    {
-                    	$token1 = md5($row['email']);
-						$token2 = md5($row['username']);
-						$token = $token1.$token2;
-						$digits = 8;
-						$password = rand(pow(10, $digits-1), pow(10, $digits)-1);
-
-      					$staff_data['user_id'] = $user_id;
-                    	$staff_data['full_name'] = $row['staff_name']; 
-			            $staff_data['username'] = $row['username'];
-			            $staff_data['password'] = md5($password); 
-			            $staff_data['email'] = $row['email'];
-			            $staff_data['mobile'] = $row['mobile'];
-			            $staff_data['description'] = $row['description'];
-			            //$staff_data['home_phone'] = $row['home_phone']; 
-			            //$staff_data['work_phone'] = $row['work_phone']; 
-			            $staff_data['expertise'] = $row['expertise']; 
-			            //$staff_data['address'] = $row['address'] ? $row['address'] : ''; 
-			            $staff_data['email_verification_code'] = $token;
-			            //print_r($staff_data); die();
-			          
-			          	$insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
-			          	if($insertdata)
-			          	{
-							$emailData['username'] = $row['username'];
-							$emailData['password'] = $password;
-							$emailData['toName'] = $row['staff_name'];
-							$this->sendmail(10,$row['email'],$emailData);
-			          	}
-                        $notExit++;
-                    }
-				}
+                $excel_rows = $excelData->toArray();
+                //echo "<pre>";print_r($excel_rows);exit;
+                if(!empty($excel_rows)){
+                    if(isset($excel_rows[0]['email']) && $excel_rows[0]['email']!='' && isset($excel_rows[0]['username']) && $excel_rows[0]['username']!='' && isset($excel_rows[0]['staff_name']) && $excel_rows[0]['staff_name']!=''){
+                        foreach ($excel_rows as $row)
+                        {
+                            $updateMasterData = array();
+                            //echo "<pre>";print_r($row);exit;
+                            if(!empty($row)){
+                                
+                                if(in_array($row['email'],$exist_staff_email) && in_array($row['username'],$exist_staff_username))
+                                {
+                                    $exist++;
+                                }
+                                else
+                                {
+                                    $token1 = md5($row['email']);
+                                    $token2 = md5($row['username']);
+                                    $token = $token1.$token2;
+                                    $digits = 8;
+                                    $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
+            
+                                    $staff_data['user_id'] = $user_id;
+                                    $staff_data['full_name'] = $row['staff_name']; 
+                                    $staff_data['username'] = $row['username'];
+                                    $staff_data['password'] = md5($password); 
+                                    $staff_data['email'] = $row['email'];
+                                    $staff_data['mobile'] = $row['mobile'];
+                                    $staff_data['description'] = $row['description'];
+                                    //$staff_data['home_phone'] = $row['home_phone']; 
+                                    //$staff_data['work_phone'] = $row['work_phone']; 
+                                    $staff_data['expertise'] = $row['expertise']; 
+                                    //$staff_data['address'] = $row['address'] ? $row['address'] : ''; 
+                                    $staff_data['email_verification_code'] = $token;
+                                    //print_r($staff_data); die();
+                                    
+                                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
+                                        if($insertdata)
+                                        {
+                                        $emailData['username'] = $row['username'];
+                                        $emailData['password'] = $password;
+                                        $emailData['toName'] = $row['staff_name'];
+                                        $this->sendmail(10,$row['email'],$emailData);
+                                        }
+                                    $notExit++;
+                                }
+                                
+                                
+                            } else {
+                                $this->response_message = "No records to import.";
+                            }
+                            
+                        }
+                    } else {
+                        $this->response_message = "Plase upload proper excel file.";
+                    }  
+                } else {
+                    $this->response_message = "No records to import.";
+                }
+				
 			}
 
 			$this->response_status='1';
-            $this->response_message = $exist .'row exist <br>'.$notExit. 'row successfully insert';
+            //$this->response_message = $exist.' records exists, '.$notExit.' records successfully inserted.';
+            $this->response_message = $notExit.' records successfully inserted.';
         }
         else
         {
         	$this->response_message = "Only excel file can import.";
         }
 
-        echo 'e'.$exist.'/ne'.$notExit; die();
+        //echo 'e'.$exist.'/ne'.$notExit; die();
         $this->json_output($response_data);
 
     }
@@ -693,11 +712,153 @@ class StaffsController extends ApiController {
     }
 
 
+    public function delete_staff_block_time(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+
+        $block_time_id = $request->input('block_time_id');
+        $staff_id = $request->input('staff_id');
+
+        $conditions = array(
+            array('staff_id','=',$staff_id),
+            array('user_id','=',$user_id),
+            array('block_id','=',$block_time_id),
+            array('is_blocked','=','0'),
+        );
+
+        $result = $this->common_model->fetchData($this->tableObj->tableNameBlockDateTime,$conditions);
+        //echo '<pre>'; print_r($result); exit;
+        if(empty($result))
+        {
+            $this->response_message = "Invalid details.";
+        }
+        else
+        {
+            $update_data['is_deleted'] = 1;
+
+            $update = $this->common_model->update_data($this->tableObj->tableNameBlockDateTime,$conditions,$update_data);
+            
+            $this->response_status='1';
+            $this->response_message = "Blocked times deleted successfully.";
+        }
+        
+        $this->json_output($response_data);
+    }
 
 
+    public function staff_service_availability(Request $request){
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_no = $this->logged_user_no;
+        $staff_id = $request->input('staff_id');
+        $service_id = $request->input('service_id');
+
+        $findCond=array(
+            array('service_id','=',$service_id),
+            array('staff_id','=',$staff_id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
+        $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$findCond,$selectField);
+        
+    }
 
 
+    public function add_staff_service_availability(Request $request)
+    {
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
 
+        $staff_id = $request->input('staff_id');
+        $day = $request->input('day');
+        $availability_start_time = $request->input('availability_start_time');
+        $availability_end_time = $request->input('availability_end_time');
+        $service_ids = $request->input('service_ids');
+
+        if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
+            $total_records = count($day);
+            for($i=0;$i<$total_records;$i++){
+                $insert_data[] = array('staff_id'=>$staff_id,
+                                        'service_id'=>'',
+                                        'day'=>$day[$i],
+                                        'start_time'=>$availability_start_time[$i],
+                                        'end_time'=>$availability_end_time[$i]
+                                        );
+            }
+            //echo '<pre>'; print_r($insert_data); exit;
+            $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
+            
+        } else {
+            $this->response_message="Required filed is missing.";
+        }
+        
+        
+        $this->json_output($response_data);
+
+    }
+
+    public function services_lists(Request $request)
+    {
+        //date_default_timezone_set('Asia/Kolkata');
+        // Check User Login. If not logged in redirect to login page /
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $user_no = $this->logged_user_no;
+
+        $service_ids = $request->input('service_ids');
+        $service_id = explode(',', $service_ids);
+
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            'in'=>array('service_id' => $service_id)
+        );
+        
+        $selectFields=array();
+        $staff_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$findCond,$selectFields);
+
+        $service_name = array();
+        //$service_id = array();
+        foreach ($staff_list as $key => $value) 
+        {
+            $service_name[] = $value->service_name;
+            //$service_id[] = $value->service_id;
+        }
+
+        $service_name = implode(',', $service_name);
+        //$service_ids = implode(',', $service_id);
+        if($service_name==''){
+            $service_name = "SELECT SERVICE";
+        }
+
+        $this->response_status='1';
+        $response_data['service_name'] = $service_name;
+        $response_data['service_ids'] = $service_ids;
+        $this->json_output($response_data);
+
+    }
 
 
 }

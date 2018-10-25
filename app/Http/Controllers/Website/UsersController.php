@@ -686,6 +686,10 @@ class UsersController extends ApiController {
 		exit;
 	}
 
+	public function event_viewer(){
+		return view('website.event-viewer');
+	}
+
 
 	
 }

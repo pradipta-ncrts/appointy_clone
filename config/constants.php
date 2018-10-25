@@ -40,6 +40,8 @@ return [
         
         'payment_option' => 'payment_option',
 
+        'staff_service_availability' => 'staff_service_availability',
+
 
 
     ],

@@ -643,6 +643,69 @@ $(".email_cutomisation_form").submit(function(e) {
        }
    });
 //=================apoinmnet Reschedule end=====================================
+$('#select_service').on('click', function(e) {
+    e.preventDefault();
+    $("#serviceListModal").modal('show');
+});
+
+$('.service-select-all').click(function(event) { 
+    event.preventDefault();
+    // Iterate each checkbox
+    $('input:checkbox[name=filter_service_id]').each(function() {
+      if ( $(this).is(':visible'))
+      {
+        this.checked = true;  
+      }
+        //this.checked = true;                        
+    });
+});
+
+$('.service-deselect-all').click(function(event) { 
+    event.preventDefault();
+    // Iterate each checkbox
+    $('input:checkbox[name=filter_service_id]').each(function() {
+    if ( $(this).is(':visible'))
+     {
+        this.checked = false;  
+     }                      
+    });
+});
+
+$('#add-service-into-input').click(function(event) { 
+    event.preventDefault();
+    var service_ids = [];
+    $("input:checkbox[name=filter_service_id]:checked").each(function(){
+        service_ids.push($(this).val());
+    });
+  
+    let data = addCommonParams([]);
+    data.push({name:'service_ids',value:service_ids});
+    $.ajax({
+        url: baseUrl+"/api/services_lists", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            console.log(response);
+            if(response.response_status=='1')
+            {
+                $("#select_services").text(response.service_name); 
+                $("#service_ids").val(response.service_ids); 
+                $("#serviceListModal").modal('hide');
+                $('.animationload').hide();     
+            } 
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('#myModalAppointmentContent').modal('hide');
+        }
+    });
+});
 
 //=================Block Date Start=============================================
 

@@ -33,6 +33,7 @@ class BaseApiController extends BaseController
     public $logged_user;
     public $date_format;
     public $tableObj;
+    public $weekdays;
     // all table name params 
 
 
@@ -47,6 +48,7 @@ class BaseApiController extends BaseController
         $this->device_token_key = '';
         $this->user_request_key ='';
         $this->date_format=date("Y-m-d H:i:s");
+        $this->weekdays = array('1'=>'MON','2'=>'TUE','3'=>'WED','4'=>'THU','5'=>'FRI','6'=>'SAT','7'=>'SUN');
         // table object 
         $this->tableObj=new TablesController();
         //Load Model

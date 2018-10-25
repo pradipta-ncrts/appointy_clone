@@ -94,10 +94,10 @@ Squeedr
                     <!-- Nav tabs -->
                     <div class="staff-detail">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" id="detailsTab" href="#tab1">Details</a></li>
-                            <li><a data-toggle="tab" href="#tab2">Availability</a></li>
+                            <li class="active"><a data-toggle="tab" href="#tab1"id="detailsTab">Details</a></li>
+                            <li><a data-toggle="tab" href="#tab2" id="availabilityTab">Availability</a></li>
                             <li><a data-toggle="tab" href="#tab3" id="block_time" >Block Time</a></li>
-                            <li><a data-toggle="tab" href="#tab4">Postal Codes</a></li>
+                            <li><a data-toggle="tab" href="#tab4" id="postalcodeTab">Postal Codes</a></li>
                         </ul>
                         <div class="tab-content">
                             <div id="tab1" class="tab-pane fade in active">
@@ -190,10 +190,10 @@ Squeedr
                             <div id="tab2" class="tab-pane fade">
                                 <!--<h3>Menu 2</h3>-->
                                 <!--<p>No record found</p>-->
-                                <ul class="nav nav-tabs staff-inertab">
+                                <!--<ul class="nav nav-tabs staff-inertab">
                                     <li class="active"><a data-toggle="tab" href="#regulariner1" aria-expanded="false">REGULAR</a></li>
                                     <li ><a data-toggle="tab" href="#irregulariner1" aria-expanded="true">IRREGULAR</a></li>
-                                </ul>
+                                </ul>-->
                                 <div class="tab-content" style="padding:0;">
                                     <div id="regulariner1" class="tab-pane fade active in">
                                         <div class="row">
@@ -201,21 +201,21 @@ Squeedr
                                             <div class="col-md-6">
                                             <div class="dropdown custm-uperdrop">
                                                 <button class="btn dropdown-toggle staff-drptxt" type="button" data-toggle="dropdown" aria-expanded="false">Current Schedule (23 May 2018 - 01 Jan 2070)</button>
-                                                <ul class="dropdown-menu">
+                                                <!--<ul class="dropdown-menu">
                                                     <li class="custm-staffdrp">Current Schedule (23 May 2018 - 01 Jan 2070) 
                                                         <a href="#" data-toggle="modal" data-target="#myModaledit"><i class="fa fa-pencil"></i></a>
                                                         <a href="#"><i class="fa fa-trash-o"></i></a>
                                                     </li>
                                                     <li><a href="#" data-toggle="modal" data-target="#myModalnew-schedule"> Add new schedule </a></li>
-                                                </ul>
+                                                </ul>-->
                                             </div>
                                             </div>
                                             <div class="col-md-3">
                                             <div class="dropdown custm-uperdrop">
-                                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"><img src="images/add-circular-button.png" alt="" height="18"></button>
+                                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"><img src="{{asset('public/assets/website/images/add-circular-button.png')}}" alt="" height="18"></button>
                                                 <ul class="dropdown-menu">
                                                     <li><a href="#" data-toggle="modal" data-target="#myModalregular">Regular</a></li>
-                                                    <li><a href="#" data-toggle="modal" data-target="#myModalirregular">Irregular</a></li>
+                                                    <!--<li><a href="#" data-toggle="modal" data-target="#myModalirregular">Irregular</a></li>-->
                                                 </ul>
                                             </div>
                                             </div>
@@ -283,7 +283,7 @@ Squeedr
                                             </table>
                                         </div>
                                     </div>
-                                    <div id="irregulariner1" class="tab-pane fade">
+                                    <!--<div id="irregulariner1" class="tab-pane fade">
                                         <div class="row">
                                             <div class="col-md-3"></div>
                                             <div class="col-md-6 text-center">
@@ -365,7 +365,7 @@ Squeedr
                                             </tbody>
                                             </table>
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                             <div id="tab3" class="tab-pane fade">
@@ -411,7 +411,7 @@ Squeedr
                                         <li><a href="#">Inactive<span class="badge">5</span></a></li>
                                     </ul>
                                 </div>
-                                <div class="col-md-5">
+                                <!--<div class="col-md-5">
                                     <div id="custom-search-input">
                                         <div class="input-group col-md-12">
                                             <input type="text" class="  search-query form-control" placeholder="Search">
@@ -420,10 +420,11 @@ Squeedr
                                             </span>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="pull-right">
-                                    <button type="button" class="btn btn-primary btn-xs">Save</button>
-                                    <button type="button" class="btn btn-xs">Cancle</button>
+                                    <!--<button type="button" class="btn btn-primary btn-xs">Save</button>
+                                    <button type="button" class="btn btn-xs">Cancle</button>-->
+                                    <button type="button" class="btn btn-primary btn-xs">Add</button>
                                 </div>
                                 <p class="tabnewp">Area codes are defined geographical boundaries within a location. Staff can be assigned to these area codes. Customers will only be shown staff members in the area code they select</p>
 
@@ -906,7 +907,7 @@ $(document).ready(function(){
 
     $('#example').DataTable( {
         "paging":   false,
-        "info":     false
+        //"info":     false
     } );
 
     $("#staff_search_btn").click(function(){
@@ -1161,12 +1162,12 @@ $(document).ready(function(){
                             
                             date_html += '<div class="tabnewrow">';
                             date_html += '<div class="row">';
-                            date_html += '<div class="col-md-4"><input name="staff_send_email" type="checkbox" value="1"> '+response.block_dates[i].month+' '+response.block_dates[i].year+'</div>';
+                            date_html += '<div class="col-md-4"> '+response.block_dates[i].month+' '+response.block_dates[i].year+'</div>';
                             date_html += '<div class="col-md-8">';
                             date_html += '<div class="tabnewdt">';
                             date_html += '<ul>';
                             for(j = 0;j<response.block_dates[i].block_dates.length;j++){
-                                date_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_dates[i].block_dates[j]+'<i class="fa fa-trash" aria-hidden="true" title="Delete!"></i></a></li>';
+                                date_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_dates[i].block_dates[j]+'<i class="fa fa-trash delete_block_time" data-block-time-id="'+response.block_dates[i].block_id+'" aria-hidden="true" title="Delete!"></i></a></li>';
                             }
                             date_html += '</ul>';
                             date_html += '</div>';
@@ -1189,7 +1190,7 @@ $(document).ready(function(){
                             
                             time_html += '<div class="tabnewrow">';
                             time_html += '<div class="row">';
-                            time_html += '<div class="col-md-4"><input name="" type="checkbox" value="1">'+response.block_times[i].block_date+'</div>';
+                            time_html += '<div class="col-md-4">'+response.block_times[i].block_date+'</div>';
                             time_html += '<div class="col-md-8">';
                             time_html += '<div class="tabnewdt">';
                             time_html += '<ul>';
@@ -1224,7 +1225,127 @@ $(document).ready(function(){
                 $('.animationload').hide();
             }
         });
-    })
+    });
+
+    $('#availabilityTab').click(function(){
+        var staff_id = $('#editStaff').attr('data-staff-id');
+        var data = addCommonParams([]);
+        data.push({name:'staff_id', value:staff_id});
+        $.ajax({
+            url: "<?php echo url('api/staff_service_availability')?>",
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function(response) {
+                console.log(response); //Success//
+                /*if (response.response_status == 1) {
+                    
+                    var date_html = "";
+                    if(response.block_dates.length > 0){
+                        for(i = 0;i<response.block_dates.length;i++){
+                            
+                            date_html += '<div class="tabnewrow">';
+                            date_html += '<div class="row">';
+                            date_html += '<div class="col-md-4"> '+response.block_dates[i].month+' '+response.block_dates[i].year+'</div>';
+                            date_html += '<div class="col-md-8">';
+                            date_html += '<div class="tabnewdt">';
+                            date_html += '<ul>';
+                            for(j = 0;j<response.block_dates[i].block_dates.length;j++){
+                                date_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_dates[i].block_dates[j]+'<i class="fa fa-trash delete_block_time" data-block-time-id="'+response.block_dates[i].block_id+'" aria-hidden="true" title="Delete!"></i></a></li>';
+                            }
+                            date_html += '</ul>';
+                            date_html += '</div>';
+                            date_html += '</div>';
+                            date_html += '</div>';
+                            date_html += '</div>';
+                        }
+                    } else {
+                        date_html += '<div class="tabnewrow">';
+                        date_html += '<div class="row">';
+                        date_html += 'No records found';
+                        date_html += '</div>';
+                        date_html += '</div>';
+                    }
+
+
+                    var time_html = "";
+                    if(response.block_times.length > 0){
+                        for(i = 0;i<response.block_times.length;i++){
+                            
+                            time_html += '<div class="tabnewrow">';
+                            time_html += '<div class="row">';
+                            time_html += '<div class="col-md-4">'+response.block_times[i].block_date+'</div>';
+                            time_html += '<div class="col-md-8">';
+                            time_html += '<div class="tabnewdt">';
+                            time_html += '<ul>';
+                            for(j = 0;j<response.block_times[i].block_date_time.length;j++){
+                                time_html += '<li><a data-toggle="tooltip" data-placement="top" >'+response.block_times[i].block_date_time[j].start_time+' - '+response.block_times[i].block_date_time[j].end_time+'<i class="fa fa-trash delete_block_time" aria-hidden="true" data-block-time-id="'+response.block_times[i].block_date_time[j].block_id+'" title="Delete!"></i></a></li>';
+                            }
+                            time_html += '</ul>';
+                            time_html += '</div>';
+                            time_html += '</div>';
+                            time_html += '</div>';
+                            time_html += '</div>';
+                        }
+                    } else {
+                        time_html += '<div class="tabnewrow">';
+                        time_html += '<div class="row">';
+                        time_html += 'No records found';
+                        time_html += '</div>';
+                        time_html += '</div>';
+                    }
+					
+                    $('#blockedDates').html(date_html);
+                    $('#blockedTimes').html(time_html);
+                    
+                } else {
+                    swal('Sorry!', response.response_message, 'error');
+                }*/
+            },
+            beforeSend: function() {
+                $('.animationload').show();
+            },
+            complete: function() {
+                $('.animationload').hide();
+            }
+        });
+    });
+
+
+    $('#add_staff_availability_form').validate({
+
+            submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            data = addCommonParams(data);
+            var staff_id = $('#editStaff').attr('data-staff-id');
+            data.push({name:'staff_id', value:staff_id});
+            //console.log(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: data,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response); //Success//
+                    /*if (response.response_status == 1) {
+                        $(form)[0].reset();
+                        $('#myModalnewteam').modal('hide');
+                        swal('Success!', response.response_message, 'success');
+                        location.reload();
+                    } else {
+                        swal('Sorry!', response.response_message, 'error');
+                    }*/
+                },
+                beforeSend: function() {
+                    $('.animationload').show();
+                },
+                complete: function() {
+                    $('.animationload').hide();
+                }
+            });
+        }
+    });
+    
 });
 
 
@@ -1278,34 +1399,61 @@ $(document).on('change','#staff_import_excel',function(e){
 
 $(document).on('click','.delete_block_time',function(e){
     e.preventDefault();
-    data = addCommonParams([]);
+    //data = addCommonParams([]);
     var block_time_id = $(this).attr('data-block-time-id');
-    data.push({name:'block_time_id', value:block_time_id});
-    //alert(block_time_id);
-    /*$.ajax({
-        url: baseUrl+"/api/delete_block_time", // Url to which the request is send
-        type: "POST", // Type of request to be send, called as method
-        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-        dataType: "json",
-        success: function(response) // A function to be called if request succeeds
-        {
-            console.log(response);
-            $('.animationload').hide();
-            if(response.result=='1')
-            {
-                swal("Success!", response.message, "success")
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will never access this blocked date/time!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, I am sure!',
+        cancelButtonText: "No, not now!",
+        closeOnConfirm: false,
+        closeOnCancel: true
+        },function(isConfirm){
+
+            if (isConfirm){
+                var data = addCommonParams([]);
+                //alert(serviceid);
+                data.push({name:'block_time_id', value:block_time_id},
+                          {name:'staff_id', value:staff_id});
+                $.ajax({
+                    url: baseUrl+"/api/delete_staff_block_time", // Url to which the request is send
+                    type: "POST", // Type of request to be send, called as method
+                    data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+                    dataType: "json",
+                    success: function(response) // A function to be called if request succeeds
+                    {
+                        //console.log(response);
+                        $('.animationload').hide();
+                        if(response.result=='1')
+                        {
+                            //swal("Success!", response.message, "success")
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                location.reload();
+                            });
+                        }
+                        else
+                        {
+                            swal("Error", response.message , "error");
+                        }
+                    },
+                    beforeSend: function()
+                    {
+                        $('.animationload').show();
+                    }
+                });
             }
-            else
-            {
-                swal("Error", response.message , "error");
-            }
-        },
-        beforeSend: function()
-        {
-            $('.animationload').show();
-        }
-    });*/
+        });
+
+
 });
+
+
 
 </script>
 

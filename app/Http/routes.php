@@ -59,6 +59,11 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/staff-details','Api\StaffsController@staff_details');
     Route::post('/delete-staff','Api\StaffsController@staff_delete');
     Route::post('/block-times','Api\StaffsController@block_times');
+    Route::post('/staff_service_availability','Api\StaffsController@staff_service_availability');
+    Route::post('/add_staff_service_availability','Api\StaffsController@add_staff_service_availability');
+    Route::post('/delete_staff_block_time','Api\StaffsController@delete_staff_block_time');
+    Route::post('/services_lists','Api\StaffsController@services_lists');
+
     Route::post('/add_client','Api\ClientsController@add_client');
     Route::post('/client_list','Api\ClientsController@client_list');
     Route::post('/email_customisation_data','Api\BookingsController@email_customisation_data');
@@ -159,6 +164,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/privacy-settings','Website\UsersController@privacy_settings');
     Route::post('/email_customisation','Website\BookingsController@email_customisation');
     Route::get('/help','Website\UsersController@help');
+    Route::get('/event-viewer','Website\UsersController@event_viewer');
 
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
