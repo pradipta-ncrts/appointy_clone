@@ -108,7 +108,7 @@
             <li class="c-menu__item"><a href="{{ url('booking-rules') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/booking-rules.png')}}" alt=""> Booking Rules</a> <span>Control how, what, when</span> </li>
             <li class="c-menu__item"><a href="{{ url('notification-settings') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/notification.png')}}" alt=""> Notification</a> <span>Control email and text alerts</span> </li>
             <li class="c-menu__item"><a href="#" onclick="showSqeeder();" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/sqeedr.png')}}" alt=""> Your Squeedr Page</a> <span>Add, edit or delete info</span> </li>
-            <li class="c-menu__item"><a href="#" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/event-viewer.png')}}" alt=""> Event Viewer</a> <span>View and control events</span> </li>
+            <li class="c-menu__item"><a href="{{ url('event-viewer') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/event-viewer.png')}}" alt=""> Event Viewer</a> <span>View and control events</span> </li>
          </ul>
       </div>
       <!--End /c-menu slide-left --> <!-- /c-menu slide-right --> 
@@ -778,248 +778,73 @@
             </div>
          </div>
       </div>
+
       <div class="modal fade" id="myModalregular" role="dialog">
          <div class="modal-dialog modal-md">
             <div class="modal-content new-modalcustm">
+            <form name="add_staff_availability_form" id="add_staff_availability_form" method="post" action="{{url('api/add_staff_service_availability')}}">
                <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button> 
-                  <h4 class="modal-title">Add Schedule for Cheb</h4>
+                  <h4 class="modal-title">Add Schedule</h4>
                </div>
                <div class="modal-body clr-modalbdy">
                   <div class="regular-frmbx">
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-1" type="checkbox" value="value1"> <label for="styled-checkbox-1">Mon</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
+                    <?php
+                    $weekdays = array('1'=>'MON','2'=>'TUE','3'=>'WED','4'=>'THU','5'=>'FRI','6'=>'SAT','7'=>'SUN');
+                    foreach($weekdays as $key=>$val){
+                    ?>
+                        <div class="row">
+                            <div class="col-md-3"> <input class="styled-checkbox" name="day[]" id="styled-checkbox-{{$key}}" type="checkbox" value="{{$key}}"> <label for="styled-checkbox-{{$key}}">{{$val}}</label></div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon"></span>
+                                    <div class="form-group nomarging color-b" >
+                                    <!--<select >
+                                        <option>Start Time</option>
+                                    </select>-->
+                                    <input class="form-control availability_start_time" name="availability_start_time[]" id="availability_start_time_{{$key}}" type="text" value="" disabled="">
                                     <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="tocls">To</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon"></span>
+                                    <div class="form-group nomarging color-b" >
+                                    <!--<select >
+                                        <option>End Time</option>
+                                    </select>-->
+                                    <input class="form-control availability_end_time" name="availability_end_time[]" id="availability_end_time_{{$key}}" type="text" value="" disabled="">
                                     <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    <?php
+                    }
+                    ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                           <div class="mlf-30" id="select_service" style="cursor:pointer"> <span class="child-outline child-outline--dark"></span> <span id="select_services">SELECT SERVICE<span>  </div>
+                           <input type="hidden" name="service_ids" id="service_ids" value="">
                         </div>
                      </div>
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-2" type="checkbox" value="value2"> <label for="styled-checkbox-2">Tue</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-3" type="checkbox" value="value3"> <label for="styled-checkbox-3">Wed</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-4" type="checkbox" value="value4"> <label for="styled-checkbox-4">Thu</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-5" type="checkbox" value="value5"> <label for="styled-checkbox-5">Fri</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-6" type="checkbox" value="value6"> <label for="styled-checkbox-6">Sat</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="row">
-                        <div class="col-md-3"> <input class="styled-checkbox" id="styled-checkbox-7" type="checkbox" value="value7"> <label for="styled-checkbox-7">Sun</label></div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>Start Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="col-md-1">
-                           <div class="tocls">To</div>
-                        </div>
-                        <div class="col-md-4">
-                           <div class="form-group">
-                              <div class="input-group">
-                                 <span class="input-group-addon"></span> 
-                                 <div class="form-group nomarging color-b" >
-                                    <select >
-                                       <option>End Time</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
+
                   </div>
                </div>
                <div class="modal-footer">
-                  <div class="col-md-12 text-center"> <a class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">ADD</a> </div>
+                  <div class="col-md-12 text-center"> <button type="submit" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">ADD</button> </div>
                </div>
+            </form>
             </div>
          </div>
       </div>
-      <div class="modal fade" id="myModalirregular" role="dialog">
+
+      <!--<div class="modal fade" id="myModalirregular" role="dialog">
          <div class="modal-dialog modal-md">
             <div class="modal-content new-modalcustm">
                <div class="modal-header">
@@ -1106,7 +931,8 @@
                </div>
             </div>
          </div>
-      </div>
+      </div>-->
+
       <div class="modal fade" id="myModaledit" role="dialog">
          <div class="modal-dialog modal-md">
             <div class="modal-content new-modalcustm">
@@ -1619,6 +1445,50 @@
     </div>
 
     <!--====================================Modal area End ========================================-->
+
+    <div class="modal fade" id="serviceListModal" role="dialog">
+      <div class="modal-dialog add-pop">
+         <!-- Modal content--> 
+        <div class="modal-content new-modalcustm">
+            <form name="" id="" method="post" action="" enctype="multipart/form-data">
+                <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal">×</button>
+                   <h4 class="modal-title">Select Service</h4>
+                </div>
+                <div class="filter-op"> <!-- All staff selected -->   <span><a href="JavaScript:Void(0);" class="service-select-all">Select All</a>  &nbsp; | &nbsp;  <a href="JavaScript:Void(0);" class="service-deselect-all">Deselect All</a></span></div>
+                <div class="modal-body clr-modalbdy">
+                   <div class="notify" >
+                      <input type="text" id="serviceFilter" class="input-block-level form-control search-ap" placeholder="Search Service" >
+                      <?php
+                      foreach ($services_list['service_list'] as $key => $value)
+                      {   
+                      ?>
+                          <div class="user-bkd break20px">
+                          <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded">
+                           <h2><?=$value->service_name;?>
+                           </h2>
+                           <div class="row">
+                              <div class="check-ft">
+                                 <div class="form-group"> 
+                                  <input name="filter_service_id" class="calender-inpt" type="checkbox" value="<?=$value->service_id;?>">
+                                </div>
+                              </div>
+                           </div>
+                         </div>
+                      <?php
+                      }
+                      ?>
+                   </div>
+                   <div class="butt-pop-ft">
+                       <button type="submit" id="add-service-into-input" class="btn btn-primary butt-next">Done</button> 
+                       <a href="JavaScript:Void(0);" id="cancel-service-list" class="btn btn-primary butt-next" style="margin-bottom: -20px;">Cancel</a> 
+                    </div>
+                </div>
+            </form>
+          </div>
+      </div>
+   </div>
+
     <!--=========================Stuff List Modal Start==========================-->
    <!--Block date modal for user start-->
    <div class="modal fade" id="staffListModal" role="dialog">
@@ -2088,6 +1958,11 @@
             $("#location_full_name").prop("readonly", false);
             $("#location_email").prop("readonly", false);
          });
+
+         $('#myModalregular').on('hidden.bs.modal', function (e) {
+            $(this).find('form').trigger('reset');
+            //$('input:checkbox.styled-checkbox').prop('checked', false);
+         });
          
       });
 
@@ -2304,37 +2179,38 @@
                         }
                     } 
 					// append all data in form data 
-			$.each(data, function(ia, l) {
+			    $.each(data, function(ia, l) {
 					form_data.append(l.name, l.value);
 				});
 				$.ajax({
-				url: form.action,
-				type: form.method,
-				data: form_data,
-				dataType: "json",
-				processData: false, // tell jQuery not to process the data 
-				contentType: false, // tell jQuery not to set contentType 
-				success: function(response) {
-					console.log(response); //Success//
-					if (response.response_status == 1) {
-						$(form)[0].reset();
-						$('#myModalnewteam').modal('hide');
-						swal('Success!', response.response_message, 'success');
-						location.reload();
-					} else {
-						swal('Sorry!', response.response_message, 'error');
-					}
-				},
-				beforeSend: function() {
-					$('.animationload').show();
-				},
-				complete: function() {
-					$('.animationload').hide();
-				}
+                    url: form.action,
+                    type: form.method,
+                    data: form_data,
+                    dataType: "json",
+                    processData: false, // tell jQuery not to process the data 
+                    contentType: false, // tell jQuery not to set contentType 
+                    success: function(response) {
+                        console.log(response); //Success//
+                        if (response.response_status == 1) {
+                            $(form)[0].reset();
+                            $('#myModalnewteam').modal('hide');
+                            swal('Success!', response.response_message, 'success');
+                            location.reload();
+                        } else {
+                            swal('Sorry!', response.response_message, 'error');
+                        }
+                    },
+                    beforeSend: function() {
+                        $('.animationload').show();
+                    },
+                    complete: function() {
+                        $('.animationload').hide();
+                    }
 				});
-				}
-				});
-				/*var client = [
+            }
+        });
+
+		/*var client = [
             <?php
             foreach ($clients_list['client_list'] as $key => $cli)
             {
@@ -2451,10 +2327,27 @@
      });
    </script>
 
-   <script type="text/javascript">
-      $('#appointmenttime,#reshedule_appointmenttime,#bolck_start_time,#bolck_end_time').timepicker();
-   </script>
-   
+    <script type="text/javascript">
+        $('#appointmenttime,#reshedule_appointmenttime,#bolck_start_time,#bolck_end_time').timepicker({defaultTime: ''});
+        $('.availability_start_time,.availability_end_time').timepicker({defaultTime: ''});
+
+        $('input:checkbox.styled-checkbox').on('click', function(){
+            var sel_val = $(this).val();
+            if($('input:checkbox.styled-checkbox').is(':checked')){
+                $('#availability_start_time_'+sel_val).prop('disabled', false);
+                $('#availability_start_time_'+sel_val).val('');
+                $('#availability_end_time_'+sel_val).prop('disabled', false);
+                $('#availability_end_time_'+sel_val).val('');
+            }
+            else{
+                $('#availability_start_time_'+sel_val).prop('disabled', true);
+                $('#availability_start_time_'+sel_val).val('');
+                $('#availability_end_time_'+sel_val).prop('disabled', true);
+                $('#availability_end_time_'+sel_val).val('');
+            }
+        });
+    </script>
+
 	<script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
 
    
@@ -2472,7 +2365,7 @@
       <!-- <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&callback=initMap">
     </script> -->
-   <!--=========================Google Map end============================--->
+   <!--=========================Google Map end============================-->
 	  @yield('custom_js') 
    </body>
 </html>
