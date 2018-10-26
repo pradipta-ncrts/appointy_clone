@@ -1367,7 +1367,16 @@ class UsersController extends ApiController {
         }
 
         $file = $request->file('contacts_excel_file');
-        $discount = $request->file('discount'); 
+        $discount_type = $request->input('discount_type');
+        if($discount_type=='yes')
+        {
+        	$discount = $request->input('discount'); 
+        }
+        else
+        {
+        	$discount = 0; 
+        }
+        
         //print_r($file); die();
         $type = $file->extension();
         $productInputs = array();
@@ -1405,24 +1414,75 @@ class UsersController extends ApiController {
 					foreach($row as $key=>$val)
 					{
 						//echo "<pre>";print_r($val);exit;
+						$client_name = $val['name'];
+						$client_email = $val['email'];
+						$client_mobile = $val['phone'];
+
 						if(in_array($val['email'],$exist_client_array))
 						{
+							
+							$updateData=array(
+								'discount' => $discount,
+								'updated_on' => $this->date_format
+							);
+							$updateCond=array(
+								array('client_email','=',$client_email)
+							);
+							$this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$updateData);
+
+							
+							$emailData['username'] = $client_email;
+							//$emailData['password'] = $password;
+							$emailData['toName'] = $client_name;
+
+							$emailData['discount'] = $discount;
+							$this->sendmail(11,$client_email,$emailData);
+
 							$exist++;
 						}
 						else
 						{
+							$token1 = md5($client_email);
+							$token = $token1;
+							$digits = 8;
+							$password = rand(pow(10, $digits-1), pow(10, $digits)-1);
+							$client_data['user_id'] = $user_no;
+							$client_data['client_name'] = $client_name;
+							$client_data['client_email'] = $client_email;
+							$client_data['client_mobile'] = $client_mobile;
+							$client_data['password'] = md5($password);
+							$client_data['email_verification_code'] = $token;
+							$client_data['discount'] = $discount;
+
+							$insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
+							if($insertdata > 0)
+							{
+								$emailData['username'] = $client_email;
+								$emailData['password'] = $password;
+								$emailData['toName'] = $client_name;
+
+								$this->sendmail(6,$client_email,$emailData);
+
+							}
+
+							$emailData['discount'] = $discount;
+							$this->sendmail(11,$client_email,$emailData);
 							$notExit++;
 						}
 					}
 				}
 			}
+
+			$total = $exist + $notExit;
+			$this->response_status = '1';
+			$this->response_message = $total." Mial send successfully.";
         }
         else
         {
         	$this->response_message = "Only excel file can import.";
         }
 
-        echo 'e'.$exist.'/ne'.$notExit; die();
+        //echo 'e'.$exist.'/ne'.$notExit; die();
         $this->json_output($response_data);
     }
 

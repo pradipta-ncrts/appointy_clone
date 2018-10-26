@@ -451,6 +451,12 @@ class BaseApiController extends BaseController
                     $mail_body="Dear <br> ".$emailData['toName'].", Here is the Login Credentails of your accont. Username : ".$emailData['username']." Password : ".$emailData['password'];
                     $emailData['mailBody']=$mail_body;
                 break;
+                case 11: // client discount email
+                    $mail_subject = "Discount";
+                    //$link = url('/client-login');
+                    $mail_body="Dear ".$emailData['toName'].' You are eligble for discount.';
+                    $emailData['mailBody']=$mail_body;
+                break;
 
                 
 
