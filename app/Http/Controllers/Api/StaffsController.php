@@ -962,5 +962,60 @@ class StaffsController extends ApiController {
 
     }
 
+    public function area_code(Request $request)
+    {
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $area = $request->input('area');
+        $pin_no = $request->input('pin_no');
+        $staff_id = $request->input('staff_id');
+
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            array('postal_code','=',$pin_no),
+            array('user_id','=',$user_id),
+            array('staff_id','=',$staff_id),
+        );
+
+        $selectFields=array();
+        $check_postal_code = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectFields);
+        if(empty($check_postal_code))
+        {
+            $param = array(
+                'user_id' => $user_id,
+                'staff_id' => $staff_id,
+                'postal_code' => $pin_no,
+                'area' => $area
+            );
+            $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaffPostalCode,$param);
+            if($insertdata > 0)
+            {
+                 $findCond = array(
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                    array('user_id','=',$user_id),
+                    array('staff_id','=',$staff_id),
+                );
+                $postal_code = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectField='',$joins=array(),$orderBy=array(),$groupBy="postal_code",$havings=array(),$limit=0,$offset=0,$is_count=0);
+
+                $this->response_status='1';
+                $this->response_message = array('postal_data' => $postal_code, 'msg' => "Postal code successfully added");
+            }
+        }
+        else
+        {
+            $this->response_message = "Postal code already exist.";
+        }
+
+        $this->json_output($response_data);
+    }
+    
+
 
 }

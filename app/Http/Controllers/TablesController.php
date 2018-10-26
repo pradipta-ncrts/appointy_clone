@@ -63,6 +63,10 @@ class TablesController {
 
         $this->tableNameStaffServiceAvailability = config('constants.tables.staff_service_availability');
 
+        $this->tableNameStaffPostalCode = config('constants.tables.staff_postal_code');
+
+        
+
 
 
 
