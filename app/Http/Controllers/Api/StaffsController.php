@@ -764,17 +764,92 @@ class StaffsController extends ApiController {
         $user_no = $this->logged_user_no;
         $staff_id = $request->input('staff_id');
         $service_id = $request->input('service_id');
+        if(isset($service_id) && $service_id!=''){
+            $findCond[] = array('service_id','=',$service_id);
+        }
 
         $findCond=array(
-            array('service_id','=',$service_id),
             array('staff_id','=',$staff_id),
             array('is_deleted','=','0'),
             array('is_blocked','=','0'),
         );
         
+        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
+        $tableUserService = $this->tableObj->tableUserService;
         $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
-        $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$findCond,$selectField);
-        
+        $serviceField = array('service_name','duration');
+        $joins = array(
+                    array(
+                    'join_table'=>$tableUserService,
+                    'join_with'=>$tableNameStaffServiceAvailability,
+                    'join_type'=>'left',
+                    'join_on'=>array('service_id','=','service_id'),
+                    'join_on_more'=>array(),
+                    'join_conditions' => array(array('is_blocked','=','0')),
+                    'select_fields' => $serviceField,
+                ),
+            );
+
+        $staff_availability = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField, $joins);
+
+        $service_array = array();
+        if(!empty($staff_availability)){
+            foreach($staff_availability as $availability){
+                if(!isset($service_array[$availability->service_id])){
+                    $service_array[$availability->service_id] = array();
+                }
+                if(!isset($service_array[$availability->service_id][$availability->day])){
+                    $service_array[$availability->service_id][$availability->day] = array();
+                }
+                $service_array[$availability->service_id][0] = array('service_name'=>$availability->service_name,'duration'=>$availability->duration);
+                array_push($service_array[$availability->service_id][$availability->day],$availability);
+            }
+        }
+
+        //echo '<pre>'; print_r($service_array); exit;
+        $html = "";
+        $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+        if(!empty($service_array)){
+            foreach($service_array as $sa){
+                    $html .= '<tr>
+                        <td>
+                            <div class="custm-tblebx"> <img src="http://localhost/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">'.strtoupper($sa[0]['service_name']).'</a> ('.$sa[0]['duration'].'m) </div>
+                            <div class="edit-staff">
+                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-delete.png" height="15">
+                            </div>
+                            <div class="clearfix"></div>
+                        </td>';
+
+                        for($i = 1; $i<8; $i++){
+                            if(isset($sa[$i]) && !empty($sa[$i])){
+                                $html .= '<td data-column="'.$dowMap[$i-1].'">
+                                        <ul>
+                                        <li>'.$sa[$i][0]->start_time.'</li>
+                                        <li>'.$sa[$i][0]->end_time.'</li>
+                                        </ul>
+                                        <div class="edit-staff">
+                                        <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </td>';
+                            }else{
+                                $html .='<td data-column="'.$dowMap[$i-1].'">
+                                            <div class="edit-staff">
+                                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </td>';
+                            }
+                        }
+                    $html .='</tr>';
+            }
+            $response_data['html'] = $html;
+        }
+
+
+
+        $this->json_output($response_data);
+
     }
 
 
@@ -790,25 +865,52 @@ class StaffsController extends ApiController {
         $this->validate_parameter(1);
         $user_id = $this->logged_user_no;
 
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            array('user_id','=', $user_id)
+        );
+        
+        $selectFields=array('service_id','service_name');
+        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$findCond,$selectFields);
+        $service_id = array();
+        foreach ($service_list as $key => $value) 
+        {
+            $service_id[] = $value->service_id;
+        }
+        $service_ids = implode(',', $service_id);
+
         $staff_id = $request->input('staff_id');
         $day = $request->input('day');
         $availability_start_time = $request->input('availability_start_time');
         $availability_end_time = $request->input('availability_end_time');
-        $service_ids = $request->input('service_ids');
-
+        $selected_service_ids = $request->input('service_ids');
+        if($selected_service_ids != ''){
+            $service_id_str = $selected_service_ids;
+        } else {
+            $service_id_str = $service_ids;
+        }
+        $service_array = explode(',',$service_id_str);
+        
         if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
             $total_records = count($day);
-            for($i=0;$i<$total_records;$i++){
-                $insert_data[] = array('staff_id'=>$staff_id,
-                                        'service_id'=>'',
-                                        'day'=>$day[$i],
-                                        'start_time'=>$availability_start_time[$i],
-                                        'end_time'=>$availability_end_time[$i]
-                                        );
+            foreach($service_array as $service){
+                for($i=0;$i<$total_records;$i++){
+                    $insert_data[] = array('staff_id'=>$staff_id,
+                                            'service_id'=>$service,
+                                            'day'=>$day[$i],
+                                            'start_time'=>$availability_start_time[$i],
+                                            'end_time'=>$availability_end_time[$i],
+                                            'created_on'=>date('Y-m-d H:i:s')
+                                            );
+                }
             }
+            
             //echo '<pre>'; print_r($insert_data); exit;
             $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
             
+            $this->response_status='1';
+            $this->response_message = 'Schedule has been added successfully.';
         } else {
             $this->response_message="Required filed is missing.";
         }
