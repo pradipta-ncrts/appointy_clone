@@ -222,64 +222,64 @@ Squeedr
                                         </div>
                                         <div class="tableBH-table">
                                             <table class="table table-bordered table-custom1 table-bh tableBhMobile">
-                                            <thead>
-                                                <tr>
-                                                    <th>SERVICES</th>
-                                                    <th>Monday</th>
-                                                    <th>Tuesday</th>
-                                                    <th>Wednesday</th>
-                                                    <th>Thursday</th>
-                                                    <th>Friday</th>
-                                                    <th>Saturday</th>
-                                                    <th>Sunday</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="custm-tblebx"> <img src="http://localhost/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">SHower</a> (60m) </div>
-                                                        <div class="edit-staff">
-                                                        <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-delete.png" height="15">
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </td>
-                                                    <td data-column="Sunday">
-                                                        <div class="clearfix"></div>
-                                                    </td>
-                                                    <td data-column="Monday">
-                                                        <div class="clearfix"></div>
-                                                    </td>
-                                                    <td data-column="Tuesday">
-                                                        <ul>
-                                                        <li>10:00 AM</li>
-                                                        <li>07:30 PM</li>
-                                                        </ul>
-                                                        <div class="edit-staff">
-                                                        <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </td>
-                                                    <td></td>
-                                                    <td data-column="Wednesday">
-                                                        <ul>
-                                                        <li>10:00 AM</li>
-                                                        <li>07:30 PM</li>
-                                                        </ul>
-                                                        <div class="edit-staff">
-                                                        <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </td>
-                                                    <td data-column="Thursday"></td>
-                                                    <td data-column="Friday">
-                                                        &nbsp;
-                                                        <div class="edit-staff">
-                                                        <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
-                                                        </div>
-                                                        <div class="clearfix"></div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
+                                                <thead>
+                                                    <tr>
+                                                        <th>SERVICES</th>
+                                                        <th>Monday</th>
+                                                        <th>Tuesday</th>
+                                                        <th>Wednesday</th>
+                                                        <th>Thursday</th>
+                                                        <th>Friday</th>
+                                                        <th>Saturday</th>
+                                                        <th>Sunday</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="staff-availability-section">
+                                                    <!--<tr>
+                                                        <td>
+                                                            <div class="custm-tblebx"> <img src="http://localhost/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">SHower</a> (60m) </div>
+                                                            <div class="edit-staff">
+                                                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-delete.png" height="15">
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                        <td data-column="Sunday">
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                        <td data-column="Monday">
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                        <td data-column="Tuesday">
+                                                            <ul>
+                                                            <li>10:00 AM</li>
+                                                            <li>07:30 PM</li>
+                                                            </ul>
+                                                            <div class="edit-staff">
+                                                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                        <td></td>
+                                                        <td data-column="Wednesday">
+                                                            <ul>
+                                                            <li>10:00 AM</li>
+                                                            <li>07:30 PM</li>
+                                                            </ul>
+                                                            <div class="edit-staff">
+                                                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                        <td data-column="Thursday"></td>
+                                                        <td data-column="Friday">
+                                                            &nbsp;
+                                                            <div class="edit-staff">
+                                                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                    </tr>-->
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -1229,6 +1229,7 @@ $(document).ready(function(){
 
     $('#availabilityTab').click(function(){
         var staff_id = $('#editStaff').attr('data-staff-id');
+        $('#staff-availability-section').html("");
         var data = addCommonParams([]);
         data.push({name:'staff_id', value:staff_id});
         $.ajax({
@@ -1301,6 +1302,8 @@ $(document).ready(function(){
                 } else {
                     swal('Sorry!', response.response_message, 'error');
                 }*/
+                
+                $('#staff-availability-section').html(response.html);
             },
             beforeSend: function() {
                 $('.animationload').show();
@@ -1313,7 +1316,6 @@ $(document).ready(function(){
 
 
     $('#add_staff_availability_form').validate({
-
             submitHandler: function(form) {
             var data = $(form).serializeArray();
             data = addCommonParams(data);
@@ -1326,15 +1328,15 @@ $(document).ready(function(){
                 data: data,
                 dataType: "json",
                 success: function(response) {
-                    console.log(response); //Success//
-                    /*if (response.response_status == 1) {
+                    //console.log(response); //Success//
+                    if (response.response_status == 1) {
                         $(form)[0].reset();
-                        $('#myModalnewteam').modal('hide');
+                        $('#myModalregular').modal('hide');
                         swal('Success!', response.response_message, 'success');
                         location.reload();
                     } else {
                         swal('Sorry!', response.response_message, 'error');
-                    }*/
+                    }
                 },
                 beforeSend: function() {
                     $('.animationload').show();

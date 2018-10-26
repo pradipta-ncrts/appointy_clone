@@ -1464,7 +1464,7 @@
                       {   
                       ?>
                           <div class="user-bkd break20px">
-                          <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded">
+                          <img src="{{asset('public/assets/website/images/noimage.png')}}" class="thumbnail rounded">
                            <h2><?=$value->service_name;?>
                            </h2>
                            <div class="row">
