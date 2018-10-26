@@ -54,9 +54,10 @@ Squeedr
                </div>
                <div class="clearfix"></div>
                <div class="break20px"></div>
-               <div class="btnGrp"> <input type="submit" id="invite_without_dicount" value="Invite without a discount" class="btn btn-primary btn-sm">
+                  <div class="btnGrp"> 
+                     <input type="submit" value="Invite with a discount" class="btn btn-primary btn-sm" id="invite_without_dicount">
                   <label class="btn">Or</label>
-                  <input type="submit" class="btn btn-success btn-sm" id="invite_with_dicount" value="Invite without a discount">
+                     <input type="submit" value="Invite without a discount" class="btn btn-success btn-sm" id="invite_with_dicount">
                </div>
             </div>
          </form>

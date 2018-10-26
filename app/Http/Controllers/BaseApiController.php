@@ -421,10 +421,9 @@ class BaseApiController extends BaseController
                     //$mailTemplateName="emails/general";
                     $emailData['mailBody']=$mail_body;
                 break;
-                case 6: // Staff Email Verification 
+                case 6: // client Email Verification 
                     $mail_subject = "Client Successfully Added.";
-                    //$mail_body="Here is the Login Credentails of your accont. Username : ".$emailData['username']." Password : ".$emailData['password'];
-                    $mail_body = "Dear <br> ".$emailData['toName'].", Your are successfully added as a client on Squeedr.";
+                    $mail_body = "Dear ".$emailData['toName'].", <br>Here is the Login Credentails of your account. Username : ".$emailData['username']." Password : ".$emailData['password'];
                     //$mailTemplateName="emails/general";
                     $emailData['mailBody']=$mail_body;
                 break;

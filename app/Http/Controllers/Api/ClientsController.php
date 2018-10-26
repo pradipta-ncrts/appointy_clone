@@ -95,7 +95,7 @@ class ClientsController extends ApiController {
                 $client_data['client_timezone'] = $client_timezone;
                 $client_data['client_note'] = $client_note;
 
-                //$client_data['password'] = md5($password);
+                $client_data['password'] = md5($password);
                 $client_data['email_verification_code'] = $token;
 
 
@@ -104,12 +104,8 @@ class ClientsController extends ApiController {
                     /* Send Email */
                     //$other_params = "?device_type=0&device_token_key=".Session::getId();
 					//$verify_link = $this->base_url('api/emailverification/'.$token.$other_params);// need to change with website url
-                    //$emailData['username']=$username;
-                    //$emailData['password']=$password;
-					//$emailData['toName']=$full_name;
-
-                    $emailData['username'] = '';
-                    $emailData['password'] = '';
+                    $emailData['username']=$client_email;
+                    $emailData['password']=$password;
                     $emailData['toName'] = $client_name;
 
                     $this->sendmail(6,$client_email,$emailData);
@@ -725,15 +721,16 @@ class ClientsController extends ApiController {
         {
             //validate the user details
 
-            $table_name = $this->tableObj->tableNameStaff;
+            $table_name = $this->tableObj->tableNameClient;
             $password = $request->input('password');
             $email = $request->input('email');
             $conditions = array(
                 array('password','=',md5($password)),
-                'or'=>array('email'=>$email,'username'=>$email)
+                array('client_email', '=', $email),
             );
             $selectFields=array();
             $user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
+            //print_r($user); die();
             if(empty($user))
             {
                 $this->response_message="Email/Username and password does not match.";
