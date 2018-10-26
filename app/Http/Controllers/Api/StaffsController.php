@@ -806,16 +806,32 @@ class StaffsController extends ApiController {
             }
         }
 
+        $conditions = array(
+            array('user_id','=',$user_no),
+            array('is_blocked','=','0'),
+            array('is_deleted','=','0')
+        );
+
+        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$conditions);
+        //echo '<pre>'; print_r($service_list); exit;
+
+        if(!empty($service_list) && is_array($service_list)){
+            foreach($service_list as $sl){
+                if(!isset($service_array[$sl->service_id])){
+                    $service_array[$sl->service_id] =array(array('service_name'=>$sl->service_name,'duration'=>$sl->duration));
+                }
+            }
+        }
         //echo '<pre>'; print_r($service_array); exit;
         $html = "";
         $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
         if(!empty($service_array)){
-            foreach($service_array as $sa){
+            foreach($service_array as $key=>$sa){
                     $html .= '<tr>
                         <td>
                             <div class="custm-tblebx"> <img src="http://localhost/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">'.strtoupper($sa[0]['service_name']).'</a> ('.$sa[0]['duration'].'m) </div>
                             <div class="edit-staff">
-                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-delete.png" height="15">
+                            <img class="delete_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'" src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-delete.png" height="15">
                             </div>
                             <div class="clearfix"></div>
                         </td>';
@@ -828,14 +844,14 @@ class StaffsController extends ApiController {
                                         <li>'.$sa[$i][0]->end_time.'</li>
                                         </ul>
                                         <div class="edit-staff">
-                                        <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                        <img class="edit_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'" src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
                                         </div>
                                         <div class="clearfix"></div>
                                     </td>';
                             }else{
                                 $html .='<td data-column="'.$dowMap[$i-1].'">
                                             <div class="edit-staff">
-                                            <img src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
+                                            <img class="edit_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'" src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
                                             </div>
                                             <div class="clearfix"></div>
                                         </td>';
@@ -892,28 +908,33 @@ class StaffsController extends ApiController {
         }
         $service_array = explode(',',$service_id_str);
         
-        if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
-            $total_records = count($day);
-            foreach($service_array as $service){
-                for($i=0;$i<$total_records;$i++){
-                    $insert_data[] = array('staff_id'=>$staff_id,
-                                            'service_id'=>$service,
-                                            'day'=>$day[$i],
-                                            'start_time'=>$availability_start_time[$i],
-                                            'end_time'=>$availability_end_time[$i],
-                                            'created_on'=>date('Y-m-d H:i:s')
-                                            );
+        if(isset($availability_start_time) && !empty($availability_start_time) && isset($availability_end_time) && !empty($availability_end_time)){
+            if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
+                $total_records = count($day);
+                foreach($service_array as $service){
+                    for($i=0;$i<$total_records;$i++){
+                        $insert_data[] = array('staff_id'=>$staff_id,
+                                                'service_id'=>$service,
+                                                'day'=>$day[$i],
+                                                'start_time'=>$availability_start_time[$i],
+                                                'end_time'=>$availability_end_time[$i],
+                                                'created_on'=>date('Y-m-d H:i:s')
+                                                );
+                    }
                 }
+                
+                //echo '<pre>'; print_r($insert_data); exit;
+                $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
+                
+                $this->response_status='1';
+                $this->response_message = 'Schedule has been added successfully.';
+            } else {
+                $this->response_message="Required filed is missing.";
             }
-            
-            //echo '<pre>'; print_r($insert_data); exit;
-            $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
-            
-            $this->response_status='1';
-            $this->response_message = 'Schedule has been added successfully.';
         } else {
-            $this->response_message="Required filed is missing.";
+            $this->response_message="Nothing to update. Please enter required fileds";
         }
+        
         
         
         $this->json_output($response_data);
@@ -962,5 +983,44 @@ class StaffsController extends ApiController {
 
     }
 
+    public function delete_staff_availability(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+
+        $service_id = $request->input('service_id');
+        $staff_id = $request->input('staff_id');
+
+        $conditions = array(
+            array('staff_id','=',$staff_id),
+            array('service_id','=',$service_id),
+            array('is_blocked','=','0'),
+            array('is_deleted','=','0'),
+        );
+
+        $result = $this->common_model->fetchData($this->tableObj->tableNameStaffServiceAvailability,$conditions);
+        //echo '<pre>'; print_r($result); exit;
+        if(empty($result))
+        {
+            $this->response_message = "Invalid details.";
+        }
+        else
+        {
+            $update_data['is_deleted'] = 1;
+
+            $update = $this->common_model->update_data($this->tableObj->tableNameStaffServiceAvailability,$conditions,$update_data);
+            
+            $this->response_status='1';
+            $this->response_message = "Staff availability deleted successfully.";
+        }
+        
+        $this->json_output($response_data);
+    }
 
 }
