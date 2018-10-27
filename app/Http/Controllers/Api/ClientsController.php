@@ -739,7 +739,7 @@ class ClientsController extends ApiController {
                     ];
             $parameter= Crypt::encrypt($parameter);
             //$cancel_url = url('/client/cancel_appointent',$parameter);
-            $reschedule_url = url('/client/reschedule-appointment',$parameter);
+            $reschedule_url = url('/client/client-dashboard',$parameter);
 
             if(empty($user))
             {

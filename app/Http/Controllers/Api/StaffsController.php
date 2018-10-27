@@ -1016,6 +1016,4 @@ class StaffsController extends ApiController {
         $this->json_output($response_data);
     }
     
-
-
 }

@@ -222,5 +222,10 @@ class ClientsController extends ApiController {
 	{
 		return view('website.client.client-login');
 	}
+
+	function client_dashboard($parameter=NULL)
+	{
+		return view('website.client.client-dashboard');
+	}
 	
 }

@@ -205,6 +205,7 @@ Route::group(['prefix'=>'client'],function(){
     
     Route::get('/cancel_appointent/{parameter?}','Website\ClientsController@cancel_appointment');
     Route::get('/reschedule-appointment/{parameter?}','Website\ClientsController@reschedule_appointment');
+    Route::get('/client-dashboard/{parameter?}','Website\ClientsController@client_dashboard');
     Route::get('/client-info/','Website\ClientsController@client_info');
     Route::get('/booking-verify/','Website\ClientsController@booking_verify');
     Route::get('/booking-details/','Website\ClientsController@booking_details');
