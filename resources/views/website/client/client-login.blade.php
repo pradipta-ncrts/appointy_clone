@@ -115,7 +115,7 @@ $('#clientloginform').validate({
                 console.log(response);
                 if(response.result==1)
                 {
-                    var url = "{{url('/reschedule_appointment')}}";
+                    var url = response.message;
                     console.log(url);
                     //alert(url);
                     window.location=url;

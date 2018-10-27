@@ -42,6 +42,8 @@ return [
 
         'staff_service_availability' => 'staff_service_availability',
 
+        'staff_postal_code' => 'staff_postal_code',
+
 
 
     ],

@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests;
 use App\Http\Controllers\BaseApiController as ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Validator;
 
 class ClientsController extends ApiController {
@@ -720,7 +721,7 @@ class ClientsController extends ApiController {
         if(!$validator->fails())
         {
             //validate the user details
-
+            
             $table_name = $this->tableObj->tableNameClient;
             $password = $request->input('password');
             $email = $request->input('email');
@@ -731,6 +732,15 @@ class ClientsController extends ApiController {
             $selectFields=array();
             $user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
             //print_r($user); die();
+            //Redirect url
+            $parameter = [
+                    'appointment_id' => '',
+                    'client_id' => $user->client_id,
+                    ];
+            $parameter= Crypt::encrypt($parameter);
+            //$cancel_url = url('/client/cancel_appointent',$parameter);
+            $reschedule_url = url('/client/reschedule-appointment',$parameter);
+
             if(empty($user))
             {
                 $this->response_message="Email/Username and password does not match.";
@@ -738,6 +748,7 @@ class ClientsController extends ApiController {
             else
             {
                 $this->response_status='1';
+                $this->response_message = $reschedule_url;
             }
         }
         else

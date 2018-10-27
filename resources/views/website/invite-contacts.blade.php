@@ -23,6 +23,7 @@ Squeedr
       </div>
       <div class="rightpan">
          <form class="form-inline" action="{{ url('api/import-invite-contact') }}" method="post" autocomplete="off" id="import-invite-contact">
+            <input type="hidden" name="discount_type" value="yes" id="discount_type">
             <div class="headRow nopadding">
                <h3>Attach an invite offer </h3>
                <p>You can invite customers with or without a discount, but customers are more likely to schedule a booking if they have an incentive.</p>
@@ -55,9 +56,9 @@ Squeedr
                <div class="clearfix"></div>
                <div class="break20px"></div>
                   <div class="btnGrp"> 
-                     <input type="submit" value="Invite with a discount" class="btn btn-primary btn-sm" id="invite_without_dicount">
+                     <input type="submit" value="Invite with a discount" class="btn btn-primary btn-sm" id="invite_with_dicount">
                   <label class="btn">Or</label>
-                     <input type="submit" value="Invite without a discount" class="btn btn-success btn-sm" id="invite_with_dicount">
+                     <input type="submit" value="Invite without a discount" class="btn btn-success btn-sm" id="invite_without_dicount">
                </div>
             </div>
          </form>

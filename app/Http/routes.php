@@ -109,6 +109,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/change-password','Api\ProfileController@change_password');
 
     Route::post('/client_login','Api\ClientsController@client_login');
+    Route::post('/area_code','Api\StaffsController@area_code');
 
     
 });

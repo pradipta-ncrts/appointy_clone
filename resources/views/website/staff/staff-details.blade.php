@@ -399,7 +399,6 @@ Squeedr
                                     <p>Some content in menu 2.</p>
                                     </div>-->
                                 </div>
-
                             </div>
                             <div id="tab4" class="tab-pane fade">
                                 <h3 class="tabnewtxt1">Area codes</h3>
@@ -411,25 +410,10 @@ Squeedr
                                         <li><a href="#">Inactive<span class="badge">5</span></a></li>
                                     </ul>
                                 </div>
-                                <!--<div class="col-md-5">
-                                    <div id="custom-search-input">
-                                        <div class="input-group col-md-12">
-                                            <input type="text" class="  search-query form-control" placeholder="Search">
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="pull-right">
-                                    <!--<button type="button" class="btn btn-primary btn-xs">Save</button>
-                                    <button type="button" class="btn btn-xs">Cancle</button>-->
-                                    <button type="button" class="btn btn-primary btn-xs">Add</button>
+                                    <button type="button" class="btn btn-primary btn-xs add-area-code">Add</button>
                                 </div>
                                 <p class="tabnewp">Area codes are defined geographical boundaries within a location. Staff can be assigned to these area codes. Customers will only be shown staff members in the area code they select</p>
-
-                                <!--<div class="alert alert-warning mt-20"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Postal Code is a premium feature available in Growth and above membership. <a class="text-danger pull-right" href="javascript:void(0)"><small>Upgrade</small></a></div>-->
-
                                 <div class="staff-detailtab-bx">
                                     <ul>
                                         <li>
@@ -459,7 +443,7 @@ Squeedr
                                     <button type="button" class="btn btn-default btn-xs" title="Set Inactive"><i class="fa fa-ban" aria-hidden="true"></i></button>
                                 </div>
 
-                                <div class="tableBH-table stfftable">
+                                <div class="tableBH-table stfftable" id="postal_code_html">
                                     <table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile">
                                         <thead>
                                             <tr>
@@ -470,17 +454,11 @@ Squeedr
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="custm-tblebx">
-                                                        <input name="staff_send_email" type="checkbox" value="1"> 700091
-                                                    </div>
-                                                </td>
-                                                <td>India</td>
-                                                <td>0</td>
-                                                <td>Active</td>
-                                            </tr>
-                                            <tr>
+                                          <!--   <tr>
+                                                <td colspan="4">No data found.</td>
+                                            </tr> -->
+                                            
+                                            <!-- <tr>
                                                 <td>
                                                     <div class="custm-tblebx">
                                                         <input name="staff_send_email" type="checkbox" value="1"> 700081
@@ -489,7 +467,7 @@ Squeedr
                                                 <td>India</td>
                                                 <td>0</td>
                                                 <td>Active</td>
-                                            </tr>
+                                            </tr> -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -676,7 +654,47 @@ Squeedr
         </div>
     </div>
 </div>
+<div class="modal fade" id="addAreaCode" role="dialog">
+   <div class="modal-dialog add-pop">
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm">
+         <form name="area_code" id="area_code" method="post" action="{{ url('api/area_code') }}" enctype="multipart/form-data">
+            <input type="hidden" name="staff_id" id="postal_code_staff_id" value="">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Area Code</h4>
+         </div>
+         <div class="modal-body clr-modalbdy">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="form-group">
+                     <div class="input-group"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                        <input id="area" type="text" class="form-control" name="area" placeholder="Area name">
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="form-group">
+                     <div class="input-group"> <span class="input-group-addon"><i class="fa fa-thumb-tack"></i></span>
+                        <input id="pin_no" type="text" class="form-control" name="pin_no" placeholder="Pin No">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <div class="col-md-12 text-center">
+               <input type="submit" value="submit" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">
+            </div>
+         </div>
+     </form>
+      </div>
+   </div>
+</div>
 @endsection
+
 
 @section('custom_js')
 <script>
@@ -1454,49 +1472,6 @@ $(document).on('click','.delete_block_time',function(e){
 
 });
 
-$(document).on('click','.edit_availability',function(e){
-    e.preventDefault();
-    var service_id = $(this).data('service-id');
-    var staff_id = $(this).data('staff-id');
-    //alert(service_id+'---'+staff_id);
-    var data = addCommonParams([]);
-    //alert(serviceid);
-    data.push({name:'service_id', value:service_id},
-                {name:'staff_id', value:staff_id});
-    
-    /*$.ajax({
-        url: baseUrl+"/api/delete_staff_block_time", // Url to which the request is send
-        type: "POST", // Type of request to be send, called as method
-        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
-        dataType: "json",
-        success: function(response) // A function to be called if request succeeds
-        {
-            //console.log(response);
-            $('.animationload').hide();
-            if(response.result=='1')
-            {
-                //swal("Success!", response.message, "success")
-                swal({title: "Success", text: response.message, type: "success"},
-                function(){ 
-                    location.reload();
-                });
-            }
-            else
-            {
-                swal("Error", response.message , "error");
-            }
-        },
-        beforeSend: function()
-        {
-            $('.animationload').show();
-        }
-    });*/
-
-    $('#myModalregular').modal('show');
-
-});
-
-
 $(document).on('click','.delete_availability',function(e){
     e.preventDefault();
     var service_id = $(this).data('service-id');
@@ -1554,14 +1529,87 @@ $(document).on('click','.delete_availability',function(e){
 
 });
 
+$(document).on('click', '.add-area-code', function(){
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    //alert(staff_id);
+    $("#postal_code_staff_id").val(staff_id);
+    $('#addAreaCode').modal('show');
+});
 
-    /*$("#staff-availability-section").mouseover(function(){
-        $("#staff-availability-section tr td div.edit-staff").show();
-    });
-    $("#staff-availability-section").mouseout(function(){
-        $("#staff-availability-section tr td div.edit-staff").hide();
-    });*/
+$.validator.addMethod("phoneUS", function (phone_number, element) {
+    phone_number = phone_number.replace(/\s+/g, "");
+    return this.optional(element) || phone_number.length > 5 && phone_number.length < 7;
+}, "Please enter valid pin no.");
 
+$('#area_code').validate({
+    //ignore: ":hidden:not(.selectpicker)",
+    //ignore: [],
+    rules: {
+        'area': {
+            required: true
+        },
+        'pin_no': {
+            required: true,
+            digits: true,
+            phoneUS: true
+        },
+      },
+
+    messages: {
+        'area': {
+            required: 'Please enter area name'
+        },
+        'pin_no': {
+            required: 'Please enter pin no'
+        },
+    },
+
+    submitHandler: function(form) {
+      var data = $(form).serializeArray();
+      data = addCommonParams(data);
+      console.log(data);
+      $.ajax({
+          url: form.action,
+          type: form.method,
+          data:data ,
+          dataType: "json",
+          success: function(response) {
+               console.log(response);
+               $('.animationload').hide();
+               if(response.result=='1')
+               {
+                  $('#area_code').trigger("reset");
+                  $('#addAreaCode').modal('hide');
+                  //swal(title: "Success", text: response.message.msg, type: "success");
+                var postal_html = "";
+                if(response.message.postal_data.length > 0)
+                {
+                    postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+                    for(i = 0;i<response.message.postal_data.length;i++)
+                    {
+                        postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>0</td><td>Active</td></tr>';
+                    }
+                    postal_html +='</tbody>';
+                }
+
+                $("#postal_code_html").html(postal_html);
+                swal("Success", response.message.msg , "success");
+                  
+               }
+               else
+               {
+                   swal("Error", response.message , "error");
+               }
+          },
+          beforeSend: function(){
+              $('.animationload').show();
+          },
+          complete: function(){
+              $('.animationload').hide();
+          }
+      });
+    }
+});
 
 </script>
 
