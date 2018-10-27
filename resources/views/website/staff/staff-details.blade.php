@@ -1320,8 +1320,8 @@ $(document).ready(function(){
                 } else {
                     swal('Sorry!', response.response_message, 'error');
                 }*/
-                
                 $('#staff-availability-section').html(response.html);
+                //$('div.edit-staff').hide();
             },
             beforeSend: function() {
                 $('.animationload').show();
@@ -1416,7 +1416,6 @@ $(document).on('change','#staff_import_excel',function(e){
     });
 });
 
-
 $(document).on('click','.delete_block_time',function(e){
     e.preventDefault();
     //data = addCommonParams([]);
@@ -1470,6 +1469,63 @@ $(document).on('click','.delete_block_time',function(e){
             }
         });
 
+
+});
+
+$(document).on('click','.delete_availability',function(e){
+    e.preventDefault();
+    var service_id = $(this).data('service-id');
+    var staff_id = $(this).data('staff-id');
+    
+    swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will never access this blocked date/time!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, I am sure!',
+        cancelButtonText: "No, not now!",
+        closeOnConfirm: false,
+        closeOnCancel: true
+        },function(isConfirm){
+
+            if (isConfirm){
+                var data = addCommonParams([]);
+                //alert(serviceid);
+                data.push({name:'service_id', value:service_id},
+                            {name:'staff_id', value:staff_id});
+                
+                $.ajax({
+                    url: baseUrl+"/api/delete_staff_availability", // Url to which the request is send
+                    type: "POST", // Type of request to be send, called as method
+                    data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+                    dataType: "json",
+                    success: function(response) // A function to be called if request succeeds
+                    {
+                        //console.log(response);
+                        $('.animationload').hide();
+                        if(response.result=='1')
+                        {
+                            //swal("Success!", response.message, "success")
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                location.reload();
+                            });
+                        }
+                        else
+                        {
+                            swal("Error", response.message , "error");
+                        }
+                    },
+                    beforeSend: function()
+                    {
+                        $('.animationload').show();
+                    }
+                });                                                             
+            }
+        });
+
+    
 
 });
 
@@ -1554,9 +1610,6 @@ $('#area_code').validate({
       });
     }
 });
-
-
-
 
 </script>
 

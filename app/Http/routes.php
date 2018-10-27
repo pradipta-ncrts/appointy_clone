@@ -61,6 +61,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/block-times','Api\StaffsController@block_times');
     Route::post('/staff_service_availability','Api\StaffsController@staff_service_availability');
     Route::post('/add_staff_service_availability','Api\StaffsController@add_staff_service_availability');
+    Route::post('/delete_staff_availability','Api\StaffsController@delete_staff_availability');
     Route::post('/delete_staff_block_time','Api\StaffsController@delete_staff_block_time');
     Route::post('/services_lists','Api\StaffsController@services_lists');
 
