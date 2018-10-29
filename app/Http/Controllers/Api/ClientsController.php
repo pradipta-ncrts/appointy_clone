@@ -128,8 +128,8 @@ class ClientsController extends ApiController {
 		$response_data=array();	
 		// validate the requested param for access this service api
 		$this->validate_parameter(1); // along with the user request key validation
-		$other_user_no = $request->input('other_user_no');
-		$pageNo = $request->input('page_no');
+        $other_user_no = $request->input('other_user_no');
+        $pageNo = $request->input('page_no');
 		$pageNo = ($pageNo>1)?$pageNo:1;
 		$limit=$this->limit;
 		$offset=($pageNo-1)*$limit;
@@ -141,7 +141,7 @@ class ClientsController extends ApiController {
 			$user_no = $this->logged_user_no;
 		}
         
-        $serch_text = $request->input('client_search_text');
+        $search_text = $request->input('client_search_text');
 		$findCond=array(
             array('user_id','=',$user_no),
 			array('is_deleted','=','0'),
@@ -151,7 +151,7 @@ class ClientsController extends ApiController {
 			$findCond[]=array('client_name','like','%'.$search_text.'%');
 		}
 		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields=array());
-		$response_data['client_list']=$client_list;
+        $response_data['client_list']=$client_list;
 
 		$this->response_status='1';
 		// generate the service / api response

@@ -829,9 +829,9 @@ class StaffsController extends ApiController {
             foreach($service_array as $key=>$sa){
                     $html .= '<tr>
                         <td>
-                            <div class="custm-tblebx"> <img src="http://localhost/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">'.strtoupper($sa[0]['service_name']).'</a> ('.$sa[0]['duration'].'m) </div>
+                            <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">'.strtoupper($sa[0]['service_name']).'</a> ('.$sa[0]['duration'].'m) </div>
                             <div class="edit-staff">
-                            <img class="delete_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'" src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-delete.png" height="15">
+                            <a data-toggle="tooltip" data-placement="top" class="delete_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'"><i class="fa fa-trash delete_block_time" aria-hidden="true" style="color:red" title="Delete!"></i></a>
                             </div>
                             <div class="clearfix"></div>
                         </td>';
@@ -844,14 +844,12 @@ class StaffsController extends ApiController {
                                         <li>'.$sa[$i][0]->end_time.'</li>
                                         </ul>
                                         <div class="edit-staff">
-                                        <img class="edit_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'" src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
                                         </div>
                                         <div class="clearfix"></div>
                                     </td>';
                             }else{
                                 $html .='<td data-column="'.$dowMap[$i-1].'">
                                             <div class="edit-staff">
-                                            <img class="edit_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'" src="http://localhost/squeedr/public/assets/website/images/business-hours/tbl-edit.png" height="15">
                                             </div>
                                             <div class="clearfix"></div>
                                         </td>';

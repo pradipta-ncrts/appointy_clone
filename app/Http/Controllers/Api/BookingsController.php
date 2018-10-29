@@ -288,6 +288,9 @@ class BookingsController extends ApiController {
                         $this->sendmail(8,$staff_email,$stuff_email_data);
 
                     }
+
+                    // Event Viewer //
+				    $this->add_user_event_viewer($user_no,$type=4,$staff);
                     
                     $this->response_status='1';
                     $this->response_message = "An appointment has been successfully booked.";
@@ -601,6 +604,9 @@ class BookingsController extends ApiController {
 
         $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data);
 
+        // Event Viewer //
+        $this->add_user_event_viewer($user_no,$type=6);
+
         $this->response_status='1';
         $this->response_message="Appointment has been cancelled successfully.";
 
@@ -727,6 +733,9 @@ class BookingsController extends ApiController {
                 );
                 $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$param);
 
+                // Event Viewer //
+                $this->add_user_event_viewer($user_no,$type=5,$reshedule_staff_id);
+                    
                 $this->response_status='1';
                 $this->response_message = "Appointment has been rescheduled successfully .";
             }

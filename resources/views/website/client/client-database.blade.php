@@ -8,24 +8,24 @@ Squeedr
    <div class="container-custm">
       <div class="upper-cmnsection">
          <div class="heading-uprlft">Client Database</div>
-         <div class="upr-rgtsec">
+         <!--<div class="upr-rgtsec">
             <div class="col-md-5">
             </div>
             <div class="col-md-7">
                <div class="full-rgt">
                </div>
             </div>
-         </div>
+         </div>-->
       </div>
         <div class="leftpan">
             <div class="left-menu">
                 <div id="custom-search-input">
                     <a href="#" class="imp-st" data-toggle="tooltip" title="Import Client"><i class="fa fa-download"></i> </a> <a href="#" class="exp-st"  data-toggle="tooltip" title="Export Client"><i class="fa fa-external-link "></i> </a>
                     <div class="input-group col-md-12">
-                    <input type="text" class="search-staff form-control" placeholder="Search client" />
-                    <span class="input-group-btn">
-                    <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
-                    </span>
+                        <input type="text" name="client_search_text" id="client_search_text" class="search-staff form-control" placeholder="Search Client" <?php if(!empty($client_search_text)) { ?> value="<?php echo $client_search_text;?>" <?php } ?> />
+                        <span class="input-group-btn">
+                        <button class="btn btn-danger" id="client_search_btn" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
+                        </span>
                     </div>
                 </div>
                 <div class="stf-list heightfull">
@@ -259,25 +259,7 @@ Squeedr
         </div>
    </div>
 </div>
-<div id="popup">
-   <div id="selectstaff">
-      <div class="container-fluid">
-         <div class="popupInside">
-            <h3>Select Staff</h3>
-            <ul>
-               <li><a onclick="staffcheck(this)"><img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}"/>
-                  <label>Douglas N</label>
-                  </a> 
-               </li>
-               <li><a onclick="staffcheck(this)"><img src="{{asset('public/assets/website/images/business-hours/grey-user.png')}}"/>
-                  <label>Janice D</label>
-                  </a> 
-               </li>
-            </ul>
-         </div>
-      </div>
-   </div>
-</div>
+
 @endsection
 
 
@@ -322,6 +304,16 @@ $('.stafflistitem').click(function(){
 
 $(document).ready(function(){
     $('.stafflistitem').eq(0).trigger('click');
+
+    $("#client_search_btn").click(function(){
+        var url = "<?php echo url('client-database')?>";
+        var client_search_text = $("#client_search_text").val();
+        if(client_search_text!=""){
+            window.location.replace(url+'/'+client_search_text);
+        } else {
+            window.location.replace(url);
+        }
+    });
 });
 </script>
 @endsection

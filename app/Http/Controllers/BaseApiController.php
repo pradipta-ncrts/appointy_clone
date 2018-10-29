@@ -764,5 +764,59 @@ class BaseApiController extends BaseController
     }  
     
 
+    public function add_user_event_viewer($user_id=NULL,$type=0,$staff_id=0)
+    {
+        if($user_id > 0 && $type > 0){
+            switch($type){
+                case 1:// Service Created
+                    $save_data['type']=1;
+                    $save_data['type_name']="Service Created";
+                    $save_data['message']="A service has been created";
+                break;
+                case 2: // Service Edited
+                    $save_data['type']=2;
+                    $save_data['type_name']="Service Edited";
+                    $save_data['message']="A service has been edited";
+                break;
+                case 3: // Service Deleted
+                    $save_data['type']=3;
+                    $save_data['type_name']="Service Deleted";
+                    $save_data['message']="A service has been deleted";
+                break;
+                case 4: // Appointment Created
+                    $save_data['type']=4;
+                    $save_data['type_name']="Appointment Created";
+                    $save_data['message']="An appointment has been created";
+                break;
+                case 5: // Appointment Rescheduled
+                    $save_data['type']=5;
+                    $save_data['type_name']="Appointment Rescheduled";
+                    $save_data['message']="An appointment has been rescheduled";
+                break;
+                case 6: // Appointment Cancelled
+                    $save_data['type']=6;
+                    $save_data['type_name']="Appointment Cancelled";
+                    $save_data['message']="An appointment has been cancelled";
+                break;
+                
+                default:
+                    $save_data['type']=0;
+                    $save_data['type_name']="";
+                    $save_data['message']="Something went wrong";
+                break;
+            }
+            // save the new data 
+            $save_data['user_id']=$user_id;
+            $save_data['staff_id']=$staff_id;
+            $save_data['created_on']=date('Y-m-d H:i:s');
+
+            $this->common_model->insert_data_get_id($this->tableObj->tableNameUserEventViewer,$save_data);
+            return true;
+        } else {
+            return false;
+        }
+        
+    }
+
 }
 

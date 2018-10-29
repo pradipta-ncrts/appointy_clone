@@ -285,17 +285,18 @@ class UsersController extends ApiController {
 		return view('website.reports');
 	}
 
-	public function client_database()
+	public function client_database($client_search_text="")
 	{
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
            return redirect('/login');
 		}
-
+		
 
 		// Call API //
 		$post_data = $authdata;
 		$post_data['page_no']=1;
+		$post_data['client_search_text']=$client_search_text;
 		$data=array(
 			'client_list'=>array(),
 			'authdata'=>$authdata
@@ -307,6 +308,7 @@ class UsersController extends ApiController {
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['client_list'] = $return->client_list;
+				$data['client_search_text'] = $client_search_text;
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.client.client-database')->with($data);
@@ -670,6 +672,37 @@ class UsersController extends ApiController {
 
 		
 
+	public function event_viewer(){
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$data=array(
+			'event_viewer_list'=>array(),
+			'authdata'=>$authdata
+		);
+		$url_func_name="event_viewer_list";
+		$return = $this->curl_call($url_func_name,$post_data);
+		
+		// Check response status. If success return data //		
+		if(isset($return->response_status)){
+			if($return->response_status == 1){
+				$data['event_viewer_list'] = $return->event_viewer_list;
+			}
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.event-viewer')->with($data);
+		}
+		else{
+			return $return;
+		}
+		//return view('website.event-viewer');
+	}
+
+
+	/******* Test purpose ***** */
 	public function cancel_appointent_url()
 	{
 		$authdata = $this->website_login_checked();
@@ -686,10 +719,4 @@ class UsersController extends ApiController {
 		exit;
 	}
 
-	public function event_viewer(){
-		return view('website.event-viewer');
-	}
-
-
-	
 }

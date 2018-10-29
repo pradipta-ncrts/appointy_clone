@@ -940,7 +940,7 @@ class UsersController extends ApiController {
 		$response_data=array();	
 		// validate the requested param for access this service api
 		$this->validate_parameter(1); // along with the user request key validation
-		
+		$user_no = $this->logged_user_no;
 		$service_id = $request->input('service_id');
 
 		$findCond = array(
@@ -955,6 +955,9 @@ class UsersController extends ApiController {
 		);
 		
 		$this->common_model->update_data($this->tableObj->tableUserService,$findCond,$param);
+
+		// Event Viewer //
+		$this->add_user_event_viewer($user_no,$type=3);
 
 		$this->response_status='1';
 		$this->response_message="Successfully service status updated.";
@@ -1004,7 +1007,7 @@ class UsersController extends ApiController {
 		{
 			if($category=='new')
 	    	{
-	    		$this->response_message="You cun't add new category when update service.";
+	    		$this->response_message="You can't add new category when update service.";
 	    		$this->json_output($response_data);
 	    	}
 	    	else
@@ -1063,6 +1066,9 @@ class UsersController extends ApiController {
 
     		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$param);
 
+			// Event Viewer //
+			$this->add_user_event_viewer($user_no,$type=2);
+
     		$this->response_status='1';
 			$this->response_message="Successfully service updated.";
 		}
@@ -1071,6 +1077,9 @@ class UsersController extends ApiController {
 			$insert = $this->common_model->insert_data_get_id($this->tableObj->tableUserService, $param);
 			if($insert)
 			{
+				// Event Viewer //
+				$this->add_user_event_viewer($user_no,$type=1);
+
 				$this->response_status='1';
 				$this->response_message="Successfully service added.";
 			}
@@ -1520,6 +1529,72 @@ class UsersController extends ApiController {
 	        'place_id' => $placeId,
 	    ];
 	    return $result;
+	}
+
+	function event_viewer_list(Request $request){
+		$response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+		$pageNo = $request->input('page_no');
+		$staff_name = $request->input('staff_name');
+		$type = $request->input('type');
+
+        $pageNo = ($pageNo>1)?$pageNo:1;
+        $limit=$this->limit;
+        $offset=($pageNo-1)*$limit;
+
+        $user_no = $this->logged_user_no;
+        
+        $findCond=array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+		);
+		if(isset($type) && $type > 0){
+			$findCond[]=array('type','=',$type);
+		}
+
+		if(isset($staff_name) && $staff_name != ''){
+			$findCond[]=array($this->tableObj->tableNameStaff.'.full_name','=',$staff_name);
+		}
+        
+        $selectFields = array('event_viewer_id','type_name','message', 'created_on');
+		$user_select_field = array('name as username');
+		$staff_select_field = array('full_name as staffname');
+		$joins = array(
+                    array(
+                    'join_table'=>$this->tableObj->tableNameUser,
+                    'join_table_alias'=>'',
+                    'join_with'=>$this->tableObj->tableNameUserEventViewer,
+                    'join_type'=>'left',
+                    'join_on'=>array('user_id','=','id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $user_select_field,
+				),
+				array(
+                    'join_table'=>$this->tableObj->tableNameStaff,
+                    'join_table_alias'=>'',
+                    'join_with'=>$this->tableObj->tableNameUserEventViewer,
+                    'join_type'=>'left',
+                    'join_on'=>array('staff_id','=','staff_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $staff_select_field,
+                ),
+            );
+
+		$event_viewer_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserEventViewer, $findCond, $selectFields, $joins, $orderBy=array(),$groupBy='');
+		for($i=0;$i<count($event_viewer_list);$i++){
+			$event_viewer_list[$i]->created_on = date('d M, Y h:m A', strtotime($event_viewer_list[$i]->created_on));
+		}
+		$response_data['event_viewer_list'] = $event_viewer_list;
+		$this->response_status='1';
+		$this->response_message="event_viewer_list";
+
+        // generate the service / api response
+        $this->json_output($response_data);
+
 	}
 
 }

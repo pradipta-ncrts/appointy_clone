@@ -65,6 +65,8 @@ class TablesController {
 
         $this->tableNameStaffPostalCode = config('constants.tables.staff_postal_code');
 
+        $this->tableNameUserEventViewer = config('constants.tables.user_event_viewer');
+
         
 
 

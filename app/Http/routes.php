@@ -111,6 +111,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_login','Api\ClientsController@client_login');
     Route::post('/area_code','Api\StaffsController@area_code');
 
+    Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
+
     
 });
 
@@ -143,7 +145,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/marketing-discount-coupons','Website\UsersController@marketing_discount_coupons');
     Route::get('/offers','Website\UsersController@offers');
     Route::get('/reports','Website\UsersController@reports');
-    Route::get('/client-database','Website\UsersController@client_database');
+    Route::get('/client-database/{search_param?}','Website\UsersController@client_database');
     Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
     Route::get('/staff-export','Website\UsersController@staff_export');
     Route::get('/settings-membership','Website\UsersController@settings_membership');

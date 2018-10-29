@@ -44,6 +44,8 @@ return [
 
         'staff_postal_code' => 'staff_postal_code',
 
+        'user_event_viewer' => 'user_event_viewer',
+
 
 
     ],
