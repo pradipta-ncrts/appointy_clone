@@ -47,6 +47,8 @@ Squeedr
                   <label>discount</label>
                </div>
                <div class="clearfix"></div>
+               <a href="{{asset('public/assets/website/export/demo-excel.xlsx')}}" download>Export</a>
+               <div class="clearfix"></div>
                <div class="break20px"></div>
                <h3>Import your existing contacts</h3>
                <div class="form-group">

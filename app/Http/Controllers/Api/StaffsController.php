@@ -1061,16 +1061,57 @@ class StaffsController extends ApiController {
             $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaffPostalCode,$param);
             if($insertdata > 0)
             {
-                 $findCond = array(
+                $query = "select `squ_staff_postal_code`.`postal_code`, COUNT(*) as count from `squ_staff_postal_code` where `squ_staff_postal_code`.`is_deleted` = 0 and `squ_staff_postal_code`.`is_blocked` = 0 and `squ_staff_postal_code`.`user_id` = '".$user_id."' and `squ_staff_postal_code`.`is_deleted` = 0 group by `postal_code`";
+
+                $postal_code_count = $this->common_model->customQuery($query,$query_type=1);
+                //print_r($postal_code_count); die();
+               
+
+                $findCond = array(
                     array('is_deleted','=','0'),
                     array('is_blocked','=','0'),
                     array('user_id','=',$user_id),
                     array('staff_id','=',$staff_id),
                 );
-                $postal_code = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectField='',$joins=array(),$orderBy=array(),$groupBy="postal_code",$havings=array(),$limit=0,$offset=0,$is_count=0);
+
+                $selectField = array();
+
+                $postal_codes = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="postal_code",$havings=array(),$limit=0,$offset=0,$is_count=0);
+                
+                $postal_code_array = array();
+                foreach ($postal_codes as $key => $value)
+                {
+                    foreach ($postal_code_count as $keys => $ct) 
+                    {
+                        if($value->postal_code==$ct->postal_code)
+                        {
+                            $count = $ct->count;
+                        }
+                        else
+                        {
+                            $count = '1';
+                        }
+    
+                    }
+
+                    $postal_code_array[] = array(
+                            'postal_code_id' => $value->postal_code_id,
+                            'user_id' => $value->user_id,
+                            'staff_id' => $value->staff_id,
+                            'postal_code' => $value->postal_code,
+                            'area' => $value->area,
+                            'status' => $value->status,
+                            'is_blocked' => $value->is_blocked,
+                            'is_deleted' => $value->is_deleted,
+                            'created_on' => $value->created_on,
+                            'updated_on' => $value->updated_on,
+                            'deleted_on' => $value->deleted_on,
+                            'count' => $count,
+                    );
+                }
 
                 $this->response_status='1';
-                $this->response_message = array('postal_data' => $postal_code, 'msg' => "Postal code successfully added");
+                $this->response_message = array('postal_data' => $postal_code_array, 'msg' => "Postal code successfully added");
             }
         }
         else
@@ -1080,5 +1121,303 @@ class StaffsController extends ApiController {
 
         $this->json_output($response_data);
     }
+
+    public function get_post_code(Request $request)
+    {
+
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $staff_id = $request->input('staff_id');
+
+        
+        $query = "select `squ_staff_postal_code`.`postal_code`, COUNT(*) as count from `squ_staff_postal_code` where `squ_staff_postal_code`.`is_deleted` = 0 and `squ_staff_postal_code`.`is_blocked` = 0 and `squ_staff_postal_code`.`user_id` = '".$user_id."' and `squ_staff_postal_code`.`is_deleted` = 0 group by `postal_code`";
+
+        $postal_code_count = $this->common_model->customQuery($query,$query_type=1);
+        //print_r($postal_code_count); die();
+       
+
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            array('user_id','=',$user_id),
+            array('staff_id','=',$staff_id),
+        );
+
+        $selectField = array();
+
+        $postal_codes = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="postal_code",$havings=array(),$limit=0,$offset=0,$is_count=0);
+        
+        $postal_code_array = array();
+        foreach ($postal_codes as $key => $value)
+        {
+            foreach ($postal_code_count as $keys => $ct) 
+            {
+                if($value->postal_code==$ct->postal_code)
+                {
+                    $count = $ct->count;
+                }
+                else
+                {
+                    $count = '1';
+                }
+
+            }
+
+            $postal_code_array[] = array(
+                    'postal_code_id' => $value->postal_code_id,
+                    'user_id' => $value->user_id,
+                    'staff_id' => $value->staff_id,
+                    'postal_code' => $value->postal_code,
+                    'area' => $value->area,
+                    'status' => $value->status,
+                    'is_blocked' => $value->is_blocked,
+                    'is_deleted' => $value->is_deleted,
+                    'created_on' => $value->created_on,
+                    'updated_on' => $value->updated_on,
+                    'deleted_on' => $value->deleted_on,
+                    'count' => $count,
+            );
+        }
+
+
+        $staffFindCond = array(
+            array('staff_id','=',$staff_id),
+        );
+        $StaffSelectedField = array('postlcode_customer_interface');
+        $postlcode_customer_interface = $this->common_model->fetchData($this->tableObj->tableNameStaff,$staffFindCond,$StaffSelectedField);
+
+        $this->response_status='1';
+        $this->response_message = array('postal_data' => $postal_code_array, 'postlcode_customer_interface' => $postlcode_customer_interface, 'msg' => "Postal code successfully added");
+
+        $this->json_output($response_data);
+    }
+
+
+    public function chnage_postal_code_status(Request $request)
+    {
+
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $staff_id = $request->input('staff_id');
+        $status = $request->input('status');
+        $ids = explode(',', $request->input('ids'));
+
+        $status = $status=='active' ? '1' : '2';
+        
+        foreach ($ids as $key => $value)
+        {
+            $findCond=array(
+                        array('postal_code_id','=',$value),
+                    );
+
+            $updateData=array(
+                'status'=>$status,
+                'updated_on'=>$this->date_format
+            );
+            $this->common_model->update_data($this->tableObj->tableNameStaffPostalCode,$findCond,$updateData);
+
+        }
+        
+        $query = "select `squ_staff_postal_code`.`postal_code`, COUNT(*) as count from `squ_staff_postal_code` where `squ_staff_postal_code`.`is_deleted` = 0 and `squ_staff_postal_code`.`is_blocked` = 0 and `squ_staff_postal_code`.`user_id` = '".$user_id."' and `squ_staff_postal_code`.`is_deleted` = 0 group by `postal_code`";
+
+        $postal_code_count = $this->common_model->customQuery($query,$query_type=1);
+        //print_r($postal_code_count); die();
+       
+
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            array('user_id','=',$user_id),
+            array('staff_id','=',$staff_id),
+        );
+
+        $selectField = array();
+
+        $postal_codes = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="postal_code",$havings=array(),$limit=0,$offset=0,$is_count=0);
+        
+        $postal_code_array = array();
+        foreach ($postal_codes as $key => $value)
+        {
+            foreach ($postal_code_count as $keys => $ct) 
+            {
+                if($value->postal_code==$ct->postal_code)
+                {
+                    $count = $ct->count;
+                }
+                else
+                {
+                    $count = '1';
+                }
+
+            }
+
+            $postal_code_array[] = array(
+                    'postal_code_id' => $value->postal_code_id,
+                    'user_id' => $value->user_id,
+                    'staff_id' => $value->staff_id,
+                    'postal_code' => $value->postal_code,
+                    'area' => $value->area,
+                    'status' => $value->status,
+                    'is_blocked' => $value->is_blocked,
+                    'is_deleted' => $value->is_deleted,
+                    'created_on' => $value->created_on,
+                    'updated_on' => $value->updated_on,
+                    'deleted_on' => $value->deleted_on,
+                    'count' => $count,
+            );
+        }
+
+        $this->response_status='1';
+        $this->response_message = array('postal_data' => $postal_code_array, 'msg' => "Postal code successfully added");
+
+        $this->json_output($response_data);
+    }
+
+    public function postal_code_filter(Request $request)
+    {
+
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $staff_id = $request->input('staff_id');
+        $status = $request->input('status');
+
+        
+        $query = "select `squ_staff_postal_code`.`postal_code`, COUNT(*) as count from `squ_staff_postal_code` where `squ_staff_postal_code`.`is_deleted` = 0 and `squ_staff_postal_code`.`is_blocked` = 0 and `squ_staff_postal_code`.`user_id` = '".$user_id."' and `squ_staff_postal_code`.`is_deleted` = 0 group by `postal_code`";
+
+        $postal_code_count = $this->common_model->customQuery($query,$query_type=1);
+        //print_r($postal_code_count); die();
+       
+        if($status=="all")
+        {
+            $findCond = array(
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+                array('user_id','=',$user_id),
+                array('staff_id','=',$staff_id),
+            );
+        }
+        else if($status=="active")
+        {
+            $findCond = array(
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+                array('user_id','=',$user_id),
+                array('staff_id','=',$staff_id),
+                array('status','=','1'),
+            );
+        }
+        else if($status=="inactive")
+        {
+            $findCond = array(
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+                array('user_id','=',$user_id),
+                array('staff_id','=',$staff_id),
+                array('status','=','2'),
+            );
+        }
+        
+
+        $selectField = array();
+
+        $postal_codes = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="postal_code",$havings=array(),$limit=0,$offset=0,$is_count=0);
+        
+        $postal_code_array = array();
+        foreach ($postal_codes as $key => $value)
+        {
+            foreach ($postal_code_count as $keys => $ct) 
+            {
+                if($value->postal_code==$ct->postal_code)
+                {
+                    $count = $ct->count;
+                }
+                else
+                {
+                    $count = '1';
+                }
+
+            }
+
+            $postal_code_array[] = array(
+                    'postal_code_id' => $value->postal_code_id,
+                    'user_id' => $value->user_id,
+                    'staff_id' => $value->staff_id,
+                    'postal_code' => $value->postal_code,
+                    'area' => $value->area,
+                    'status' => $value->status,
+                    'is_blocked' => $value->is_blocked,
+                    'is_deleted' => $value->is_deleted,
+                    'created_on' => $value->created_on,
+                    'updated_on' => $value->updated_on,
+                    'deleted_on' => $value->deleted_on,
+                    'count' => $count,
+            );
+        }
+
+        $this->response_status='1';
+        $this->response_message = array('postal_data' => $postal_code_array, 'msg' => "Postal code successfully added");
+
+        $this->json_output($response_data);
+    }
+
+    public function change_postal_code_customer_interface(Request $request)
+    {
+
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $staff_id = $request->input('staff_id');
+        
+        $staffFindCond = array(
+            array('staff_id','=',$staff_id),
+        );
+        $StaffSelectedField = array('postlcode_customer_interface');
+        $postlcode_customer_interface = $this->common_model->fetchData($this->tableObj->tableNameStaff,$staffFindCond,$StaffSelectedField);
+
+        $postlcode_customer_interface = $postlcode_customer_interface->postlcode_customer_interface == '1' ? '0' : '1';
+
+        $findCond=array(
+                    array('staff_id','=',$staff_id),
+                );
+
+        $updateData=array(
+            'postlcode_customer_interface' => $postlcode_customer_interface,
+            'updated_on'=>$this->date_format
+        );
+        
+        $this->common_model->update_data($this->tableObj->tableNameStaff,$findCond,$updateData);
+
+        $this->response_status='1';
+        $this->response_message = array('postlcode_customer_interface' => $postlcode_customer_interface, 'msg' => "Successfully updated");
+
+        $this->json_output($response_data);
+    }
+
+    
+
+    
 
 }

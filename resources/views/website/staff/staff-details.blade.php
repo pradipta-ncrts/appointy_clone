@@ -405,9 +405,9 @@ Squeedr
                                 <div class="dropdown custm-uperdrop">
                                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">All<img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""></button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="#">All</a></li>
-                                        <li><a href="#">Active<span class="badge">15</span></a></li>
-                                        <li><a href="#">Inactive<span class="badge">5</span></a></li>
+                                        <li><a class="show-postal-code" data-status="all" href="javascript:void(0)">All</a></li>
+                                        <li><a class="show-postal-code" data-status="active" href="javascript:void(0)">Active<!-- <span class="badge">15</span> --></a></li>
+                                        <li><a class="show-postal-code" data-status="inactive" href="javascript:void(0)">Inactive<!-- <span class="badge">5</span> --></a></li>
                                     </ul>
                                 </div>
                                 <div class="pull-right">
@@ -423,7 +423,7 @@ Squeedr
                                                 </div>
 
                                                 <div class="col-sm-2">
-                                                    <button type="button" id="isBlocked" class="btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                                    <button type="button" id="postlcode_customer_interface" class="postlcode_customer_interface btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
                                                         <div class="handle"></div>
                                                     </button>
                                                 </div>
@@ -433,14 +433,16 @@ Squeedr
                                 </div>
 
                                 <div class="postal-cdbx">
-                                    <div class="dropdown stff-drp">
+                                    <!-- <div class="dropdown stff-drp">
                                         <button class="btn dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-expanded="false" title="Select"><i class="fa fa-minus-circle" aria-hidden="true"></i><img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""></button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#">All</a></li>
-                                            <li><a href="#">None</a></li>
+                                            <li><a id="checked-all" href="javascript:void(0)">All</a></li>
+                                            <li><a id="unchecked-all" href="javascript:void(0)">None</a></li>
                                         </ul>
-                                    </div>
-                                    <button type="button" class="btn btn-default btn-xs" title="Set Inactive"><i class="fa fa-ban" aria-hidden="true"></i></button>
+                                    </div> -->
+                                    <button type="button" class="btn btn-default btn-xs set-status" data-status="inactive" title="Set Inactive"><i class="fa fa-ban" aria-hidden="true"></i></button>
+
+                                    <button type="button" class="btn btn-default btn-xs set-status" data-status="active" title="Set Active"><i class="fa fa-check" aria-hidden="true"></i></button>
                                 </div>
 
                                 <div class="tableBH-table stfftable" id="postal_code_html">
@@ -1584,10 +1586,18 @@ $('#area_code').validate({
                 var postal_html = "";
                 if(response.message.postal_data.length > 0)
                 {
+                    if(response.message.postal_data[i].status=='1')
+                    {
+                        var status = "Active";
+                    }
+                    else
+                    {
+                        var status = "Inactive";
+                    }
                     postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
                     for(i = 0;i<response.message.postal_data.length;i++)
                     {
-                        postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>0</td><td>Active</td></tr>';
+                        postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox" value="'+response.message.postal_data[i].postal_code_id+'">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>'+response.message.postal_data[i].count+'</td><td>'+status+'</td></tr>';
                     }
                     postal_html +='</tbody>';
                 }
@@ -1610,6 +1620,225 @@ $('#area_code').validate({
       });
     }
 });
+
+$('#postalcodeTab').click(function(){
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id});
+    $.ajax({
+        url: "<?php echo url('api/get_post_code')?>",
+        type: "post",
+        data: data,
+        dataType: "json",
+        success: function(response) {
+            console.log(response); //Success//
+            var postal_html = "";
+            if(response.message.postal_data.length > 0)
+            {
+                if(response.message.postal_data[i].status=='1')
+                {
+                    var status = "Active";
+                }
+                else
+                {
+                    var status = "Inactive";
+                }
+
+                postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+
+                for(i = 0;i<response.message.postal_data.length;i++)
+                {
+                    postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox" value="'+response.message.postal_data[i].postal_code_id+'">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>'+response.message.postal_data[i].count+'</td><td>'+status+'</td></tr>';
+                }
+                postal_html +='</tbody>';
+            }
+            else
+            {
+                postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+                postal_html +='<tr><td colspan="4">No record found</td></tr>';
+                postal_html +='</tbody>';
+            }
+
+
+            $('#postlcode_customer_interface').removeClass('active');
+            if(response.message.postlcode_customer_interface.postlcode_customer_interface == '1')
+            {
+                $('#postlcode_customer_interface').addClass('active');
+            }
+            else
+            {
+                $('#postlcode_customer_interface').removeClass('active');
+            }
+
+            $("#postal_code_html").html(postal_html);
+        },
+        beforeSend: function() {
+            $('.animationload').show();
+        },
+        complete: function() {
+            $('.animationload').hide();
+        }
+    });
+});
+
+$('.set-status').click(function(){
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    var status = $(this).data('status');
+    var val = [];
+    $(':checkbox:checked').each(function(i){
+      val[i] = $(this).val();
+    });
+    //alert(val);
+    //return false;
+    if(val!='')
+    {
+        var data = addCommonParams([]);
+        data.push({name:'staff_id', value:staff_id}, {name:'status', value:status}, {name:'ids', value:val});
+        console.log(data);
+        $.ajax({
+            url: "<?php echo url('api/chnage_postal_code_status')?>",
+            type: "post",
+            data: data,
+            dataType: "json",
+            success: function(response) {
+                console.log(response); //Success//
+                var postal_html = "";
+                if(response.message.postal_data.length > 0)
+                {
+                    postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+
+                    for(i = 0;i<response.message.postal_data.length;i++)
+                    {
+                        if(response.message.postal_data[i].status=='1')
+                        {
+                            var status = "Active";
+                        }
+                        else
+                        {
+                            var status = "Inactive";
+                        }
+                        postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox" value="'+response.message.postal_data[i].postal_code_id+'">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>'+response.message.postal_data[i].count+'</td><td>'+status+'</td></tr>';
+                    }
+                    postal_html +='</tbody>';
+                }
+                else
+                {
+                    postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+                    postal_html +='<tr><td colspan="4">No record found</td></tr>';
+                    postal_html +='</tbody>';
+                }
+
+                $("#postal_code_html").html(postal_html);
+            },
+            beforeSend: function() {
+                $('.animationload').show();
+            },
+            complete: function() {
+                $('.animationload').hide();
+            }
+        });
+    }
+    else
+    {
+        swal("Error", "Please check any postal code" , "error");
+    }
+});
+
+$('.show-postal-code').click(function(){
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    var status = $(this).data('status');
+    
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id}, {name:'status', value:status});
+    console.log(data);
+    $.ajax({
+        url: "<?php echo url('api/postal_code_filter')?>",
+        type: "post",
+        data: data,
+        dataType: "json",
+        success: function(response) {
+            console.log(response); //Success//
+            var postal_html = "";
+            if(response.message.postal_data.length > 0)
+            {
+                postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+
+                for(i = 0;i<response.message.postal_data.length;i++)
+                {
+                    if(response.message.postal_data[i].status=='1')
+                    {
+                        var status = "Active";
+                    }
+                    else
+                    {
+                        var status = "Inactive";
+                    }
+                    postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox" value="'+response.message.postal_data[i].postal_code_id+'">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>'+response.message.postal_data[i].count+'</td><td>'+status+'</td></tr>';
+                }
+                postal_html +='</tbody>';
+            }
+            else
+            {
+                postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
+                postal_html +='<tr><td colspan="4">No record found</td></tr>';
+                postal_html +='</tbody>';
+            }
+
+            $("#postal_code_html").html(postal_html);
+        },
+        beforeSend: function() {
+            $('.animationload').show();
+        },
+        complete: function() {
+            $('.animationload').hide();
+        }
+    });
+});
+
+$(document).on('click','#postlcode_customer_interface',function(){
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id});
+    $.ajax({
+        url: baseUrl+"/api/change_postal_code_customer_interface", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                $('#postlcode_customer_interface').removeClass('active');
+                if(response.message.postlcode_customer_interface == '1')
+                {
+                    $('#postlcode_customer_interface').addClass('active');
+                }
+                else
+                {
+                    $('#postlcode_customer_interface').removeClass('active');
+                }
+                swal({title: "Success", text: response.message.msg, type: "success"});
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+
+});
+
+
 
 </script>
 
