@@ -110,6 +110,14 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/client_login','Api\ClientsController@client_login');
     Route::post('/area_code','Api\StaffsController@area_code');
+    Route::post('/get_post_code','Api\StaffsController@get_post_code');
+    Route::post('/chnage_postal_code_status','Api\StaffsController@chnage_postal_code_status');
+    Route::post('/postal_code_filter','Api\StaffsController@postal_code_filter');
+    Route::post('/change_postal_code_customer_interface','Api\StaffsController@change_postal_code_customer_interface');
+
+    
+    
+    
 
     Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
 
