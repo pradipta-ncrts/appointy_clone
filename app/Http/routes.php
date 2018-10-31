@@ -124,6 +124,14 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
 
+    Route::post('/settings_membership','Api\PlanController@settings_membership');
+
+    Route::post('/change_plan_duration','Api\PlanController@change_plan_duration');
+
+    
+
+    
+
     
 });
 
@@ -160,7 +168,6 @@ Route::group(['prefix'=>''],function(){
     Route::get('/client-export','Website\UsersController@client_export');
     Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
     Route::get('/staff-export','Website\UsersController@staff_export');
-    Route::get('/settings-membership','Website\UsersController@settings_membership');
     Route::get('/integration','Website\UsersController@integration');
     Route::get('/settings-business-hours','Website\UsersController@settings_business_hours');
     Route::get('/booking-options','Website\BookingsController@booking_options');
@@ -201,6 +208,9 @@ Route::group(['prefix'=>''],function(){
     Route::get('/profile-login','Website\ProfileController@profile_login');
 
     Route::get('/client-login','Website\ClientsController@client_login');
+
+    Route::get('/settings-membership','Website\PlanController@settings_membership');
+    
 });
 
 

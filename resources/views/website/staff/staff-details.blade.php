@@ -1638,19 +1638,19 @@ $('#postalcodeTab').click(function(){
             var postal_html = "";
             if(response.message.postal_data.length > 0)
             {
-                if(response.message.postal_data[i].status=='1')
-                {
-                    var status = "Active";
-                }
-                else
-                {
-                    var status = "Inactive";
-                }
-
                 postal_html +='<table id="example" class="table table-bordered table-custom1 table-bh tableBhMobile"><thead><tr><th>Code</th><th>Area</th><th>Assigned Staffs</th><th>Status</th></tr></thead><tbody>';
 
                 for(i = 0;i<response.message.postal_data.length;i++)
                 {
+                    if(response.message.postal_data[i].status=='1')
+                    {
+                        var status = "Active";
+                    }
+                    else
+                    {
+                        var status = "Inactive";
+                    }
+                    
                     postal_html +='<tr><td><div class="custm-tblebx"><input name="selected_checkbox" type="checkbox" value="'+response.message.postal_data[i].postal_code_id+'">'+response.message.postal_data[i].postal_code+'</div></td><td>'+response.message.postal_data[i].area+'</td><td>'+response.message.postal_data[i].count+'</td><td>'+status+'</td></tr>';
                 }
                 postal_html +='</tbody>';

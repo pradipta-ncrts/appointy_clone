@@ -59,6 +59,10 @@
       $stuffs_list = App\Http\Controllers\BaseApiController::stuffs_list(); 
       $currency_list = App\Http\Controllers\BaseApiController::currency_list(); 
       $user_new_category = App\Http\Controllers\BaseApiController::user_new_category(); 
+      $mysquder_page_inner = App\Http\Controllers\BaseApiController::mysquder_page_inner();
+      $inner_user_details = $mysquder_page_inner['inner_user_details'];
+      $inner_staff_list = $mysquder_page_inner['inner_staff_list'];
+      $inner_service_list = $mysquder_page_inner['inner_service_list']; 
       /*echo "<pre>";
       print_r($stuffs_list); die();*/
       ?> 
@@ -317,170 +321,282 @@
       <!-- /c-mask --> 
       <div class="profilepopup">
          <div class="container-custom">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="profile">
-                     <a class="closePopUp"> <img src="{{asset('public/assets/website/images/popup-close.png')}}"/></a> 
-                     <div class="row">
-                        <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
-                           <div class="profileInside">
-                              <div class="banner-top">
-                                 <div class="img-banner-parent">
-                                    <div class="img-banner">
-                                       <img src="{{asset('public/assets/website/images/img-banner.jpg')}}" class="img-responsive"/> 
-                                       <div class="blackbox">
-                                          <div class="lefttext">
-                                             <h6>Dr. Esther Gladden<br/> <span>Psychiatrist</span> </h6>
-                                          </div>
-                                          <a class="btn-select">Select a service <i class=" fa fa-caret-down"></i></a> 
-                                       </div>
-                                       <!-- <a class="btn btn-custom">Book Now</a>--> 
-                                    </div>
-                                 </div>
-                                 <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" /> 
-                                 <ul class="profilelinks">
-                                    <li><a href="#">Services</a> </li>
-                                    <li><a href="#"> Expertise </a> </li>
-                                    <li><a href="#">Presentation </a> </li>
-                                    <li><a href="#">Contacts</a> </li>
-                                 </ul>
-                              </div>
-                              <div class="staffs">
-                                 <div class="staffsinside">
-                                    <div class="headbar">
-                                       <img src="{{asset('public/assets/website/images/popup-staffs.png')}}"/> 
-                                       <h4>Staffs</h4>
-                                    </div>
-                                    <div class="owl-carousel owl-theme owl-custom">
-                                       <div class="item"><img src="{{asset('public/assets/website/images/staffs/img1.png')}}"/><span>Carla J. Boatner</span> </div>
-                                       <div class="item"><img src="{{asset('public/assets/website/images/staffs/img2.png')}}"/><span>Kristen R. Anderson</span></div>
-                                       <div class="item"><img src="{{asset('public/assets/website/images/staffs/img3.png')}}"/><span>Robert C. Booker</span></div>
-                                       <div class="item"><img src="{{asset('public/assets/website/images/staffs/img1.png')}}"/><span>Marie N. McDaniel</span> </div>
-                                       <div class="item"><img src="{{asset('public/assets/website/images/staffs/img2.png')}}"/><span>Marvin S. Brown</span></div>
-                                       <div class="item"><img src="{{asset('public/assets/website/images/staffs/img3.png')}}"/><span>Otis K. Holmes</span></div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="staffs">
-                                 <div class="staffsinside">
-                                    <div class="prof">
-                                       <img src="{{asset('public/assets/website/images/profile-icon-presentation.png')}}"> 
-                                       <div class="prof-cont">
-                                          <h3>Presentation</h3>
-                                          <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ad quorum et cognitionem et usum iam corroborati natura ipsa praeeunte deducimur. Nunc ita separantur, ut disiuncta <a href="#">more</a> </p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="staffs">
-                                 <div class="staffsinside">
-                                    <div class="prof">
-                                       <img src="{{asset('public/assets/website/images/profile-icon-expertise.png')}}"> 
-                                       <div class="prof-cont">
-                                          <h3>Expertise</h3>
-                                          <p> <span class="expt">Addiction, addiction and alcoholism</span> <span class="expt">Sleep medicine</span> <span class="expt">Hyperactivity - Inhibition</span> <span class="expt">Child Psychiatry</span> <span class="expt">Sleep disorder</span> <span class="expt">Insomnia</span> <span class="expt">Child sleep apnea</span> <span class="expt">Sleep Apnea</span> </p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="staffs">
-                                 <div class="staffsinside">
-                                    <div class="prof">
-                                       <img src="{{asset('public/assets/website/images/profile-icon-service.png')}}"> 
-                                       <div class="prof-cont">
-                                          <h3>Services <small>(Select any service to book)</small> </h3>
-                                          <div class="headRow mobileappointed clearfix" id="row2" >
-                                             <div class="appointment mobSevices whitebox col-sm-4">
-                                                <div class="pull-left">
-                                                   <p>Dental Consultation</p>
-                                                   <span>30min-1h <label>$50</label> </span> 
-                                                </div>
-                                                <div class="pull-right">Pack</div>
-                                             </div>
-                                             <div class="appointment mobSevices col-sm-4">
-                                                <div class="pull-left">
-                                                   <p>Smile corrections</p>
-                                                   <span>30min-1h <label>$50</label> </span> 
-                                                </div>
-                                                <div class="pull-right">Meeting</div>
-                                             </div>
-                                             <div class="appointment mobSevices col-sm-4">
-                                                <div class="pull-left">
-                                                   <p>Smile corrections</p>
-                                                   <span>30min-1h <label>$50</label> </span> 
-                                                </div>
-                                                <div class="pull-right">Service</div>
-                                             </div>
-                                          </div>
-                                          <div class="headRow mobileappointed clearfix" id="row2" >
-                                             <div class="appointment mobSevices whitebox col-sm-4">
-                                                <div class="pull-left">
-                                                   <p>Dental Consultation</p>
-                                                   <span>30min-1h <label>$50</label> </span> 
-                                                </div>
-                                                <div class="pull-right">Meeting</div>
-                                             </div>
-                                             <div class="appointment mobSevices col-sm-4">
-                                                <div class="pull-left">
-                                                   <p>Smile corrections</p>
-                                                   <span>30min-1h <label>$50</label> </span> 
-                                                </div>
-                                                <div class="pull-right">Meeting</div>
-                                             </div>
-                                             <div class="appointment mobSevices col-sm-4">
-                                                <div class="pull-left">
-                                                   <p>Smile corrections</p>
-                                                   <span>30min-1h <label>$50</label> </span> 
-                                                </div>
-                                                <div class="pull-right">Pack</div>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <div class="staffs">
-                                 <div class="staffsinside">
-                                    <div class="prof">
-                                       <img src="{{asset('public/assets/website/images/profile-icon-location.png')}}"> 
-                                       <div class="prof-cont">
-                                          <div class=" col-md-4">
-                                             <!-- <h3>Map and access information</h3>--> 
-                                             <h4>Smile Corrections</h4>
-                                             <p><img src="{{asset('public/assets/website/images/profile-icon-location1.png')}}" /> Lauren Drive, Madison, WI 53705 </p>
-                                             <h5>Transport</h5>
-                                             <p>Metro - Lauren Drive <br> RER - LaurenDrive </p>
-                                             <h5>Parking</h5>
-                                             <p>Grenelle 2 (surface) <br> Lauren Drive, Madision, WI 53705 </p>
-                                             <h5>Useful information</h5>
-                                             <p>Ground floor, Handicap access </p>
-                                          </div>
-                                          <div class=" col-md-4">
-                                             <h3>Contacts</h3>
-                                             <div class="inf"> <img src="{{asset('public/assets/website/images/profile-icon-email.png')}}" /> EstherG@gmail.com </div>
-                                             <div class="inf"> <img src="{{asset('public/assets/website/images/profile-icon-phone1.png')}}" /> 802-438-0497 </div>
-                                             <div class="inf"> <img src="{{asset('public/assets/website/images/profile-icon-location1.png')}}" /> Lauren Drive, Madison, WI 53705 </div>
-                                             <div class=" flex break30px">
-                                                <div class="prof-cont">
-                                                   <h3>Payment mode</h3>
-                                                   <p> Cheques, Chash and Credit Cards</p>
-                                                </div>
-                                             </div>
-                                          </div>
-                                          <div class=" col-md-4 socials">
-                                             <h3>Social Medias</h3>
-                                             <div class="inf"> <a href="#" class="fa fa-facebook-official"></a> <a href="#" class="fa fa-twitter-square"></a> <a href="#" class="fa fa-instagram"></a> </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
+           <div class="profile">
+             <a class="closePopUp"> <img src="{{asset('public/assets/website/images/popup-close.png')}}"/></a>
+             <div class="row">
+               <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1">
+                 <div class="profileInside">
+                   <div class="banner-top">
+                     <div class="img-banner-parent">
+                       <div class="img-banner">
+                         <?php
+                          if($inner_user_details->timeline_image)
+                          {
+                          ?>
+                         <img src="{{asset('public/')}}/image/timeline_image/<?=$inner_user_details->timeline_image;?>" class="img-responsive"/>
+                         <?php
+                          }
+                          else
+                          {
+                          ?>
+                         <img src="{{asset('public/assets/website/images/img-banner.jpg')}}" class="img-responsive"/>
+                         <?php
+                           }
+                         ?>
+                         <div class="blackbox">
+                           <div class="lefttext">
+                             <h6>
+                               <?=$inner_user_details->user_type==1 ? $inner_user_details->name :  $inner_user_details->business_name;?>
+                               <br/>
+                               <span>
+                               <?=$inner_user_details->prof ? $inner_user_details->prof : "No data found";?>
+                               </span> </h6>
                            </div>
-                        </div>
+                           <a class="btn-select">Select a service <i class=" fa fa-caret-down"></i></a> </div>
+                         
+                         <!-- <a class="btn btn-custom">Book Now</a>--> 
+                         
+                       </div>
                      </div>
-                  </div>
+                     <?php
+                     if($inner_user_details->user_type==1)
+                     {
+                        $url = asset('public/').'/image/profile_perosonal_image/'.$inner_user_details->profile_perosonal_image;
+                        if($inner_user_details->profile_perosonal_image && file_exists($url))
+                        {
+                        ?>
+                     <img src="{{asset('public/')}}/image/profile_perosonal_image/<?=$inner_user_details->profile_perosonal_image;?>" class="profilepic"/>
+                     <?php 
+                      }
+                      else
+                      {
+                      ?>
+                     <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" />
+                     <?php
+                     }
+                     ?>
+                     <?php
+                     }
+                     else
+                     {
+                         if($inner_user_details->profile_image)
+                         {
+                     ?>
+                     <img src="{{asset('public/')}}/image/profile_perosonal_image/<?=$inner_user_details->profile_image;?>" class="profilepic"/>
+                     <?php 
+                         }
+                         else
+                         {
+                      ?>
+                     <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" />
+                     <?php
+                         }
+                     }
+                     ?>
+                     <ul class="profilelinks">
+                       <li><a href="#">Services</a> </li>
+                       <li><a href="#"> Expertise </a> </li>
+                       <li><a href="#">Presentation </a> </li>
+                       <li><a href="#">Contacts</a> </li>
+                     </ul>
+                   </div>
+                   <div class="staffs">
+                     <div class="staffsinside">
+                       <div class="headbar"> <img src="{{asset('public/assets/website/images/popup-staffs.png')}}"/>
+                         <h4>Staffs</h4>
+                       </div>
+                       <div class="owl-carousel owl-theme owl-custom">
+                     <?php
+                     foreach ($inner_staff_list as $key => $value)
+                     {
+                     ?>  
+                         <div class="item">
+                           <?php
+                            if($value->staff_profile_picture != '')
+                            { 
+                            ?>
+                           <img class="user-pic" src="<?php echo $value->staff_profile_picture;?>" width="35px" height="35px" />
+                           <?php
+                           } 
+                           else
+                           {
+                           ?>
+                           <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" />
+                           <?php
+                            } 
+                           ?>
+                           <span>
+                           <?=$value->full_name;?>
+                           </span> </div>
+                         <?php
+                           }
+                           ?>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="staffs">
+                     <div class="staffsinside">
+                       <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-presentation.png')}}">
+                         <div class="prof-cont">
+                           <h3>Presentation</h3>
+                           <p>
+                             <?=$inner_user_details->presentation ? $inner_user_details->presentation : "No data found";?>
+                             <!-- <a href="#">more</a> --> </p>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="staffs">
+                     <div class="staffsinside">
+                       <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-expertise.png')}}">
+                         <div class="prof-cont">
+                           <h3>Expertise</h3>
+                           <p>
+                             <?php
+                             if(!empty($inner_user_details->expertise))
+                             {
+                                $expertise = explode(',', $inner_user_details->expertise);
+                                foreach ($expertise as $key => $value)
+                                {
+                                ?>
+                             <span class="expt">
+                             <?=$value;?>
+                             </span>
+                             <?php
+                                }
+                             }
+                             else
+                             {
+                                echo "No expertise found.";
+                             }
+                             ?>
+                           </p>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="staffs">
+                     <div class="staffsinside">
+                       <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-service.png')}}">
+                         <div class="prof-cont">
+                           <h3>Services <small>(Select any service to book)</small> </h3>
+                           <div class="headRow mobileappointed clearfix" id="row2">
+                             <?php
+                               if(empty($inner_service_list))
+                               {
+                                  echo "<h2>No service found!</h2>";
+                               }
+                               foreach ($inner_service_list as $key => $details) 
+                               {
+                               ?>
+                             <div class="appointment mobSevices col-sm-4">
+                               <div class="pull-left">
+                                 <p>
+                                   <?=$details->service_name;?>
+                                 </p>
+                                 <span>
+                                 <?=$details->duration;?>
+                                 min
+                                 <label>
+                                   <?=$details->currency;?>
+                                   <?=$details->duration ? $details->cost : '';?>
+                                 </label>
+                                 </span> </div>
+                               <div class="pull-right">
+                                 <?=$details->cat;?>
+                               </div>
+                             </div>
+                             <?php
+                               }
+                               ?>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="staffs">
+                     <div class="staffsinside">
+                       <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-location.png')}}">
+                         <div class="prof-cont">
+                           <div class=" col-md-4"> 
+                             <!-- <h3>Map and access information</h3>-->
+                             <h5 style="margin-top:0;">Business Information</h5>
+                             <p> <?=$inner_user_details->business_description ? strip_tags($inner_user_details->business_description) : "No data found";?> </p>
+                             <h5>Smile Corrections</h5>
+                             <p><img src="{{asset('public/assets/website/images/profile-icon-location1.png')}}" />
+                               <?=$inner_user_details->business_location ? $inner_user_details->business_location : "No data found";?>
+                             </p>
+                             <h5>Transport</h5>
+                             <p>
+                               <?=$inner_user_details->transport ? $inner_user_details->transport : "No data found";?>
+                             </p>
+                             <h5>Parking</h5>
+                             <p>
+                               <?=$inner_user_details->parking ? $inner_user_details->parking : "No data found";?>
+                             </p>
+                           </div>
+                           <div class=" col-md-4">
+                             <h5 style="margin-top:0;">Contacts</h5>
+                             <div class="inf"> <img src="{{asset('public/assets/website/images/profile-icon-email.png')}}" />
+                               <?=$inner_user_details->email ? $inner_user_details->email : "No data found";?>
+                             </div>
+                             <div class="inf"> <img src="{{asset('public/assets/website/images/profile-icon-phone1.png')}}" />
+                               <?=$inner_user_details->mobile ? $inner_user_details->mobile : "No data found";?>
+                             </div>
+                             <div class="inf"> <img src="{{asset('public/assets/website/images/profile-icon-location1.png')}}" /> Lauren Drive, Madison, WI 53705 </div>
+                             <div class=" flex break30px">
+                               <div class="prof-cont">
+                                 <h5>Payment mode</h5>
+                                 <p>
+                                   <?=$inner_user_details->payment_mode ? $inner_user_details->payment_mode : "No data found";?>
+                                 </p>
+                               </div>
+                             </div>
+                           </div>
+                           <div class=" col-md-4 socials">
+                            <div class="map-yurpage">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2531.268456989167!2d-89.4622255849775!3d43.071637097859536!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8807ac17ef4bd095%3A0xc0813a752fde03f7!2sMadison%2C+WI+53705%2C+USA!5e1!3m2!1sen!2sin!4v1539428284980" width="100%" height="200" frameborder="0" style="border:0" allowfullscreen></iframe>
+                            </div>
+                           </div>
+                           
+                           
+                           
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+
+                   <div class="col-md-12">
+                           <div class="yurpage-ftr">
+                            <ul>
+                             <?php
+                             foreach ($inner_staff_list as $key => $value)
+                             {
+                               if($value->city)
+                               {
+                             ?>
+                              <li><a href="#"><?=$value->city;?></a></li>
+                             <?php
+                               }
+                             }
+                             ?>
+                            </ul>
+                           </div>
+                             <div class="yurpage-social"> 
+                             <ul>
+                             <li><a target="_blank" href="<?=$inner_user_details->facebook_link ? $inner_user_details->facebook_link : "";?>" class="fa fa-facebook"></a></li> 
+                             <li><a target="_blank" href="<?=$inner_user_details->twitter_link ? $inner_user_details->twitter_link : '';?>" class="fa fa-twitter"></a></li>
+                             <li><a target="_blank" href="<?=$inner_user_details->linked_in_link ? $inner_user_details->linked_in_link : '';?>" class="fa fa-instagram"></a></li>
+                             <li><a target="_blank" href="" class="fa fa-skype"></a></li>
+                             </ul>
+                             </div>
+                           </div>
+
+                           
+                 </div>
                </div>
-            </div>
+             </div>
+           </div>
          </div>
       </div>
       <!--====================================Modal area start ====================================--> 
@@ -1640,7 +1756,7 @@
                             <?php
                             }
                             ?>
-                           <h2><a class="add-location-exist-user" href="JavaScript:Void(0);" data-username="<?=$value->username;?>" data-fullname="<?=$value->full_name;?>" data-email="<?=$value->email;?>" data-location="<?=$value->addess;?>" data-staffid="<?=$value->staff_id;?>"><?=$value->full_name;?></a>
+                           <h2><a class="add-location-exist-user" href="JavaScript:Void(0);" data-username="<?=$value->username;?>" data-fullname="<?=$value->full_name;?>" data-email="<?=$value->email;?>" data-location="<?=$value->addess;?>" data-staffid="<?=$value->staff_id;?>" data-country="<?=$value->country;?>" data-city="<?=$value->city;?>"><?=$value->full_name;?></a>
                               <br><a href="mailto:<?=$value->email;?>"><i class="fa fa-envelope-o"></i> <?=$value->email;?></a>
                            </h2>
                          </div>

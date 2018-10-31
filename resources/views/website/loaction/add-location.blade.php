@@ -132,6 +132,24 @@ Squeedr
                  <div class="col-md-12">
                     <div class="form-group">
                        <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                          <input id="country" type="text" class="form-control" name="country" placeholder="Country">
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="row">
+                 <div class="col-md-12">
+                    <div class="form-group">
+                       <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                          <input id="city" type="text" class="form-control" name="city" placeholder="City">
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="row">
+                 <div class="col-md-12">
+                    <div class="form-group">
+                       <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
                           <input id="location_username" type="text" class="form-control" name="location_username" placeholder="User Name">
                        </div>
                     </div>

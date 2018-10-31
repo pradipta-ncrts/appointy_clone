@@ -571,16 +571,6 @@ class UsersController extends ApiController {
 		return view('website.email-confirmation');
 	}
 
-	public function settings_membership()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.settings-membership');
-		}
-
-		return view('website.settings-membership');
-	}
-
 	public function integration()
 	{
 		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])

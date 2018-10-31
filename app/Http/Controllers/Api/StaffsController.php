@@ -413,6 +413,8 @@ class StaffsController extends ApiController {
         if($staff_id)
         {
             $staff_data['addess'] = $request->input('location_name');
+            $staff_data['country'] = $request->input('country');
+            $staff_data['city'] = $request->input('city');
 
             $updateCond=array(
                 array('staff_id','=',$staff_id),
@@ -427,6 +429,8 @@ class StaffsController extends ApiController {
         {
             $validate = Validator::make($request->all(),[
                                      'location_name'=>'required',
+                                     'country'=>'required',
+                                     'city'=>'required',
                                      'location_username'=>'required',
                                      'location_password'=>'required',
                                      'location_full_name'=>'required',
@@ -445,6 +449,8 @@ class StaffsController extends ApiController {
                 $username = $request->input('location_username');
                 $location = $request->input('location_name');
                 $password = $request->input('location_password');
+                $country = $request->input('country'); 
+                $city = $request->input('city');
                 
 
                 $conditions = array(
@@ -471,6 +477,8 @@ class StaffsController extends ApiController {
                     $staff_data['email'] = $email;
                     $staff_data['password'] = md5($password);
                     $staff_data['addess'] = $location;
+                    $staff_data['country'] = $country;
+                    $staff_data['city'] = $city;
                     
                     
                     //$staff_data['email_verification_code'] = $token;
@@ -1413,9 +1421,5 @@ class StaffsController extends ApiController {
 
         $this->json_output($response_data);
     }
-
-    
-
-    
 
 }

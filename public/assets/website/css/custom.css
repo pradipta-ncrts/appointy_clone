@@ -2127,7 +2127,6 @@ to {
 .stff-drp{float: left;margin: 0 9px 0 0;border: 1px solid #E4E4E4;border-radius: 4px;}
 .stff-drp img{height: 6px;margin: 3px 0 1px 5px;}
 .stff-drp .dropdown-menu{min-width:90px;}
-
 .yurpage-ftr{width:100%;display:inline-block;text-align:center;margin:15px 0 5px;}
 .yurpage-ftr ul{margin:0;padding:0;list-style:none;}
 .yurpage-ftr ul li{display:inline-block;text-align:center;border-right:1px solid #ccc;color:#000;font-size:17px;padding:0 10px;}
@@ -2144,6 +2143,10 @@ to {
 .yurpage-social ul li a.fa-instagram{color: #e7002d;}
 .yurpage-social ul li a.fa-skype{color: #5FD0FB;}
 .prof .prof-cont .inf{font-size:16px;}
+
+
+
+.datetime-nadd{width:100%;float:left;font-size:13px;line-height: 17px;margin: 4px 0 0 0;}
 
 /****** responsive ******/
 

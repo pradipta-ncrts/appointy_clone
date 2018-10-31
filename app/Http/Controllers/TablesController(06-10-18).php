@@ -59,6 +59,8 @@ class TablesController {
 
         $this->tableNameNotificationSettings = config('constants.tables.user_notification_settings');
 
+        $this->tableNamePlan = config('constants.tables.plan');
+
         
 
 
