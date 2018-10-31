@@ -67,7 +67,7 @@ class TablesController {
 
         $this->tableNameUserEventViewer = config('constants.tables.user_event_viewer');
 
-        
+        $this->tableNamePlan = config('constants.tables.plan');
 
 
 

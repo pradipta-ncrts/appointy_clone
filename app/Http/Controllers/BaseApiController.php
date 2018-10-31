@@ -679,6 +679,84 @@ class BaseApiController extends BaseController
         return $data;
     }
 
+    public static function mysquder_page_inner()
+    {
+        $data = array();
+        $obj = new Request();
+        $ci = new BaseApiController($obj);
+        $user_id = $_COOKIE['sqd_user_no'];
+        $findCond = array(
+            array('id','=',$user_id),
+            array('is_deleted','=','0'),
+        );
+        $selectFields = array();
+        $profession_select_field = array('profession as prof');
+        $joins = array(
+                     array(
+                        'join_table'=>$ci->tableObj->tableNameProfession,
+                        //'join_with_alias'=>'userTb',
+                        'join_with'=>$ci->tableObj->tableNameUser,
+                        //'join_with_alias'=>'servTb',
+                        'join_type'=>'left',
+                        'join_on'=>array('profession','=','profession_id'),
+                        //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+                        'select_fields' => $profession_select_field,
+                    ),
+        );
+        $user_details = $ci->common_model->fetchData($ci->tableObj->tableNameUser, $findCond, $selectFields,$joins);
+
+        //staff list
+        $staffCondition = array(
+            array('user_id','=',$user_details->id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        $staffFields = array();
+        $staff_list = $ci->common_model->fetchDatas($ci->tableObj->tableNameStaff, $staffCondition, $staffFields);
+        //echo "<pre>";
+        //print_r($staff_list); die();
+
+        //service list
+        $servCond = array(
+            array('user_id','=',$user_details->id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        $serviceFields = array();
+        $currency_field = array('currency');
+        $category_select_field = array('category as cat');
+        $joins = array(
+                     array(
+                        'join_table'=>$ci->tableObj->tableNameCurrency,
+                        //'join_with_alias'=>'userTb',
+                        'join_with'=>$ci->tableObj->tableUserService,
+                        //'join_with_alias'=>'servTb',
+                        'join_type'=>'left',
+                        'join_on'=>array('currency_id','=','currency_id'),
+                        //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+                        'select_fields' => $currency_field,
+                    ),
+                    array(
+                        'join_table'=>$ci->tableObj->tableNameCategory,
+                        'join_table_alias'=>'servTb',
+                        'join_with'=>$ci->tableObj->tableUserService,
+                        'join_type'=>'left',
+                        'join_on'=>array('category_id','=','category_id'),
+                        'join_on_more'=>array(),
+                        //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                        'select_fields' => $category_select_field,
+                    ),
+        );
+
+        $service_list = $ci->common_model->fetchDatas($ci->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
+
+        
+        $data['inner_user_details'] = $user_details;
+        $data['inner_staff_list'] = $staff_list;
+        $data['inner_service_list'] = $service_list;
+        return $data;
+    }
+
     public static function stuffs_list()
     {
         $data = array();

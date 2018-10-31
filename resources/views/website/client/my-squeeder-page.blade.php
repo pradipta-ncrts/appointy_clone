@@ -43,28 +43,19 @@
               <div class="img-banner-parent">
                 <div class="img-banner">
                   <?php
-
-                                 if($user_details->timeline_image)
-
-                                 {
-
-                                 ?>
+                   if($user_details->timeline_image)
+                   {
+                   ?>
                   <img src="{{asset('public/')}}/image/timeline_image/<?=$user_details->timeline_image;?>" class="img-responsive"/>
                   <?php
-
-                                 }
-
-                                 else
-
-                                 {
-
-                                 ?>
+                   }
+                   else
+                   {
+                   ?>
                   <img src="{{asset('public/assets/website/images/img-banner.jpg')}}" class="img-responsive"/>
                   <?php
-
-                                 }
-
-                              ?>
+                    }
+                  ?>
                   <div class="blackbox">
                     <div class="lefttext">
                       <h6>
@@ -81,63 +72,40 @@
                 </div>
               </div>
               <?php
-
-                        if($user_details->user_type==1)
-
-                        {
-
-                           if($user_details->profile_perosonal_image)
-
-                           {
-
-                           ?>
+              if($user_details->user_type==1)
+              {
+                 $url = asset('public/').'/image/profile_perosonal_image/'.$user_details->profile_perosonal_image;
+                 if($user_details->profile_perosonal_image && file_exists($url))
+                 {
+                 ?>
               <img src="{{asset('public/')}}/image/profile_perosonal_image/<?=$user_details->profile_perosonal_image;?>" class="profilepic"/>
               <?php 
-
-                           }
-
-                           else
-
-                           {
-
-                           ?>
+               }
+               else
+               {
+               ?>
               <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" />
               <?php
-
-                           }
-
-                        ?>
+              }
+              ?>
               <?php
-
-                        }
-
-                        else
-
-                        {
-
-                           if($user_details->profile_image)
-
-                           {
-
-                           ?>
+              }
+              else
+              {
+                  if($user_details->profile_image)
+                  {
+              ?>
               <img src="{{asset('public/')}}/image/profile_perosonal_image/<?=$user_details->profile_image;?>" class="profilepic"/>
               <?php 
-
-                           }
-
-                           else
-
-                           {
-
-                           ?>
+                  }
+                  else
+                  {
+               ?>
               <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" />
               <?php
-
-                           }
-
-                        }
-
-                        ?>
+                  }
+              }
+              ?>
               <ul class="profilelinks">
                 <li><a href="#">Services</a> </li>
                 <li><a href="#"> Expertise </a> </li>
@@ -151,45 +119,31 @@
                   <h4>Staffs</h4>
                 </div>
                 <div class="owl-carousel owl-theme owl-custom">
-                  <?php
-
-                              foreach ($staff_list as $key => $value)
-
-                              {
-
-                              ?>
+              <?php
+              foreach ($staff_list as $key => $value)
+              {
+              ?>  
                   <div class="item">
                     <?php
-
-                                 if($value->staff_profile_picture != '')
-
-                                 { 
-
-                                 ?>
+                     if($value->staff_profile_picture != '')
+                     { 
+                     ?>
                     <img class="user-pic" src="<?php echo $value->staff_profile_picture;?>" width="35px" height="35px" />
                     <?php
-
-                                    } 
-
-                                    else
-
-                                    {
-
-                                    ?>
+                    } 
+                    else
+                    {
+                    ?>
                     <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" />
                     <?php
-
-                                  } 
-
-                                 ?>
+                     } 
+                    ?>
                     <span>
                     <?=$value->full_name;?>
                     </span> </div>
                   <?php
-
-                              }
-
-                              ?>
+                    }
+                    ?>
                 </div>
               </div>
             </div>
@@ -212,36 +166,23 @@
                     <h3>Expertise</h3>
                     <p>
                       <?php
-
-                                    if(!empty($user_details->expertise))
-
-                                    {
-
-                                       $expertise = explode(',', $user_details->expertise);
-
-                                       foreach ($expertise as $key => $value)
-
-                                       {
-
-                                       ?>
+                      if(!empty($user_details->expertise))
+                      {
+                         $expertise = explode(',', $user_details->expertise);
+                         foreach ($expertise as $key => $value)
+                         {
+                         ?>
                       <span class="expt">
                       <?=$value;?>
                       </span>
                       <?php
-
-                                       }
-
-                                    }
-
-                                    else
-
-                                    {
-
-                                       echo "No expertise found.";
-
-                                    }
-
-                                    ?>
+                         }
+                      }
+                      else
+                      {
+                         echo "No expertise found.";
+                      }
+                      ?>
                     </p>
                   </div>
                 </div>
@@ -254,20 +195,13 @@
                     <h3>Services <small>(Select any service to book)</small> </h3>
                     <div class="headRow mobileappointed clearfix" id="row2">
                       <?php
-
-                                    if(empty($service_list))
-
-                                    {
-
-                                       echo "<h2>No service found!</h2>";
-
-                                    }
-
-                                    foreach ($service_list as $key => $details) 
-
-                                    {
-
-                                    ?>
+                        if(empty($service_list))
+                        {
+                           echo "<h2>No service found!</h2>";
+                        }
+                        foreach ($service_list as $key => $details) 
+                        {
+                        ?>
                       <div class="appointment mobSevices col-sm-4">
                         <div class="pull-left">
                           <p>
@@ -286,10 +220,8 @@
                         </div>
                       </div>
                       <?php
-
-                                    }
-
-                                    ?>
+                        }
+                        ?>
                     </div>
                   </div>
                 </div>
@@ -300,11 +232,9 @@
                 <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-location.png')}}">
                   <div class="prof-cont">
                     <div class=" col-md-4"> 
-                      
                       <!-- <h3>Map and access information</h3>-->
-                      
-                      <h5 style="margin-top:0;">Useful information</h5>
-                      <p>Ground floor, Handicap access </p>
+                      <h5 style="margin-top:0;">Business Information</h5>
+                      <p> <?=$user_details->business_description ? strip_tags($user_details->business_description) : "No data found";?> </p>
                       <h5>Smile Corrections</h5>
                       <p><img src="{{asset('public/assets/website/images/profile-icon-location1.png')}}" />
                         <?=$user_details->business_location ? $user_details->business_location : "No data found";?>
@@ -352,10 +282,17 @@
             <div class="col-md-12">
                     <div class="yurpage-ftr">
                      <ul>
-                     <li><a href="#">Paris</a></li>
-                     <li><a href="#">London</a></li>
-                     <li><a href="#">Spain</a></li>
-                     <li><a href="#">Italy</a></li>
+                      <?php
+                      foreach ($staff_list as $key => $value)
+                      {
+                        if($value->city)
+                        {
+                      ?>
+                       <li><a href="#"><?=$value->city;?></a></li>
+                      <?php
+                        }
+                      }
+                      ?>
                      </ul>
                     </div>
                       <div class="yurpage-social"> 

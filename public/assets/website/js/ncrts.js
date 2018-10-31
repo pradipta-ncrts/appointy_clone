@@ -2005,6 +2005,12 @@ $('#add-new-location').validate({
         'location_name': {
             required: true
         },
+        'country': {
+            required: true
+        },
+        'city': {
+            required: true
+        },
         'location_username': {
             required: true
         },
@@ -2023,6 +2029,12 @@ $('#add-new-location').validate({
         
         'location_name': {
             required: 'Please enter location'
+        },
+        'country': {
+            required: 'Please enter country'
+        },
+        'city': {
+            required: 'Please enter city'
         },
         'location_username': {
             required: 'Please enter username'
@@ -2107,6 +2119,8 @@ $(".add-location-exist-user").click(function (event) {
     $("#location_password").parent().parent().parent().hide();
    
     $("#autocomplete").val($(this).data('location'));
+    $("#country").val($(this).data('country'));
+    $("#city").val($(this).data('city'));
     
     $("#location_username").val($(this).data('username'));
     $("#location_username").prop("readonly", true);
@@ -2658,3 +2672,54 @@ $("#close-change-password").click(function(e){
 
 //===============Profile section end====================================
 
+$(".change-plan-duration").on('click', (function() {
+    //e.preventDefault();
+    //data = addCommonParams(data);   
+    if($(this).prop('checked') == true)
+    {
+        var duration = "12";
+    }
+    else
+    {
+        var duration = "1";
+    }
+    var data = addCommonParams([]);
+    data.push({name:'duration', value:duration});
+  
+    console.log(data);
+
+    $.ajax({
+        url: baseUrl+"/api/change_plan_duration", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            console.log(response);
+            //alert(response.response_status);
+            if(response.response_status=='1')
+            {
+                for(var i=0; i < response.message.length; i++)
+                {
+                    $("#get-plan-list-"+response.message[i].plan_id).html('<label>$'+response.message[i].price+'<sup>00</sup></label>/'+response.message[i].duration);
+                    $("#get-plan-list-"+response.message[i].plan_id).next().html("ball");
+                }
+
+                //$(".listItem h5:contains('Month')").html("doll");
+                $('.animationload').hide();
+            }
+            else
+            {
+                swal("Error", "Somthing wrong try again later." , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+}));
