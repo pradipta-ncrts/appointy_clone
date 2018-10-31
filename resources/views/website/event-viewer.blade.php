@@ -47,7 +47,11 @@ Squeedr
                     <td><?=$event_viewer->username;?></td>
                     <td><?=$event_viewer->staffname ? $event_viewer->staffname : 'N/A';?></td>
                 </tr>
-                <?php } } ?>
+                <?php } } else { ?>
+                <tr>
+                    <td colspan="5">No records found</td>
+                </tr>
+                <?php } ?>
                 
             </tbody>
         </table>

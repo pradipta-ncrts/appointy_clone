@@ -320,6 +320,56 @@ class UsersController extends ApiController {
 
 	}
 
+	// Client Export //
+	public function client_export(){
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+			return redirect('/login');
+		}
+		
+		$user_no = $authdata['user_no'];
+		$findCond=array(
+						array('user_id','=',$user_no),
+						array('is_deleted','=','0'),
+						array('is_blocked','=','0'),
+					);
+			
+		$selectFields=array('client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','is_blocked','created_on');
+		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields);
+			
+		$exportData[] = ['Client Name', 'Email','Mobile','Home Phone','Work Phone','Address','Timezone','Note','DOB','Is Login Allowed','Is Email Verified','Is Blocked','Created On'];
+		if(!empty($client_list)){
+			//$exportData = array('Product Name','Product Description','Regular Price','Sale Price','Product Code','Floor Location','Product Stock','Product Lot','Vendor Code','Second Language Value','Third Language Value','Tags');
+			foreach($client_list as $client){
+				$exportData[] = array(
+					'Client Name'   => ($client->client_name) ? $client->client_name : '',
+					'Email'  => ($client->client_email) ? $client->client_email : '',
+					'Mobile'   => ($client->client_mobile) ? $client->client_mobile : '',
+					'Home Phone'   => ($client->client_home_phone) ? $client->client_home_phone : '',
+					'Work Phone'   => ($client->client_work_phone) ? $client->client_work_phone : '',
+					'Address'   => ($client->client_address) ? $client->client_address : '',
+					'Timezone'   => ($client->client_timezone) ? $client->client_timezone : '',
+					'Note'   => ($client->client_note) ? $client->client_note : '',
+					'DOB'   => ($client->client_dob & $client->client_dob != '0000-00-00') ? date('m-d-Y',strtotime($client->client_dob)) : '',
+					'Is Login Allowed'   => ($client->is_login_allowed) ? $client->is_login_allowed : '0',
+					'Is Email Verified'   => ($client->is_email_verified) ? $client->is_email_verified : '0',
+					'Is Blocked'   => ($client->is_blocked) ? $client->is_blocked : '0',
+					'Created On'   => ($client->created_on) ? $client->created_on : ''
+				);
+			}
+			//echo "<pre>";print_r($exportData);exit;
+			$type = 'xls';
+			return Excel::create('client_list', function($excel) use ($exportData) {
+			$excel->sheet('mySheet', function($sheet) use ($exportData)
+			{
+				$sheet->fromArray($exportData, null, 'A1', false, false);
+			});
+			})->download('xlsx');
+			
+		}
+	}
+
 	public function staff_details($staff_search_text="")
 	{
 		// Check User Login. If not logged in redirect to login page //

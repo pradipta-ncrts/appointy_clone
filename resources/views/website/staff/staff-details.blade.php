@@ -1404,7 +1404,10 @@ $(document).on('change','#staff_import_excel',function(e){
             $('.animationload').hide();
             if(response.result=='1')
             {
-                swal("Success!", response.message, "success")
+                swal({title: "Success", text: response.message, type: "success"},
+                function(){ 
+                    location.reload();
+                });
             }
             else
             {

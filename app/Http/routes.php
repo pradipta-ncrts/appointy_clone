@@ -67,6 +67,9 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/add_client','Api\ClientsController@add_client');
     Route::post('/client_list','Api\ClientsController@client_list');
+    Route::post('/client_import','Api\ClientsController@client_import');
+    Route::post('/verify_client','Api\ClientsController@verify_client');
+    Route::post('/send_reset_password_email','Api\ClientsController@send_reset_password_email');
     Route::post('/email_customisation_data','Api\BookingsController@email_customisation_data');
     Route::post('/email_customisation_update','Api\BookingsController@email_customisation_update');
     Route::post('/add_appoinment','Api\BookingsController@add_appoinment');
@@ -115,7 +118,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/postal_code_filter','Api\StaffsController@postal_code_filter');
     Route::post('/change_postal_code_customer_interface','Api\StaffsController@change_postal_code_customer_interface');
 
-    
+    Route::post('/client_forgot_password','Api\ClientsController@client_forgot_password');
     
     
 
@@ -154,6 +157,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/offers','Website\UsersController@offers');
     Route::get('/reports','Website\UsersController@reports');
     Route::get('/client-database/{search_param?}','Website\UsersController@client_database');
+    Route::get('/client-export','Website\UsersController@client_export');
     Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
     Route::get('/staff-export','Website\UsersController@staff_export');
     Route::get('/settings-membership','Website\UsersController@settings_membership');
@@ -220,6 +224,8 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/client-info/','Website\ClientsController@client_info');
     Route::get('/booking-verify/','Website\ClientsController@booking_verify');
     Route::get('/booking-details/','Website\ClientsController@booking_details');
+    Route::get('/view-staffs/','Website\ClientsController@view_staff_list');
+    Route::get('/forgot-password/{parameter?}','Website\ClientsController@forgot_password');
 
 });
     

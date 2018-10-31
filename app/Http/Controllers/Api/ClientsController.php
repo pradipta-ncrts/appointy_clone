@@ -13,6 +13,7 @@ use App\Http\Controllers\BaseApiController as ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Validator;
+use Excel;
 
 class ClientsController extends ApiController {
 	function __construct(Request $input){
@@ -158,7 +159,268 @@ class ClientsController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+    // Client Import //
+    public function client_import(Request $request){
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
 
+        $file = $request->file('client_excel_file');
+        //print_r($file); die();
+        $type = $file->extension();
+        $productInputs = array();
+        //echo $type;exit;
+        if($type == 'xls' || $type == 'xlsx')
+        {
+			$existingCompanyPrd = array();
+			$fileName = $file->getClientOriginalName();
+			$destinationPath = public_path() . '/import_client_excel/';
+			$file->move($destinationPath, $fileName);
+			$excelData = Excel::load('/public/import_client_excel/'.$fileName, function($reader) {})->get();
+
+			//get data from client table
+			$condition = array(
+	                array('is_deleted', '=', 0),
+	            );
+            $selectField = array('client_email');
+            $check_client = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$condition,$selectField);
+
+            $exist_client_email = array();
+        	foreach ($check_client as $key => $value)
+            {
+            	$exist_client_email[] = $value->client_email;
+            }
+
+            //echo "<pre>";print_r($exist_client_email);exit;
+            $exist = 0;
+            $notExit = 0;
+			if(!empty($excelData) && count($excelData) > 0)
+			{
+                $excel_rows = $excelData->toArray();
+                //echo "<pre>";print_r($excel_rows);exit;
+                if(!empty($excel_rows)){
+                    if(isset($excel_rows[0]['email']) && $excel_rows[0]['email']!='' && isset($excel_rows[0]['client_name']) && $excel_rows[0]['client_name']!=''){
+                        foreach ($excel_rows as $row)
+                        {
+                            $updateMasterData = array();
+                            //echo "<pre>";print_r($row);exit;
+                            if(!empty($row)){
+                                
+                                if(in_array($row['email'],$exist_client_email))
+                                {
+                                    $exist++;
+                                }
+                                else
+                                {
+                                    $token1 = md5($row['email']);
+                                    $token = $token1;
+                                    $digits = 8;
+                                    $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
+            
+                                    $client_data['user_id'] = $user_id;
+                                    $client_data['client_name'] = $row['client_name']; 
+                                    $client_data['password'] = md5($password); 
+                                    $client_data['client_email'] = $row['email'];
+                                    $client_data['client_mobile'] = $row['mobile'];
+                                    //$client_data['client_home_phone'] = $row['home_phone']; 
+                                    //$client_data['client_work_phone'] = $row['work_phone']; 
+                                    $client_data['client_address'] = $row['address']; 
+                                    $client_data['client_timezone'] = $row['timezone']; 
+                                    $client_data['client_dob'] = ($row['dob'])?date('Y-m-d',strtotime($row['dob'])):''; 
+                                    $client_data['client_note'] = $row['note']; 
+                                    $client_data['email_verification_code'] = $token;
+                                    //print_r($client_data); die();
+                                    
+                                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
+                                        if($insertdata)
+                                        {
+                                            $emailData['username'] = $row['email'];
+                                            $emailData['password'] = $password;
+                                            $emailData['toName'] = $row['client_name'];
+                                            $this->sendmail(11,$row['email'],$emailData);
+                                        }
+                                    $notExit++;
+                                }
+                                
+                                
+                            } else {
+                                $this->response_message = "No records to import.";
+                            }
+                            
+                        }
+                    } else {
+                        $this->response_message = "Please upload proper excel file.";
+                    }  
+                } else {
+                    $this->response_message = "No records to import.";
+                }
+				
+			}
+
+			$this->response_status='1';
+            //$this->response_message = $exist.' records exists, '.$notExit.' records successfully inserted.';
+            $this->response_message = $notExit.' records successfully inserted.';
+        }
+        else
+        {
+        	$this->response_message = "Only excel file can import.";
+        }
+
+        //echo 'e'.$exist.'/ne'.$notExit; die();
+        $this->json_output($response_data);
+
+    }
+
+    // Verify Client //
+    public function verify_client(Request $request){
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+
+        $client_id = $request->input('client_id');
+
+        $condition = array(
+            array('client_id', '=', $client_id),
+            array('user_id', '=', $user_id),
+            array('is_deleted', '=', '0'),
+        );
+
+        $fields = array();                   
+        $checkClient = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$condition, $fields);
+        if(!empty($checkClient))
+        {
+            $param = array(
+                    'is_email_verified' => 1,
+                    'updated_on' => date('Y-m-d H:i:s')
+            );
+
+            $updateCond=array(
+                array('client_id', '=', $client_id),
+                array('user_id', '=', $user_id),
+                array('is_deleted', '=', '0'),
+            );
+            $this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$param);
+
+            $this->response_status='1';
+            $this->response_message = "Account veried successfully.";
+        }
+        else
+        {
+            $this->response_message = "Client details is not valid.";
+        }
+
+        $this->json_output($response_data);
+
+    }
+
+    // Send Password EMail (Client)//
+    public function send_reset_password_email(Request $request){
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+
+        $client_id = $request->input('client_id');
+
+        $condition = array(
+            array('client_id', '=', $client_id),
+            array('user_id', '=', $user_id),
+            array('is_deleted', '=', '0'),
+        );
+
+        $fields = array();                   
+        $checkClient = $this->common_model->fetchData($this->tableObj->tableNameClient,$condition, $fields);
+        if(!empty($checkClient))
+        {
+            // Send reset password email to client //
+            $parameter =[
+                'client_id' => $client_id,
+                'time' => time()
+            ];
+            $parameter= Crypt::encrypt($parameter);
+            $forgot_password_link = url('/client/forgot-password',$parameter);
+            
+            $client_email  = $checkClient->client_email;
+            $emailData['forgotPasswordLink'] = $forgot_password_link;            
+            $emailData['toName'] = $checkClient->client_name;
+
+            $this->sendmail(13,$client_email,$emailData);
+
+        }
+        else
+        {
+            $this->response_message = "Client details is not valid.";
+        }
+
+        $this->json_output($response_data);
+    }
+
+
+    // Regenerate Password //
+    public function client_forgot_password(Request $request){
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+
+        $client_id = $request->input('client_id');
+        $new_password = $request->input('new_password');
+        $confirm_password = $request->input('confirm_password');
+
+        $condition = array(
+            array('client_id', '=', $client_id),
+            array('user_id', '=', $user_id),
+            array('is_deleted', '=', '0'),
+        );
+
+        $fields = array();                   
+        $checkClient = $this->common_model->fetchData($this->tableObj->tableNameClient,$condition, $fields);
+        if(!empty($checkClient))
+        {
+            if($new_password == $confirm_password){
+                $param = array(
+                    'password' => md5($new_password),
+                    'updated_on' => date('Y-m-d H:i:s')
+                );
+
+                $updateCond=array(
+                    array('client_id', '=', $client_id),
+                    array('user_id', '=', $user_id),
+                    array('is_deleted', '=', '0'),
+                );
+                $this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$param);
+
+                $this->response_status='1';
+                $this->response_message = "Password has been updated successfully.";
+            } else {
+                $this->response_message = "Confirm password does not matched with new password.";
+            }
+        }
+        else
+        {
+            $this->response_message = "Client details is not valid.";
+        }
+
+        $this->json_output($response_data);
+    }
 
 
     //--------------------- //

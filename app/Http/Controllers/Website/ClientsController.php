@@ -227,5 +227,45 @@ class ClientsController extends ApiController {
 	{
 		return view('website.client.client-dashboard');
 	}
+
+	function view_staff_list(){
+		return view('website.client.view-staff-list');
+	}
+
+	
+	function forgot_password($parameter=NULL)
+	{
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			$client_id=$param_data['client_id'];
+			$sent_time=$param_data['time'];
+	
+			$check_condition = array(
+				array('client_id', '=', $client_id),
+				array('is_deleted', '=', 0),
+			);
+			$select_fields = array();
+			$client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$check_condition, $select_fields);
+			
+			/*if(time() < $sent_time+7200){
+				// Success //
+			} else {
+				// Link Expired //
+			}*/
+	
+			if(!empty($client_details)){
+				$data['client_id'] = $client_id;
+				return view('website.client.client-forgot-password',$data);
+			} else {
+				// Invalid Token //
+				echo 'Invalid token'; exit;
+			}
+		} else {
+			// Invalid Params //
+			echo 'Invalid Parameters'; exit;
+		}
+
+	}
 	
 }

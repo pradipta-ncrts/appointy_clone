@@ -20,7 +20,14 @@ Squeedr
         <div class="leftpan">
             <div class="left-menu">
                 <div id="custom-search-input">
-                    <a href="#" class="imp-st" data-toggle="tooltip" title="Import Client"><i class="fa fa-download"></i> </a> <a href="#" class="exp-st"  data-toggle="tooltip" title="Export Client"><i class="fa fa-external-link "></i> </a>
+                    
+                    <a href="javascript:void(0);" id="import_client_icon" class="imp-st" data-toggle="tooltip" title="Import Client"><i class="fa fa-download"></i> </a> 
+                    <form name="client_import_form" id="client_import_form" action="{{url('api/client_import')}}" method="post">
+                    <input type="file" name="client_import_excel" id="client_import_excel" style="display:none;" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    </form>
+                    <a href="{{url('client-export')}}" class="exp-st"  data-toggle="tooltip" title="Export Client"><i class="fa fa-external-link "></i> </a>
+               
+
                     <div class="input-group col-md-12">
                         <input type="text" name="client_search_text" id="client_search_text" class="search-staff form-control" placeholder="Search Client" <?php if(!empty($client_search_text)) { ?> value="<?php echo $client_search_text;?>" <?php } ?> />
                         <span class="input-group-btn">
@@ -61,16 +68,16 @@ Squeedr
             <div class="row">
                 <div class="col-lg-12">
                     <form>
-                        <div class="headRow  custm-linkedt custm-l " id="clientdatabase">
-                        <ul>
-                            <li><a><i class="fa fa-edit"></i> Edit </a> </li>
-                            <li><a><i class="fa fa-paper-plane"></i> Invite </a> </li>
-                            <li><a><i class="fa fa-lock"></i> Verify </a> </li>
-                        </ul>
-                        </div>
                         <?php 
                         if(!empty($client_list)){
                         ?>
+                        <div class="headRow  custm-linkedt custm-l" id="clientdatabase" style="width:230px!important">
+                            <ul>
+                                <li><a><i class="fa fa-edit"></i> Edit </a> </li>
+                                <li><a id="invite" data-client-id=""><i class="fa fa-paper-plane"></i> Invite </a> </li>
+                                <li id="verifySection"><a id="verify" data-client-id=""><i class="fa fa-lock"></i> Verify </a> </li>
+                            </ul>
+                        </div>
                         <div class="headRow cdHeadbar">
                             <div class="namebar">
                                 <!--<label>ST</label>-->
@@ -80,8 +87,8 @@ Squeedr
                             <h3><b id="clientName"></b><br/>
                                 <span id="clientEmail"></span> 
                             </h3>
-                            </div>
-                            <div class="staff-detail">
+                        </div>
+                        <div class="staff-detail">
                             <ul class="nav nav-tabs" >
                                 <li><a data-toggle="tab" href="#tab1" id="detailsTab" class="active">Info </a></li>
                                 <li><a data-toggle="tab" href="#tab2">Appointments </a></li>
@@ -260,17 +267,72 @@ Squeedr
    </div>
 </div>
 
+<div class="modal fade" id="modalInviteClient" role="dialog">
+   <div class="modal-dialog add-pop">
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm">
+         <div class="modal-header" style="padding: 20px 21px 0px 21px !important;">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+         </div>
+         <div class="modal-body clr-modalbdy">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="form-group">
+                     <h4>An invitation email will be sent to this client with an option to generate a new password. Would you like to send now?</h4>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <div class="col-md-12 text-center">
+               <input id="send_client_email" type="button" value="Send" class="btn btn-primary" style="margin: 0px auto 0; width: 150px; display: block">
+            </div>
+         </div>
+     </form>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modalVerifyClient" role="dialog">
+   <div class="modal-dialog add-pop">
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm">
+         <div class="modal-header" style="padding: 20px 21px 0px 21px !important;">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+         </div>
+         <div class="modal-body clr-modalbdy">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="form-group">
+                     <h4>Make this account verified</h4>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <div class="col-md-12 text-center">
+               <input id="cancel_verify" type="button" value="No" class="btn btn-danger" >
+               <input id="approve_verify" type="button" value="Yes" class="btn btn-primary" >
+            </div>
+         </div>
+     </form>
+      </div>
+   </div>
+</div>
+
 @endsection
 
 
 @section('custom_js')
 <script>
+var client_id = 0;
 $('.stafflistitem').click(function(){
     $('.stafflistitem').removeClass('active');
     $(this).addClass('active');
     var data = $(this).data('json');
     $('#detailsTab').trigger('click');
 
+    client_id = data.client_id;
     $('#clientNote').html("");
     if(data.client_note !== undefined){
         $('#clientNote').html(data.client_note);
@@ -300,6 +362,18 @@ $('.stafflistitem').click(function(){
             $('#clientImg').attr('src',data.client_profile_picture);
         }
     }
+
+    $('#verifySection').html("");
+    if(data.is_email_verified == 0){
+        $('#verifySection').html('<a id="verify" data-client-id=""><i class="fa fa-lock"></i> Verify </a>');
+    } else {
+        $('#verifySection').html('<a class="btn btn-xs btn-success"><i class="fa fa-ok"></i> Verified </a>');
+    }
+
+    if(data.client_id !== undefined){
+        $('#invite').attr("data-client-id",data.client_id);
+        $('#verify').attr("data-client-id",data.client_id);
+    }
 });
 
 $(document).ready(function(){
@@ -314,6 +388,150 @@ $(document).ready(function(){
             window.location.replace(url);
         }
     });
+
 });
+
+// Import Client Section //
+$(document).on('click', '#import_client_icon', function(){
+    $('#client_import_excel').trigger('click');
+});
+
+$(document).on('change','#client_import_excel',function(e){
+    e.preventDefault();
+    data = addCommonParams([]);
+    var files = $("#client_import_form input[type='file']")[0].files;
+    var form_data = new FormData();
+    if(files.length>0){
+        for(var i=0;i<files.length;i++){
+            form_data.append('client_excel_file',files[i]);
+        }
+    }
+    // append all data in form data 
+    $.each(data, function( ia, l ){
+        form_data.append(l.name, l.value);
+    });
+
+    $.ajax({
+        url: baseUrl+"/api/client_import", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: form_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false, // The content type used when sending data to the server.
+        cache: false, // To unable request pages to be cached
+        processData: false, // To send DOMDocument or non processed data file it is set to false
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal({title: "Success", text: response.message, type: "success"},
+                function(){ 
+                    location.reload();
+                });
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+});
+
+
+$(document).on('click','#invite',function(e){
+    e.preventDefault();
+    $('#modalInviteClient').modal('show');
+
+});
+
+$(document).on('click','#send_client_email',function(e){
+    e.preventDefault();
+    //alert(client_id);
+    var data = addCommonParams([]);
+    data.push({name:'client_id', value:client_id});
+
+    if(client_id > 0){
+        $.ajax({
+        url: baseUrl+"/api/send_reset_password_email", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            //console.log(response);
+            $('#modalVerifyClient').modal('hide');
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal({title: "Success", text: response.message, type: "success"});
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+    } else {
+        swal("Error", "Invalid client details", "error");
+    }
+    
+});
+
+$(document).on('click','#verify',function(e){
+    $('#modalVerifyClient').modal('show');
+});
+
+$(document).on('click','#cancel_verify',function(e){
+    $('#modalVerifyClient').modal('hide');
+});
+
+$(document).on('click','#approve_verify',function(e){
+    e.preventDefault();
+    //alert(client_id);
+    var data = addCommonParams([]);
+    data.push({name:'client_id', value:client_id});
+
+    if(client_id > 0){
+        $.ajax({
+        url: baseUrl+"/api/verify_client", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            //console.log(response);
+            $('#modalVerifyClient').modal('hide');
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                swal({title: "Success", text: response.message, type: "success"});
+                $('#verifySection').html('<a class="btn btn-xs btn-success"><i class="fa fa-ok"></i> Verified </a>');
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+    } else {
+        swal("Error", "Invalid client details", "error");
+    }
+    
+});
+
+
 </script>
 @endsection

@@ -447,7 +447,7 @@ class BaseApiController extends BaseController
                     $emailData['mailBody']=$mail_body;
                 break;
                 case 10: // Stuff username & password
-                    $mail_subject = "Stuff Created";
+                    $mail_subject = "You have registered as Staff";
                     $mail_body="Dear <br> ".$emailData['toName'].", Here is the Login Credentails of your accont. Username : ".$emailData['username']." Password : ".$emailData['password'];
                     $emailData['mailBody']=$mail_body;
                 break;
@@ -457,7 +457,16 @@ class BaseApiController extends BaseController
                     $mail_body="Dear ".$emailData['toName'].' You are eligble for discount.';
                     $emailData['mailBody']=$mail_body;
                 break;
-
+                case 12: // Client username & password
+                    $mail_subject = "You have registered as Client";
+                    $mail_body="Dear <br> ".$emailData['toName'].", Here is the Login Credentails of your accont. Username : ".$emailData['username']." Password : ".$emailData['password'];
+                    $emailData['mailBody']=$mail_body;
+                break;
+                case 13: // Forgot Password Link (Client) //
+                    $mail_subject = "Generate New Password";
+                    $mail_body="Dear <br> ".$emailData['toName'].", Here is the new password generate url - ".$emailData['forgotPasswordLink'];
+                    $emailData['mailBody']=$mail_body;
+                break;
                 
 
                 default:
