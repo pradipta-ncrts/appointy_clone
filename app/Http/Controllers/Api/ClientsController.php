@@ -475,6 +475,9 @@ class ClientsController extends ApiController {
 
             $this->sendmail(13,$client_email,$emailData);
 
+            $this->response_status='1';
+			$this->response_message="New password generation link has been sent successfully.";
+
         }
         else
         {
