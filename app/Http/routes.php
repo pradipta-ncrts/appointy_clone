@@ -131,9 +131,7 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/change_plan_duration','Api\PlanController@change_plan_duration');
 
-    
-
-    
+    Route::post('/send-to-stripe','Api\PlanController@send_to_stripe');
 
     
 });
@@ -213,6 +211,10 @@ Route::group(['prefix'=>''],function(){
     Route::get('/client-login','Website\ClientsController@client_login');
 
     Route::get('/settings-membership','Website\PlanController@settings_membership');
+
+    Route::any('/make-payment/{parameter?}','Website\PlanController@make_payment');
+
+    
     
 });
 

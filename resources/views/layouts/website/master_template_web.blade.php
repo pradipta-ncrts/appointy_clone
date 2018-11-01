@@ -2464,6 +2464,9 @@
         });
     </script>
 
+   <!-- Stripe JavaScript library -->
+   <!-- <script type="text/javascript" src="https://js.stripe.com/v2/"></script> -->
+
 	<script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
 
    
