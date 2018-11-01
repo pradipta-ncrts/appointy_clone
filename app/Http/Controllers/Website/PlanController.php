@@ -173,7 +173,7 @@ class PlanController extends ApiController {
                     data-key="' .config('constants.stripe.PUBLIC_KEY'). '"
                     data-amount="' . ($payble_amount * 100) . '"
                     data-name="iImprove"
-                    data-description="iImprove Stripe Payment"
+                    data-description="Squeedr"
                     data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                     data-locale="auto" 
                     data-currency="USD" 
