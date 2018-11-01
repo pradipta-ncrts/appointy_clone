@@ -46,7 +46,9 @@ return [
 
         'user_event_viewer' => 'user_event_viewer',
 
-        'plan' => 'plan'
+        'plan' => 'plan',
+
+        'user_subscription' => 'user_subscription',
 
 
 

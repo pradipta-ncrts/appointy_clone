@@ -467,6 +467,12 @@ class BaseApiController extends BaseController
                     $mail_body="Dear <br> ".$emailData['toName'].", Here is the new password generate url - ".$emailData['forgotPasswordLink'];
                     $emailData['mailBody']=$mail_body;
                 break;
+                case 14: // User subcription mail //
+                    $mail_subject = "Successfully Subscribe";
+                    $mail_body="Dear ".$emailData['name'].", You have successfully subscribe ".$plan_name['name']." for ".$emailData['duration_in_day']." and payment transuction ID : ".$emailData['transuction_id'];
+                    $emailData['mailBody']=$mail_body;
+                break;
+
                 
 
                 default:

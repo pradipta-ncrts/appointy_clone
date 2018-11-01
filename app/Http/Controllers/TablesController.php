@@ -69,9 +69,7 @@ class TablesController {
 
         $this->tableNamePlan = config('constants.tables.plan');
 
-
-
-
+        $this->tableNameUserSubscription = config('constants.tables.user_subscription');
 
         
 

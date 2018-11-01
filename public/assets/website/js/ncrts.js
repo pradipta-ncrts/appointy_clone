@@ -2671,7 +2671,7 @@ $("#close-change-password").click(function(e){
 
 
 //===============Profile section end====================================
-
+//===============Plan Section ==========================================
 $(".change-plan-duration").on('click', (function() {
     //e.preventDefault();
     //data = addCommonParams(data);   
@@ -2723,3 +2723,62 @@ $(".change-plan-duration").on('click', (function() {
         }
     });
 }));
+
+
+$(".choose-plan").on('click', (function() {
+    //e.preventDefault();
+    //data = addCommonParams(data);   
+    if($(".change-plan-duration").prop('checked') == true)
+    {
+        var duration = "12";
+    }
+    else
+    {
+        var duration = "1";
+    }
+
+    var plan_id = $(this).attr('id');
+    var data = addCommonParams([]);
+    data.push({name:'duration', value:duration}, { name:'plan_id', value:plan_id });
+  
+    console.log(data);
+    if(plan_id==1)
+    {
+        swal("Success!", "Successfully subscribe", "success");
+    }
+    else
+    {
+        $.ajax({
+            url: baseUrl+"/api/send-to-stripe", // Url to which the request is send
+            type: "POST", // Type of request to be send, called as method
+            data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+            dataType: "json",
+            success: function(response) // A function to be called if request succeeds
+            {
+                console.log(response);
+                //alert(response.response_status);
+                if(response.response_status=='1')
+                {
+                    window.location.href = response.message;
+                }
+                else
+                {
+                    swal("Error", "Somthing wrong try again later." , "error");
+                }
+            },
+            beforeSend: function()
+            {
+                $('.animationload').show();
+            },
+            complete: function()
+            {
+                //$('.animationload').hide();
+            }
+        });
+    }
+
+    
+}));
+
+//===============Plan Section ==========================================
+

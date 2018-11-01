@@ -48,12 +48,12 @@ class ClientsController extends ApiController {
         else
         {
             $client_name = $request->input('client_name');
-            $client_email = $request->input('client_email');
+            $client_email = str_replace(' ', '', $request->input('client_email'));
             $client_mobile = $request->input('client_mobile');
             $client_home_phone = $request->input('client_home_phone');
             $client_work_phone = $request->input('client_work_phone');
             $client_category = $request->input('client_category');
-            $client_address = $request->input('client_address')?$request->input('client_address'):"";
+            $client_address = $request->input('client_address') ? $request->input('client_address'):"";
 
             $client_timezone = $request->input('client_timezone');
             $client_note = $request->input('client_note');
@@ -66,7 +66,7 @@ class ClientsController extends ApiController {
             }
 
             $conditions = array(
-				'or'=>array('client_email' => $client_email)
+			     array('client_email', '=', $client_email),
 			);
                         
 
