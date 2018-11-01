@@ -4,23 +4,15 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
       <title>@yield('title')</title>
-      <!--<link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700" rel="stylesheet">-->
-      <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/bootstrap.min.css')}}" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="{{asset('public/assets/website/css/font-awesome.min.css')}}" />
-      <link href="{{asset('public/assets/website/css/app.css')}}" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/styles.css')}}" rel="stylesheet">      
-      <link href="{{asset('public/assets/website/css/custom-selectbox.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/website/css/styles.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/custom.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/website/css/custom-selectbox.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/slide-menu.css')}}" rel="stylesheet">
 	  <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-      
-
-
-      
-      
-      
 	  
    </head>
    <body class="dashboard-bg">

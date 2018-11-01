@@ -157,7 +157,122 @@ class ClientsController extends ApiController {
 		$this->response_status='1';
 		// generate the service / api response
 		$this->json_output($response_data);
-	}
+    }
+    
+    // Client Details //
+    public function client_details(Request $request){
+        $response_data=array();	
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $client_id = $request->input('client_id');
+        $user_no = $this->logged_user_no;
+
+        $findCond=array(
+            array('user_id','=',$user_no),
+            array('client_id','=',$client_id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+        $selectFields=array();
+        $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$findCond,$selectFields);
+
+        if(!empty($client_details)){
+            $response_data['client_details']=$client_details;
+            $this->response_status='1';
+            $this->response_message="Client details.";
+        } else {
+            $this->response_status='0';
+            $this->response_message="Client is not valid.";
+        }
+        
+        // generate the service / api response
+        $this->json_output($response_data);
+
+    }
+
+    // Edit Client //
+    public function edit_client(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+            return redirect('/login');
+        }
+        
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        
+        $validate = Validator::make($request->all(),[
+                                         'client_name'=>'required',
+                                         'client_address'=>'required']);
+        
+        if ($validate->fails())
+        {
+            $this->response_message = $this->decode_validator_error($validate->errors());
+            $this->json_output($response_data);
+        }
+        else
+        {
+            $client_id = $request->input('client_id');
+            $client_name = $request->input('client_name');
+            $client_mobile = $request->input('client_mobile');
+            $client_home_phone = $request->input('client_home_phone');
+            $client_work_phone = $request->input('client_work_phone');
+            $client_category = $request->input('client_category');
+            $client_timezone = $request->input('client_timezone');
+            $client_address = $request->input('client_address');
+            $client_note = $request->input('client_note');
+            //$staff_profile_picture = '';
+
+            $conditions = array(
+                array('client_id','=',$client_id),
+                array('user_id','=',$user_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+            );
+
+            $result = $this->common_model->fetchData($this->tableObj->tableNameClient,$conditions);
+            //echo '<pre>'; print_r($result); exit;
+            if(empty($result))
+            {
+                $this->response_message = "Invalid client details.";
+            }
+            else
+            {
+                /*$destinationPath = './uploads/profile_image/';
+                if (!empty($_FILES)) {
+                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
+                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
+                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
+                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
+                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
+                        }
+                    }
+                }*/
+
+                $client_data['client_name'] = $client_name;
+                $client_data['client_mobile'] = $client_mobile;
+                $client_data['client_home_phone'] = $client_home_phone;
+                $client_data['client_work_phone'] = $client_work_phone;
+                $client_data['client_category'] = $client_category;
+                $client_data['client_address'] = $client_address;
+                $client_data['client_timezone'] = $client_timezone;
+                $client_data['client_note'] = $client_note;
+
+                $update = $this->common_model->update_data($this->tableObj->tableNameClient,$conditions,$client_data);
+                
+                $this->response_status='1';
+                $this->response_message = "Client successfully updated.";
+
+            }
+
+            $this->json_output($response_data);
+
+        }
+        
+    }
 
     // Client Import //
     public function client_import(Request $request){

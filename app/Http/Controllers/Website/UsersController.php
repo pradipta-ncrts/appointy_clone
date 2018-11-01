@@ -303,12 +303,33 @@ class UsersController extends ApiController {
 		);
 		$url_func_name="client_list";
 		$return = $this->curl_call($url_func_name,$post_data);
+
+		$service_post_data = $authdata;
+		$service_url_func_name="service_list";
+		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
+
+		/*$timezone_post_data = $authdata;
+		$timezone_url_func_name="timezone_list";
+		$timezone_return = $this->curl_call($timezone_url_func_name,$timezone_post_data);*/
+
+		$data = array();
+        $zones_array = array();
+        $timestamp = time();
+        foreach(timezone_identifiers_list() as $key => $zone)
+        {
+            date_default_timezone_set($zone);
+            $zones_array[$key]['zone'] = $zone;
+            $zones_array[$key]['diff_from_GMT'] = 'UTC/GMT ' . date('P', $timestamp);
+        }
+        //$data = $zones_array;
 		
 		// Check response status. If success return data //		
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['client_list'] = $return->client_list;
 				$data['client_search_text'] = $client_search_text;
+				$data['category_list'] = $service_return->category_list;
+				$data['timezone'] = $zones_array;
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.client.client-database')->with($data);

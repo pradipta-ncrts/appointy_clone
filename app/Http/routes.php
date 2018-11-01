@@ -34,6 +34,7 @@ Route::get('/', function () {
 |------------------------------------------------------------------------
 */
 Route::group(['prefix'=>'api'],function(){
+    Route::post('/timezone_list','Api\UsersController@timezone_list');
     Route::post('/registration-step1','Api\UsersController@registration_step1');
     Route::post('/registration','Api\UsersController@registration');
     Route::any('/emailverification/{id}','Api\UsersController@emailverification');
@@ -67,6 +68,8 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/add_client','Api\ClientsController@add_client');
     Route::post('/client_list','Api\ClientsController@client_list');
+    Route::post('/client_details','Api\ClientsController@client_details');
+    Route::post('/edit_client','Api\ClientsController@edit_client');
     Route::post('/client_import','Api\ClientsController@client_import');
     Route::post('/verify_client','Api\ClientsController@verify_client');
     Route::post('/send_reset_password_email','Api\ClientsController@send_reset_password_email');

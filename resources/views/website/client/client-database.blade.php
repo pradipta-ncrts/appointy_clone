@@ -73,7 +73,7 @@ Squeedr
                         ?>
                         <div class="headRow  custm-linkedt custm-l" id="clientdatabase" style="width:230px!important">
                             <ul>
-                                <li><a><i class="fa fa-edit"></i> Edit </a> </li>
+                                <li><a id="editClient"><i class="fa fa-edit"></i> Edit </a> </li>
                                 <li><a id="invite" data-client-id=""><i class="fa fa-paper-plane"></i> Invite </a> </li>
                                 <li id="verifySection"><a id="verify" data-client-id=""><i class="fa fa-lock"></i> Verify </a> </li>
                             </ul>
@@ -265,6 +265,145 @@ Squeedr
             </div>
         </div>
    </div>
+</div>
+
+<div class="modal fade" id="myModaleditclient" role="dialog">
+    <div class="modal-dialog add-pop">
+        <!-- Modal content-->
+        <div class="modal-content new-modalcustm">
+            <form name="edit_client_form" id="edit_client_form" method="post" action="{{url('api/edit_client')}}" enctype="multipart/form-data">
+                <input type="hidden" name="client_id" id="edit_client_id" value="">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modalTitle">Update Client</h4>
+                </div>
+                <div class="modal-body clr-modalbdy">
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group" id="edit_client_name_error"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input id="edit_client_name" type="text" class="form-control" name="client_name" placeholder="Client Name" >
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group" id="edit_client_email_error"> <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                                <input id="edit_client_email" type="text" class="form-control" name="client_email" placeholder="Email Address" disabled="">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group" id="edit_client_mobile_error"> <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                <input id="edit_client_mobile" type="text" class="form-control" name="client_mobile" placeholder="Mobile" style="width: 92%;">               
+                            </div>
+                            <a style="position: absolute; right:15px; top:8px; font-size: 18px" role="button" data-toggle="collapse" data-target="#edit_other_phone" id="edit_more_phone"><i class="fa fa-plus"></i></a>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="row collapse" id="edit_other_phone" >
+                        <div class="col-md-12">
+                        <div class="form-group" id="edit_client_home_phone_error">
+                            <div class="input-group"> <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                <input id="edit_client_home_phone" type="text" class="form-control" name="client_home_phone" placeholder="Home Phone">
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group" id="edit_client_work_phone_error"> <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+                                <input id="edit_client_work_phone" type="text" class="form-control" name="client_work_phone" placeholder="Work Phone">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group" id="edit_category_error">
+                                <span class="input-group-addon"><i class="fa fa-file-text"></i></span>
+                                <div class="form-group nomarging color-b" >
+                                    <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="client_category" id="edit_client_category" >
+                                    <option value="">Select Category </option>
+                                    <?php
+                                    if(!empty($category_list))
+                                    foreach ($category_list as $key => $value)
+                                    {
+                                        echo "<option value='".$value->category_id."'>".$value->cat."</option>";
+                                    }
+                                    ?>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group" id="edit_client_address_error"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                                <input id="edit_client_address" type="text" class="form-control" name="client_address" placeholder="Address">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group"> 
+                                <span class="input-group-addon"><i class="fa fa-clock-o "></i></span>
+                                <!--<select class="form-control">
+                                    <option>Category Name</option>
+                                    </select>-->
+                                <div class="form-group nomarging color-b" id="edit_client_timezone">
+                                    <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="client_timezone" id="edit_client_timezone" >
+                                    <option value="">Select Timezone </option>
+                                    <?php
+                                    foreach($timezone as $tzone)
+                                    {
+                                    ?>
+                                    <option value="<?=$tzone['zone'] ?>">
+                                        <?=$tzone['diff_from_GMT'] . ' - ' . $tzone['zone'] ?>
+                                    </option>
+                                    <?php
+                                    }
+                                    ?>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group textarea-md" id="edit_client_note_error"> <span class="input-group-addon"><i class="fa fa-file"></i></span>
+                                <textarea style="width: 100%" name="client_note" id="edit_client_note" placeholder="Client Note"></textarea>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-primary butt-next" type="submit" style="margin: 0px auto 0; width: 150px; display: block">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="modalInviteClient" role="dialog">
@@ -532,6 +671,148 @@ $(document).on('click','#approve_verify',function(e){
     
 });
 
+
+$('#editClient').click(function(e){
+    var data = addCommonParams([]);
+    //alert(serviceid);
+    data.push({name:'client_id', value:client_id});
+    $.ajax({
+        url: baseUrl+"/api/client_details", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            //console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                /*if(response.client_details.client_profile_picture!=''){
+                    var profile_picture = response.client_details.client_profile_picture;
+                } else {
+                    profile_picture = "<?php echo asset('public/assets/website/images/business-hours/blue-user.png');?>";
+                }*/
+                $('#modalTitle').text('Update '+response.client_details.client_name);
+                $('#edit_client_name').val(response.client_details.client_name);
+                $('#edit_client_email').val(response.client_details.client_email);
+                $('#edit_client_mobile').val(response.client_details.client_mobile);
+                $('#edit_client_home_phone').val(response.client_details.client_home_phone);
+                $('#edit_client_work_phone').val(response.client_details.client_work_phone);
+                $("#edit_client_category").val(response.client_details.client_category).trigger('change');
+                $("#edit_client_timezone").val(response.client_details.client_timezone).trigger('change');
+                $('#edit_client_address').val(response.client_details.client_address);
+                $('#edit_client_note').val(response.client_details.client_note);
+                //$('#edit_staff_image').attr('src',profile_picture);
+                $('#edit_client_id').val(response.client_details.client_id);
+                $('#myModaleditclient').modal('show');
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+    
+});
+
+$('#edit_client_form').validate({
+        rules: {
+            edit_client_name: {
+                required: true
+            },
+            edit_client_email: {
+                required: true,
+                email: true
+            },
+            edit_client_mobile: {
+                required: true,
+                number: true,
+                minlength: 10,
+                maxlength: 10
+            },
+            edit_client_address: {
+                required: true
+            }
+        },
+        messages: {
+            edit_client_name: {
+                required: 'Please enter client name'
+            },
+            edit_client_email: {
+                required: 'Please enter email',
+                email: 'Please enter proper email'
+            },
+            edit_client_mobile: {
+                required: 'Please enter mobile no',
+                number: 'Please enter proper mobile no',
+                minlength: 'Please enter minimum 10 digit mobile no',
+                maxlength: 'Please enter maximum 10 digit mobile no'
+            },
+            edit_client_address: {
+                required: 'Please enter address'
+            }
+        },
+        errorPlacement: function(error, element) {
+            if (element.attr("name") == "client_name") {
+                error.insertAfter($('#edit_client_name_error'));
+            } else if (element.attr("name") == "client_email") {
+                error.insertAfter($('#edit_client_email_error'));
+            } else if (element.attr("name") == "staff_client_mobile") {
+                error.insertAfter($('#edit_client_mobile_error'));
+            } else if (element.attr("name") == "client_address") {
+                error.insertAfter($('#edit_client_address_error'));
+            }
+        },
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            data = addCommonParams(data);
+            /*var files = $("#edit_client_form input[type='file']")[0].files;
+            var form_data = new FormData();
+            if (files.length > 0) {
+                for (var i = 0; i < files.length; i++) {
+                    form_data.append('client_profile_picture', files[i]);
+                }
+            } 
+            // append all data in form data 
+            $.each(data, function(ia, l) {
+                form_data.append(l.name, l.value);
+            });*/
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: data,
+                //data: form_data,
+                dataType: "json",
+                //processData: false, // tell jQuery not to process the data 
+                //contentType: false, // tell jQuery not to set contentType 
+                success: function(response) {
+                    //alert(response.response_status);
+                    console.log(response); //Success//
+                    if (response.response_status == '1') {
+                        $(form)[0].reset();
+                        $('#myModaleditclient').modal('hide');
+                        swal({title: "Success", text: response.response_message, type: "success"},
+                        function(){ 
+                            location.reload();
+                        });
+                        
+                    } else {
+                        swal('Sorry!', response.response_message, 'error');
+                    }
+                },
+                beforeSend: function() {
+                    $('.animationload').show();
+                },
+                complete: function() {
+                    $('.animationload').hide();
+                }
+            });
+        }
+});
 
 </script>
 @endsection

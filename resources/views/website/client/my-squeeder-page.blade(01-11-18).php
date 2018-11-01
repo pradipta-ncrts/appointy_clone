@@ -119,8 +119,7 @@
                   <h4>Staffs</h4>
                 </div>
                 <div class="owl-carousel owl-theme owl-custom">
-
-                            <?php
+              <?php
               foreach ($staff_list as $key => $value)
               {
               ?>  
@@ -145,8 +144,6 @@
                   <?php
                     }
                     ?>
-                    
-                    
                 </div>
               </div>
             </div>
@@ -505,7 +502,7 @@
 
          $('.owl-carousel').owlCarousel({
 
-            //loop: true,
+            loop: true,
 
             margin: 10,
 
@@ -539,7 +536,7 @@
 
                   nav: false,
 
-                  //loop: true,
+                  loop: true,
 
                   margin: 25
 
@@ -592,7 +589,7 @@
 
          $('.owl-carousel').owlCarousel({
 
-           // loop: true,
+            loop: true,
 
             margin: 10,
 
@@ -618,11 +615,11 @@
 
                1000: {
 
-                 items: 10,
+                  items: 10,
 
                   nav: false,
 
-                  //loop: true,
+                  loop: true,
 
                   margin: 30
 
