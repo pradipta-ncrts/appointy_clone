@@ -62,66 +62,103 @@ Squeedr
          </div>
          <hr>
          <div class="clearfix"></div>
-         <!--<div class="headRow mobileappointed arrow-d clearfix "  id="row2">
-            <a href="services.html" class="more-link"  data-toggle="tooltip" title="More Services"><img src="{{asset('public/assets/website/images/threeDots.png')}}"/></a>
-            <div class="appointment mobSevices  col-sm-4">
-               <div class="pull-left">
-                  <p>Dental Consultation</p>
-                  <span>30min-1h
-                  <label>$50</label>
-                  </span> 
-               </div>
-               <ul class="pull-right">
-                  <li onclick="showUl(this);">
-                     <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
-                     <ul>
-                        <li><a><i class="fa fa-edit"></i> Edit </a> </li>
-                        <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
-                        <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
-                     </ul>
-                  </li>
-               </ul>
-            </div>
-            <div class="appointment mobSevices  col-sm-4">
-               <div class="pull-left">
-                  <p>Dental Consultation</p>
-                  <span>30min-1h
-                  <label>$50</label>
-                  </span> 
-               </div>
-               <ul class="pull-right">
-                  <li onclick="showUl(this);">
-                     <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
-                     <ul>
-                        <li><a><i class="fa fa-edit"></i> Edit </a> </li>
-                        <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
-                        <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
-                     </ul>
-                  </li>
-               </ul>
-            </div>
-            <div class="appointment mobSevices  col-sm-4">
-               <div class="pull-left">
-                  <p>Dental Consultation</p>
-                  <span>30min-1h
-                  <label>$50</label>
-                  </span> 
-               </div>
-               <ul class="pull-right">
-                  <li onclick="showUl(this);">
-                     <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
-                     <ul>
-                        <li><a><i class="fa fa-edit"></i> Edit </a> </li>
-                        <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
-                        <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
-                     </ul>
-                  </li>
-               </ul>
-            </div>
-         </div>-->
+         <div id="chartContainer" style="height: 300px; width: 100%;"></div>
          <hr>
-         <a class="btn btn-primary butt-next center-block" style=" margin: 20px auto;  width: 200px;"  >Quick Start Guide</a>
+         <a class="btn btn-primary butt-next center-block" style=" margin: 20px auto;  width: 200px;" id="addDataPoint"  >Quick Start Guide</a>
       </div>
    </div>
 </div>
 @endsection
+
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+   theme:"light2",
+   animationEnabled: true,
+   /*title:{
+      text: "Game of Thrones Viewers of the First Airing on HBO"
+   },*/
+   axisY :{
+      includeZero: false,
+      //title: "Number of Viewers",
+      //suffix: "mn"
+   },
+   axisX:{
+      interval: 1,
+   },
+   toolTip: {
+      shared: "true"
+   },
+   legend:{
+      cursor:"pointer",
+      itemclick : toggleDataSeries
+   },
+   data: [{
+      type: "spline",
+      visible: true,
+      showInLegend: true,
+      //yValueFormatString: "##.00mn",
+      name: "Season 1",
+      dataPoints: [
+         { label: "1", y: 0 },
+         { label: "2", y: 1},
+         { label: "3", y: 0 },
+         { label: "4", y: 0 },
+         { label: "5", y: 0 },
+         { label: "6", y: 0 },
+         { label: "7", y: 0 },
+         { label: "8", y: 0 },
+         { label: "9", y: 3 },
+         { label: "10", y: 0 },
+         { label: "11", y: 0 },
+         { label: "12", y: 0 },
+         { label: "13", y: 0 },
+         { label: "14", y: 0 },
+         { label: "15", y: 0 },
+         { label: "16", y: 0 },
+         { label: "17", y: 0 },
+         { label: "18", y: 0 },
+         { label: "19", y: 0 },
+         { label: "20", y: 0 },
+         { label: "21", y: 0 },
+         { label: "22", y: 1 },
+         { label: "23", y: 0 },
+         { label: "24", y: 0 },
+         { label: "25", y: 0 },
+         { label: "26", y: 0 },
+         { label: "27", y: 0 },
+         { label: "28", y: 0 },
+         { label: "29", y: 0 },
+         { label: "30", y: 0 },
+         { label: "31", y: 0 },
+      ]
+   }]
+});
+chart.render();
+
+$("#addDataPoint").click(function () {
+
+   var length = chart.options.data[0].dataPoints.length;
+   chart.options.data[0].name = "Month";
+   
+   for (var i = 0; i < 31; i++)
+   {
+      chart.options.data[0].dataPoints[i].y = Math.random();
+   }
+   
+   chart.render();
+
+   });
+
+function toggleDataSeries(e) {
+   if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible ){
+      e.dataSeries.visible = false;
+   } else {
+      e.dataSeries.visible = true;
+   }
+   chart.render();
+}
+
+}
+</script>

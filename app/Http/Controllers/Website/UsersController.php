@@ -433,7 +433,8 @@ class UsersController extends ApiController {
 
 
 	// Staff Export //
-	public function staff_export(){
+	public function staff_export()
+	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
@@ -541,6 +542,46 @@ class UsersController extends ApiController {
 		//return view('website.services');
 	}
 
+	public function settings_business_hours($staff_search_text="")
+	{
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$post_data['staff_search_text']=$staff_search_text;
+
+		$data=array(
+			'staff_list'=>array(),
+			'authdata'=>$authdata
+		);
+		$url_func_name="staff_list";
+		$return = $this->curl_call($url_func_name,$post_data);
+
+		$service_post_data = $authdata;
+		$service_url_func_name="service_list";
+		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
+		
+		// Check response status. If success return data //		
+		if(isset($return->response_status)){
+			if($return->response_status == 1){
+				$data['staff_list'] = $return->staff_list;
+				$data['staff_search_text'] = $staff_search_text;
+				$data['category_list'] = $service_return->category_list;
+
+			}
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.settings-business-hours')->with($data);
+		}
+		else{
+			return $return;
+		}
+		//return view('website.settings-business-hours');
+	}
+
 	public function booking_options()
 	{
 		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
@@ -602,15 +643,7 @@ class UsersController extends ApiController {
 		return view('website.integration');
 	}
 
-	public function settings_business_hours()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.settings-business-hours');
-		}
-
-		return view('website.settings-business-hours');
-	}
+	
 
 	public function invitees()
 	{

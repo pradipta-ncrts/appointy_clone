@@ -2464,9 +2464,6 @@
         });
     </script>
 
-   <!-- Stripe JavaScript library -->
-   <!-- <script type="text/javascript" src="https://js.stripe.com/v2/"></script> -->
-
 	<script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
 
    
@@ -2481,6 +2478,8 @@
       });
       });
       </script>
+
+      <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
       <!-- <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&callback=initMap">
     </script> -->
