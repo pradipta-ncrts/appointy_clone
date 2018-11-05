@@ -147,12 +147,12 @@ class PlanController extends ApiController {
                   	// Insert into stripe payment //
                     if($this->common_model->insert_data_get_id($this->tableObj->tableNameUserSubscription, $input_array)) 
                     {
-						/*$emailData['name'] = $user_name;
+						$emailData['name'] = $user_name;
 						$emailData['plan_name'] = $plan_name;
 						$emailData['duration_in_day'] = $duration_in_day;
 						$emailData['transuction_id'] = $final_charge['balance_transaction'];
 
-						$this->sendmail(14,$user_email,$emailData);*/
+						$this->sendmail(14,$user_email,$emailData);
 
                     	return redirect(url('settings-membership/'))->with('payment_success','Payment successfully done.'); 
                     }
@@ -172,7 +172,7 @@ class PlanController extends ApiController {
                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="' .config('constants.stripe.PUBLIC_KEY'). '"
                     data-amount="' . ($payble_amount * 100) . '"
-                    data-name="iImprove"
+                    data-name="Squeedr"
                     data-description="Squeedr"
                     data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                     data-locale="auto" 

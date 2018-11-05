@@ -734,6 +734,73 @@ class UsersController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+
+	public function dashboard(Request $request)
+	{
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$user_id = $this->logged_user_no;
+
+		$duration = $request->input('duration');
+		$type = $request->input('type');
+
+		$start = date('Y-m-01 00:00:00');
+		$finish = date('Y-m-t 00:00:00');
+
+		if($duration == '1'){
+			// This Week //
+			$start = (date('D') != 'Mon') ? date('Y-m-d H:i:s', strtotime('last Monday')) : date('Y-m-d H:i:s');
+			$finish = (date('D') != 'Sun') ? date('Y-m-d H:i:s', strtotime('next Sunday')) : date('Y-m-d H:i:s');
+			$duration_query = " AND created_on >= '".$start."' AND created_on <= '".$finish."'";
+		} else if($duration == '2'){
+			// Previous Week //
+			$previous_week = strtotime("-1 week +1 day");
+			$start_week = strtotime("last monday midnight",$previous_week);
+			$end_week = strtotime("next sunday",$start_week);
+			$start = date("Y-m-d H:i:s",$start_week);
+			$finish = date("Y-m-d H:i:s",$end_week);
+		} else if($duration == '3'){
+			// This Month
+			$start = date('Y-m-01 00:00:00');
+			$finish = date('Y-m-t 00:00:00');
+		} else if($duration == '4'){
+			// Previous Month
+			$start = date('Y-m-d H:i:s',strtotime('first day of last month'));
+			$finish = date('Y-m-d H:i:s',strtotime('last day of last month'));
+		} else if($duration == '5'){
+			// This Year
+			$start = date('Y-01-01 00:00:00');
+			$finish = date('Y-12-31 00:00:00');
+		} else if($duration == '6'){
+			// Previous Year
+			$start = date("Y-m-d H:i:s",strtotime("last year January 1st"));
+			$finish = date("Y-m-d H:i:s",strtotime("last year December 31st"));
+		}
+		
+		$duration_query = " AND created_on >= '".$start."' AND created_on <= '".$finish."'";
+
+		// Total Appointments //
+		$appointments_query = "SELECT COUNT(*) AS total_appointments FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$duration_query;
+		$total_appointments = $this->common_model->customQuery($appointments_query,$query_type=1);
+
+		// Total Sales //
+		$sales_query = "SELECT SUM(paid_amount) AS total_sales FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$duration_query;
+		$total_sales = $this->common_model->customQuery($sales_query,$query_type=1);
+
+		// Total Customers //
+		$customers_query = "SELECT COUNT(*) AS total_customers FROM `squ_client` WHERE `squ_client`.`user_id` = '".$user_id."' AND `squ_client`.`is_deleted` = 0 ".$duration_query;
+		$total_customers = $this->common_model->customQuery($customers_query,$query_type=1);
+
+		$response_data['total_appointments'] = $total_appointments[0]->total_appointments;
+		$response_data['total_sales'] = $total_sales[0]->total_sales;
+		$response_data['total_customers'] = $total_customers[0]->total_customers;
+		$this->response_status = '1';
+
+		$this->json_output($response_data);
+	}
+
+
 	// User's service Listing //
     public function service_list(Request $request)
     {
