@@ -171,7 +171,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
     Route::get('/staff-export','Website\UsersController@staff_export');
     Route::get('/integration','Website\UsersController@integration');
-    Route::get('/settings-business-hours','Website\UsersController@settings_business_hours');
+    Route::get('/settings-business-hours/{search_param?}','Website\UsersController@settings_business_hours');
     Route::get('/booking-options','Website\BookingsController@booking_options');
     Route::get('/booking-rules','Website\BookingsController@booking_rules');
     Route::get('/booking-policies','Website\BookingsController@booking_policies');
@@ -190,8 +190,7 @@ Route::group(['prefix'=>''],function(){
     Route::post('/email_customisation','Website\BookingsController@email_customisation');
     Route::get('/help','Website\UsersController@help');
     Route::get('/event-viewer','Website\UsersController@event_viewer');
-
-    //Route::get('/profile-settings','Website\UsersController@profile_settings');
+    
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
