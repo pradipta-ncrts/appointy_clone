@@ -65,7 +65,16 @@ Squeedr
                            </span>
                         </h5>
                         <?php
-                        if($check_plan_id->subscription_id!=$value->plan_id)
+                        if(isset($check_plan_id->subscription_id) && $check_plan_id->subscription_id)
+                        {
+                           if($check_plan_id->subscription_id!=$value->plan_id)
+                           {
+                        ?>
+                        <button class="btn btn-large btn-green choose-plan" id="<?=$value->plan_id;?>">Choose Plan</button>
+                        <?php
+                           }
+                        }
+                        else
                         {
                         ?>
                         <button class="btn btn-large btn-green choose-plan" id="<?=$value->plan_id;?>">Choose Plan</button>
