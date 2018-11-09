@@ -874,6 +874,175 @@ class StaffsController extends ApiController {
 
     }
 
+     public function service_staff_availability(Request $request){
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_no = $this->logged_user_no;
+        $staff_id = $request->input('staff_id');
+        $service_id = $request->input('service_id');
+        if(isset($staff_id) && $staff_id!=''){
+            $findCond[] = array('staff_id','=',$staff_id);
+        }
+
+        $findCond=array(
+            array('service_id','=',$service_id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
+        $tableUserService = $this->tableObj->tableUserService;
+        $tableStaff = $this->tableObj->tableNameStaff;
+        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
+        $serviceField = array('service_name','duration');
+        $staffField = array('full_name');
+        $joins = array(
+                    array(
+                        'join_table'=>$tableUserService,
+                        'join_with'=>$tableNameStaffServiceAvailability,
+                        'join_type'=>'left',
+                        'join_on'=>array('service_id','=','service_id'),
+                        'join_on_more'=>array(),
+                        'join_conditions' => array(array('is_blocked','=','0')),
+                        'select_fields' => $serviceField,
+                    ),
+                    array(
+                        'join_table'=>$tableStaff,
+                        'join_with'=>$tableNameStaffServiceAvailability,
+                        'join_type'=>'left',
+                        'join_on'=>array('staff_id','=','staff_id'),
+                        'join_on_more'=>array(),
+                        //'join_conditions' => array(array('is_blocked','=','0')),
+                        'select_fields' => $staffField,
+                    ),
+            );
+
+        $staff_availability = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField, $joins);
+
+        //print_r($staff_availability); die();
+
+        /*$service_array = array();
+        if(!empty($staff_availability)){
+            foreach($staff_availability as $availability){
+                if(!isset($service_array[$availability->service_id])){
+                    $service_array[$availability->service_id] = array();
+                }
+                if(!isset($service_array[$availability->service_id][$availability->day])){
+                    $service_array[$availability->service_id][$availability->day] = array();
+                }
+                $service_array[$availability->service_id][0] = array('service_name'=>$availability->service_name,'duration'=>$availability->duration);
+                array_push($service_array[$availability->service_id][$availability->day],$availability);
+            }
+        }*/
+
+        //print_r($staff_availability); die();
+
+        /*$conditions = array(
+            array('user_id','=',$user_no),
+            array('is_blocked','=','0'),
+            array('is_deleted','=','0')
+        );
+
+        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$conditions);
+        //echo '<pre>'; print_r($service_list); exit;
+
+        if(!empty($service_list) && is_array($service_list)){
+            foreach($service_list as $sl){
+                if(!isset($service_array[$sl->service_id])){
+                    $service_array[$sl->service_id] =array(array('service_name'=>$sl->service_name,'duration'=>$sl->duration));
+                }
+            }
+        }*/
+        //echo '<pre>'; print_r($service_array); exit;
+        $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+        $service_array = array();
+        $old_user_id = '';
+        foreach ($staff_availability as $key => $value)
+        {
+            if($old_user_id!=$value->staff_id)
+            {
+                $dayarray = array();
+                for($k=0; $k<7; $k++)
+                {
+                    foreach ($staff_availability as $key => $val)
+                    {
+                        if($value->staff_id==$val->staff_id && $val->day==$k+1)
+                        {
+                            $dayarray[] = array('day' => $dowMap[$k], 'day_no' => $val->day,'start_time' => $val->start_time, 'end_time' => $val->end_time);
+                        }
+                    }
+                }
+                $service_array[] = array('staff_id' => $value->staff_id,'staff_name' => $value->full_name, 'dayarray' => $dayarray);
+            }
+            $old_user_id = $value->staff_id;
+        }
+
+        //print_r($service_array); die();
+
+        $html = "";
+        $dowMapNew = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+        if(!empty($service_array)){
+            foreach($service_array as $key=>$sa){
+                    $html .= '<tr>
+                        <td>
+                            <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">'.strtoupper($sa['staff_name']).'</a> </div>
+                            <div class="edit-staff">
+                            <a data-toggle="tooltip" data-placement="top" class="delete_availability" data-service-id = "'.$service_id.'" data-staff-id="'.$sa['staff_id'].'"><i class="fa fa-trash delete_block_time" aria-hidden="true" style="color:red" title="Delete!"></i></a>
+                            </div>
+                            <div class="clearfix"></div>
+                        </td>';
+
+                        $day_no = array();
+                        $n_array = $sa['dayarray'];
+                        foreach ($n_array as $key => $row)
+                        {
+                            $day_no[$key] = $row['day_no'];
+                        }
+                        array_multisort($day_no, SORT_ASC, $n_array);
+                        //print_r($n_array); die();
+                        //echo $n_array[0]['day']; die();
+                        for($i = 0; $i<7; $i++)
+                        {
+                            if(isset($n_array[$i]['day']) && $dowMapNew[$i]==$n_array[$i]['day'])
+                            {
+                                $html .= '<td data-column="'.$dowMapNew[$i].'">
+                                        <ul>
+                                        <li>'.$n_array[$i]['start_time'].'</li>
+                                        <li>'.$n_array[$i]['end_time'].'</li>
+                                        </ul>
+                                        <div class="edit-staff">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </td>';
+                            }
+                            else
+                            {
+                                $html .='<td data-column="'.$dowMapNew[$i].'">
+                                            <div class="edit-staff">
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </td>';
+                            }
+                        }
+                    $html .='</tr>';
+            }
+        }
+        else
+        {
+           $html = "<tr><td colspan='8'>No data found</td></tr>";
+        }
+
+        $response_data['html'] = $html;
+        $this->json_output($response_data);
+
+    }
+
+
 
     public function add_staff_service_availability(Request $request)
     {

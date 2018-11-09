@@ -62,6 +62,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/delete-staff','Api\StaffsController@staff_delete');
     Route::post('/block-times','Api\StaffsController@block_times');
     Route::post('/staff_service_availability','Api\StaffsController@staff_service_availability');
+    Route::post('/service_staff_availability','Api\StaffsController@service_staff_availability');
     Route::post('/add_staff_service_availability','Api\StaffsController@add_staff_service_availability');
     Route::post('/delete_staff_availability','Api\StaffsController@delete_staff_availability');
     Route::post('/delete_staff_block_time','Api\StaffsController@delete_staff_block_time');
@@ -171,7 +172,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
     Route::get('/staff-export','Website\UsersController@staff_export');
     Route::get('/integration','Website\UsersController@integration');
-    Route::get('/settings-business-hours/{search_param?}','Website\UsersController@settings_business_hours');
+    Route::get('/settings-business-hours/{type}/{search_param?}','Website\UsersController@settings_business_hours');
     Route::get('/booking-options','Website\BookingsController@booking_options');
     Route::get('/booking-rules','Website\BookingsController@booking_rules');
     Route::get('/booking-policies','Website\BookingsController@booking_policies');

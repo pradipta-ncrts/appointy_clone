@@ -885,6 +885,7 @@ class UsersController extends ApiController {
 		// validate the requested param for access this service api
 		$this->validate_parameter(1); // along with the user request key validation
 		$other_user_no = $request->input('other_user_no');
+		$search_text = $request->input('staff_search_text');
 		$pageNo = $request->input('page_no');
 		$pageNo = ($pageNo > 1) ? $pageNo : 1;
 		$limit=$this->limit;
@@ -943,6 +944,10 @@ class UsersController extends ApiController {
 		if(!empty($category))
 		{
 			$servCond[] = array('category_id','=', $category);
+		}
+
+		if(!empty($search_text)){
+			$servCond[]=array('service_name','like','%'.$search_text.'%');
 		}
 
 		$serviceFields = array();

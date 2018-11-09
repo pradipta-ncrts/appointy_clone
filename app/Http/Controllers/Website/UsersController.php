@@ -596,7 +596,7 @@ class UsersController extends ApiController {
 		//return view('website.services');
 	}
 
-	public function settings_business_hours($staff_search_text="")
+	public function settings_business_hours($type="",$staff_search_text="")
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -615,16 +615,17 @@ class UsersController extends ApiController {
 		$url_func_name="staff_list";
 		$return = $this->curl_call($url_func_name,$post_data);
 
-		$service_post_data = $authdata;
+		//$service_post_data = $authdata;
 		$service_url_func_name="service_list";
-		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
+		$service_return = $this->curl_call($service_url_func_name,$post_data);
 		
 		// Check response status. If success return data //		
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['staff_list'] = $return->staff_list;
 				$data['staff_search_text'] = $staff_search_text;
-				$data['category_list'] = $service_return->category_list;
+				$data['service_list'] = $service_return->service_list;
+				$data['type'] = $type;
 
 			}
 			//echo '<pre>'; print_r($data); exit;
