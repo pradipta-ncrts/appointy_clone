@@ -148,6 +148,9 @@ class UsersController extends ApiController {
 			'total_appointments'=>0,
 			'total_sales'=>0,
 			'total_customers'=>0,
+			'appointments_difference' => 0,
+			'sales_difference' => 0,
+			'customers_difference' => 0,
 			'appointment_data'=>array(),
 			'sales_data'=>array(),
 			'customer_data'=>array(),
@@ -165,9 +168,12 @@ class UsersController extends ApiController {
 				$data['total_appointments'] = $return->total_appointments;
 				$data['total_sales'] = $return->total_sales;
 				$data['total_customers'] = $return->total_customers;
-				/*$data['appointment_data'] = $return->appointment_data;
-				$data['sales_data'] = $return->sales_data;
-				$data['customer_data'] = $return->customer_data;*/
+				$data['appointments_difference'] = $return->appointments_difference;
+				$data['sales_difference'] = $return->sales_difference;
+				$data['customers_difference'] = $return->customers_difference;
+				//$data['appointment_data'] = $return->appointment_data;
+				//$data['sales_data'] = $return->sales_data;
+				//$data['customer_data'] = $return->customer_data;
 				$data['duration'] = $duration;
 				$data['type'] = $type;
 				

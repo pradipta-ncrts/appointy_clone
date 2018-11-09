@@ -54,19 +54,19 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             </div>
             <div class="col-md-7">
                <div class="full-rgt">
-                  <div class="dropdown custm-uperdrop">
+                  <!--<div class="dropdown custm-uperdrop">
                      <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Upcoming Dates <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button>
                      <ul class="dropdown-menu" id="months-tab">
                      <?php
-                        $curr_month = date('n') - 1;
+                        /* $curr_month = date('n') - 1;
                         for($i=$curr_month+1;$i<=$curr_month+2;$i++){
                      ?>
                         <li><a data-month="<?php echo $i;?>" href="javascript:void(0);"><?=$month_array[$i];?></a></li>
                         <?php 
-                        }
+                        } */
                         ?>
                      </ul>
-                  </div>
+                  </div>-->
                   <div class="filter-option"><a href="" data-toggle="modal" data-target="#staffFilterModal">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div>
                </div>
             </div>
