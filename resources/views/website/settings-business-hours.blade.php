@@ -81,11 +81,15 @@ Squeedr
          {
          ?>
          <div class="stf-list heightfull">
-            <?php
-                //echo '<pre>'; print_r($service_list); die();
-                if(!empty($service_list)){
-                    foreach($service_list as $serv){
-            ?>
+               <?php
+               //echo '<pre>'; print_r($service_list); die();
+               if(!empty($service_list))
+               {
+                  foreach($service_list as $serv)
+                  {
+                     if($serv->is_blocked==0)
+                     {
+               ?>
                <a href="javascript:void(0);" id="<?php echo $serv->service_id;?>" class="servicelistitem">
                    <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" />
                   
@@ -94,13 +98,17 @@ Squeedr
                         <small>30min</small>
                     </div>
                </a>
-            <?php 
-                } } else { 
-            ?>
-                <a>No service found</a>
-            <?php 
-                }   
-            ?>
+               <?php 
+                     }
+                  } 
+               } 
+               else
+               { 
+               ?>
+               <a>No service found</a>
+               <?php 
+               }   
+               ?>
             </div>
          <?php
          }
@@ -144,7 +152,20 @@ Squeedr
                                       </div>
                                       <div class="col-md-3">
                                       <div class="dropdown custm-uperdrop">
+                                       <?php
+                                       if($type=="services")
+                                       {
+                                       ?>
                                           <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"><img src="{{asset('public/assets/website/images/add-circular-button.png')}}" alt="" height="18"></button>
+                                       <?php
+                                       }
+                                       else
+                                       {
+                                       ?>
+                                          <button class="btn dropdown-toggle" type="button" data-toggle="dropdown" disabled=""><img src="{{asset('public/assets/website/images/add-circular-button.png')}}" alt="" height="18"></button>
+                                       <?php
+                                       }
+                                       ?>
                                           <ul class="dropdown-menu">
                                               <li><a href="#" data-toggle="modal" data-target="#myModalregular">Regular</a></li>
                                               <!--<li><a href="#" data-toggle="modal" data-target="#myModalirregular">Irregular</a></li>-->
@@ -711,6 +732,25 @@ $(document).on('click','#tab-two',function(e){
   var url = "<?php echo url('settings-business-hours').'/staffs'?>";
   window.location.replace(url);
 });
+
+$(document).on('click','.update_user_shedule',function(){
+   var staff_id = $(this).data('staff-id');
+   var service_id = $(this).data('service-id');
+   var day_no = $(this).data('day-no');
+   var start_date = $(this).data('start-date');
+   var end_date = $(this).data('end-date');
+   $("#myModalregularShedule").modal('show');
+   
+   $("#availability_update_start_time_"+day_no).prop('disabled', false);
+   $("#availability_update_start_time_"+day_no).val(start_date);
+   $("#availability_updaet_end_time_"+day_no).prop('disabled', false);
+   $("#availability_updaet_end_time_"+day_no).val(end_date);
+   $("#styled-checkbox-update-"+day_no).prop('checked', true);
+   
+
+});
+
+
 
 </script>
 @endsection

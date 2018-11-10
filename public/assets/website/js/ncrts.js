@@ -707,6 +707,12 @@ $('#add-service-into-input').click(function(event) {
     });
 });
 
+$('#cancel-service-list').click(function(event) { 
+    event.preventDefault();
+    $("#serviceListModal").modal('hide');
+});
+
+
 //=================Block Date Start=============================================
 
 $('#date_block_for').on('click keyup keypress blur change', function(e) {

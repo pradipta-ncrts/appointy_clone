@@ -73,6 +73,12 @@ Squeedr
                         <button class="btn btn-large btn-green choose-plan" id="<?=$value->plan_id;?>">Choose Plan</button>
                         <?php
                            }
+                           else
+                           {
+                           ?>
+                           <button class="btn btn-large choose-plan" id="" disabled="">Subscribed</button>
+                           <?php
+                           }
                         }
                         else
                         {

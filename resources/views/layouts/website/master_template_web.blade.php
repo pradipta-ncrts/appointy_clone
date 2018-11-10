@@ -949,6 +949,70 @@
                            <input type="hidden" name="service_ids" id="service_ids" value="">
                         </div>
                      </div>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <div class="col-md-12 text-center"> <button type="submit" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">ADD</button> </div>
+               </div>
+            </form>
+            </div>
+         </div>
+      </div>
+
+      <div class="modal fade" id="myModalregularShedule" role="dialog">
+         <div class="modal-dialog modal-md">
+            <div class="modal-content new-modalcustm">
+            <form name="update_staff_availability_form" id="update_staff_availability_form" method="post" action="{{url('api/update_staff_availability_form')}}">
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button> 
+                  <h4 class="modal-title">Edit Schedule</h4>
+               </div>
+               <div class="modal-body clr-modalbdy">
+                  <div class="regular-frmbx">
+                    <?php
+                    $weekdays = array('1'=>'MON','2'=>'TUE','3'=>'WED','4'=>'THU','5'=>'FRI','6'=>'SAT','7'=>'SUN');
+                    foreach($weekdays as $key=>$val){
+                    ?>
+                        <div class="row">
+                            <div class="col-md-3"> <input class="styled-checkbox-update" name="day[]" id="styled-checkbox-update-{{$key}}" type="checkbox" value="{{$key}}"> <label for="styled-checkbox-update-{{$key}}">{{$val}}</label></div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon"></span>
+                                    <div class="form-group nomarging color-b" >
+                                    <!--<select >
+                                        <option>Start Time</option>
+                                    </select>-->
+                                    <input class="form-control availability_start_time" name="availability_update_start_time[]" id="availability_update_start_time_{{$key}}" type="text" value="" disabled="">
+                                    <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="tocls">To</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon"></span>
+                                    <div class="form-group nomarging color-b" >
+                                    <!--<select >
+                                        <option>End Time</option>
+                                    </select>-->
+                                    <input class="form-control availability_end_time" name="availability_update_end_time[]" id="availability_updaet_end_time_{{$key}}" type="text" value="" disabled="">
+                                    <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    <?php
+                    }
+                    ?>
+                    <!-- <div class="row">
+                        <div class="col-md-12">
+                           <div class="mlf-30" id="select_service" style="cursor:pointer"> <span class="child-outline child-outline--dark"></span> <span id="select_services">SELECT SERVICE<span>  </div>
+                           <input type="hidden" name="service_ids" id="service_ids" value="">
+                        </div>
+                     </div> -->
 
                   </div>
                </div>
@@ -2460,6 +2524,24 @@
                 $('#availability_start_time_'+sel_val).val('');
                 $('#availability_end_time_'+sel_val).prop('disabled', true);
                 $('#availability_end_time_'+sel_val).val('');
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        $('input:checkbox.styled-checkbox-update').on('click', function(){
+            var sel_val = $(this).val();
+            if($('input:checkbox.styled-checkbox-update').is(':checked')){
+               $(this).parent().next().find('input').prop('disabled', false);
+               $(this).parent().next().next().next().find('input').prop('disabled', false);
+            }
+            else
+            {
+               $(this).parent().next().find('input').prop('disabled', true);
+               $(this).parent().next().next().next().find('input').prop('disabled', true);
+               $(this).parent().next().find('input').val('');
+               $(this).parent().next().next().next().find('input').val('');
             }
         });
     </script>

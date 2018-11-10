@@ -852,12 +852,14 @@ class StaffsController extends ApiController {
                                         <li>'.$sa[$i][0]->end_time.'</li>
                                         </ul>
                                         <div class="edit-staff">
+                                            <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$staff_id.'" data-service-id = "'.$key.'" data-day-no = "'.$i.'" data-start-date = "'.$sa[$i][0]->start_time.'" data-end-date = "'.$sa[$i][0]->end_time.'"></i>
                                         </div>
                                         <div class="clearfix"></div>
                                     </td>';
                             }else{
                                 $html .='<td data-column="'.$dowMap[$i-1].'">
                                             <div class="edit-staff">
+                                                <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$staff_id.'" data-service-id = "'.$key.'" data-day-no = "'.$i.'"></i>
                                             </div>
                                             <div class="clearfix"></div>
                                         </td>';
@@ -1008,28 +1010,20 @@ class StaffsController extends ApiController {
                         //echo $n_array[0]['day']; die();
                         for($i = 0; $i<7; $i++)
                         {
-                            if(isset($n_array[$i]['day']) && $dowMapNew[$i]==$n_array[$i]['day'])
-                            {
-                                $html .= '<td data-column="'.$dowMapNew[$i].'">
+                            $start_time = isset($n_array[$i]['start_time']) && $n_array[$i]['start_time'] ? $n_array[$i]['start_time'] : '';
+                            $end_time = isset($n_array[$i]['end_time']) && $n_array[$i]['start_time'] ? $n_array[$i]['end_time'] : '';
+                            $html .= '<td data-column="'.$dowMapNew[$i].'">
                                         <ul>
-                                        <li>'.$n_array[$i]['start_time'].'</li>
-                                        <li>'.$n_array[$i]['end_time'].'</li>
+                                        <li>'.$start_time.'</li>
+                                        <li>'.$end_time.'</li>
                                         </ul>
                                         <div class="edit-staff">
+                                            <i class="fa fa-pencil" aria-hidden="true" style="color:#67bde5" title="Edit!"></i>
                                         </div>
                                         <div class="clearfix"></div>
                                     </td>';
-                            }
-                            else
-                            {
-                                $html .='<td data-column="'.$dowMapNew[$i].'">
-                                            <div class="edit-staff">
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </td>';
-                            }
                         }
-                    $html .='</tr>';
+                        $html .='</tr>';
             }
         }
         else
