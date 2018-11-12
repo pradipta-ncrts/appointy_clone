@@ -135,6 +135,12 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/send-to-stripe','Api\PlanController@send_to_stripe');
 
+    Route::post('/edit_service_list_staff','Api\StaffsController@edit_service_list_staff');
+
+    Route::post('/update_staff_availability_form','Api\StaffsController@update_staff_availability_form');
+
+    
+
     
 });
 

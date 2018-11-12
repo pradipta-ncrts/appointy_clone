@@ -734,23 +734,85 @@ $(document).on('click','#tab-two',function(e){
 });
 
 $(document).on('click','.update_user_shedule',function(){
+   $('#update_staff_availability_form').trigger("reset");
    var staff_id = $(this).data('staff-id');
    var service_id = $(this).data('service-id');
    var day_no = $(this).data('day-no');
    var start_date = $(this).data('start-date');
    var end_date = $(this).data('end-date');
-   $("#myModalregularShedule").modal('show');
-   
-   $("#availability_update_start_time_"+day_no).prop('disabled', false);
-   $("#availability_update_start_time_"+day_no).val(start_date);
-   $("#availability_updaet_end_time_"+day_no).prop('disabled', false);
-   $("#availability_updaet_end_time_"+day_no).val(end_date);
-   $("#styled-checkbox-update-"+day_no).prop('checked', true);
-   
 
+   $("#update_staff_availability_staff_id").val(staff_id);
+   $("#update_staff_availability_service_id").val(service_id);
+
+   var data = addCommonParams([]);
+    //alert(serviceid);
+   data.push({name:'service_id', value:service_id},
+                {name:'staff_id', value:staff_id});
+   $.ajax({
+        url: baseUrl+"/api/edit_service_list_staff", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+               console.log(response.message);
+               $("#myModalregularShedule").modal('show');
+               var i;
+               for (i = 0; i < response.message.length; i++)
+               { 
+                  $("#styled-checkbox-update-"+response.message[i].day).prop('checked', true);
+                  //$("#styled-checkbox-update-"+response.message[i].day).trigger('click');
+                  $("#availability_update_start_time_"+response.message[i].day).prop('disabled', false);
+                  $("#availability_update_start_time_"+response.message[i].day).val(response.message[i].start_time);
+                  $("#availability_updaet_end_time_"+response.message[i].day).prop('disabled', false);
+                  $("#availability_updaet_end_time_"+response.message[i].day).val(response.message[i].end_time);
+               }
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+   });
 });
 
-
-
+$('#update_staff_availability_form').validate({
+   submitHandler: function(form) {
+   var data = $(form).serializeArray();
+   data = addCommonParams(data);
+   
+   //console.log(data);
+   $.ajax({
+       url: form.action,
+       type: form.method,
+       data: data,
+       dataType: "json",
+       success: function(response) {
+           //console.log(response); //Success//
+           if (response.response_status == 1) {
+               $(form)[0].reset();
+               $('#myModalregular').modal('hide');
+               swal('Success!', response.response_message, 'success');
+               location.reload();
+           } else {
+               swal('Sorry!', response.response_message, 'error');
+           }
+       },
+       beforeSend: function() {
+           $('.animationload').show();
+       },
+       complete: function() {
+           $('.animationload').hide();
+       }
+   });
+}
+});
 </script>
 @endsection

@@ -963,6 +963,8 @@
          <div class="modal-dialog modal-md">
             <div class="modal-content new-modalcustm">
             <form name="update_staff_availability_form" id="update_staff_availability_form" method="post" action="{{url('api/update_staff_availability_form')}}">
+               <input type="hidden" name="stuff_id" value="" id="update_staff_availability_staff_id">
+               <input type="hidden" name="service_id" value="" id="update_staff_availability_service_id">
                <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button> 
                   <h4 class="modal-title">Edit Schedule</h4>
