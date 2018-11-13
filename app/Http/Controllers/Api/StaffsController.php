@@ -852,12 +852,14 @@ class StaffsController extends ApiController {
                                         <li>'.$sa[$i][0]->end_time.'</li>
                                         </ul>
                                         <div class="edit-staff">
+                                            <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$staff_id.'" data-service-id = "'.$key.'" data-day-no = "'.$i.'" data-start-date = "'.$sa[$i][0]->start_time.'" data-end-date = "'.$sa[$i][0]->end_time.'"></i>
                                         </div>
                                         <div class="clearfix"></div>
                                     </td>';
                             }else{
                                 $html .='<td data-column="'.$dowMap[$i-1].'">
                                             <div class="edit-staff">
+                                                <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$staff_id.'" data-service-id = "'.$key.'" data-day-no = "'.$i.'"></i>
                                             </div>
                                             <div class="clearfix"></div>
                                         </td>';
@@ -926,38 +928,6 @@ class StaffsController extends ApiController {
 
         //print_r($staff_availability); die();
 
-        /*$service_array = array();
-        if(!empty($staff_availability)){
-            foreach($staff_availability as $availability){
-                if(!isset($service_array[$availability->service_id])){
-                    $service_array[$availability->service_id] = array();
-                }
-                if(!isset($service_array[$availability->service_id][$availability->day])){
-                    $service_array[$availability->service_id][$availability->day] = array();
-                }
-                $service_array[$availability->service_id][0] = array('service_name'=>$availability->service_name,'duration'=>$availability->duration);
-                array_push($service_array[$availability->service_id][$availability->day],$availability);
-            }
-        }*/
-
-        //print_r($staff_availability); die();
-
-        /*$conditions = array(
-            array('user_id','=',$user_no),
-            array('is_blocked','=','0'),
-            array('is_deleted','=','0')
-        );
-
-        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$conditions);
-        //echo '<pre>'; print_r($service_list); exit;
-
-        if(!empty($service_list) && is_array($service_list)){
-            foreach($service_list as $sl){
-                if(!isset($service_array[$sl->service_id])){
-                    $service_array[$sl->service_id] =array(array('service_name'=>$sl->service_name,'duration'=>$sl->duration));
-                }
-            }
-        }*/
         //echo '<pre>'; print_r($service_array); exit;
         $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
         $service_array = array();
@@ -1006,30 +976,25 @@ class StaffsController extends ApiController {
                         array_multisort($day_no, SORT_ASC, $n_array);
                         //print_r($n_array); die();
                         //echo $n_array[0]['day']; die();
+                        $m=1;
                         for($i = 0; $i<7; $i++)
                         {
-                            if(isset($n_array[$i]['day']) && $dowMapNew[$i]==$n_array[$i]['day'])
-                            {
-                                $html .= '<td data-column="'.$dowMapNew[$i].'">
+                            $start_time = isset($n_array[$i]['start_time']) && $n_array[$i]['start_time'] ? $n_array[$i]['start_time'] : '';
+                            $end_time = isset($n_array[$i]['end_time']) && $n_array[$i]['start_time'] ? $n_array[$i]['end_time'] : '';
+                            $html .= '<td data-column="'.$dowMapNew[$i].'">
                                         <ul>
-                                        <li>'.$n_array[$i]['start_time'].'</li>
-                                        <li>'.$n_array[$i]['end_time'].'</li>
+                                        <li>'.$start_time.'</li>
+                                        <li>'.$end_time.'</li>
                                         </ul>
                                         <div class="edit-staff">
+                                            <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$sa['staff_id'].'" data-service-id = "'.$service_id.'" data-day-no = "'.$m.'" data-start-date = "'.$start_time.'" data-end-date = "'.$end_time.'"></i>
                                         </div>
                                         <div class="clearfix"></div>
                                     </td>';
-                            }
-                            else
-                            {
-                                $html .='<td data-column="'.$dowMapNew[$i].'">
-                                            <div class="edit-staff">
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </td>';
-                            }
+
+                            $m++;
                         }
-                    $html .='</tr>';
+                        $html .='</tr>';
             }
         }
         else
@@ -1587,6 +1552,105 @@ class StaffsController extends ApiController {
 
         $this->response_status='1';
         $this->response_message = array('postlcode_customer_interface' => $postlcode_customer_interface, 'msg' => "Successfully updated");
+
+        $this->json_output($response_data);
+    }
+
+    public function edit_service_list_staff(Request $request)
+    {
+
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $service_id = $request->input('service_id');
+        $staff_id = $request->input('staff_id');
+        
+        $staffFindCond = array(
+            array('service_id','=',$service_id),
+            array('staff_id','=',$staff_id),
+        );
+
+        $order_by = array('day' => 'ASC');
+        $StaffSelectedField = '';
+        $avability_list_staff_view = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability, $staffFindCond,$StaffSelectedField,$joins = '', $order_by);
+
+        $service_array = array();
+        for($i = 0; $i<7; $i++)
+        {
+            if(isset($avability_list_staff_view[$i]->day) && $avability_list_staff_view[$i]->day)
+            {
+                $start_time = $avability_list_staff_view[$i]->start_time;
+                $end_time = $avability_list_staff_view[$i]->end_time;
+                $day = $i+1;
+            }
+            else
+            {
+                $start_time = '';
+                $end_time = '';
+                $day = $i+1;
+            }
+    
+            $service_array[] = array('day' => $day, 'start_time' => $start_time, 'end_time' => $end_time);
+        }
+
+        //print_r($service_array); die();
+
+        $this->response_status='1';
+        $this->response_message = $service_array;
+
+        $this->json_output($response_data);
+    }
+
+
+    public function update_staff_availability_form(Request $request)
+    {
+
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+
+        //echo '<pre>'; print_r($request->all()); exit;
+
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $service_id = $request->input('service_id');
+        $staff_id = $request->input('stuff_id');
+        $day = $request->input('day');
+        $start_time = $request->input('availability_update_start_time');
+        $end_time = $request->input('availability_update_end_time');
+        
+        $staffFindCond = array(
+            array('service_id','=',$service_id),
+            array('staff_id','=',$staff_id),
+        );
+
+        $delete = $this->common_model->delete_data($this->tableObj->tableNameStaffServiceAvailability, $staffFindCond);
+
+        for ($i=0; $i < count($day) ; $i++)
+        { 
+            if($start_time[$i] && $end_time[$i])
+            {
+                $param = array(
+                    'staff_id' => $staff_id,
+                    'service_id' => $service_id,
+                    'day' => $day[$i],
+                    'start_time' => $start_time[$i],
+                    'end_time' => $end_time[$i],
+                );
+
+                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaffServiceAvailability,$param);
+            }
+        }
+
+        $this->response_status='1';
+        $this->response_message = "Successfully updated.";
 
         $this->json_output($response_data);
     }
