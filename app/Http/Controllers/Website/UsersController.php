@@ -122,7 +122,7 @@ class UsersController extends ApiController {
 		return view('website.user.thank_you')->with($data);
 	}
 
-	public function dashboard(Request $data)
+	public function dashboard(Request $data,$type="")
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -138,8 +138,8 @@ class UsersController extends ApiController {
 		$post_data['type'] = '';
 
 		$duration = $data->input('duration');
-		$type = $data->input('type');
-		if(!empty($duration) && !empty($type))
+		//$type = $data->input('type');
+		if(!empty($duration) || !empty($type))
 		{
 			$post_data['duration'] = $duration;
 			$post_data['type'] = $type;
@@ -171,6 +171,7 @@ class UsersController extends ApiController {
 				$data['appointments_difference'] = $return->appointments_difference;
 				$data['sales_difference'] = $return->sales_difference;
 				$data['customers_difference'] = $return->customers_difference;
+				$data['service_list'] = $return->service_list;
 				//$data['appointment_data'] = $return->appointment_data;
 				//$data['sales_data'] = $return->sales_data;
 				//$data['customer_data'] = $return->customer_data;

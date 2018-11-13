@@ -7,305 +7,318 @@ Squeedr
 @section('content')
 <div class="body-part">
     <div class="container-custm">
-      <div class="upper-cmnsection">
-        <div class="heading-uprlft" style="padding-bottom:8px">Staff Details</div>
-      </div>
-      <div class="leftpan">
-          <div class="left-menu">
-              <div id="custom-search-input">   
-                  <div class="input-group col-md-12">
-                   
-                    <input type="text" class="search-staff form-control" placeholder="Search Staff" />
-                    <span class="input-group-btn">
-                    <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
-                    </span>
-                   
-                  </div>
-                   
-                </div>
-                
-              <div class="stf-list heightfull">
-    
-                <a href="#" class="active">
-                  <img src="http://runmobileapps.com/squeedr/public/assets/website/images/business-hours/blue-user.png" /> 
-                  <div><h3>Douglas N</h3>
-                  <small>30min</small></div>
-                  </a>
-    
-                  <a href="#" >
-                    <img src="http://runmobileapps.com/squeedr/public/assets/website/images/business-hours/blue-user.png" /> 
-                    <div><h3>Douglas N</h3>
-                    <small>30min</small></div>
-                    </a>
-    
-                    <a href="#" >
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/business-hours/blue-user.png" /> 
-                        <div><h3>Douglas N</h3>
-                        <small>30min</small></div>
-                        </a>
-    
-                </div>
-                
-            </div>
-      </div>
-       <div class="rightpan"> 
-        <div class="relativePostion">
-    <div class=" showDekstop clearfix">
-      <div class="col-md-12">
-        <div class="custm-linkedt">
-          <ul>
-             <li><a href="#" data-toggle="tooltip" title="Add Staff"><button type="button" class="btn btn-primary">Book Now</button></a></li>
-          </ul>
+        <?php if(!empty($staff_details)) { ?>
+        <div class="upper-cmnsection">
+            <div class="heading-uprlft" style="padding-bottom:8px">Staff Details</div>
         </div>
-        <div class="staff-detailuser"> <img src="http://runmobileapps.com/squeedr/uploads/profile_image/154064492711501225258060-Rain--Rainbow-Women-Dresses-9391501225257859-1_mini.jpg" class="img-circle" alt="" width="55" height="55">
-        <div class="img-boxrgt">
-          <h4><strong>Jason</strong></h4> 
-          <p><i class="fa fa-map-marker" aria-hidden="true"></i> <strong>Margo, India</strong> - 5:46 pm local time</p>
-          <p>lamie74@gmail.com</p>
-          </div>
-        </div>
-        
-        <!-- Nav tabs -->
-        
-        <div class="staff-detail">
-          <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab1">Details</a></li>
-            <li><a data-toggle="tab" href="#tab2">Availability</a></li>
-          </ul>
-          <div class="tab-content">
-            <div id="tab1" class="tab-pane fade in active">
-              <div class="staff-detailtab-bx">
-                <ul>
-                 <li>
-                    <div class="row">
-                      <div class="col-sm-10">
-                        <h4>Booking URL</h4>
-                        <p>https://booking.appointy.com/</p>
-                      </div>
-                      <div class="col-sm-2">
-                        <button type="button" class="btn btn-default pull-right"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>
-                      </div>
-                    </div>
-                  </li>
-                 <li>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <h4>Available in (Postal Codes)</h4>
-                        <p>700101, E715</p>
-                      </div>
-                    </div>
-                  </li>
-                 <li>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <h4>Mobile No</h4>
-                        <p>9831209888</p>
-                      </div>
-                    </div>
-                  </li>
-                 <li>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <h4>Expertise</h4>
-                        <p></p>
-                      </div>
-                    </div>
-                  </li>
-                 <li>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <h4>Category</h4>
-                        <p>Meeting</p>
-                      </div>
-                    </div>
-                  </li>
-                 <li>
-                    <div class="row">
-                      <div class="col-sm-10">
-                        <h4>Staff Description</h4>
-                        <p>No Description</p>
-                      </div>
-                    </div>
-                  </li>
-                  
-                  <li>
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <h4>Payment Accepted</h4>
-                        <div class="paypal-iconbx">
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/paypal.png" alt="" height="50"/>
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/stripe-logo.png" alt="" height="50"/>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
 
-                </ul>
-              </div>
-            </div>
-            
-            <div id="tab2" class="tab-pane fade">
-              <div class="tab-content" style="padding:0;">
-                                    <div id="regulariner1" class="tab-pane fade active in">
+        <div class="leftpan">
+            <div class="left-menu">
+                <div id="custom-search-input">   
+                    <div class="input-group col-md-12">
+                    
+                        <input type="text" class="search-staff form-control" placeholder="Search Staff" />
+                        <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
+                        </span>
+                    
+                    </div>
+                    
+                    </div>
+                    
+                <div class="stf-list heightfull">
+                    <?php if(!empty($staff_list)) { foreach($staff_list as $staffs) { ?>
+                    <a href="{{url('client/view-staffs/'.$staffs->username)}}" <?php if($staffs->username == $username) { ?> class="active" <?php } ?> >
+                        <?php if($staffs->staff_profile_picture != ''){ ?>
+                            <img class="user-pic" src="<?php echo $staffs->staff_profile_picture;?>" width="35px" height="35px" /> 
+                        <?php } else { ?>
+                            <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" /> 
+                        <?php } ?>
+                        <div><h3>{{ucwords($staffs->full_name)}}</h3>
+                        <small>30min</small></div>
+                    </a>
+                    <?php } } ?>
+        
+                    </div>
+                    
+                </div>
+        </div>
+
+        <div class="rightpan">
+            <div class="relativePostion">
+                <div class=" showDekstop clearfix">
+                    <div class="col-md-12">
+                        <div class="custm-linkedt">
+                        <ul>
+                            <li><a href="#" data-toggle="tooltip" title="Book Now"><button type="button" class="btn btn-primary">Book Now</button></a></li>
+                        </ul>
+                        </div>
+                        <div class="staff-detailuser">
+                        <?php if($staff_details->staff_profile_picture != ''){ ?>
+                            <img class="user-pic" src="<?php echo $staff_details->staff_profile_picture;?>" width="55px" height="55px" /> 
+                        <?php } else { ?>
+                            <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" width="55px" height="55px" /> 
+                        <?php } ?>
+                        <div class="img-boxrgt">
+                            <h4><strong>{{ucwords($staff_details->full_name)}}</strong></h4>
+                            <?php if(isset($staff_details->address) && !empty($staff_details->address)) { ?>
+                            <p><i class="fa fa-map-marker" aria-hidden="true"></i> <strong></strong>{{$staff_details->address}}</p>
+                            <?php } ?>
+                            <p>{{$staff_details->email}}</p>
+                        </div>
+                        </div>
+                        <!-- Nav tabs -->
+                        <div class="staff-detail">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab1">Details</a></li>
+                            <li><a data-toggle="tab" href="#tab2">Availability</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab1" class="tab-pane fade in active">
+                                <div class="staff-detailtab-bx">
+                                    <ul>
+                                    <li>
                                         <div class="row">
-                                            <div class="col-md-3"></div>
-                                            <div class="col-md-6">
+                                            <div class="col-sm-10">
+                                                <h4>Booking URL</h4>
+                                                <p></p>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-default pull-right"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h4>Available in (Postal Codes)</h4>
+                                                <?php 
+                                                $postal_code = "";
+                                                if(!empty($staff_details->pincodes)) { foreach($staff_details->pincodes as $pincodes) {  ?>
+                                                <p>{{$pincodes->postal_code}}, {{$pincodes->area}}</p>
+                                                <?php } } else { ?>
+                                                <p>N/A</p>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h4>Mobile No</h4>
+                                                <p>{{$staff_details->mobile}}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h4>Expertise</h4>
+                                                <p>{{$staff_details->expertise}}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h4>Category</h4>
+                                                <p>{{$staff_details->category}}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-sm-10">
+                                                <h4>Staff Description</h4>
+                                                <p>{{$staff_details->description}}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!--<li>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h4>Payment Accepted</h4>
+                                                <div class="paypal-iconbx">
+                                                <img src="http://runmobileapps.com/squeedr/public/assets/website/images/paypal.png" alt="" height="50"/>
+                                                <img src="http://runmobileapps.com/squeedr/public/assets/website/images/stripe-logo.png" alt="" height="50"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="tab2" class="tab-pane fade">
+                                <div class="tab-content" style="padding:0;">
+                                    <div id="regulariner1" class="tab-pane fade active in">
+                                    <div class="row">
+                                        <div class="col-md-3"></div>
+                                        <div class="col-md-6">
                                             <div class="dropdown custm-uperdrop">
                                                 <button class="btn dropdown-toggle staff-drptxt" type="button" data-toggle="dropdown" aria-expanded="false">Current Schedule (23 May 2018 - 01 Jan 2070)</button>    
                                             </div>
-                                            </div>
-                                            <div class="col-md-3"></div>
                                         </div>
-                                        <div class="tableBH-table" style="margin-top:10px;">
-                                            <table class="table table-bordered table-custom1 table-bh tableBhMobile">
-                                                <thead>
-                                                    <tr>
-                                                        <th>SERVICES</th>
-                                                        <th>Monday</th>
-                                                        <th>Tuesday</th>
-                                                        <th>Wednesday</th>
-                                                        <th>Thursday</th>
-                                                        <th>Friday</th>
-                                                        <th>Saturday</th>
-                                                        <th>Sunday</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="staff-availability-section"><tr>
-                        <td>
-                            <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">PSYCHIATRIC</a> (60m) </div>
-                            
-                            <div class="clearfix"></div>
-                        </td><td data-column="Monday">
-                                        <ul>
-                                        <li>9:00 PM</li>
-                                        <li>12:00 PM</li>
-                                        </ul>
-                                        
-                                        <div class="clearfix"></div>
-                                    </td><td data-column="Tuesday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Wednesday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Thursday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Friday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Saturday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Sunday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td></tr><tr>
-                        <td>
-                            <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">PRODUCT RELEASE</a> (60m) </div>
-                            
-                            <div class="clearfix"></div>
-                        </td><td data-column="Monday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Tuesday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Wednesday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Thursday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Friday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Saturday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Sunday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td></tr><tr>
-                        <td>
-                            <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">SURGEON</a> (120m) </div>
-                            
-                            <div class="clearfix"></div>
-                        </td><td data-column="Monday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Tuesday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Wednesday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Thursday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Friday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Saturday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td><td data-column="Sunday">
-                                            
-                                            <div class="clearfix"></div>
-                                        </td></tr></tbody>
-                                            </table>
-                                        </div>
+                                        <div class="col-md-3"></div>
+                                    </div>
+                                    <div class="tableBH-table" style="margin-top:10px;">
+                                        <table class="table table-bordered table-custom1 table-bh tableBhMobile">
+                                            <thead>
+                                                <tr>
+                                                <th>SERVICES</th>
+                                                <th>Monday</th>
+                                                <th>Tuesday</th>
+                                                <th>Wednesday</th>
+                                                <th>Thursday</th>
+                                                <th>Friday</th>
+                                                <th>Saturday</th>
+                                                <th>Sunday</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="staff-availability-section">
+                                                <tr>
+                                                <td>
+                                                    <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">PSYCHIATRIC</a> (60m) </div>
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Monday">
+                                                    <ul>
+                                                        <li>9:00 PM</li>
+                                                        <li>12:00 PM</li>
+                                                    </ul>
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Tuesday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Wednesday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Thursday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Friday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Saturday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Sunday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                </tr>
+                                                <tr>
+                                                <td>
+                                                    <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">PRODUCT RELEASE</a> (60m) </div>
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Monday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Tuesday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Wednesday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Thursday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Friday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Saturday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Sunday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                </tr>
+                                                <tr>
+                                                <td>
+                                                    <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">SURGEON</a> (120m) </div>
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Monday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Tuesday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Wednesday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Thursday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Friday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Saturday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                <td data-column="Sunday">
+                                                    <div class="clearfix"></div>
+                                                </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-        <div class="custm-tab team-memtab">
-    <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#tabmenu1">Active</a></li>
-      <li><a data-toggle="tab" href="#tabmenu2">Inactive</a></li>
-    </ul>
-    <div class="tab-content">
-      <div id="tabmenu1" class="tab-pane fade in active">
-        <div class="mobileStaff showMobile" >
-          <div class="whitebox">
-            <h2>Dr. Concepcion M.</h2>
-            <span>Psychiatrist</span>
-            <ul>
-              <li><i class="fa fa-envelope"></i>LateshaJ@gmail.com</li>
-              <li><i class="fa fa-phone"></i>802-438-0497</li>
+            <div class="custm-tab team-memtab">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tabmenu1">Active</a></li>
+                <li><a data-toggle="tab" href="#tabmenu2">Inactive</a></li>
             </ul>
-            <ol>
-              <li>Addiction, Alcoholism</li>
-              <li>Sleep Medicine</li>
-              <li><a>More </a></li>
-            </ol>
-          </div>
-          <div class="whitebox">
-            <h2>Dr. Concepcion M.</h2>
-            <span>Psychiatrist</span>
-            <ul>
-              <li><i class="fa fa-envelope"></i>LateshaJ@gmail.com</li>
-              <li><i class="fa fa-phone"></i>802-438-0497</li>
-            </ul>
-            <ol>
-              <li>Addiction, Alcoholism</li>
-              <li>Sleep Medicine</li>
-              <li><a>More </a></li>
-            </ol>
-          </div>
+            <div class="tab-content">
+                <div id="tabmenu1" class="tab-pane fade in active">
+                    <div class="mobileStaff showMobile" >
+                        <div class="whitebox">
+                        <h2>Dr. Concepcion M.</h2>
+                        <span>Psychiatrist</span>
+                        <ul>
+                            <li><i class="fa fa-envelope"></i>LateshaJ@gmail.com</li>
+                            <li><i class="fa fa-phone"></i>802-438-0497</li>
+                        </ul>
+                        <ol>
+                            <li>Addiction, Alcoholism</li>
+                            <li>Sleep Medicine</li>
+                            <li><a>More </a></li>
+                        </ol>
+                        </div>
+                        <div class="whitebox">
+                        <h2>Dr. Concepcion M.</h2>
+                        <span>Psychiatrist</span>
+                        <ul>
+                            <li><i class="fa fa-envelope"></i>LateshaJ@gmail.com</li>
+                            <li><i class="fa fa-phone"></i>802-438-0497</li>
+                        </ul>
+                        <ol>
+                            <li>Addiction, Alcoholism</li>
+                            <li>Sleep Medicine</li>
+                            <li><a>More </a></li>
+                        </ol>
+                        </div>
+                    </div>
+                </div>
+                <div id="tabmenu2" class="tab-pane fade">
+                    <p>Some content in tab menu 2.</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div id="tabmenu2" class="tab-pane fade">
-        <p>Some content in tab menu 2.</p>
-      </div>
+        <?php } else { ?>
+        <div class="upper-cmnsection">
+            <div class="heading-uprlft" style="padding-bottom:8px">Sorry, No staff found</div>
+        </div>
+        <?php } ?>
     </div>
-  </div>
-      </div>
  </div>
 @endsection
 

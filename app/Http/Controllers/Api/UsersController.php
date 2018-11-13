@@ -863,12 +863,49 @@ class UsersController extends ApiController {
 		$customer_data = $this->common_model->customQuery($customersQuery,$query_type=1);*/
 		
 
+		//Service list 
+		$servCond = array(
+            array('user_id','=',$user_id),
+			array('is_deleted','=','0'),
+			//array('is_blocked','=','0'),
+		);
+
+		$type = $request->input('type'); 
+		if($type == "group")
+		{
+			$servCond[] = array('capacity','>','0');
+		}
+		if($type == "users")
+		{
+			$servCond[] = array('capacity','=','0');
+		}
+
+		$serviceFields = array();
+		$currency_field = array('currency');
+
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameCurrency,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('currency_id','=','currency_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $currency_field,
+		            ),
+        );
+
+		$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
+
+
 		$response_data['total_appointments'] = $total_appointments[0]->total_appointments;
 		$response_data['total_sales'] = $total_sales[0]->total_sales;
 		$response_data['total_customers'] = $total_customers[0]->total_customers;
 		$response_data['appointments_difference'] = $appointments_difference;
 		$response_data['sales_difference'] = $sales_difference;
 		$response_data['customers_difference'] = $customers_difference;
+		$response_data['service_list'] = $service_list;
 		//$response_data['appointment_data'] = $appointment_data;
 		//$response_data['sales_data'] = $sales_data;
 		//$response_data['customer_data'] = $customer_data;

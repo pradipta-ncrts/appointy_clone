@@ -155,7 +155,7 @@ Route::group(['prefix'=>''],function(){
     Route::any('/','Website\UsersController@registration');
     Route::get('/registration-step1','Website\UsersController@registration_step1');
     Route::get('/registration-step2','Website\UsersController@registration_step2');
-    Route::get('/dashboard','Website\UsersController@dashboard');
+    Route::get('/dashboard/{type?}','Website\UsersController@dashboard');
     Route::get('/logout', 'Website\UsersController@logout');
     Route::any('/thank-you','Website\UsersController@thank_you');
     Route::get('/business-contact-info','Website\UsersController@business_contact_info');
@@ -240,7 +240,7 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/client-info/','Website\ClientsController@client_info');
     Route::get('/booking-verify/','Website\ClientsController@booking_verify');
     Route::get('/booking-details/','Website\ClientsController@booking_details');
-    Route::get('/view-staffs/','Website\ClientsController@view_staff_list');
+    Route::get('/view-staffs/{username}','Website\ClientsController@view_staff_list');
     Route::get('/forgot-password/{parameter?}','Website\ClientsController@forgot_password');
 
 });

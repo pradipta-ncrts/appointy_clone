@@ -11,10 +11,10 @@ Squeedr
          <div class="upr-rgtsec">
             <div class="col-md-6">
                <ul class="tab-menu ">
-                  <li><a href="#" class="active">My Squeedr</a></li>
-                  <li><a href="#">Group</a></li>
-                  <li><a href="#">Users</a></li>
-                  <li><a href="#">Template</a></li>
+                    <li><a href="{{url('dashboard/')}}" <?php if(!isset($type) || $type=='') { ?> class="active" <?php } ?> >My Squeedr</a></li>
+                    <li><a href="{{url('dashboard/group')}}" <?php if(isset($type) && $type=='group') { ?> class="active" <?php } ?> >Group</a></li>
+                    <li><a href="{{url('dashboard/users')}}" <?php if(isset($type) && $type=='users') { ?> class="active" <?php } ?> >Users</a></li>
+                    <li><a href="{{url('dashboard/template')}}" <?php if(isset($type) && $type=='template') { ?> class="active" <?php } ?> >Template</a></li>
                </ul>
             </div>
             <div class="col-md-6">
@@ -69,12 +69,13 @@ Squeedr
          <hr>
          <div class="clearfix"></div>
          <div class="headRow mobileappointed arrow-d clearfix row-2"  id="row2">
-            <a href="services.html" class="more-link"  data-toggle="tooltip" title="More Services"><img src="{{asset('public/assets/website/images/threeDots.png')}}"/></a>
+            <!--<a href="services.html" class="more-link"  data-toggle="tooltip" title="More Services"><img src="{{asset('public/assets/website/images/threeDots.png')}}"/></a>-->
+            <?php if(!empty($service_list)) { foreach($service_list as $service) { ?>
             <div class="appointment mobSevices  col-sm-4">
                <div class="pull-left">
-                  <p>Dental Consultation</p>
-                  <span>30min-1h
-                  <label>$50</label>
+                  <p>{{ucwords($service->service_name)}}</p>
+                  <span>{{$service->duration}} mins
+                  <label>{{$service->currency}} {{$service->cost}}</label>
                   </span> 
                </div>
                <ul class="pull-right">
@@ -88,42 +89,9 @@ Squeedr
                   </li>
                </ul>
             </div>
-            <div class="appointment mobSevices  col-sm-4">
-               <div class="pull-left">
-                  <p>Dental Consultation</p>
-                  <span>30min-1h
-                  <label>$50</label>
-                  </span> 
-               </div>
-               <ul class="pull-right">
-                  <li onclick="showUl(this);">
-                     <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
-                     <ul>
-                        <li><a><i class="fa fa-edit"></i> Edit </a> </li>
-                        <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
-                        <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
-                     </ul>
-                  </li>
-               </ul>
-            </div>
-            <div class="appointment mobSevices  col-sm-4">
-               <div class="pull-left">
-                  <p>Dental Consultation</p>
-                  <span>30min-1h
-                  <label>$50</label>
-                  </span> 
-               </div>
-               <ul class="pull-right">
-                  <li onclick="showUl(this);">
-                     <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
-                     <ul>
-                        <li><a><i class="fa fa-edit"></i> Edit </a> </li>
-                        <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
-                        <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
-                     </ul>
-                  </li>
-               </ul>
-            </div>
+            <?php } } else { ?>
+
+            <?php } ?>
          </div>
          <hr>
          <a class="btn btn-primary butt-next center-block" style=" margin: 20px auto;  width: 200px;" data-toggle="modal" data-target="#myModalQuickGuide"  >Quick Start Guide</a>

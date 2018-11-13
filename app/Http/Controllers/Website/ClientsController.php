@@ -230,8 +230,74 @@ class ClientsController extends ApiController {
 		return view('website.client.client-dashboard');
 	}
 
-	function view_staff_list(){
-		return view('website.client.view-staff-list');
+	function view_staff_list($username=NULL){
+		$staff_postal_code_list = array();
+		$staff_list=array();
+		$staff_details=array();
+		$username='';
+		
+		$findCond=array(
+			array('username','=',$username),
+			array('is_internal_staff','=',0),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+		$selectFields=array();
+		$category_select_field = array('category');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameCategory,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableNameStaff,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('category_id','=','category_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $category_select_field,
+		            ),
+        );
+        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields,$joins);
+		
+		if(!empty($staff_details)){
+			$user_id = $staff_details->user_id;
+			$staff_id = $staff_details->staff_id;
+			
+	
+			$findpostCond=array(
+				array('staff_id','=',$staff_id),
+				array('is_deleted','=','0'),
+				array('is_blocked','=','0'),
+			);
+			
+			$selectpostFields=array('postal_code','area');
+			$staff_postal_code_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findpostCond,$selectpostFields);
+			$staff_details->pincodes = $staff_postal_code_list;
+
+			// All Staff List //
+			$findstaffCond=array(
+				array('user_id','=',$user_id),
+				array('is_internal_staff','=',0),
+				array('is_deleted','=','0'),
+				array('is_blocked','=','0'),
+			);
+			
+			$selectstaffFields=array('staff_id','full_name','username','email','staff_profile_picture');
+			$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findstaffCond,$selectstaffFields);
+			
+				
+		}
+		
+
+		$data=array(
+			'staff_list'=>$staff_list,
+			'staff_details'=>$staff_details,
+			'username'=>$username
+		);
+
+		//echo '<pre>'; print_r($data); exit;
+
+		return view('website.client.view-staff-list',$data);
 	}
 
 	
