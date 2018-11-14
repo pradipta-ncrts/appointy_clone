@@ -971,10 +971,16 @@ class UsersController extends ApiController {
 		if($type == "group")
 		{
 			$servCond[] = array('capacity','>','0');
+			$servCond[] = array('is_template','=','0');
 		}
 		if($type == "users")
 		{
 			$servCond[] = array('capacity','=','0');
+			$servCond[] = array('is_template','=','0');
+		}
+		if($type == "template")
+		{
+			$servCond[] = array('is_template','=','1');
 		}
 
 		$category = $request->input('category'); 
@@ -1048,7 +1054,7 @@ class UsersController extends ApiController {
 		$this->common_model->update_data($this->tableObj->tableUserService,$findCond,$param);
 
 		$this->response_status='1';
-		$this->response_message="Successfully service status updated.";
+		$this->response_message = array('msg' => "Successfully service status updated." , 'status' => $service_details->is_blocked== '0' ? '1' : '0' );;
 
 		$this->json_output($response_data);
 
@@ -1144,6 +1150,36 @@ class UsersController extends ApiController {
 
 		// Event Viewer //
 		$this->add_user_event_viewer($user_no,$type=3);
+
+		$this->response_status='1';
+		$this->response_message="Successfully service status updated.";
+
+		$this->json_output($response_data);
+
+	}
+
+	public function service_template(Request $request)
+    {
+		$response_data=array();	
+		// validate the requested param for access this service api
+		$this->validate_parameter(1); // along with the user request key validation
+		$user_no = $this->logged_user_no;
+		$service_id = $request->input('service_id');
+
+		$findCond = array(
+            array('service_id','=',$service_id),
+		);
+
+		//now update service status 
+		$param = array(
+			'is_template' => '1',
+			'updated_on' => $this->date_format
+		);
+		
+		$this->common_model->update_data($this->tableObj->tableUserService,$findCond,$param);
+
+		// Event Viewer //
+		//$this->add_user_event_viewer($user_no,$type=3);
 
 		$this->response_status='1';
 		$this->response_message="Successfully service status updated.";

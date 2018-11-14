@@ -2101,12 +2101,12 @@
 			$("#popup").fadeToggle();
 		}
 
-		function togglebtn(obj) {
+		/*function togglebtn(obj) {
 			$(obj).toggleClass("active");
 			$(obj).find("i").toggleClass("fa-toggle-off fa-toggle-on");
 			$(".mobSevices ul li a.active").find("i").not($(obj).find("i")).removeClass("fa-toggle-on").addClass("fa-toggle-off");
 			$(".mobSevices ul li a.active").not($(obj)).removeClass("active");
-		}
+		}*/
 
 		function showUl(obj) {
 			$(obj).find("ul").fadeToggle();

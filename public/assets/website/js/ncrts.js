@@ -1397,7 +1397,7 @@ $('#when_to_send').change(function(e) {
 $(".chnage-service-status").click(function (e) {
     e.preventDefault();
     let data = addCommonParams([]);
-    let id = $(this).attr('id');
+    let id = $(this).data('id');
     data.push({name:'service_id',value:id});
     $.ajax({
         url: baseUrl+"/api/chnage-service-status", 
@@ -1410,11 +1410,16 @@ $(".chnage-service-status").click(function (e) {
             $('.animationload').hide();
             if(response.result=='1')
             {
-                swal({title: "Success", text: response.message, type: "success"},
-                 function(){ 
-                     location.reload();
-                 }
-              );
+                if(response.message.status==1)
+                {
+                    $("#change-status-"+id).removeClass('active');
+                }
+                else
+                {
+                    $("#change-status-"+id).addClass('active');
+                }
+                swal({title: "Success", text: response.message.msg, type: "success"});
+                //swal(title: "Success", text: response.message.msg, type: "success");
             }
             else
             {
@@ -1517,6 +1522,45 @@ $(".clone-srvice").click(function (event) {
  
 });
 
+$(".save-as-template").click(function (event) {
+  event.preventDefault();
+  let data = addCommonParams([]);
+  let id = $(this).data('id');
+  data.push({name:'service_id', value:id});
+  $.ajax({
+      url: baseUrl+"/api/service-template", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          console.log(response);
+          $('.animationload').hide();
+          if(response.result=='1')
+          {
+              swal({title: "Success", text: response.message, type: "success"},
+               function(){ 
+                   location.reload();
+               }
+            );
+          }
+          else
+          {
+              swal("Error", response.message , "error");
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          //$('.animationload').hide();
+      }
+  });
+ 
+});
+
 
 $(".delete-srvice").click(function (event) {
   event.preventDefault();
@@ -1570,6 +1614,47 @@ $(".delete-srvice").click(function (event) {
             });
         }
     });
+});
+
+$("#submit_service_status_filter").click(function (event) {
+  event.preventDefault();
+  $('.animationload').show();
+  var data = $("#service_status_filter").serializeArray();
+  console.log(data);
+  if(data.length > 0)
+  {
+      if(data.length < 2)
+      {
+          if(data[0].value==1)
+          {
+              //alert('1');
+              $(".check-active").show();
+              $(".check-inactive").hide();
+              $("#staffFilterModal").modal('hide');
+          }
+          else
+          {
+              //alert('2')
+              $(".check-inactive").show();
+              $(".check-active").hide();
+              $("#staffFilterModal").modal('hide');
+          }
+      }
+      else
+      {
+         $(".check-active").show();
+         $(".check-inactive").show();
+         $("#staffFilterModal").modal('hide');
+      }
+  }
+  else
+  {
+      $(".check-active").show();
+      $(".check-inactive").show();
+      $("#staffFilterModal").modal('hide');
+  }
+  
+  $('.animationload').hide();
 });
 
 $("#embed-link").click(function (event) {

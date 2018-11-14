@@ -139,6 +139,17 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/update_staff_availability_form','Api\StaffsController@update_staff_availability_form');
 
+    Route::post('/service-template','Api\UsersController@service_template');
+
+    Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
+
+    Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
+
+
+
+    
+    
+
     
 
     

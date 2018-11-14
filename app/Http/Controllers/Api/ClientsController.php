@@ -1141,5 +1141,106 @@ class ClientsController extends ApiController {
         $this->json_output($response_data);
     }
 
+    // Regenerate Password //
+    public function client_appointment_list(Request $request)
+    {
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $client_id = $request->input('client_id');
+        
+
+        $condition = array(
+            array('client_id', '=', $client_id),
+            array('user_id', '=', $user_id),
+            //array('is_deleted', '=', '0'),
+        );
+
+        $appointmentFields = array('appointment_id','date','start_time','created_on','total_payable_amount','appointment_status');
+        $staffFields = array('full_name');
+        $serviceFields = array('service_name');
+
+        $tableUserService = $this->tableObj->tableUserService;
+        $tableStaff = $this->tableObj->tableNameStaff;
+        $tableAppointement = $this->tableObj->tableNameAppointment;
+
+        $joins = array(
+                    array(
+                        'join_table'=>$tableStaff,
+                        'join_with'=>$tableAppointement,
+                        'join_type'=>'left',
+                        'join_on'=>array('staff_id','=','staff_id'),
+                        'join_on_more'=>array(),
+                        //'join_conditions' => array(array('is_blocked','=','0')),
+                        'select_fields' => $staffFields,
+                    ),
+                    array(
+                        'join_table'=>$tableUserService,
+                        'join_with'=>$tableAppointement,
+                        'join_type'=>'left',
+                        'join_on'=>array('service_id','=','service_id'),
+                        'join_on_more'=>array(),
+                        //'join_conditions' => array(array('is_blocked','=','0')),
+                        'select_fields' => $serviceFields,
+                    ),
+            );
+
+        $appoinment_list = $this->common_model->fetchDatas($tableAppointement,$condition,$appointmentFields, $joins);
+        $html = '';
+        if(!empty($appoinment_list))
+        {
+            foreach ($appoinment_list as $key => $value)
+            {
+                $create_date = date('d M, Y', strtotime($value->created_on)); 
+                $appintment_date = date('d M, Y', strtotime($value->date)).'-'. $value->start_time;
+                $client_appoinment_status = $value->appointment_status;
+                $client_appoinment_status = $client_appoinment_status ? $client_appoinment_status : 'CHECK IN';
+
+                $html .= '<tr><td>'.$create_date.'</td><td>'.$appintment_date.'</td><td>'.$value->service_name.'</td><td>'.$value->full_name.'</td><td  style="text-align: center;">$'.$value->total_payable_amount.'</td><td  style="text-align: center;"><div class="dropdown "><button class="btn dropdown-toggle" type="button" data-toggle="dropdown" "><span id="change-status-'.$value->appointment_id.'">'.$client_appoinment_status.'</span> <img src="'.url('public/assets/website/images/arrow.png').'" alt=""/></button><ul class="dropdown-menu"><li><a href="javascript:void(0);" data-id="'.$value->appointment_id.'" data-status="As Scheduled" class="change-status">As Scheduled</a></li><li><a href="javascript:void(0);" data-id="'.$value->appointment_id.'" data-status="Arrived Late" class="change-status">Arrived Late</a></li><li><a href="javascript:void(0);" data-id="'.$value->appointment_id.'" data-status="No show" class="change-status">No show</a></li><li><a href="javascript:void(0);" data-id="'.$value->appointment_id.'" data-status="Gift Certificates" class="change-status">Gift Certificates</a></li></ul></div></td></tr>';
+            }
+        }
+        else
+        {
+            $html .= '<tr><td colspan="6">No data found</td></tr>';
+        }
+
+        $this->response_status='1';
+        $this->response_message = $html;
+        $this->json_output($response_data);
+    }  
+
+    
+    public function client_appointment_status(Request $request)
+    {
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $appointment_id = $request->input('appointment_id');
+        $appointment_status = $request->input('appointment_status');
+
+        $condition = array(
+            array('appointment_id', '=', $appointment_id),
+            array('user_id', '=', $user_id),
+            //array('is_deleted', '=', '0'),
+        );
+        
+        $update_data['appointment_status'] = $appointment_status;
+
+        $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$condition,$update_data);
+        $this->response_status='1';
+        $this->response_message = "Successfully Update";
+        $this->json_output($response_data);
+    }
 
 }
+
