@@ -43,6 +43,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/login','Api\UsersController@login');
     Route::post('/logout','Api\UsersController@logout');
     Route::post('/dashboard','Api\UsersController@dashboard');
+    Route::post('/change_status_dashboard_report','Api\UsersController@change_status_dashboard_report');
     Route::post('/update-contact-info','Api\UsersController@update_contact_info');
     Route::post('/update-logo-social','Api\UsersController@update_logo_social');
     //Route::post('/add_staff','Api\UsersController@add_staff');

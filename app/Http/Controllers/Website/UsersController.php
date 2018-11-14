@@ -175,6 +175,7 @@ class UsersController extends ApiController {
 				//$data['appointment_data'] = $return->appointment_data;
 				//$data['sales_data'] = $return->sales_data;
 				//$data['customer_data'] = $return->customer_data;
+				$data['dashboard_reports'] = $return->dashboard_reports;
 				$data['duration'] = $duration;
 				$data['type'] = $type;
 				

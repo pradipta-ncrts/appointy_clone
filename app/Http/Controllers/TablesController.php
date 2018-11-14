@@ -71,6 +71,8 @@ class TablesController {
 
         $this->tableNameUserSubscription = config('constants.tables.user_subscription');
 
+        $this->tableNameUserDashboardReport = config('constants.tables.user_dashboard_reports');
+
         
 
     }

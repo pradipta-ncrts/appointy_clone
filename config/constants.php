@@ -50,6 +50,8 @@ return [
 
         'user_subscription' => 'user_subscription',
 
+        'user_dashboard_reports' => 'user_dashboard_reports',
+
 
 
     ],

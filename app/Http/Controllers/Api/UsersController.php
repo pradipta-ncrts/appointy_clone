@@ -744,110 +744,145 @@ class UsersController extends ApiController {
 
 		$duration = $request->input('duration');
 		//$type = $request->input('type');
+		$total_appointments = 0;
+		$total_sales = 0;
+		$total_customers = 0;
+		$appointments_difference = 0;
+		$sales_difference = 0;
+		$customers_difference = 0;
 
-		$start = date('Y-m-01 00:00:00');
-		$finish = date('Y-m-t 00:00:00');
-		$prev_start = date('Y-m-d H:i:s',strtotime('first day of last month'));
-		$prev_finish = date('Y-m-d H:i:s',strtotime('last day of last month'));
+		$find_cond=array(
+			array('user_id','=',$user_id),
+			array('is_deleted','=','0')
+		);
 
-		if($duration == '1'){
-			// This Week //
-			$start = (date('D') != 'Mon') ? date('Y-m-d H:i:s', strtotime('last Monday')) : date('Y-m-d H:i:s');
-			$finish = (date('D') != 'Sun') ? date('Y-m-d H:i:s', strtotime('next Sunday')) : date('Y-m-d H:i:s');
-			//Prev Week//
-			$previous_week = strtotime("-1 week +1 day");
-			$start_week = strtotime("last monday midnight",$previous_week);
-			$end_week = strtotime("next sunday",$start_week);
-			$prev_start = date("Y-m-d H:i:s",$start_week);
-			$prev_finish = date("Y-m-d H:i:s",$end_week);
-		} else if($duration == '2'){
-			// Previous Week //
-			$previous_week = strtotime("-1 week +1 day");
-			$start_week = strtotime("last monday midnight",$previous_week);
-			$end_week = strtotime("next sunday",$start_week);
-			$start = date("Y-m-d H:i:s",$start_week);
-			$finish = date("Y-m-d H:i:s",$end_week);
-			//Prev Week//
-			$prev_previous_week = strtotime("-2 week +1 day");
-			$prev_start_week = strtotime("last monday midnight",$prev_previous_week);
-			$prev_end_week = strtotime("next sunday",$prev_start_week);
-			$prev_start = date("Y-m-d H:i:s",$prev_start_week);
-			$prev_finish = date("Y-m-d H:i:s",$prev_end_week);
-		} else if($duration == '3'){
-			// This Month
+		$dashboard_reports = $this->common_model->fetchDatas($this->tableObj->tableNameUserDashboardReport,$find_cond);
+		if(!empty($dashboard_reports))
+		{
 			$start = date('Y-m-01 00:00:00');
 			$finish = date('Y-m-t 00:00:00');
-			//Prev Month//
 			$prev_start = date('Y-m-d H:i:s',strtotime('first day of last month'));
 			$prev_finish = date('Y-m-d H:i:s',strtotime('last day of last month'));
-		} else if($duration == '4'){
-			// Previous Month
-			$start = date('Y-m-d H:i:s',strtotime('first day of last month'));
-			$finish = date('Y-m-d H:i:s',strtotime('last day of last month'));
-			//Prev Month//
-			$prev_start = date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")-2, 1));
-			$prev_finish = date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")-1, 0));
-		} else if($duration == '5'){
-			// This Year
-			$start = date('Y-01-01 00:00:00');
-			$finish = date('Y-12-31 00:00:00');
-			//Prev Year//
-			$prev_start = date("Y-m-d H:i:s",strtotime("last year January 1st"));
-			$prev_finish = date("Y-m-d H:i:s",strtotime("last year December 31st"));
-		} else if($duration == '6'){
-			// Previous Year
-			$start = date("Y-m-d H:i:s",strtotime("last year January 1st"));
-			$finish = date("Y-m-d H:i:s",strtotime("last year December 31st"));
-			//Prev Year//
-			$year = date('Y') - 2; // Get current year and subtract 1
-			$prev_start = date("Y-m-d H:i:s",strtotime("January 1st, ".$year));
-			$prev_finish = date("Y-m-d H:i:s",strtotime("December 31st, ".$year));
+	
+			if($duration == '1'){
+				// This Week //
+				$start = (date('D') != 'Mon') ? date('Y-m-d H:i:s', strtotime('last Monday')) : date('Y-m-d H:i:s');
+				$finish = (date('D') != 'Sun') ? date('Y-m-d H:i:s', strtotime('next Sunday')) : date('Y-m-d H:i:s');
+				//Prev Week//
+				$previous_week = strtotime("-1 week +1 day");
+				$start_week = strtotime("last monday midnight",$previous_week);
+				$end_week = strtotime("next sunday",$start_week);
+				$prev_start = date("Y-m-d H:i:s",$start_week);
+				$prev_finish = date("Y-m-d H:i:s",$end_week);
+			} else if($duration == '2'){
+				// Previous Week //
+				$previous_week = strtotime("-1 week +1 day");
+				$start_week = strtotime("last monday midnight",$previous_week);
+				$end_week = strtotime("next sunday",$start_week);
+				$start = date("Y-m-d H:i:s",$start_week);
+				$finish = date("Y-m-d H:i:s",$end_week);
+				//Prev Week//
+				$prev_previous_week = strtotime("-2 week +1 day");
+				$prev_start_week = strtotime("last monday midnight",$prev_previous_week);
+				$prev_end_week = strtotime("next sunday",$prev_start_week);
+				$prev_start = date("Y-m-d H:i:s",$prev_start_week);
+				$prev_finish = date("Y-m-d H:i:s",$prev_end_week);
+			} else if($duration == '3'){
+				// This Month
+				$start = date('Y-m-01 00:00:00');
+				$finish = date('Y-m-t 00:00:00');
+				//Prev Month//
+				$prev_start = date('Y-m-d H:i:s',strtotime('first day of last month'));
+				$prev_finish = date('Y-m-d H:i:s',strtotime('last day of last month'));
+			} else if($duration == '4'){
+				// Previous Month
+				$start = date('Y-m-d H:i:s',strtotime('first day of last month'));
+				$finish = date('Y-m-d H:i:s',strtotime('last day of last month'));
+				//Prev Month//
+				$prev_start = date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")-2, 1));
+				$prev_finish = date("Y-m-d H:i:s", mktime(0, 0, 0, date("m")-1, 0));
+			} else if($duration == '5'){
+				// This Year
+				$start = date('Y-01-01 00:00:00');
+				$finish = date('Y-12-31 00:00:00');
+				//Prev Year//
+				$prev_start = date("Y-m-d H:i:s",strtotime("last year January 1st"));
+				$prev_finish = date("Y-m-d H:i:s",strtotime("last year December 31st"));
+			} else if($duration == '6'){
+				// Previous Year
+				$start = date("Y-m-d H:i:s",strtotime("last year January 1st"));
+				$finish = date("Y-m-d H:i:s",strtotime("last year December 31st"));
+				//Prev Year//
+				$year = date('Y') - 2; // Get current year and subtract 1
+				$prev_start = date("Y-m-d H:i:s",strtotime("January 1st, ".$year));
+				$prev_finish = date("Y-m-d H:i:s",strtotime("December 31st, ".$year));
+			}
+			
+			$duration_query = " AND created_on >= '".$start."' AND created_on <= '".$finish."'";
+			$prev_duration_query = " AND created_on >= '".$prev_start."' AND created_on <= '".$prev_finish."'";
+
+			
+			foreach($dashboard_reports as $report){
+				if($report->report_id == '1'){
+					// Total Appointments //
+					$appointments_query = "SELECT COUNT(*) AS total_appointments FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$duration_query;
+					$appointments = $this->common_model->customQuery($appointments_query,$query_type=1);
+					$total_appointments = $appointments[0]->total_appointments;
+
+					$prev_appointments_query = "SELECT COUNT(*) AS prev_total_appointments FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$prev_duration_query;
+					$prev_appointments = $this->common_model->customQuery($prev_appointments_query,$query_type=1);
+					$prev_total_appointments = $prev_appointments[0]->prev_total_appointments;
+
+					if($prev_total_appointments > 0){
+						$appointments_difference = round(($total_appointments - $prev_total_appointments) / $prev_total_appointments) * 100;			
+					} else {
+						$appointments_difference = round($total_appointments - $prev_total_appointments) * 100;
+					}
+				} else if($report->report_id == '2') {
+					// Total Sales //
+					$sales_query = "SELECT IFNULL(SUM(paid_amount),0) AS total_sales FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$duration_query;
+					$sales = $this->common_model->customQuery($sales_query,$query_type=1);
+					$total_sales = $sales[0]->total_sales;
+
+					$prev_sales_query = "SELECT IFNULL(SUM(paid_amount),0) AS prev_total_sales FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$prev_duration_query;
+					$prev_sales = $this->common_model->customQuery($prev_sales_query,$query_type=1);
+					$prev_total_sales = $prev_sales[0]->prev_total_sales;
+
+					if($prev_total_sales > 0){
+						$sales_difference = round(($total_sales - $prev_total_sales) / $prev_total_sales) * 100;			
+					} else {
+						$sales_difference = round(($total_sales - $prev_total_sales)) * 100;			
+					}
+
+				} else if($report->report_id == '3') {
+					// Total Customers //
+					$customers_query = "SELECT COUNT(*) AS total_customers FROM `squ_client` WHERE `squ_client`.`user_id` = '".$user_id."' AND `squ_client`.`is_deleted` = 0 ".$duration_query;
+					$customers = $this->common_model->customQuery($customers_query,$query_type=1);
+					$total_customers = $customers[0]->total_customers;
+
+					$prev_customers_query = "SELECT COUNT(*) AS prev_total_customers FROM `squ_client` WHERE `squ_client`.`user_id` = '".$user_id."' AND `squ_client`.`is_deleted` = 0 ".$prev_duration_query;
+					$prev_customers = $this->common_model->customQuery($prev_customers_query,$query_type=1);
+					$prev_total_customers = $prev_customers[0]->prev_total_customers;
+
+					if($prev_total_customers > 0){
+						$customers_difference = round(($total_customers - $prev_total_customers) / $prev_total_customers) * 100;
+					} else {
+						$customers_difference = round(($total_customers - $prev_total_customers)) * 100;
+					}
+
+				} else if($report->report_id == '4') {
+
+				} else if($report->report_id == '5') {
+
+				} else if($report->report_id == '6') {
+
+				}
+			}
 		}
-		
-		$duration_query = " AND created_on >= '".$start."' AND created_on <= '".$finish."'";
-		$prev_duration_query = " AND created_on >= '".$prev_start."' AND created_on <= '".$prev_finish."'";
+		else
+		{
 
-		// Total Appointments //
-		$appointments_query = "SELECT COUNT(*) AS total_appointments FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$duration_query;
-		$total_appointments = $this->common_model->customQuery($appointments_query,$query_type=1);
-
-		$prev_appointments_query = "SELECT COUNT(*) AS prev_total_appointments FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$prev_duration_query;
-		$prev_total_appointments = $this->common_model->customQuery($prev_appointments_query,$query_type=1);
-
-		if($prev_total_appointments[0]->prev_total_appointments > 0){
-			$appointments_difference = round(($total_appointments[0]->total_appointments - $prev_total_appointments[0]->prev_total_appointments) / $prev_total_appointments[0]->prev_total_appointments) * 100;			
-		} else {
-			$appointments_difference = round($total_appointments[0]->total_appointments - $prev_total_appointments[0]->prev_total_appointments) * 100;
 		}
-		
-
-		// Total Sales //
-		$sales_query = "SELECT IFNULL(SUM(paid_amount),0) AS total_sales FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$duration_query;
-		$total_sales = $this->common_model->customQuery($sales_query,$query_type=1);
-
-		$prev_sales_query = "SELECT IFNULL(SUM(paid_amount),0) AS prev_total_sales FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_id."' AND `squ_appointment`.`is_deleted` = 0 ".$prev_duration_query;
-		$prev_total_sales = $this->common_model->customQuery($prev_sales_query,$query_type=1);
-
-		if($prev_total_sales[0]->prev_total_sales > 0){
-			$sales_difference = round(($total_sales[0]->total_sales - $prev_total_sales[0]->prev_total_sales) / $prev_total_sales[0]->prev_total_sales) * 100;			
-		} else {
-			$sales_difference = round(($total_sales[0]->total_sales - $prev_total_sales[0]->prev_total_sales)) * 100;			
-		}
-		
-
-		// Total Customers //
-		$customers_query = "SELECT COUNT(*) AS total_customers FROM `squ_client` WHERE `squ_client`.`user_id` = '".$user_id."' AND `squ_client`.`is_deleted` = 0 ".$duration_query;
-		$total_customers = $this->common_model->customQuery($customers_query,$query_type=1);
-
-		$prev_customers_query = "SELECT COUNT(*) AS prev_total_customers FROM `squ_client` WHERE `squ_client`.`user_id` = '".$user_id."' AND `squ_client`.`is_deleted` = 0 ".$prev_duration_query;
-		$prev_total_customers = $this->common_model->customQuery($prev_customers_query,$query_type=1);
-
-		if($prev_total_customers[0]->prev_total_customers > 0){
-			$customers_difference = round(($total_customers[0]->total_customers - $prev_total_customers[0]->prev_total_customers) / $prev_total_customers[0]->prev_total_customers) * 100;
-		} else {
-			$customers_difference = round(($total_customers[0]->total_customers - $prev_total_customers[0]->prev_total_customers)) * 100;
-		}
-		
 		
 
 		// All Appointments //
@@ -897,11 +932,11 @@ class UsersController extends ApiController {
         );
 
 		$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
+		
 
-
-		$response_data['total_appointments'] = $total_appointments[0]->total_appointments;
-		$response_data['total_sales'] = $total_sales[0]->total_sales;
-		$response_data['total_customers'] = $total_customers[0]->total_customers;
+		$response_data['total_appointments'] = $total_appointments;
+		$response_data['total_sales'] = $total_sales;
+		$response_data['total_customers'] = $total_customers;
 		$response_data['appointments_difference'] = $appointments_difference;
 		$response_data['sales_difference'] = $sales_difference;
 		$response_data['customers_difference'] = $customers_difference;
@@ -909,6 +944,7 @@ class UsersController extends ApiController {
 		//$response_data['appointment_data'] = $appointment_data;
 		//$response_data['sales_data'] = $sales_data;
 		//$response_data['customer_data'] = $customer_data;
+		$response_data['dashboard_reports'] = $dashboard_reports;
 		$this->response_status = '1';
 
 		$this->json_output($response_data);
@@ -1781,6 +1817,53 @@ class UsersController extends ApiController {
         // generate the service / api response
         $this->json_output($response_data);
 
+	}
+
+
+	function change_status_dashboard_report(Request $request){
+		$response_data=array();	
+		// validate the requested param for access this service api
+		$this->validate_parameter(1); // along with the user request key validation
+		
+		$user_id = $this->logged_user_no;
+		$report_id = $request->input('report_id');
+
+		$findCond=array(
+            array('user_id','=',$user_id),
+			array('report_id','=',$report_id),
+        );
+        
+        $selectFields=array();
+
+        $user_dashboard_reports = $this->common_model->fetchData($this->tableObj->tableNameUserDashboardReport,$findCond,$selectFields);
+        if(empty($user_dashboard_reports))
+        {
+			// Insert //
+			$saveData = array('user_id' => $user_id, 'report_id' => $report_id);
+			$user_dashboard_report_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserDashboardReport, $saveData);
+			if($user_dashboard_report_id > 0){
+				$this->response_status='1';
+				$this->response_message="Report widget added successfully.";
+			} else {
+				$this->response_message="Something went wrong.";
+			}
+		} 
+		else 
+		{
+			// Delete //
+			$deleteConds = array(
+				array('user_id','=',$user_id),
+				array('report_id','=',$report_id),
+			);
+			
+			$this->common_model->delete_data($this->tableObj->tableNameUserDashboardReport,$deleteConds);
+	
+			$this->response_status='1';
+			$this->response_message="Report widget deleted successfully.";
+
+		}
+
+		$this->json_output($response_data);
 	}
 	
 }
