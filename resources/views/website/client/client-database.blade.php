@@ -91,7 +91,7 @@ Squeedr
                         <div class="staff-detail">
                             <ul class="nav nav-tabs" >
                                 <li><a data-toggle="tab" href="#tab1" id="detailsTab" class="active">Info </a></li>
-                                <li><a data-toggle="tab" href="#tab2">Appointments </a></li>
+                                <li><a data-toggle="tab" href="#tab2" id="appointments">Appointments </a></li>
                                 <li><a data-toggle="tab" href="#tab3">Give as a gift </a></li>
                                 <li><a data-toggle="tab" href="#tab4">Payments</a></li>
                                 <li><a data-toggle="tab" href="#tab5">Feedback</a></li>
@@ -135,6 +135,7 @@ Squeedr
                                         <table id="example" class="table table-striped app" style="width:100%">
                                             <thead>
                                                 <tr>
+                                                    <th >Create Date</th>
                                                     <th >Date</th>
                                                     <th >Service</th>
                                                     <th>Staff</th>
@@ -142,8 +143,8 @@ Squeedr
                                                     <th>&nbsp;</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
+                                            <tbody id="get-appointment-data">
+                                                <!-- <tr>
                                                     <td>Sep 12, 2018  07:00am </td>
                                                     <td>SHowner</td>
                                                     <td>Johan</td>
@@ -160,14 +161,14 @@ Squeedr
                                                         </ul>
                                                     </div>
                                                     </td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
-                                        <div class="discount-innertabbx break20px">
+                                        <!-- <div class="discount-innertabbx break20px">
                                             <p><i class="fa fa-file-text-o" aria-hidden="true"></i><br>
                                                 No Discount Coupons
                                             </p>
-                                        </div>
+                                        </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -458,6 +459,7 @@ Squeedr
       </div>
    </div>
 </div>
+<input type="hidden" name="global_client_id" id="global_client_id" value="">
 
 @endsection
 
@@ -472,6 +474,7 @@ $('.stafflistitem').click(function(){
     $('#detailsTab').trigger('click');
 
     client_id = data.client_id;
+    $("#global_client_id").val(client_id);
     $('#clientNote').html("");
     if(data.client_note !== undefined){
         $('#clientNote').html(data.client_note);
@@ -813,6 +816,70 @@ $('#edit_client_form').validate({
             });
         }
 });
+
+$('#appointments').click(function(e){
+    var client_id = $("#global_client_id").val();
+    var data = addCommonParams([]);
+    data.push({name:'client_id', value:client_id});
+    $.ajax({
+        url: baseUrl+"/api/client_appointment_list", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                $("#get-appointment-data").html(response.message);
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+    
+});
+$(document).on('click','.change-status',function(e){
+//$('.change-status').click(function(e){
+    var appointment_id = $(this).data('id');
+    var appointment_status = $(this).data('status');
+    var data = addCommonParams([]);
+    data.push({name:'appointment_id', value:appointment_id},{name:'appointment_status', value:appointment_status});
+    $.ajax({
+        url: baseUrl+"/api/client_appointment_status", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            //console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                $('#change-status-'+appointment_id).text(appointment_status);
+                swal({title: "Success", text: response.message, type: "success"});
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+    
+});
+
+
 
 </script>
 @endsection
