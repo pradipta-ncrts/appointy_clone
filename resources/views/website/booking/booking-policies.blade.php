@@ -42,8 +42,8 @@ Squeedr
                <li><a href="{{ url('booking-options') }}" > Clients Booking Flow</a></li>
                <li><a href="{{ url('booking-rules') }}"> Booking Rules</a> </li>
                <li><a href="{{ url('booking-policies') }}" class="active"> Booking Policies</a></li>
-               <li><a href="{{ url('notification-settings') }}"> Notification Settings</a></li>
-               <li><a href="{{ url('email-customisation') }}"> Email Customisation</a> </li>
+              <!--  <li><a href="{{ url('notification-settings') }}"> Notification Settings</a></li>
+               <li><a href="{{ url('email-customisation') }}"> Email Customisation</a> </li> -->
              </ul>
          </div>
       </div>
