@@ -894,14 +894,14 @@ class BookingsController extends ApiController {
             $user_id = $this->logged_user_no;
         }
 
-
+        $start_time = $request->input('bolck_start_time');
+        $end_time = $request->input('bolck_end_time');
         $block_date = explode(',', $request->input('block_date'));
         $date_block_for = $request->input('date_block_for');
         $staff_ids = explode(',', $request->input('date_block_for_ids'));
         $date_block_reasons = $request->input('date_block_reasons');
         $date_block_note = $request->input('date_block_note');
         $user_id = $user_id;
-
         //check date in appointment table
         $format_date = array();
         foreach ($block_date as $key => $value)
@@ -954,14 +954,25 @@ class BookingsController extends ApiController {
                     $checkDate = $this->common_model->fetchData($this->tableObj->tableNameBlockDateTime,$condition, $fields);
                     if(empty($checkDate))
                     {
-                         $strto_start_time = strtotime($newDateFormat.' 12:00 AM');
-                         $strto_end_time = strtotime($newDateFormat.' 11:59 PM');
+                        if($start_time && $end_time)
+                        {
+                            $strto_start_time = strtotime($newDateFormat.' '.$start_time);
+                            $strto_end_time = strtotime($newDateFormat.' '.$end_time);
+                        }
+                        else
+                        {
+                            $strto_start_time = strtotime($newDateFormat.' 12:00 AM');
+                            $strto_end_time = strtotime($newDateFormat.' 11:59 PM');
+                        }
+                         
                          $param = array(
                                 'user_id' => $user_id,
                                 'staff_id' => $block_user,
                                 'block_date' => $newDateFormat,
                                 'block_reasons' => $date_block_reasons,
                                 'block_note' => $date_block_note,
+                                'start_time' => $start_time,
+                                'end_time' => $end_time,
                                 'strto_start_time' => $strto_start_time,
                                 'strto_end_time' => $strto_end_time,
                          );  

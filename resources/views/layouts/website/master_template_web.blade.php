@@ -111,6 +111,7 @@
             <li class="c-menu__item"><a href="{{ url('business-contact-info') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/businessdetails.png')}}" alt=""> Business Details</a> <span>Address, Timezone, Currency </span> </li>
             <li class="c-menu__item"><a href="{{ url('booking-rules') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/booking-rules.png')}}" alt=""> Booking Rules</a> <span>Control how, what, when</span> </li>
             <li class="c-menu__item"><a href="{{ url('notification-settings') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/notification.png')}}" alt=""> Notification</a> <span>Control email and text alerts</span> </li>
+            <li class="c-menu__item"><a href="{{ url('email-customisation') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/notification.png')}}" alt=""> Email Customisation </a> <span>Control email and text alerts</span> </li>
             <li class="c-menu__item"><a href="#" onclick="showSqeeder();" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/sqeedr.png')}}" alt=""> Your Squeedr Page</a> <span>Add, edit or delete info</span> </li>
             <li class="c-menu__item"><a href="{{ url('event-viewer') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/event-viewer.png')}}" alt=""> Event Viewer</a> <span>View and control events</span> </li>
          </ul>
@@ -1287,6 +1288,18 @@
                            <div class="form-group">
                               <div class="input-group" id="block_date_error"> <span class="input-group-addon"><i class="fa fa-calendar"></i></span> <input id="block_date" type="text" class="form-control" name="block_date" placeholder="Date" style="position: relative; z-index: 100000;">
                                 <!--  <input id="block_date" type="text" class="form-control" name="block_date" placeholder="Date" style="position: relative; z-index: 100000;"> --> </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class='col-sm-6'>
+                           <div class="form-group">
+                              <div class="input-group" id="bolck_start_time_error"> <span class="input-group-addon"><i class="fa fa-clock-o"></i></span> <input id="bolck_start_time" type="text" class="form-control" name="bolck_start_time" placeholder="Start Time"> </div>
+                           </div>
+                        </div>
+                        <div class='col-sm-6'>
+                           <div class="form-group" id="bolck_end_time_error">
+                              <div class="input-group"> <span class="input-group-addon"><i class="fa fa-clock-o"></i></span> <input id="bolck_end_time" type="text" class="form-control" name="bolck_end_time" placeholder="End Time"> </div>
                            </div>
                         </div>
                      </div>
