@@ -31,7 +31,7 @@ class UsersController extends ApiController {
         // Check User Login. If logged in redirect to dashboard //
 		$authdata = $this->website_login_checked();
 		if((!empty($authdata['user_no']) || $authdata['user_no'] > 0 ) && !empty($authdata['user_request_key'])){
-			$this->remove_all_cookies(); // for manualy cookie remove testing
+			//$this->remove_all_cookies(); // for manualy cookie remove testing
 			return redirect('/dashboard');
 		}
         return view('website.user.login.login');
@@ -78,8 +78,17 @@ class UsersController extends ApiController {
         	}
         	else
         	{
-        		setcookie('new_email', $email, time() + (86400 * 30), "/");
-        		return redirect('registration-step1');
+        		$redirect_url = Crypt::encrypt($email);
+        		$redirect_url = url('registration-step1/'.$redirect_url);
+        		
+				//Send Verification Link
+				$emailData['verify_link'] = $redirect_url;
+				$emailData['toName'] = '';
+
+				$this->sendmail(1,$email,$emailData);
+
+        		\Session::flash('success_message', "A email sent to your mail.");
+        		return redirect('/');
         	}
 		}
         return view('website.user.registration.registration');
@@ -88,29 +97,50 @@ class UsersController extends ApiController {
 
 	//***** User Registartion step 1 *****//
 
-	public function registration_step1(Request $data)
+	public function registration_step1(Request $data, $request_url=NULL)
 	{
 		$data['professions'] = $this->master_data_list($table=$this->tableObj->tableNameProfession);
 		$data['country'] = $this->master_data_list($table=$this->tableObj->tableNameCountry);
-        return view('website.user.registration.registration1', $data);
+		$data['request_url'] = $request_url;
+		$email = Crypt::decrypt($request_url);
+		$condition = array(
+                    array('email','=',$email),
+                );
+    	$checkEmail = $this->common_model->fetchData('user',$condition);
+    	if(empty($checkEmail))
+    	{
+        	return view('website.user.registration.registration1', $data);
+        }
+        else
+        {
+        	\Session::flash('error_message', "Email already exists."); 
+            return redirect('/');
+        }
 	}
 
 	//***** User Registartion step 2 *****//
-	public function registration_step2()
+	public function registration_step2($request_url=NULL)
 	{
-		if($_COOKIE['new_email'])
-		{
-			$conditions = array(
+		$data['request_url'] = $request_url;
+		$email = Crypt::decrypt($request_url);
+		$condition = array(
+                    array('email','=',$email),
+                );
+    	$checkEmail = $this->common_model->fetchData('user',$condition);
+    	if(!empty($checkEmail))
+    	{
+        	$conditions = array(
 	                        array('is_blocked', '=', 0),
 	                    );
 			$data['category'] = $this->master_data_list($table=$this->tableObj->tableNameCategory);
 			$data['currency'] = $this->master_data_list($table=$this->tableObj->tableNameCurrency);
 	        return view('website.user.registration.registration2',$data);
-		}
-		else
-		{
-			return redirect('login');
-		}
+        }
+        else
+        {
+        	\Session::flash('error_message', "Email already exists."); 
+            return redirect('/');
+        }
 		
 	}
 

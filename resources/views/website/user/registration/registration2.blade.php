@@ -33,6 +33,7 @@
                </div>
                <div class="col-lg-5 col-md-6 col-sm-6 from-reg1">
                   <form class="form-horizontal" action="{{ url('api/registration-step2') }}" method="post" autocomplete="off" id="registration-form-two">
+                     <input type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
                      <div class="clone-div">
                         <div class="form-group">
                            <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">

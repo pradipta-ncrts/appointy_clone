@@ -171,8 +171,8 @@ Route::group(['prefix'=>'api'],function(){
 Route::group(['prefix'=>''],function(){
     Route::get('/login','Website\UsersController@login');
     Route::any('/','Website\UsersController@registration');
-    Route::get('/registration-step1','Website\UsersController@registration_step1');
-    Route::get('/registration-step2','Website\UsersController@registration_step2');
+    Route::get('/registration-step1/{request_url}','Website\UsersController@registration_step1');
+    Route::get('/registration-step2/{request_url}','Website\UsersController@registration_step2');
     Route::get('/dashboard/{type?}','Website\UsersController@dashboard');
     Route::get('/logout', 'Website\UsersController@logout');
     Route::any('/thank-you','Website\UsersController@thank_you');

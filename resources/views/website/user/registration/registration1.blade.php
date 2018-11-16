@@ -42,6 +42,12 @@
                   </div>
                   <form class="form-horizontal" action="{{ url('api/registration-step1') }}" method="post" id="registration-form-one">
                      <input type="hidden" name="user_type" id="user_type" value="1">
+                     <input type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
+                        <input type="text" class="form-control" placeholder="Personal Name" name="full_name" id="full_name">
+                        <div class="clearfix"></div>
+                     </div>
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
                         <input type="text" class="form-control" placeholder="User Name" name="user_name" id="user_name">
@@ -128,6 +134,14 @@
             $('.reg-type').find('a').removeClass('active');
             $(this).addClass('active');
             $('#user_type').val(type);
+            if($(this).text()=='Individual')
+            {
+                $("#full_name").attr('placeholder', 'Personal name')
+            }
+            else
+            {
+                $("#full_name").attr('placeholder', 'Business name')
+            }
          });
          //================Tab select end ==================
          //================Show password ==================
@@ -172,6 +186,9 @@
             ignore: ":hidden:not(.selectpicker)",
 
             rules: {
+                full_name: {
+                    required: true
+                },
                 user_name: {
                     required: true
                 },
@@ -194,6 +211,9 @@
             },
             
             messages: {
+                full_name: {
+                    required: 'Please enter name'
+                },
                 user_name: {
                     required: 'Please enter username'
                 },
@@ -225,29 +245,7 @@
                     console.log(response);
                     if(response.result=='1')
                     {
-                       
-                       var
-                         closeInSeconds = 5,
-                         displayText = "I will redirect in #1 seconds.",
-                         timer;
-
-                     swal({
-                         title: "Verification link sent to your email.",   
-                         text: displayText.replace(/#1/, closeInSeconds),   
-                         timer: closeInSeconds * 1000,   
-                         button: false 
-                     });
-
-                     timer = setInterval(function() {
-                         closeInSeconds--;
-                         if (closeInSeconds < 0) {
-                             clearInterval(timer);
-                         }
-                         $('.sweet-alert > p').text(displayText.replace(/#1/, closeInSeconds));
-
-                         window.location = js_base_url+'registration-step2';
-
-                     }, 1000);
+                        window.location = js_base_url+'registration-step2/'+response.message;
                     }
                     else
                     {

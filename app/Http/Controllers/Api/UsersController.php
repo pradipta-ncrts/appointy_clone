@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests;
 use App\Http\Controllers\BaseApiController as ApiController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Validator;
 use Session;
 use Excel;
@@ -343,6 +344,7 @@ class UsersController extends ApiController {
 		//validation section 
 		$validator = Validator::make($this->postParam->all(),
 			[
+				'full_name' => 'bail|required',
 				'user_name' => 'bail|required',
 				'password' => 'bail|required|min:8',
 				'phone' => 'bail|required',
@@ -353,6 +355,7 @@ class UsersController extends ApiController {
 
 		if(!$validator->fails())
 		{
+			$full_name = $request->input('full_name');
 			$user_type = $request->input('user_type');
 			$username = $request->input('user_name');
 			$password = $request->input('password');
@@ -360,98 +363,83 @@ class UsersController extends ApiController {
 			$mobile = $country_code.$request->input('phone');
 			$profession = $request->input('profession');
 			$country = $request->input('country');  
-			$email = $_COOKIE['new_email'];
+			$request_url = $request->input('request_url');
+			$email = Crypt::decrypt($request_url);
 
-			//check profession 
-			$profession_condition = array(
-							array('profession', '=', $profession), 
-							array('is_blocked', '=', '0'),
-						);
-			$check_profession = $this->common_model->fetchData($this->tableObj->tableNameProfession, $profession_condition);
-			if(!empty($check_profession))
-			{
-				$profession = $check_profession->profession_id;
-			}
-			else
-			{
-				$profession_param = array('profession' => $profession, 'is_blocked' => '1');
-				$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameProfession, $profession_param);
-				$profession = $profession_id;
-			}
-
-			$param = array(
-					'user_type' => $user_type,
-					'username' => $username,
-					'password' => md5($password),
-					'mobile' => $mobile,
-					'profession' => $profession,
-					'country' => $country,
-					'email' => $email	
-			);
-
+			//Check duplicate email id
 			$condition = array(
-	                        array('username','=',$username),
-	                    );
-	        $checkUsername = $this->common_model->fetchData($this->tableObj->tableNameUser,$condition);
+                      'or' => array('email'=>$email,'username'=>$username)
+                    );
+        	$checkEmail = $this->common_model->fetchData('user',$condition);
 
-	        $emailCodtion = array(
-	                        array('email','=',$email),
-	                    );
-	        $checkEmail = $this->common_model->fetchData($this->tableObj->tableNameUser,$emailCodtion);
+        	if(empty($checkEmail))
+        	{
+        		//check profession 
+        		$profession_condition = array(
+								array('profession', '=', $profession), 
+								array('is_blocked', '=', '0'),
+							);
+				$check_profession = $this->common_model->fetchData($this->tableObj->tableNameProfession, $profession_condition);
+				if(!empty($check_profession))
+				{
+					$profession = $check_profession->profession_id;
+				}
+				else
+				{
+					$profession_param = array('profession' => $profession, 'is_blocked' => '1');
+					$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameProfession, $profession_param);
+					$profession = $profession_id;
+				}
 
-	        if(empty($checkUsername) && empty($checkEmail))
-	        {
-	        	$user_no = $this->common_model->insert_data_get_id($this->tableObj->tableNameUser, $param);
-	            if($user_no)
+				$param = array(
+						'name' => $full_name,
+						'user_type' => $user_type,
+						'username' => $username,
+						'password' => md5($password),
+						'mobile' => $mobile,
+						'profession' => $profession,
+						'country' => $country,
+						'is_email_verified' => '1',
+						'email' => $email	
+				);
+
+				$user_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameUser, $param);
+	            if($user_id)
 	            {
-					// create email validation token :: format : md5(email).md5(username.user_no)
-					$email = $email;
-					$token1 = md5($email);
-					$token2 = md5($username.$user_no);
-					$token = $token1.$token2;
-					//update the user with the token
-					$update_condition=array(
-						array('id','=',$user_no),
-						array('email','=',$email)
-					);
-					$update_data=array('email_verification_code'=>$token);
-					$this->common_model->update_data($this->tableObj->tableNameUser,$update_condition,$update_data);
-					// send mail 
-					$other_params = "?device_type=0&device_token_key=".Session::getId();
-					$verify_link = $this->base_url('api/emailverification/'.$token.$other_params);// need to change with website url
-					$emailData['verify_link']=$verify_link;
-					$emailData['toName']=$username;
+	            	//if profession new update created by
+	            	$condition = array(
+			            array('profession_id', '=', $profession),
+			            array('is_blocked', '=', '1'),
+			        );
+			        
+			        $update_data['created_by'] = $user_id;
 
-					$this->sendmail(1,$email,$emailData);
+			        $update = $this->common_model->update_data($this->tableObj->tableNameProfession,$condition,$update_data);
 
-					// return section
-					$response_data['token'] = $token;
-					$response_data['user_type'] = $user_type;
-					$this->response_status='1';
-					$this->response_message="Verification link send to your email.";
-
+			        $this->response_message = $request_url;
+			        $this->response_status = '1';
 	            }
 	            else
 	            {
 	            	$this->response_message="Somthing wrong.Try again later.";
 					$this->response_status='0';
 	            }
-	        }
-	        else
-	        {
-	        	$this->response_message="User already exist.";
-				$this->response_status='0';
-	        }
+        	}
+        	else
+        	{
+        		$this->response_message="Email/Username already exist.";
+        		$this->response_status='0';
+        	}
 		}
 		else
 		{
 			$errors = $validator->errors()->messages();
 			$this->response_message = $this->forErrorMessage($errors);
+			$this->response_status='0';
 		}
 
 		// generate the service / api response
 		$this->json_output($response_data);
-
 	}
 
 
@@ -539,53 +527,62 @@ class UsersController extends ApiController {
 		$duration = $request->input('duration');
 		$custom_duration = $request->input('custom_duration');  
 		$capacity = $request->input('capacity'); 
-		$email = $_COOKIE['new_email'];
+		$request_url = $request->input('request_url');
+		$email = Crypt::decrypt($request_url);
+		//$email = $_COOKIE['new_email'];
 
 		$emailCodtion = array(
-	                     'or'=>array('email'=>$email,'username'=>$email)
+	                     array('email', '=', $email)
 	                    );
 	    $checkEmail = $this->common_model->fetchData($this->tableObj->tableNameUser,$emailCodtion);
-	    $count = 0;
-	    foreach ($category as $key => $value)
+	    if(!empty($checkEmail))
 	    {
-	    	if($value=='new')
-	    	{
-	    		$param = array('category' => $new_category_name[$key], 'is_blocked' => 1);
-	    		$category_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameCategory, $param);
-	    	}
-	    	else
-	    	{
-	    		$category_id = $value;
-	    	}
+	    	$count = 0;
+		    foreach ($category as $key => $value)
+		    {
+		    	if($value=='new')
+		    	{
+		    		$param = array('category' => $new_category_name[$key], 'created_by' =>$checkEmail->id,'is_blocked' => 1);
+		    		$category_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameCategory, $param);
+		    	}
+		    	else
+		    	{
+		    		$category_id = $value;
+		    	}
 
-	    	if($duration[$key] == "Custom")
-	    	{
-	    		$duration_new = $custom_duration[$key];
-	    	}
-	    	else
-	    	{
-	    		$duration_new = $duration[$key];
-	    	}
+		    	if($duration[$key] == "Custom")
+		    	{
+		    		$duration_new = $custom_duration[$key];
+		    	}
+		    	else
+		    	{
+		    		$duration_new = $duration[$key];
+		    	}
 
-	    	$param = array(
-	    			'user_id' => $checkEmail->id,
-					'category_id' => $category_id,
-					'service_name' => $service[$key],
-					'cost' => $cost[$key],
-					'currency_id' => $currency[$key],
-					'duration' => $duration_new,
-					'capacity' => $capacity[$key],
-			);
+		    	$param = array(
+		    			'user_id' => $checkEmail->id,
+						'category_id' => $category_id,
+						'service_name' => $service[$key],
+						'cost' => $cost[$key],
+						'currency_id' => $currency[$key],
+						'duration' => $duration_new,
+						'capacity' => $capacity[$key],
+				);
 
-	    	//inset into service table
-	    	$this->common_model->insert_data_get_id($this->tableObj->tableUserService, $param);
-	    	$count++;
+		    	//inset into service table
+		    	$this->common_model->insert_data_get_id($this->tableObj->tableUserService, $param);
+		    	$count++;
+		    }
+		    //print_r($param); die();	
+			$this->response_status='1';
+			$this->response_message="Verification link send to your email.";
 	    }
-
-	    //print_r($param); die();
-			
-		$this->response_status='1';
-		$this->response_message="Verification link send to your email.";
+	    else
+	    {
+	    	$this->response_message="Invalid url";
+        	$this->response_status='0';
+	    }
+	   
 
 		// generate the service / api response
 		$this->json_output($response_data);
