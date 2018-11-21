@@ -139,7 +139,7 @@ class UsersController extends ApiController {
         else
         {
         	\Session::flash('error_message', "Email already exists."); 
-            return redirect('/');
+            return redirect('/mobile');
         }
 		
 	}
@@ -158,7 +158,7 @@ class UsersController extends ApiController {
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
 		{
-			return redirect('/login');
+			return redirect('/mobile/login');
 		}
 		
 
@@ -211,14 +211,12 @@ class UsersController extends ApiController {
 				
 			}
 			//echo '<pre>'; print_r($data); exit;
-			return view('website.user.dashboard.dashboard')->with($data);
+			return view('mobile.user.dashboard.dashboard')->with($data);
 		}
 		else
 		{
 			return $return;
 		}
-
-		//return view('website.user.dashboard.dashboard');
 	}
 
 	public function business_contact_info()
