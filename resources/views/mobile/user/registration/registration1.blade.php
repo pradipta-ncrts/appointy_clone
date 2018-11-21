@@ -2,121 +2,87 @@
 <html>
    <head>
       <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, minimal-ui" />
       <title>Squeedr</title>
       <link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/bootstrap.min.css')}}" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" href="{{asset('public/assets/website/css/font-awesome.min.css')}}" />
-      <link href="{{asset('public/assets/website/css/styles.css')}}" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/mobile.css')}}" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/custom-selectbox.css')}}" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/custom.css')}}" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
-      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+      <link href="{{asset('public/assets/mobile/css/bootstrap.min.css')}}" rel="stylesheet">
+      <link rel="stylesheet" type="text/css" href="{{asset('public/assets/mobile/css/font-awesome.min.css')}}" />
+      <link href="{{asset('public/assets/mobile/css/styles.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/mobile/css/mobile.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/mobile/css/custom.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/mobile/css/ncrts.css')}}" rel="stylesheet">
       <script type="text/javascript"> var js_base_url = '<?=url('');?>/';</script>
    </head>
    <body class="login-bg">
-
       <div class="animationload" style="display: none;">
             <div class="osahanloading"></div>
       </div>
-
-      <div id="web">
-         <div class="reg-1st ">
-            <div class="logo-reg">
-               <img src="{{asset('public/assets/website/images/logo.svg')}}">
+      <div id="mobile" class="mobile-login">
+         <div class="login-form" >
+            <div class="logo-login"> <img src="{{asset('public/assets/mobile/images/logo-login.png')}}"> </div>
+            <div class="user-type">
+                 <a href="" class="active user-status" id="1">Individual</a> &nbsp; &nbsp;
+                 <a href="" class="user-status" id="2">Business</a>
             </div>
-            <div class="clearfix"></div>
-         </div>
-         <div class="reg-container container-fixed1">
-            <div class="row">
-               <div class="col-sm-5">
-                  <h2>Sign Up</h2>
+            <form class="form-horizontal" action="{{ url('api/registration-step1') }}" method="post" id="registration-form-one">
+             <input type="hidden" name="user_type" id="user_type" value="1">
+             <input type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
+               <div class="form-group">
+                  <img src="{{asset('public/assets/mobile/images/reg-icon-user.png')}}">
+                  <input type="text" class="form-control" placeholder="Personal Name" name="full_name" id="full_name">
+                  <div class="clearfix"></div>
                </div>
-               
-               <div class="col-md-5 col-sm-6 from-reg1">
-                  <div class="reg-type">
-                     <a href="" class="active user-status" id="1">Individual</a> &nbsp; &nbsp;
-                     <a href="" class="user-status" id="2">Business</a>
-                  </div>
-                  <form class="form-horizontal" action="{{ url('api/registration-step1') }}" method="post" id="registration-form-one">
-                     <input type="hidden" name="user_type" id="user_type" value="1">
-                     <input type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
-                        <input type="text" class="form-control" placeholder="Personal Name" name="full_name" id="full_name">
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
-                        <input type="text" class="form-control" placeholder="User Name" name="user_name" id="user_name">
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-pass.png')}}">
-                        <a class="fa fa-eye" onclick="myFunction()"></a>
-                        <input type="password" class="form-control" placeholder="Password" name="password" id="password">
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-location.png')}}">
-                         <select class="selectpicker required" data-show-subtext="true" data-live-search="true" name="country" id="country"> 
-                           <option value="">Select country</option>
-                           <?php
-                           foreach ($country as $key => $value)
-                           {
-                              echo "<option value='".$value->country_no."'>".$value->country_name."</option>";
-                           }
-                           ?>
-                        </select>
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-phone1.png')}}">
-                        <div class="row">
-                        <!-- <div class="col-sm-2">
-                        <select >
-                           <option value="">+91</option>
-                        </select>
-                        <div class="clearfix"></div>
-                        </div> -->
-                        <div class="col-sm-3">
+               <div class="form-group">
+                  <img src="{{asset('public/assets/mobile/images/reg-icon-user.png')}}">
+                  <input type="text" class="form-control" placeholder="User Name" name="user_name" id="user_name">
+                  <div class="clearfix"></div>
+               </div>
+               <div class="form-group">
+                  <img src="{{asset('public/assets/mobile/images/reg-icon-pass.png')}}">
+                  <input type="password" class="form-control" placeholder="Password" name="password" id="password">
+                  <div class="clearfix"></div>
+               </div>
+               <div class="form-group">
+                  <img src="{{asset('public/assets/mobile/images/reg-icon-phone.png')}}">
+                  <select class="form-control cust-select" name="country" id="country"> 
+                     <option value="">Select country</option>
+                     <?php
+                     foreach ($country as $key => $value)
+                     {
+                        echo "<option value='".$value->country_no."'>".$value->country_name."</option>";
+                     }
+                     ?>
+                  </select>
+                  <div class="clearfix"></div>
+               </div>
+               <div class="form-group">
+                  <img src="{{asset('public/assets/website/images/reg-icon-phone1.png')}}">
+                  <div class="row">
+                     <div class="col-sm-3">
                         <input type="text" class="form-control required customphone" placeholder="Code" name="country_code" id="country_code" readonly="">
-                        </div>
-                        <div class="col-sm-6">
+                     </div>
+                     <div class="col-sm-6">
                         <input type="text" class="form-control required customphone" placeholder="Mobile" name="phone" id="phone">
-                        </div>
-                        </div>
-                        
-                        <div class="clearfix"></div>
                      </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-profesion1.png')}}">
-                        <input type="text" class="form-control" name="profession" id="profession" placeholder="Profession">
-                        
-                        <div class="clearfix"></div>
-                     </div>
-                     
-                     <button type="submit" id="sing-up">Sign Up</button>
-                     <div class="clearfix"></div>
-                     <p>By signing up, you agree to our <a href="#">terms of use</a> and 
-                        <a href="#">privacy policy</a>
-                     </p>
-                  </form>
+                  </div>
+                  <div class="clearfix"></div>
                </div>
-            </div>
+               <div class="form-group">
+                  <img src="{{asset('public/assets/website/images/reg-icon-profesion1.png')}}">
+                  <input type="text" class="form-control" name="profession" id="profession" placeholder="Profession">
+                  <div class="clearfix"></div>
+               </div>
+               <button type="submit" class="btn btn-default btn-mob-st">Sign Up</button>
+            </form>
          </div>
       </div>
-      <!-- <script src="js/bootstrap.min.js"></script> -->
+      <!-- <script src="js/bootstrap.min.js"></script> --> 
+      <script src="{{asset('public/assets/mobile/js/jquery.min.js')}}"></script> 
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+      <script src="{{asset('public/assets/mobile/js/parallax.min.js')}}"></script> 
+      <script src="{{asset('public/assets/mobile/js/script.js')}}"></script>
 
-      <script src="{{asset('public/assets/website/js/jquery.min.js')}}"></script> 
-      <script src="{{asset('public/assets/website/js/bootstrap.min.js')}}"></script> 
-      <script src="{{asset('public/assets/website/js/parallax.min.js')}}"></script> 
-      <script src="{{asset('public/assets/website/js/script.js')}}"></script>
-      <script src="{{asset('public/assets/website/js/custom-selectbox.js')}}"></script>
-      <script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
-       <!--=================select box=========================-->
+      <!--=================select box=========================-->
       <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
       <script src="{{asset('public/assets/website/js/jquery.validate.min.js')}}"></script>
       <!--==================Sweetalert=========================-->
@@ -124,14 +90,12 @@
        <!--=================select box=========================-->
        <!--===========================autocomplete========================-->
        <script src="{{asset('public/assets/website/js/jquery.autocomplete.min.js')}}"></script>
-       <!--============================autocomplete========================-->
-      </script>
       <script type="text/javascript">
          //================Tab select ==================
          $('.user-status').click(function(event) {
             event.preventDefault(); 
             var type = $(this).attr("id");
-            $('.reg-type').find('a').removeClass('active');
+            $('.user-type').find('a').removeClass('active');
             $(this).addClass('active');
             $('#user_type').val(type);
             if($(this).text()=='Individual')
@@ -175,11 +139,11 @@
       </script>
 
       <script type="text/javascript">
-		$.validator.addMethod("pwcheck", function(value) {
-			return /[a-zA-Z]+/.test(value) // consists of only these
-				&& /[0-9]+/.test(value) // has a digit
-				&& /[*@&%!#$]+/.test(value) // has a Special character
-		});
+    $.validator.addMethod("pwcheck", function(value) {
+      return /[a-zA-Z]+/.test(value) // consists of only these
+        && /[0-9]+/.test(value) // has a digit
+        && /[*@&%!#$]+/.test(value) // has a Special character
+    });
       //================Submit AJAX request ==================
       $('#registration-form-one').validate({
 
@@ -194,8 +158,8 @@
                 },
                 password: {
                     required: true,
-					minlength: 8,
-					pwcheck: true
+          minlength: 8,
+          pwcheck: true
                     //passwordCk: true
                 },
                 phone: {
@@ -219,8 +183,8 @@
                 },
                 password: {
                     required: 'Please enter password',
-					minlength: 'Please enter minimum 8 character password',
-					pwcheck: 'Password must contain minimum 1 character, 1 digit and 1 special character.'
+          minlength: 'Please enter minimum 8 character password',
+          pwcheck: 'Password must contain minimum 1 character, 1 digit and 1 special character.'
                 },
                 phone: {
                     required: 'Please enter mobile'
@@ -245,7 +209,7 @@
                     console.log(response);
                     if(response.result=='1')
                     {
-                        window.location = js_base_url+'registration-step2/'+response.message;
+                        window.location = js_base_url+'mobile/registration-step2/'+response.message;
                     }
                     else
                     {
@@ -315,7 +279,5 @@
                 lookup: countries,
             });
       </script>
-
    </body>
 </html>
-

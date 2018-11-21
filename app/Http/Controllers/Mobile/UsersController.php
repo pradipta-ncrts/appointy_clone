@@ -79,8 +79,10 @@ class UsersController extends ApiController {
         	else
         	{
         		$redirect_url = Crypt::encrypt($email);
-        		$redirect_url = url('registration-step1/'.$redirect_url);
+        		$redirect_url = url('mobile/registration-step1/'.$redirect_url);
         		
+        		echo $redirect_url; die();
+
 				//Send Verification Link
 				$emailData['verify_link'] = $redirect_url;
 				$emailData['toName'] = '';
@@ -109,12 +111,12 @@ class UsersController extends ApiController {
     	$checkEmail = $this->common_model->fetchData('user',$condition);
     	if(empty($checkEmail))
     	{
-        	return view('website.user.registration.registration1', $data);
+        	return view('mobile.user.registration.registration1', $data);
         }
         else
         {
         	\Session::flash('error_message', "Email already exists."); 
-            return redirect('/');
+            return redirect('/mobile');
         }
 	}
 
@@ -134,7 +136,7 @@ class UsersController extends ApiController {
 	                    );
 			$data['category'] = $this->master_data_list($table=$this->tableObj->tableNameCategory);
 			$data['currency'] = $this->master_data_list($table=$this->tableObj->tableNameCurrency);
-	        return view('website.user.registration.registration2',$data);
+	        return view('mobile.user.registration.registration2',$data);
         }
         else
         {

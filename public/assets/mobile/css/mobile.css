@@ -148,7 +148,7 @@
 
 
 
-.mobile-login .login-form input[type=email], .login-form input[type=password]{ background:none; border:0;  width:85%; 
+.mobile-login .login-form input[type=email], .login-form input[type=password], .login-form input[type=text] { background:none; border:0;  width:85%; 
 
 	padding: 18px 10px; font-size: 16px; outline: 0;  }
 
