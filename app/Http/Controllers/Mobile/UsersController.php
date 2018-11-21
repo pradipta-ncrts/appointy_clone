@@ -155,7 +155,7 @@ class UsersController extends ApiController {
 	public function dashboard(Request $data,$type="")
 	{
 		// Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
+		/*$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
 		{
 			return redirect('/login');
@@ -211,14 +211,14 @@ class UsersController extends ApiController {
 				
 			}
 			//echo '<pre>'; print_r($data); exit;
-			return view('website.user.dashboard.dashboard')->with($data);
+			return view('mobile.user.dashboard.dashboard')->with($data);
 		}
 		else
 		{
 			return $return;
-		}
+		}*/
 
-		//return view('website.user.dashboard.dashboard');
+		return view('mobile.user.dashboard.dashboard');
 	}
 
 	public function business_contact_info()
@@ -371,7 +371,7 @@ class UsersController extends ApiController {
 		return view('website.reports');
 	}
 
-	public function client_database($client_search_text="")
+	public function client_list($client_search_text="")
 	{
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
@@ -418,7 +418,7 @@ class UsersController extends ApiController {
 				$data['timezone'] = $zones_array;
 			}
 			//echo '<pre>'; print_r($data); exit;
-			return view('website.client.client-database')->with($data);
+			return view('mobile.client.client-list')->with($data);
 		}
 		else{
 			return $return;

@@ -293,7 +293,7 @@ ul.colors li.active {border-color: #666;}
 .custm-tab .nav-tabs>li.active>a:hover{background-color: #3097d5;color: #fff;}
 .custm-tab .tab-pane{margin: 10px 0 0;}
 #openbox{background: #DEE7F7;display: none;float: right;width: 125px;border: 1px solid #ccc;border-radius: 5px;
-position: absolute;right:0px;top: 16px;}
+position: absolute;right: 16px;top: 36px;}
 #openbox ul{margin: 0;padding: 0;list-style: none;}
 #openbox ul li{padding: 5px 10px;border-bottom: 1px solid #ccc;font-size: 13px;color: #000;width: 100%;float: left;}
 #openbox ul li:last-child{border: 0}
@@ -327,7 +327,8 @@ div.dataTables_wrapper div.dataTables_filter{display: none !important;}
 
 .upper-cmnsection{width:100%;float:left;border-bottom:1px solid #d0d0d0;padding:50px 0 0;background:#fff;}
 
-.heading-uprlft{width:295px;float:left;padding:0 0px 19px 26px;color:#242424;font-size:22px;font-weight: 300;}
+.heading-uprlft{width:295px;float:left;padding:3px 0px 0px 12px;color:#242424;font-size:22px;font-weight: 300;}
+
 .upr-rgtsec{width: calc(100% - 295px);float:left;padding: 0;}
 
 .full-rgt{float:right;}
@@ -360,7 +361,7 @@ div.dataTables_wrapper div.dataTables_filter{display: none !important;}
 padding: 10px 15px;border-left:0;}
 
 #custom-search-input {margin:0;padding: 0;}
-#custom-search-input .search-query {padding-right:5px;padding-right: 4px \9;padding-left: 3px;padding-left: 4px \9;border:0;border-bottom:2px solid #2ba2da;padding-top:8px;padding-bottom:8px;height:50px;
+#custom-search-input .search-query {padding-right:5px;padding-right: 4px \9;padding-left:10px;padding-left: 4px \9;border:0;border-bottom:2px solid #2ba2da;padding-top:8px;padding-bottom:8px; height:51px;
 /* IE7-8 doesn't have border-radius, so don't indent the padding */
 margin-bottom: 0;-webkit-border-radius: 0;-moz-border-radius: 0;border-radius: 0;}
 #custom-search-input button {border: 0;background: none;

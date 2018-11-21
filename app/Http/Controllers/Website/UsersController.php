@@ -154,8 +154,10 @@ class UsersController extends ApiController {
 
 	public function dashboard(Request $data,$type="")
 	{
+		//echo '<pre>'; print_r($_COOKIE); exit;
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
+		
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
 		{
 			return redirect('/login');
