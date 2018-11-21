@@ -628,6 +628,41 @@ class UsersController extends ApiController {
 		//return view('website.services');
 	}
 
+
+	public function add_services(){
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+
+		// Call API //
+		$post_data = $authdata;
+		$data=array(
+			'category_list'=>array(),
+			'authdata'=>$authdata
+		);
+
+		$url_func_name="user_categories";
+		$return = $this->curl_call($url_func_name,$post_data);
+		
+		// Check response status. If success return data //		
+		if(isset($return->response_status))
+		{
+			if($return->response_status == 1)
+			{
+				$data['category_list'] = $return->category_list;
+			}
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.service.add_services')->with($data);
+		}
+		else{
+			return $return;
+		}
+		//return view('website.service.add_services');
+	}
+
+
 	public function settings_business_hours($type="",$staff_search_text="")
 	{
 		// Check User Login. If not logged in redirect to login page //

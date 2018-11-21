@@ -68,6 +68,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/delete_staff_availability','Api\StaffsController@delete_staff_availability');
     Route::post('/delete_staff_block_time','Api\StaffsController@delete_staff_block_time');
     Route::post('/services_lists','Api\StaffsController@services_lists');
+    Route::post('/user_categories','Api\UsersController@user_categories');
 
     Route::post('/add_client','Api\ClientsController@add_client');
     Route::post('/client_list','Api\ClientsController@client_list');
@@ -127,23 +128,14 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_forgot_password','Api\ClientsController@client_forgot_password');
     
     
-
     Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
-
     Route::post('/settings_membership','Api\PlanController@settings_membership');
-
     Route::post('/change_plan_duration','Api\PlanController@change_plan_duration');
-
     Route::post('/send-to-stripe','Api\PlanController@send_to_stripe');
-
     Route::post('/edit_service_list_staff','Api\StaffsController@edit_service_list_staff');
-
     Route::post('/update_staff_availability_form','Api\StaffsController@update_staff_availability_form');
-
     Route::post('/service-template','Api\UsersController@service_template');
-
     Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
-
     Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
 
 });
@@ -191,6 +183,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/business-details2','Website\UsersController@business_details2');
     Route::get('/invitees','Website\UsersController@invitees');
     Route::get('/services/{type}/{category?}','Website\UsersController@services');
+    Route::get('/add_services','Website\UsersController@add_services');
 	Route::get('/payment-options','Website\UsersController@payment_options');
     Route::get('/invoice','Website\UsersController@invoice');
     Route::get('/create-invoice','Website\UsersController@create_invoice');
@@ -326,9 +319,9 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/cancel_appointent/{parameter?}','Website\ClientsController@cancel_appointment');
     Route::get('/reschedule-appointment/{parameter?}','Website\ClientsController@reschedule_appointment');
     Route::get('/client-dashboard/{parameter?}','Website\ClientsController@client_dashboard');
-    Route::get('/client-info/','Website\ClientsController@client_info');
-    Route::get('/booking-verify/','Website\ClientsController@booking_verify');
-    Route::get('/booking-details/','Website\ClientsController@booking_details');
+    Route::get('/client-info','Website\ClientsController@client_info');
+    Route::get('/booking-verify','Website\ClientsController@booking_verify');
+    Route::get('/booking-details','Website\ClientsController@booking_details');
     Route::get('/view-staffs/{username}','Website\ClientsController@view_staff_list');
     Route::get('/forgot-password/{parameter?}','Website\ClientsController@forgot_password');
 
