@@ -44,7 +44,7 @@
                   <tr>
                      <td>Admin Login</td>
                      <td><label class="switch-m">
-                        <input type="checkbox" checked>
+                        <input type="checkbox">
                         <span class="slider-m round-m"></span> </label>
                      </td>
                      <td>Team Login</td>
@@ -53,29 +53,30 @@
                <div class="form-group">
                   <img src="{{asset('public/assets/mobile/images/login-icon-email.png')}}">
                   <!-- <input type="email" class="form-control" id="email" placeholder="Email ( e.g.  john@gmail.com )"> -->
-                  <input type="email" class="form-control" id="email" placeholder="Email ( e.g.  john@gmail.com )" name="email"> 
+                  <!-- <input type="email" class="form-control" id="email" placeholder="Email ( e.g.  john@gmail.com )" name="email">  -->
+                  <input type="text" class="form-control" id="email" placeholder="Email/Username" name="email">
                   <div class="clearfix"></div>
                </div>
                <div class="form-group">
                   <img src="{{asset('public/assets/mobile/images/login-icon-passwod.png')}}">
-                  <input type="password" class="form-control" id="password"  placeholder="Password" name="password">
+                  <input type="password" class="form-control" id="pwd"  placeholder="Password" name="password">
                   <i class="fa fa-eye log-i" aria-hidden="true"></i>
                   <div class="clearfix"></div>
                </div>
-               <label>Password must be 8 to 15 characters and include at least one 
-               number and one letter</label>
-            </form>
-            <button type="submit" class="btn btn-default btn-mob-st">LOG IN</button>
-            <div class="clearfix"></div>
-            <div class="login-cont">
-               <div class="checkbox1">
-                  <label class="check">
-                  <input type="checkbox">
-                  Keep me signed in <span class="checkmark"></span></label>
-               </div>
-               <a href="#" class="forgot-pass">Forgot your password?</a>
+               <!-- <label>Password must be 8 to 15 characters and include at least one 
+               number and one letter</label> -->
+               <button type="submit" class="btn btn-default btn-mob-st">LOG IN</button>
                <div class="clearfix"></div>
-            </div>
+               <div class="login-cont">
+                  <div class="checkbox1">
+                     <label class="check">
+                     <input type="checkbox">
+                     Keep me signed in <span class="checkmark"></span></label>
+                  </div>
+                  <a href="#" class="forgot-pass">Forgot your password?</a>
+                  <div class="clearfix"></div>
+               </div>
+            </form>
          </div>
       </div>
       <!-- <script src="js/bootstrap.min.js"></script> --> 
@@ -83,6 +84,14 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
       <script src="{{asset('public/assets/mobile/js/parallax.min.js')}}"></script> 
       <script src="{{asset('public/assets/mobile/js/script.js')}}"></script>
+
+      <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+      <!--==================Sweetalert=========================-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+      <!--=================select box=========================-->
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
       <script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
       <script src="{{asset('public/assets/website/js/ncrtsdev.js')}}"></script>
@@ -122,7 +131,7 @@
                       {
                           if(response.message=='complete_step_two')
                           {
-                             var url = "{{url('/registration-step2')}}";
+                             var url = "{{url('/mobile/registration-step2')}}";
                              window.location.href = url; 
                           }
                           else
@@ -147,7 +156,7 @@
                               $.cookie("sqd_device_token_key", device_token_key, { expires: 30, path:'/' });
 
                               
-                              var url = "{{url('/dashboard')}}";
+                              var url = "{{url('/mobile/dashboard')}}";
                               console.log(url);
                               //alert(url);
                               window.location=url;
