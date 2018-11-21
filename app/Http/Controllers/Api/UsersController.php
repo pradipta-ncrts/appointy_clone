@@ -1898,5 +1898,33 @@ class UsersController extends ApiController {
 
 		$this->json_output($response_data);
 	}
+
+
+	// User Category List //
+	public function user_categories(Request $request){
+		$response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $user_no = $this->logged_user_no;
+		
+		/*$findCond=array(
+            array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+			'or'=>array('created_by'=>0,'created_by'=>$user_no)
+		);
+		$category_list = $this->common_model->fetchDatas($this->tableObj->tableNameCategory, $findCond, $selectFields=array(), $joins=array(), $orderBy=array());*/
+
+		$find_query = "SELECT * FROM `squ_categories` WHERE (`squ_categories`.`created_by` = '".$user_no."' OR `squ_categories`.`created_by` = 0) AND `squ_categories`.`is_deleted` = 0 AND `squ_categories`.`is_blocked` = 0";
+		$category_list = $this->common_model->customQuery($find_query,$query_type=1);
+		
+	
+		$response_data['category_list'] = $category_list;
+		$this->response_status='1';
+		$this->response_message="category list";
+
+        // generate the service / api response
+        $this->json_output($response_data);
+	}
+	
 	
 }
