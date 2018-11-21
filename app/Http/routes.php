@@ -251,7 +251,7 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/marketing-discount-coupons','Mobile\UsersController@marketing_discount_coupons');
     Route::get('/offers','Mobile\UsersController@offers');
     Route::get('/reports','Mobile\UsersController@reports');
-    Route::get('/client-database/{search_param?}','Mobile\UsersController@client_database');
+    Route::get('/client-list/{search_param?}','Mobile\UsersController@client_list');
     Route::get('/client-export','Mobile\UsersController@client_export');
     Route::get('/staff-details/{search_param?}','Mobile\UsersController@staff_details');
     Route::get('/staff-export','Mobile\UsersController@staff_export');

@@ -1,0 +1,161 @@
+@charset "utf-8";
+/* CSS Document */
+
+@media only screen and (max-width:500px) {
+	
+
+	#web { display: none;}
+	#mobile { display: block; }
+
+
+	.top-bar { 
+		background: #36465d; height: 45px; position: fixed; top:0; width: 100%;  text-align: center; color:#FFF; z-index: 9999;
+	}
+	.top-bar h2{font-size:18px; margin: 12px 0; }
+
+	.top-bar .menu { width:26px; height: 26px; display:block; position: absolute; left: 6px; top: 8px }
+	.top-bar .search { width:26px; height: 26px; display:block; position: absolute; right: 6px; top: 8px; border:0; }
+	.top-bar .note { width:26px; height: 26px; display:block; position: absolute; right: 45px; top: 8px }
+
+	.w-bar  { 
+		background: #FFF; height: 45px; position: fixed; top:45px; width: 100%;  text-align: center; color:#FFF;  z-index: 9999;
+	}
+	.w-bar .mob-dash-date { font-size: 16px; float: left; margin: 10px 0 0 6px;}
+	.w-bar .mob-dash-date img {width: 20px; margin:-5px 0 0 3px;}
+
+	.w-bar table { float: right;  border-collapse: separate;border-spacing: 5px; margin-top: 2px; }
+	.w-bar table a { padding:4px 5px; display: block; border: 1px solid #529fce; border-radius:5px; font-size: 13px;}
+	.w-bar table a:hover{ background: #50a1d2; color: #FFF;}
+	.w-bar table a.active { background: #50a1d2; color: #FFF;}
+
+	.mob-body { width:100%; position: absolute; padding: 10px; margin-top:90px; border: 0px solid #36465d;  z-index:1;}
+
+	.mob-day-view-cal table{ width: 100%;}
+	.mob-day-view-cal th { background: #eceef0; padding:7px 10px; border: 1px solid #e3e5e6;}
+	.mob-day-view-cal th.time { width:18%;}
+	.mob-day-view-cal th .staff-cal { font-size: 16px;}
+	.mob-day-view-cal th .staff-cal img{ width: 13px; margin-left: 3px;}
+	.mob-day-view-cal th .more-btn { float: right;}
+	.mob-day-view-cal th .more-btn img{ width:20px;}
+	.mob-day-view-cal .settings{ width:22px; height:22px; display: block;}
+
+	.mob-day-view-cal td { background: #FFF; padding:10px; border: 1px solid #e3e5e6; color: #6d7074;}
+
+
+	
+	
+	.login-bg{ background:linear-gradient(#529fcd, #9edaff) no-repeat fixed !important; background-size: cover;min-height: 100%; }
+
+
+	.mobile-login { text-align: center;}
+	.mobile-login .logo-login img { width:220px; margin: 25px auto 10px}
+
+	.mobile-login .or-login { width: 300px;margin: 20px auto;}
+
+	.mobile-login h2 { color:#FFF; font-size: 18px; text-align: center; margin-bottom:60px; font-family: "BookmanOldStyle-Bold"; }
+
+	.mobile-login  .btn-mob-st { background: #36465d; width: 85%; color: #FFF; border:0; padding: 12px; margin: 8px auto; }
+
+	.mobile-login  .btn-mob-st i { font-size: 16px;}
+
+	.mobile-login p{ margin-top: 30px; font-size: 14px;}
+	.mobile-login p a{ text-decoration: underline;}
+	.mobile-login a.contact{ font-size: 15px; text-decoration: underline;}
+
+
+.mobile-login .login-form { width:85%; margin:70px auto 10px;}
+
+.mobile-login .login-type { text-align: center; margin:60px 0 30px; font-size: 16px;}
+.mobile-login .login-type a { display:inline-block; background: #36465d; border: 1px solid #919aa6; color: #FFF; border-radius: 6px; padding: 12px 23px; }
+.mobile-login .login-type a:hover { background: #3ea9eb; color: #FFF; border-radius: 6px; padding: 12px 23px; }
+.mobile-login .login-type a.active { background: #3ea9eb; color: #FFF; border-radius: 6px; padding: 12px 23px; }
+
+.mobile-login .login-form .form-group { border-bottom: 1px solid #d7dadf;outline: 0; }
+.mobile-login .login-form .form-group img { float: left; margin: 15px 0 0 5px;}
+
+.mobile-login .login-form input[type=email], .login-form input[type=password]{ background:none; border:0;  width:85%; color: #FFF; 
+	padding: 23px 10px; font-size: 16px; outline: 0;  }
+
+	.mobile-login .login-form input[type=email]::placeholder, .mobile-login .login-form input[type=password]::placeholder {
+		color: #FFF !important; font-size: 16px
+}
+
+
+
+
+.mobile-login .login-form input:-webkit-autofill,
+.mobile-login .login-form input:-webkit-autofill:hover,
+.mobile-login .login-form input:-webkit-autofill:focus,
+.mobile-login .login-form input:-webkit-autofill:active {
+	transition: background-color 5000s ease-in-out 0s;
+	-webkit-text-fill-color: #fff !important;
+}
+
+
+
+
+.mobile-login .terms { margin-top: 70px;}
+
+.mobile-login .login-form label { font-size: 12px; color: #FFF; font-weight: 300; text-align: left; line-height: 12px; margin: 0;}
+
+.mobile-login .login-form .checkbox {color:#FFF; float: left;}
+.mobile-login .login-type input:active {outline: 0;color: #FFF; }
+.mobile-login .form-control:focus { 
+	border-radius:0; color: #FFF; 	 
+    outline: 0;
+    -webkit-box-shadow:0px  0px 0px  !important;
+    box-shadow: 0px 0px 0px !important;
+}
+
+.login-cont { width: 85%; margin: 20px auto 0;}
+.mobile-login .login-form table { margin:10px auto; width: 90%; border: 0px solid}
+.mobile-login .login-form table td { padding: 5px; color:#FFF; font-size: 14px;}
+
+.mobile-login .checkbox1{ float: left; font-size: 12px; color:#35455e;  }
+.mobile-login .checkbox1 .check {font-weight:300 !important; padding-left: 22px;}
+.mobile-login .checkbox1 .checkmark {border: 1px solid #f8f9fb}
+.mobile-login .forgot-pass{ float: right; color:#35455e;}
+.mobile-login .forgot-pass:hover{ text-decoration: underline;}
+
+.mobile-login .user-type { text-align: center; margin: 18px 0 20px;}
+.mobile-login .user-type a {background: none; border: 1px solid #FFF; color: #FFF; font-size: 15px; padding: 8px 20px; 
+	border-radius:5px; margin: 0 10px;}
+.mobile-login .user-type a:hover {background:#FFF; color: #36465d; }
+.mobile-login .user-type a.active {background:#FFF; color: #36465d; }
+
+.login-form button[type="submit"] {color:#FFF;}
+
+
+.mobile-login .cust-select {	
+
+	padding: 0px 10px 0px;
+
+	width:85%;
+
+	height:46px;
+
+	display: block;
+
+	color: #FFF !important;
+
+	border: 0; 
+
+	background: url(../images/drop-arrow.png) right center no-repeat;
+
+	appearance: none;
+
+	-webkit-appearance: none;
+
+	-moz-appearance: none;
+
+}
+
+.mobile-login .cust-select option { color: #444;}
+
+
+
+
+
+
+
+}

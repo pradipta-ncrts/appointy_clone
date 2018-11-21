@@ -122,15 +122,24 @@ class UsersController extends ApiController {
 	/***Login ***/
 	public function logout(Request $request)
 	{
-		//echo "+++++++++"; die();
+		//echo "+++++++++";
+		//echo '<pre>'; print_r($request->all()); die();
 		$response_data=array();
 		// validate the requested param for access this service api
 		$this->validate_parameter(1);
 		// now remove the request key 
+		$user_no = $request->input('user_no');
+		$user_request_key = $request->input('user_request_key');
 		$deleteConds=array(
+			array('request_key','=',$user_request_key),
+			array('user_id','=',$user_no),
+		);
+
+		/*$deleteConds=array(
 			array('request_key','=',$this->user_request_key),
 			array('user_id','=',$this->logged_user_no),
-		);
+		);*/
+
 		
 		$this->common_model->removeDatas($this->tableObj->tableNameUserRequestKey,$deleteConds);
 		//remove all the cookies 
