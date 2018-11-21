@@ -81,8 +81,6 @@ class UsersController extends ApiController {
         		$redirect_url = Crypt::encrypt($email);
         		$redirect_url = url('mobile/registration-step1/'.$redirect_url);
         		
-        		echo $redirect_url; die();
-
 				//Send Verification Link
 				$emailData['verify_link'] = $redirect_url;
 				$emailData['toName'] = '';
