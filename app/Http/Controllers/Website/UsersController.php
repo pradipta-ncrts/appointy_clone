@@ -631,37 +631,69 @@ class UsersController extends ApiController {
 	}
 
 
-	public function add_services(){
+	public function create_new_service(){
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
            return redirect('/login');
 		}
 
-		// Call API //
-		$post_data = $authdata;
-		$data=array(
-			'category_list'=>array(),
-			'authdata'=>$authdata
-		);
+		return view('website.service.create_new_service');
+	}
 
-		$url_func_name="user_categories";
-		$return = $this->curl_call($url_func_name,$post_data);
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status))
-		{
-			if($return->response_status == 1)
+
+	public function add_services($type=""){
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+
+		if($type!=""){
+			// Call API //
+			$post_data = $authdata;
+			$data=array(
+				'category_list'=>array(),
+				'authdata'=>$authdata
+			);
+
+			$url_func_name="user_categories";
+			$return = $this->curl_call($url_func_name,$post_data);
+			
+			// Check response status. If success return data //		
+			if(isset($return->response_status))
 			{
-				$data['category_list'] = $return->category_list;
+				if($return->response_status == 1)
+				{
+					$data['category_list'] = $return->category_list;
+					$data['type'] = $type;
+				}
+				//echo '<pre>'; print_r($data); exit;
+				return view('website.service.add_services')->with($data);
 			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.service.add_services')->with($data);
+			else{
+				return $return;
+			}
+		} else {
+			return redirect('create_new_service');
 		}
-		else{
-			return $return;
-		}
+		
 		//return view('website.service.add_services');
+	}
+
+
+	public function edit_service($service_id=""){
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+
+		if($service_id!=""){
+			// Call API //
+			
+		} else {
+			return redirect('create_new_service');
+		}
 	}
 
 

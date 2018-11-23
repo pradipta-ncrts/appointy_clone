@@ -1230,7 +1230,7 @@ class UsersController extends ApiController {
 
 	}
 
-	public function add_new_service(Request $request)
+	/*public function add_new_service(Request $request)
     {
     	$response_data=array();
 		$this->validate_parameter(1);
@@ -1355,7 +1355,73 @@ class UsersController extends ApiController {
 
 		$this->json_output($response_data);
 
-    }
+	}*/
+	
+	public function add_new_service(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+		$user_no = $this->logged_user_no;
+
+		$response_data=array();
+
+		$service_category = $request->input('service_category');
+		$service_name = $request->input('service_name');
+		$service_location = $request->input('service_location');
+		$service_display_location = $request->input('service_display_location');
+		$service_currency = $request->input('service_currency');
+		$service_price = $request->input('service_price');  
+		$service_capacity = $request->input('service_capacity');
+		$service_description = $request->input('service_description');
+		$service_link = $request->input('service_link');
+		$service_color = $request->input('service_color');
+		$service_type = $request->input('service_type');
+
+		if($service_type=='solo')
+		{
+			$service_capacity = 0;
+		}
+
+		$condition = array(
+			array('user_id', '=', $user_no),
+			array('service_link', '=', $service_link),
+			array('is_blocked', '=', 0),
+			array('is_deleted', '=', 0),
+		);
+		$selectField = array('service_link');
+		$check_service_link = $this->common_model->fetchDatas($this->tableObj->tableUserService,$condition,$selectField);
+		if(!empty($check_service_link)){
+			$this->response_message="Has already been taken.";
+		} else {
+			$serviceData = array(
+    			'user_id' => $user_no,
+				'category_id' => $service_category,
+				'service_name' => $service_name,
+				'cost' => $service_price,
+				'currency_id' => $service_currency,
+				'location' => $service_location,
+				'display_location' => $service_display_location,
+				'capacity' => $service_capacity,
+				'description' => $service_description,
+				'service_link' => $service_link,
+				'color' => $service_color,
+			);
+			$service_id = $this->common_model->insert_data_get_id($this->tableObj->tableUserService, $serviceData);
+			if($service_id > 0)
+			{
+				$response_data['service_id'] = $service_id;
+				$this->response_status='1';
+				$this->response_message="Service added successfully.";
+			}
+			else
+			{
+				$this->response_message="Somthing wrong try again later.";
+			}
+
+		}	
+
+		$this->json_output($response_data);
+
+	}
 
 	public function service_details(Request $request)
 	{

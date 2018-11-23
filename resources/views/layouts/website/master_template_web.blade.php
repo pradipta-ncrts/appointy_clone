@@ -80,7 +80,15 @@
                   <a id="c-button--slide-alert" class="c-button add-notifybtn"><i class="flaticon-alarm"></i></a> 
                   <div class="dropdown prof-menu " href="#">
                      <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img src="{{asset('public/assets/website/images/slide-butt-add.png')}}"></a> 
-                     <div class="dropdown-menu pm-position" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="#" data-toggle="modal" data-target="#myModaladdappoinment"> <i class="fa fa-calendar" aria-hidden="true"></i> Add Appointments</a> <a class="dropdown-item" data-toggle="modal" data-target="#myModaladdclient"> <i class="fa fa-users" aria-hidden="true"></i>Add Clients</a> <a class="dropdown-item" data-toggle="modal" data-target="#myModalnewteam"> <i class="fa fa-cog" aria-hidden="true"></i> New Team Member</a> <a href="" class="dropdown-item" data-toggle="modal" data-target="#myModalServices"> <i class="fa fa-id-card " aria-hidden="true"></i>Services</a> <a class="dropdown-item" href="#" data-toggle="modal" data-target="#myModalblockdate"> <i class="fa fa-user" aria-hidden="true"></i> Block Date</a> <a class="dropdown-item" href="#" data-toggle="modal" data-target="#myModalblocktime"> <i class="fa fa-question-circle " aria-hidden="true"></i> Block Time</a> <a class="dropdown-item" href="#" > <i class="fa fa-user" aria-hidden="true"></i> Invitee's</a> </div>
+                     <div class="dropdown-menu pm-position" aria-labelledby="dropdownMenuButton"> 
+                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#myModaladdappoinment"> <i class="fa fa-calendar" aria-hidden="true"></i> Add Appointments</a> 
+                         <a class="dropdown-item" data-toggle="modal" data-target="#myModaladdclient"> <i class="fa fa-users" aria-hidden="true"></i>Add Clients</a> 
+                         <a class="dropdown-item" data-toggle="modal" data-target="#myModalnewteam"> <i class="fa fa-cog" aria-hidden="true"></i> New Team Member</a> 
+                         <!--<a class="dropdown-item" data-toggle="modal" data-target="#myModalServices"> <i class="fa fa-id-card " aria-hidden="true"></i>Services</a>-->
+                         <a class="dropdown-item" href="{{url('create_new_service')}}" > <i class="fa fa-id-card " aria-hidden="true"></i>Services</a>
+                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#myModalblockdate"> <i class="fa fa-user" aria-hidden="true"></i> Block Date</a> 
+                         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#myModalblocktime"> <i class="fa fa-question-circle " aria-hidden="true"></i> Block Time</a> 
+                         <a class="dropdown-item" href="#" > <i class="fa fa-user" aria-hidden="true"></i> Invitee's</a> </div>
                   </div>
                   <a id="c-button--slide-right" class="c-button quick-add"><i class="flaticon-four-squares"></i></a> 
                   <div class="dropdown prof-menu" href="#">
