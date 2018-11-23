@@ -56,7 +56,7 @@ class UsersController extends ApiController {
 		}
 		else{
 			$this->remove_all_cookies();
-			return $return;
+			return redirect('mobile/login');
 		}
 	}
 
@@ -144,16 +144,13 @@ class UsersController extends ApiController {
 		
 	}
 
-	
-	//***** Thank You *****//
-	public function thank_you()
-	{
-		$data = array();
-		return view('website.user.thank_you')->with($data);
-	}
-
 	public function dashboard(Request $data,$type="")
 	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
+		{
+			return redirect('/mobile/login');
+		}
 		// Check User Login. If not logged in redirect to login page //
 		/*$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
@@ -219,6 +216,16 @@ class UsersController extends ApiController {
 		}*/
 
 		return view('mobile.user.dashboard.dashboard');
+	}
+
+	public function my_profile()
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('mobile/login');
+		}
+
+		return view('mobile.profile.my-profile');
 	}
 
 	public function business_contact_info()
@@ -328,153 +335,6 @@ class UsersController extends ApiController {
 		}
 
 
-	}
-
-
-	public function gift_certificates()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.gift-certificates');
-		}
-
-		return view('website.gift-certificates');
-	}
-
-	public function marketing_discount_coupons()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.marketing-discount-coupons');
-		}
-
-		return view('website.marketing-discount-coupons');
-	}
-
-	public function offers()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.offers');
-		}
-
-		return view('website.offers');
-	}
-
-	public function reports()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.reports');
-		}
-
-		return view('website.reports');
-	}
-
-	public function client_list($client_search_text="")
-	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-		
-
-		// Call API //
-		$post_data = $authdata;
-		$post_data['page_no']=1;
-		$post_data['client_search_text']=$client_search_text;
-		$data=array(
-			'client_list'=>array(),
-			'authdata'=>$authdata
-		);
-		$url_func_name="client_list";
-		$return = $this->curl_call($url_func_name,$post_data);
-
-		$service_post_data = $authdata;
-		$service_url_func_name="service_list";
-		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
-
-		/*$timezone_post_data = $authdata;
-		$timezone_url_func_name="timezone_list";
-		$timezone_return = $this->curl_call($timezone_url_func_name,$timezone_post_data);*/
-
-		$data = array();
-        $zones_array = array();
-        $timestamp = time();
-        foreach(timezone_identifiers_list() as $key => $zone)
-        {
-            date_default_timezone_set($zone);
-            $zones_array[$key]['zone'] = $zone;
-            $zones_array[$key]['diff_from_GMT'] = 'UTC/GMT ' . date('P', $timestamp);
-        }
-        //$data = $zones_array;
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status)){
-			if($return->response_status == 1){
-				$data['client_list'] = $return->client_list;
-				$data['client_search_text'] = $client_search_text;
-				$data['category_list'] = $service_return->category_list;
-				$data['timezone'] = $zones_array;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('mobile.client.client-list')->with($data);
-		}
-		else{
-			return $return;
-		}
-		//return view('website.client.client-database');
-
-	}
-
-	// Client Export //
-	public function client_export(){
-		// Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-			return redirect('/login');
-		}
-		
-		$user_no = $authdata['user_no'];
-		$findCond=array(
-						array('user_id','=',$user_no),
-						array('is_deleted','=','0'),
-						array('is_blocked','=','0'),
-					);
-			
-		$selectFields=array('client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','is_blocked','created_on');
-		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields);
-			
-		$exportData[] = ['Client Name', 'Email','Mobile','Home Phone','Work Phone','Address','Timezone','Note','DOB','Is Login Allowed','Is Email Verified','Is Blocked','Created On'];
-		if(!empty($client_list)){
-			//$exportData = array('Product Name','Product Description','Regular Price','Sale Price','Product Code','Floor Location','Product Stock','Product Lot','Vendor Code','Second Language Value','Third Language Value','Tags');
-			foreach($client_list as $client){
-				$exportData[] = array(
-					'Client Name'   => ($client->client_name) ? $client->client_name : '',
-					'Email'  => ($client->client_email) ? $client->client_email : '',
-					'Mobile'   => ($client->client_mobile) ? $client->client_mobile : '',
-					'Home Phone'   => ($client->client_home_phone) ? $client->client_home_phone : '',
-					'Work Phone'   => ($client->client_work_phone) ? $client->client_work_phone : '',
-					'Address'   => ($client->client_address) ? $client->client_address : '',
-					'Timezone'   => ($client->client_timezone) ? $client->client_timezone : '',
-					'Note'   => ($client->client_note) ? $client->client_note : '',
-					'DOB'   => ($client->client_dob & $client->client_dob != '0000-00-00') ? date('m-d-Y',strtotime($client->client_dob)) : '',
-					'Is Login Allowed'   => ($client->is_login_allowed) ? $client->is_login_allowed : '0',
-					'Is Email Verified'   => ($client->is_email_verified) ? $client->is_email_verified : '0',
-					'Is Blocked'   => ($client->is_blocked) ? $client->is_blocked : '0',
-					'Created On'   => ($client->created_on) ? $client->created_on : ''
-				);
-			}
-			//echo "<pre>";print_r($exportData);exit;
-			$type = 'xls';
-			return Excel::create('client_list', function($excel) use ($exportData) {
-			$excel->sheet('mySheet', function($sheet) use ($exportData)
-			{
-				$sheet->fromArray($exportData, null, 'A1', false, false);
-			});
-			})->download('xlsx');
-			
-		}
 	}
 
 	public function staff_details($staff_search_text="")
@@ -628,7 +488,7 @@ class UsersController extends ApiController {
 		//return view('website.services');
 	}
 
-	public function settings_business_hours($type="",$staff_search_text="")
+	public function business_hours($type="",$staff_search_text="")
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -661,7 +521,7 @@ class UsersController extends ApiController {
 
 			}
 			//echo '<pre>'; print_r($data); exit;
-			return view('website.settings-business-hours')->with($data);
+			return view('mobile.business.business-hours')->with($data);
 		}
 		else{
 			return $return;
@@ -669,235 +529,7 @@ class UsersController extends ApiController {
 		//return view('website.settings-business-hours');
 	}
 
-	public function booking_options()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.booking-options');
-		}
-
-		return view('website.booking-options');
-	}
-
-
-	public function booking_rules()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.booking-rules');
-		}
-
-		return view('website.booking-rules');
-	}
-
-	public function booking_policies()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.booking-policies');
-		}
-
-		return view('website.booking-policies');
-	}
-
-	public function notification_settings()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.notification-settings');
-		}
-
-		return view('website.notification-settings');
-	}
-
-	public function email_confirmation()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.email-confirmation');
-		}
-
-		return view('website.email-confirmation');
-	}
-
-	public function integration()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.integration');
-		}
-
-		return view('website.integration');
-	}
 
 	
-
-	public function invitees()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.invitees');
-		}
-
-		return view('website.invitees');
-	}
-
-
-	public function payment_options()
-	{
-
-		// Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-			return redirect('/login');
-		}
-		
-		// Call API //
-		$post_data = $authdata;
-		$post_data['page_no']=1;
-		$data=array(
-			//'service_list'=>array(),
-			'authdata'=>$authdata
-		);
-
-		$url_func_name="payment_options";
-		$return = $this->curl_call($url_func_name,$post_data);
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status))
-		{
-			if($return->response_status == 1)
-			{
-				$data['payment_options'] = $return->payment_options;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.payment.payment-options')->with($data);
-		}
-		else{
-			return $return;
-		}
-		return view('website.payment.payment-options');
-	}
-
-	public function create_invoice()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.create-invoice');
-		}
-
-		return view('website.create-invoice');
-	}
-
-	public function invoice()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.invoice');
-		}
-
-		return view('website.invoice');
-	}
-
-	public function invoice_details()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.invoice-details');
-		}
-
-		return view('website.invoice-details');
-	}
-
-	public function add_location()
-	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-		// Call API //
-		$post_data = $authdata;
-		$post_data['page_no']=1;
-		$data=array(
-			'staff_list'=>array(),
-			'authdata'=>$authdata
-		);
-		$url_func_name="staff_list";
-		$return = $this->curl_call($url_func_name,$post_data);
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status)){
-			if($return->response_status == 1){
-				$data['staff_list'] = $return->staff_list;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.loaction.add-location')->with($data);
-		}
-		else{
-			return $return;
-		}
-
-		//return view('website.add-location');
-	}
-
-	public function privacy_settings()
-	{
-		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
-		{
-			return view('website.privacy-settings');
-		}
-
-		return view('website.privacy-settings');
-
-	}
-
-		
-
-	public function event_viewer(){
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-		// Call API //
-		$post_data = $authdata;
-		$post_data['page_no']=1;
-		$data=array(
-			'event_viewer_list'=>array(),
-			'authdata'=>$authdata
-		);
-		$url_func_name="event_viewer_list";
-		$return = $this->curl_call($url_func_name,$post_data);
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status)){
-			if($return->response_status == 1){
-				$data['event_viewer_list'] = $return->event_viewer_list;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.event-viewer')->with($data);
-		}
-		else{
-			return $return;
-		}
-		//return view('website.event-viewer');
-	}
-
-
-	/******* Test purpose ***** */
-	public function cancel_appointent_url()
-	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-
-		$parameter =[
-			'appointment_id' => 35,
-			'client_id' => 2,
-        ];
-		$parameter= Crypt::encrypt($parameter);
-		echo $cancel_appointent_url = url('/client/cancel_appointent',$parameter);
-		exit;
-	}
 
 }

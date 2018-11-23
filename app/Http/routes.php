@@ -241,63 +241,23 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/registration-step2/{request_url}','Mobile\UsersController@registration_step2');
     Route::get('/dashboard/{type?}','Mobile\UsersController@dashboard');
     Route::get('/logout', 'Mobile\UsersController@logout');
-    Route::any('/thank-you','Mobile\UsersController@thank_you');
-    Route::get('/business-contact-info','Mobile\UsersController@business_contact_info');
-    Route::get('/business-logo-social-network','Mobile\UsersController@business_logo_social_network');
+    Route::get('/client-list/{search_param?}','Mobile\ClientsController@client_list');
+    Route::get('/client-details/{search_param?}','Mobile\ClientsController@client_details');
+    Route::get('/booking-list/{search_param?}','Mobile\BookingsController@booking_list');
+    Route::get('/client-booking-list/{search_param?}','Mobile\BookingsController@client_booking_list');
 
-    //Only for link purpose
-    Route::any('/calendar','Mobile\UsersController@calendar');
-    Route::get('/gift-certificates','Mobile\UsersController@gift_certificates');
-    Route::get('/marketing-discount-coupons','Mobile\UsersController@marketing_discount_coupons');
-    Route::get('/offers','Mobile\UsersController@offers');
-    Route::get('/reports','Mobile\UsersController@reports');
-    Route::get('/client-list/{search_param?}','Mobile\UsersController@client_list');
-    Route::get('/client-export','Mobile\UsersController@client_export');
-    Route::get('/staff-details/{search_param?}','Mobile\UsersController@staff_details');
-    Route::get('/staff-export','Mobile\UsersController@staff_export');
-    Route::get('/integration','Mobile\UsersController@integration');
-    Route::get('/settings-business-hours/{type}/{search_param?}','Mobile\UsersController@settings_business_hours');
-    Route::get('/booking-options','Mobile\BookingsController@booking_options');
-    Route::get('/booking-rules','Mobile\BookingsController@booking_rules');
-    Route::get('/booking-policies','Mobile\BookingsController@booking_policies');
-    Route::get('/notification-settings','Mobile\BookingsController@notification_settings');
-    Route::get('/email-customisation','Mobile\BookingsController@email_customisation');
-    Route::get('/business-details2','Mobile\UsersController@business_details2');
-    Route::get('/invitees','Mobile\UsersController@invitees');
-    Route::get('/services/{type}/{category?}','Mobile\UsersController@services');
-    Route::get('/payment-options','Mobile\UsersController@payment_options');
-    Route::get('/invoice','Mobile\UsersController@invoice');
-    Route::get('/create-invoice','Mobile\UsersController@create_invoice');
-    Route::get('/invoice-details','Mobile\UsersController@invoice_details');
-    Route::get('/invite-contacts','Mobile\UsersController@invite_contacts');
-    Route::get('/add-location','Mobile\UsersController@add_location');
-    Route::get('/privacy-settings','Mobile\UsersController@privacy_settings');
-    Route::post('/email_customisation','Mobile\BookingsController@email_customisation');
-    Route::get('/help','Mobile\UsersController@help');
-    Route::get('/event-viewer','Mobile\UsersController@event_viewer');
-    
-    //Route::get('/profile-settings','Mobile\UsersController@profile_settings');
-    //Route::get('/profile-settings','Mobile\UsersController@profile_settings');
-    //Route::get('/profile-settings','Mobile\UsersController@profile_settings');
-    //Route::get('/profile-settings','Mobile\UsersController@profile_settings');
-    //Route::get('/profile-settings','Mobile\UsersController@profile_settings');
-    //Route::get('/profile-settings','Mobile\UsersController@profile_settings');
-    Route::get('/cancel_appointent_url','Mobile\UsersController@cancel_appointent_url');
-    Route::get('/business-provider/{uesrname?}','Mobile\ClientsController@business_provider');
-    Route::get('/client-service-details/{service?}','Mobile\ClientsController@client_service_details');
+    Route::get('/my-profile','Mobile\UsersController@my_profile');
+    Route::get('/add-appointment','Mobile\BookingsController@add_appointment');
+    Route::get('/add-client','Mobile\ClientsController@add_client');
+    Route::get('/staff-list','Mobile\StaffController@staff_list');
+    Route::get('/add-staff','Mobile\StaffController@add_staff');
+    Route::get('/service-list','Mobile\ServiceController@service_list');
+    Route::get('/add-service','Mobile\ServiceController@add_service');
+    Route::get('/review-list','Mobile\ReviewController@review_list');
+    Route::get('/settings','Mobile\SettingsController@settings');
+    Route::get('/membership','Mobile\PlanController@membership');
+    Route::get('/business-hours','Mobile\UsersController@business_hours');
 
-
-    Route::get('/profile-settings','Mobile\ProfileController@profile_settings');
-    Route::get('/profile-picture','Mobile\ProfileController@profile_picture');
-    Route::get('/profile-link','Mobile\ProfileController@profile_link');
-    Route::get('/profile-payment','Mobile\ProfileController@profile_payment');
-    Route::get('/profile-login','Mobile\ProfileController@profile_login');
-
-    Route::get('/client-login','Mobile\ClientsController@client_login');
-
-    Route::get('/settings-membership','Mobile\PlanController@settings_membership');
-
-    Route::any('/make-payment/{parameter?}','Mobile\PlanController@make_payment');
   
 });
 

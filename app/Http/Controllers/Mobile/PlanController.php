@@ -5,7 +5,7 @@
  * 
  */
 
-namespace App\Http\Controllers\Website;
+namespace App\Http\Controllers\Mobile;
 
 require_once('./vendor/stripe/init.php');
 use App\Http\Requests;
@@ -28,11 +28,11 @@ class PlanController extends ApiController {
 
 	}
 
-	public function settings_membership()
+	public function membership()
 	{	
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
+           return redirect('/mobile/login');
 		}
 
 		// Call API //
@@ -56,7 +56,7 @@ class PlanController extends ApiController {
 				//echo '<pre>'; print_r($return); exit;
 			}
 			//echo '<pre>'; print_r($data); exit;
-			return view('website.plan.settings-membership')->with($data);
+			return view('mobile.plan.membership')->with($data);
 		}
 		else
 		{
