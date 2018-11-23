@@ -183,7 +183,9 @@ Route::group(['prefix'=>''],function(){
     Route::get('/business-details2','Website\UsersController@business_details2');
     Route::get('/invitees','Website\UsersController@invitees');
     Route::get('/services/{type}/{category?}','Website\UsersController@services');
-    Route::get('/add_services','Website\UsersController@add_services');
+    Route::get('/create_new_service','Website\UsersController@create_new_service');
+    Route::get('/add_services/{type?}','Website\UsersController@add_services');
+    Route::get('/edit_service/{service_id?}','Website\UsersController@edit_service');
 	Route::get('/payment-options','Website\UsersController@payment_options');
     Route::get('/invoice','Website\UsersController@invoice');
     Route::get('/create-invoice','Website\UsersController@create_invoice');
