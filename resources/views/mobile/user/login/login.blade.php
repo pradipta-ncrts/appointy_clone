@@ -93,8 +93,8 @@
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-      <script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
-      <script src="{{asset('public/assets/website/js/ncrtsdev.js')}}"></script>
+      <script src="{{asset('public/assets/mobile/js/ncrts.js')}}"></script>
+      <script src="{{asset('public/assets/mobile/js/ncrtsdev.js')}}"></script>
       <script type="text/javascript">
       //================Submit AJAX request ==================
       $('#loginform').validate({
@@ -136,10 +136,11 @@
                           }
                           else
                           {
+                              //console.log(response.user);
                               var user_no = response.user.user_no;
                               var user_type = response.user.user_type;
                               var user_request_key = response.user.user_request_key;
-                              var device_token_key = "";
+                              var device_token_key = "";//response.user.user_request_key;
                               //console.log(data['0']);
                               // get the user no and the request key for farther service calls
                               if($('input[name="remember_me"]').is(':checked')){
@@ -150,11 +151,19 @@
                                   $.cookie("UserPassword", '');
                               }
 
+                              //alert(device_token_key);
+                              //alert(user_request_key);
+
                               $.cookie("sqd_user_no", user_no, { expires: 30, path:'/' });
                               $.cookie("sqd_user_type", user_type, { expires: 30, path:'/' });
                               $.cookie("sqd_user_request_key", user_request_key, { expires: 30, path:'/' });
                               $.cookie("sqd_device_token_key", device_token_key, { expires: 30, path:'/' });
 
+                              /*console.log($.cookie('sqd_user_no'));
+                              console.log($.cookie('sqd_user_type'));
+                              console.log($.cookie('sqd_user_request_key'));
+                              console.log($.cookie('sqd_device_token_key'));
+                              */
                               
                               var url = "{{url('/mobile/dashboard')}}";
                               console.log(url);

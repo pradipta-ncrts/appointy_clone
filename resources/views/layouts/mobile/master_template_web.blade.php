@@ -16,6 +16,15 @@
       <link rel="stylesheet" href="{{asset('public/assets/mobile/css/styles.css')}}" >
       <link rel="stylesheet" href="{{asset('public/assets/mobile/css/app.css')}}" />
       <link rel="stylesheet" href="{{asset('public/assets/mobile/css/custom.css')}}" />
+      <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+      <link rel="stylesheet" href="{{asset('public/assets/website/css/bootstrap-timepicker.min.css')}}" />
+      <link href="{{asset('public/assets/mobile/css/ncrts.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/mobile/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+      <script type="text/javascript">
+          var authDatas={user_no:0}; 
+          var device_token_key="<?php echo Session::getId()?>"; 
+          var baseUrl ="<?php echo url('')?>/mobile/"; 
+      </script>
       @yield('custom_css')
    </head>
    <body>
@@ -154,7 +163,10 @@
             function ShowPopup(obj) {
                 //$("#popup").fadeToggle();
                 $(obj).next("#popup").fadeToggle();
-                $(obj).toggleClass("rotatebtn");
+                $(obj).toggleClass("rotatebtn");             
+                $("#blockDate").fadeOut('2000');
+                $("#blockTime").fadeOut('2000');
+                $(".menuList").fadeIn('10');
             }
             function blockDate(){
                 $(".menuList").fadeOut('fast');
@@ -182,8 +194,55 @@
         }
         </script> 
 
+
+
+        <script src="{{asset('public/assets/mobile/plugins/sweetalert/sweetalert.min.js')}}"></script> 
+        <!-- jQuery Cookie -->
+        <script src="{{asset('public/assets/mobile/js/jquery.cookie.min.js')}}"></script>
+        <!-- Form Validation -->
+        <script src="{{asset('public/assets/mobile/js/jquery.validate.min.js')}}"></script>
+
+        <script src="{{asset('public/assets/mobile/js/jquery-ui.js')}}"></script>
+        <script src="{{asset('public/assets/mobile/js/bootstrap-timepicker.min.js')}}"></script>
+
         <!-- sideToggle-->
         <script src="{{asset('public/assets/mobile/js/bootstrap-datepicker.js')}}"></script>
+        <script src="{{asset('public/assets/mobile/js/ncrts.js')}}"></script>
+        <script src="{{asset('public/assets/mobile/js/ncrtsdev.js')}}"></script>
+
+        <script>
+         $( function() {
+            var $var = $("#appointmentdate,#reshedule_appointmentdate,#block_time_date"); 
+                $var.datepicker({
+                minDate:0,
+            });
+
+            /*var $dp2 = $("#reshedule_appointmentdate"); 
+            $dp2.datepicker({
+                //changeYear: true,
+                //changeMonth: true,
+                minDate:1,
+            });*/
+
+            /*var $dp3 = $("#block_date"); 
+            $dp3.multiDatesPicker({
+            minDate:0,
+            });  */ 
+         });
+       </script>
+       <script type="text/javascript">
+          $(".activeColor").click(function()
+          {
+             let colour_code = $(this).attr('data-colour');
+             $(".activeColor").removeClass('active');
+             $('#colour_code').val(colour_code);
+             $(this).addClass('active');
+          });
+          
+          $('#appointmenttime,#reshedule_appointmenttime,#bolck_start_time,#bolck_end_time').timepicker({defaultTime: ''});
+
+          $('.availability_start_time,.availability_end_time').timepicker({defaultTime: ''});
+         </script>
         @yield('custom_js')
    </body>
 </html>

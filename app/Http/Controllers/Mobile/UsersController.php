@@ -50,8 +50,11 @@ class UsersController extends ApiController {
 		//print_r($post_data); die();
 		$url_func_name="logout";
 		$return = $this->curl_call($url_func_name,$post_data);
+
+		//print_r($return); die();
 		// Check response status. If success return data //
 		if(isset($return->response_status)){
+			$this->remove_all_cookies();
 			return redirect('mobile/login');
 		}
 		else{
