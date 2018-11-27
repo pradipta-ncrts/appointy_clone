@@ -116,7 +116,9 @@ Squeedr
          <div class="clearfix"></div>
          <div class="headRow mobileappointed arrow-d clearfix row-2"  id="row2">
             <!--<a href="services.html" class="more-link"  data-toggle="tooltip" title="More Services"><img src="{{asset('public/assets/website/images/threeDots.png')}}"/></a>-->
-            <?php if(!empty($service_list)) { foreach($service_list as $service) { ?>
+            <?php if(!empty($service_list)) { foreach($service_list as $service) { 
+                $enc_service_id = Crypt::encrypt($service->service_id);
+            ?>
             <div class="appointment mobSevices  col-sm-4">
                <div class="pull-left">
                   <p>{{ucwords($service->service_name)}}</p>
@@ -128,7 +130,7 @@ Squeedr
                   <li onclick="showUl(this);">
                      <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
                      <ul>
-                        <li><a><i class="fa fa-edit"></i> Edit </a> </li>
+                        <li><a href="{{url('edit_service/'.$enc_service_id)}}"><i class="fa fa-edit"></i> Edit </a> </li>
                         <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
                         <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
                      </ul>

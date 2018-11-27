@@ -52,6 +52,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/clone-service', 'Api\UsersController@clone_service');
     Route::post('/delete-service', 'Api\UsersController@delete_service');
     Route::post('/add-new-service', 'Api\UsersController@add_new_service');
+    Route::post('/update-service', 'Api\UsersController@update_service');
+    Route::post('/add-invitee-question', 'Api\UsersController@add_invitee_question');
     Route::post('/payment_terms', 'Api\UsersController@payment_terms');
     Route::post('/service-details', 'Api\UsersController@service_details');
     Route::post('/add_staff','Api\StaffsController@add_staff');

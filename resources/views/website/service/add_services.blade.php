@@ -74,7 +74,7 @@ Squeedr
                               </div>
                               <div class="col-lg-6 col-md-6 col-sm-6">
                                  <label for="service_price">Price <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Enter a price for your service." data-placement="right"></i> </label>
-                                 <input class="form-control" type="text" name="service_price" id="service_price">
+                                 <input class="form-control" type="number" min="1" name="service_price" id="service_price">
                               </div>
                            </div>
                         </div>
@@ -113,7 +113,7 @@ Squeedr
                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <label for="service_color">Select Color <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Enter a name of your service." data-placement="right"></i> </label>
                                 <input type="text" name="togglePaletteOnly" id="togglePaletteOnly" style="display:none;">
-                                <input type="text" name="service_color" id="service_color" value="#ff0000">
+                                <input type="hidden" name="service_color" id="service_color" value="#ff0000">
                             </div>
                         </div>
                         
@@ -187,7 +187,7 @@ Squeedr
                 console.log(response);
                 if(response.response_status==1)
                 {
-                    if(response.service_id > 0){
+                    if(response.service_id != ''){
                        var url = "{{url('/edit_service/')}}"+'/'+response.service_id;
                        window.location.href = url; 
                     } else {

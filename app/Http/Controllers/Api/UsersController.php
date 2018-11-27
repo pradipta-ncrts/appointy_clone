@@ -1404,11 +1404,12 @@ class UsersController extends ApiController {
 				'description' => $service_description,
 				'service_link' => $service_link,
 				'color' => $service_color,
+				'duration' => 15,
 			);
 			$service_id = $this->common_model->insert_data_get_id($this->tableObj->tableUserService, $serviceData);
 			if($service_id > 0)
 			{
-				$response_data['service_id'] = $service_id;
+				$response_data['service_id'] = Crypt::encrypt($service_id);
 				$this->response_status='1';
 				$this->response_message="Service added successfully.";
 			}
@@ -1445,9 +1446,109 @@ class UsersController extends ApiController {
 
 		$category = $this->common_model->fetchData($this->tableObj->tableNameCategory, $catCond);
 
+		$response_data['service_details'] = $service_details;
+		$response_data['category'] = $category;
 		$this->response_status='1';
-		$this->response_message['service_detils'] = $service_details;
-		$this->response_message['category'] = $category;
+		$this->response_message="Service Details.";
+		
+
+		$this->json_output($response_data);
+	}
+
+	public function update_service(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$service_id = $request->input('service_id');
+		$service_duration = $request->input('service_duration');
+		$availability_increments = $request->input('availability_increments');
+		$max_service = $request->input('max_service');
+		$minimum_scheduling_notice = $request->input('minimum_scheduling_notice');
+		$buffer_before_service = $request->input('buffer_before_service');
+		$buffer_after_service = $request->input('buffer_after_service');
+		$is_secret = $request->input('is_secret');
+
+		$updateData = array(
+				'duration' => $service_duration,
+				'availability_increments' => $availability_increments,
+				'max_service' => $max_service,
+				'minimum_scheduling_notice' => $minimum_scheduling_notice,
+				'buffer_before_service' => $buffer_before_service,
+				'buffer_after_service' => $buffer_after_service,
+				'is_secret' => $is_secret,
+		);
+
+
+		$updateCond=array(
+						array('service_id','=',$service_id),
+						array('is_deleted','=',0)
+					);
+
+		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
+
+
+		$this->response_status='1';
+		$this->response_message="Service updated successfully.";
+
+		$this->json_output($response_data);
+	}
+
+	public function add_invitee_question(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$service_id = $request->input('service_id');
+		$question = $request->input('question');
+		$isrequired = $request->input('is_required');
+		if(isset($isrequired) && $isrequired!=''){
+			$is_required = 1;
+		} else {
+			$is_required = 0;
+		}
+		$answer_type = $request->input('answer_type');
+		$answers = $request->input('answers'); 
+		$answer_options = '';
+		if(!empty($answers)){
+			$answer_options = implode('|',$answers);
+		}
+		
+		$is_question_active = $request->input('is_question_active');
+		if($is_question_active == 1){
+			$is_blocked = 0;
+		} else {
+			$is_blocked = 1;
+		}
+
+		$condition = array(
+			array('service_id','=',$service_id),
+			array('is_deleted','=','0')
+		);
+		$checkService = $this->common_model->fetchData($this->tableObj->tableUserService,$condition);
+
+		if(!empty($checkService))
+		{
+			$param = array(
+				'service_id' => $service_id,
+				'question' => $question,
+				'answer_type' => $answer_type,
+				'answer_options' => $answer_options,
+				'is_required' => $is_required,
+				'is_blocked' => $is_blocked
+			);
+
+			$invitee_question_id = $this->common_model->insert_data_get_id($this->tableObj->tableServiceInviteeQuestion,$param);
+			if($invitee_question_id)
+			{
+				$this->response_status='1';
+				$this->response_message="Question added successfully.";
+			}
+			else
+			{
+				$this->response_message="Somthing wrong try again later.";
+			}
+		} else {
+			$this->response_message="Invalid Service.";
+		}
 
 		$this->json_output($response_data);
 	}

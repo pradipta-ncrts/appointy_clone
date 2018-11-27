@@ -42,6 +42,8 @@ class TablesController {
 
         $this->tableUserService = config('constants.tables.user_service');
 
+        $this->tableServiceInviteeQuestion = config('constants.tables.service_invitee_question');
+
         $this->tableNameUserRequestKey = config('constants.tables.user_token');
 
         $this->tableNameClient = config('constants.tables.client');

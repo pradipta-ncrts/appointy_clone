@@ -52,6 +52,8 @@ return [
 
         'user_dashboard_reports' => 'user_dashboard_reports',
 
+        'service_invitee_question' => 'service_invitee_question',
+
 
 
     ],

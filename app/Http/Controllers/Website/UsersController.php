@@ -682,15 +682,48 @@ class UsersController extends ApiController {
 	}
 
 
-	public function edit_service($service_id=""){
+	public function edit_service($request_data=""){
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
            return redirect('/login');
 		}
 
-		if($service_id!=""){
-			// Call API //
+		if($request_data!=""){
 			
+			$service_id = Crypt::decrypt($request_data);
+			// Call API //
+			$post_data = $authdata;
+			$post_data['service_id'] = $service_id;
+			$data=array(
+				'category_list'=>array(),
+				'service_details'=>array(),
+				'authdata'=>$authdata
+			);
+
+
+			$url_func_name_cat="user_categories";
+			$return_cat = $this->curl_call($url_func_name_cat,$post_data);
+
+			$url_func_name="service-details";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo '<pre>'; print_r($return); exit;
+			// Check response status. If success return data //		
+			if(isset($return->response_status))
+			{
+				if($return->response_status == 1)
+				{
+					$data['category_list'] = $return_cat->category_list;
+					$data['service_details'] = $return->service_details;
+					$data['request_data'] = $request_data;
+					
+				}
+				//echo '<pre>'; print_r($data); exit;
+				return view('website.service.edit_services')->with($data);
+			} else {
+				return $return;
+			}
+			
+			//return view('website.service.edit_services');
 		} else {
 			return redirect('create_new_service');
 		}
