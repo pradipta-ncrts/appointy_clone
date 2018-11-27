@@ -20,23 +20,31 @@ class BookingsController extends ApiController {
 		parent::__construct($input);
 }
 
-	public function booking_list($param=NULL)
+	public function booking_list(Request $data)
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-			return redirect('/login');
+			return redirect('mobile/login');
 		}
-		
-		// Call API //
-		/*$post_data = $authdata;
+
+		$post_data = $authdata;
 		$post_data['page_no']=1;
+		$post_data['filter_data'] = '';
+
+		//filter staff
+		$filter_data = $data->input('appoinmnet_filter_stuff_id');
+		//print_r($filter_data); die();
+		if(!empty($filter_data))
+		{
+			$post_data['filter_data'] = implode(',', $filter_data);
+		}
 		$data=array(
-			'service_list'=>array(),
+			'appoinment_list'=>array(),
 			'authdata'=>$authdata
 		);
-
-		$url_func_name="notification_settings_data";
+		//print_r($post_data); die();
+		$url_func_name="appoinment_list";
 		$return = $this->curl_call($url_func_name,$post_data);
 		
 		// Check response status. If success return data //		
@@ -44,15 +52,20 @@ class BookingsController extends ApiController {
 		{
 			if($return->response_status == 1)
 			{
-				$data['notification_settings_data'] = $return->notification_settings_data;
+				$data['appoinment_list'] = $return->appoinment_list;
+				$data['staff_list'] = $return->staff_list;
+				$data['staff_list_filter'] = $return->staff_list_filter;
+				$data['calendar_settings'] = $return->calendar_settings;
+				$data['filter_data'] = $return->filter_data;
+				$data['block_date_time'] = $return->block_date_time;
 			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.booking.notification-settings')->with($data);
+			//echo '<pre>'; print_r($data['appoinment_list']); exit;
+			return view('mobile.booking.booking-list')->with($data);
 		}
-		else{
+		else
+		{
 			return $return;
-		}*/
-		return view('mobile.booking.booking-list');
+		}
 	}
 
 	public function client_booking_list($param=NULL)
