@@ -70,6 +70,8 @@ class BaseApiController extends BaseController
         $device_type = $this->postParam->input('device_type');
         $device_unique_code = $this->postParam->input('device_token_key');
         $user_request_key = $this->postParam->input('user_request_key');
+        // if device type = 0 then device token key should be the blowser session id capture
+        $device_unique_code = $device_unique_code ? $device_unique_code : Session::getId();
        // parameter validation section 
        /* $authdata = $this->website_login_checked();
         print_r($authdata); die();*/
@@ -144,8 +146,7 @@ class BaseApiController extends BaseController
                     $this->json_output();
                 }
 
-                // if device type = 0 then device token key should be the blowser session id capture
-                $device_unique_code = $device_unique_code ? $device_unique_code : Session::getId();
+                
                 if(empty($device_unique_code)){
                     $this->response_message="device_unique_key_required";
                     $this->json_output();

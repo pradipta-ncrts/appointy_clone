@@ -133,32 +133,12 @@ class BookingsController extends ApiController {
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
 			return redirect('/login');
 		}
-		
-		// Call API //
-		/*$post_data = $authdata;
-		$post_data['page_no']=1;
-		$data=array(
-			'service_list'=>array(),
-			'authdata'=>$authdata
-		);
 
-		$url_func_name="notification_settings_data";
-		$return = $this->curl_call($url_func_name,$post_data);
+		$data['clients_list'] = $this->clients_list();
+		$data['services_list'] = $this->services_list();
+		$data['stuffs_list'] = $this->stuffs_list();
+		return view('mobile.booking.add-appointment')->with($data);
 		
-		// Check response status. If success return data //		
-		if(isset($return->response_status))
-		{
-			if($return->response_status == 1)
-			{
-				$data['notification_settings_data'] = $return->notification_settings_data;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.booking.notification-settings')->with($data);
-		}
-		else{
-			return $return;
-		}*/
-		return view('mobile.booking.add-appointment');
 	}
 	
 

@@ -121,6 +121,7 @@ class BookingsController extends ApiController {
 
     public function add_appoinment(Request $request)
     {
+        //print_r($request->all()); die();
         $response_data = array(); 
         // validate the requested param for access this service api
         $this->validate_parameter(1); // along with the user request key validation
@@ -290,7 +291,7 @@ class BookingsController extends ApiController {
                     }
 
                     // Event Viewer //
-				    $this->add_user_event_viewer($user_no,$type=4,$staff);
+				    $this->add_user_event_viewer($user_id,$type=4,$staff);
                     
                     $this->response_status='1';
                     $this->response_message = "An appointment has been successfully booked.";
