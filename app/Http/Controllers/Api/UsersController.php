@@ -1375,10 +1375,18 @@ class UsersController extends ApiController {
 		$service_link = $request->input('service_link');
 		$service_color = $request->input('service_color');
 		$service_type = $request->input('service_type');
+		$new_category_name = $request->input('new_category_name');
 
 		if($service_type=='solo')
 		{
 			$service_capacity = 0;
+		}
+
+		if($service_category == 'new'){
+			$param = array('category' => $new_category_name, 'created_by' => $user_no);
+			$category_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameCategory, $param);
+		} else {
+			$category_id = $service_category;
 		}
 
 		$condition = array(
@@ -1394,7 +1402,7 @@ class UsersController extends ApiController {
 		} else {
 			$serviceData = array(
     			'user_id' => $user_no,
-				'category_id' => $service_category,
+				'category_id' => $category_id,
 				'service_name' => $service_name,
 				'cost' => $service_price,
 				'currency_id' => $service_currency,
@@ -1456,6 +1464,60 @@ class UsersController extends ApiController {
 	}
 
 	public function update_service(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$user_no = $this->logged_user_no;
+
+		$service_id = $request->input('service_id');
+		$service_category = $request->input('service_category');
+		$service_name = $request->input('service_name');
+		$service_location = $request->input('service_location');
+		$service_display_location = $request->input('service_display_location');
+		$service_currency = $request->input('service_currency');
+		$service_price = $request->input('service_price');  
+		$service_capacity = $request->input('service_capacity');
+		$service_description = $request->input('service_description');
+		$service_link = $request->input('service_link');
+		$service_color = $request->input('service_color');
+		$new_category_name = $request->input('new_category_name');
+
+		if($service_category == 'new'){
+			$param = array('category' => $new_category_name, 'created_by' => $user_no);
+			$category_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameCategory, $param);
+		} else {
+			$category_id = $service_category;
+		}
+
+		$updateData = array(
+				'category_id' => $category_id,
+				'service_name' => $service_name,
+				'cost' => $service_price,
+				'currency_id' => $service_currency,
+				'location' => $service_location,
+				'display_location' => $service_display_location,
+				'capacity' => $service_capacity,
+				'description' => $service_description,
+				'service_link' => $service_link,
+				'color' => $service_color,
+		);
+
+
+		$updateCond=array(
+						array('service_id','=',$service_id),
+						array('is_deleted','=',0)
+					);
+
+		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
+
+
+		$this->response_status='1';
+		$this->response_message="Service updated successfully.";
+
+		$this->json_output($response_data);
+	}
+
+	public function update_service_duration(Request $request){
 		$response_data=array();
 		$this->validate_parameter(1);
 

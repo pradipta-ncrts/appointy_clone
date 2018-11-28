@@ -33,6 +33,8 @@ Squeedr
                      </div>
                   </div>
                   <div class="headRow whitebox dsinside clearfix ">
+                    <form name="edit_service" id="edit_service" method="post" action="{{url('api/update-service')}}">
+                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
                     <div class="form-details">
                         <div class="form-group">
                            <div class="row">
@@ -88,8 +90,8 @@ Squeedr
                         </div>
                         <?php } ?>
                         <div class="break20px"></div>
-                        <label for="service_description">Description/Instructions</label>
-                        <textarea class="form-control" rows="4" name="service_description" id="service_description">{{$service_details->description}}</textarea>
+                            <label for="service_description">Description/Instructions</label>
+                            <textarea class="form-control" rows="4" name="service_description" id="service_description">{{$service_details->description}}</textarea>
                         <div class="break20px"></div>
                         <div class="row">
                            <div class="col-lg-6 col-md-6 col-sm-6">
@@ -101,12 +103,19 @@ Squeedr
                            <div class="col-lg-6 col-md-6 col-sm-6">
                               <label for="service_category">List of categories</label>
                               <select name="service_category" id="service_category">
-                                 <option>Select categories</option>
+                                 <option value="">Select categories</option>
                                  <?php if(!empty($category_list)){ foreach($category_list as $category){ ?>
                                   <option <?php if($service_details->category_id == $category->category_id) { ?> selected="selected" <?php } ?> value="<?php echo $category->category_id;?>"><?php echo $category->category;?></option>
                                 <?php } } ?>
+                                  <option value="new">New Category </option>   
                               </select>
                            </div>
+                           <div class="clearfix"></div>
+                           <div class="break10px"></div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 new-category-name" style="display: none;">
+                                <label for="new_category_name">Category Name</label>
+                                <input class="form-control" type="text" name="new_category_name" id="new_category_name" />
+                            </div>
                            <div class="clearfix"></div>
                            <div class="break10px"></div>
                            <div class="col-lg-6 col-md-6 col-sm-6">
@@ -120,12 +129,14 @@ Squeedr
                            <input type="button" class="btn btn-grey" value="Cancel" />
                            <input type="submit" class="btn btn-primary" value="Next" />
                         </div>
-                     </div>
+                    </div>
+                    </form>
                   </div>
+                  
                </div>
                <div class="break20px hidden-xs"></div>
                <div class="cust-box">
-                <form name="servie_duration_form" id="servie_duration_form" method="post" action="{{url('api/update-service')}}">
+                <form name="servie_duration_form" id="servie_duration_form" method="post" action="{{url('api/update-service-duration')}}">
                 <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
                   <div class="headRow whitebox ds  clearfix ">
                       <div class="leftbar">
@@ -141,21 +152,21 @@ Squeedr
                       <div class="form-details">
                         <div>
                             <label for="Service Duration">Service Duration <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="This is where you can define how long your service will be. It can be as short as 1 minute or as long as 12 hours."></i> </label>
-                            <input type="hidden" name="service_duration" id="service_duration" value="15">
+                            <input type="hidden" name="service_duration" id="service_duration" value="{{$service_details->duration}}">
                             <ul class="minutes">
-                              <li class="duration active" data-duration="15"><a>15<br/>
+                                 <li class="duration <?php if($service_details->duration == 15 ) echo 'active'; ?>" data-duration="15"><a>15<br/>
                                   <label>min</label>
                                   </a> 
                               </li>
-                              <li class="duration" data-duration="30"><a>30<br/>
+                              <li class="duration <?php if($service_details->duration == 30 ) echo 'active'; ?>" data-duration="30"><a>30<br/>
                                   <label>min</label>
                                   </a> 
                               </li>
-                              <li class="duration" data-duration="45"><a>45<br/>
+                              <li class="duration <?php if($service_details->duration == 45 ) echo 'active'; ?>" data-duration="45"><a>45<br/>
                                   <label>min</label>
                                   </a> 
                               </li>
-                              <li class="duration" data-duration="0"><a><input type="number" min="1" step="1" id="custom_duration" style="width:40%"><br/>
+                                 <li class="duration <?php if($service_details->duration != 15 && $service_details->duration != 30 && $service_details->duration != 45) echo 'Active'; ?>" data-duration="0"><a><input type="number" min="1" step="1" id="custom_duration" style="width:40%" <?php if($service_details->duration != 15 && $service_details->duration != 30 && $service_details->duration != 45) { ?> value="{{$service_details->duration}}" <?php } ?> ><br/>
                                   <label>custom min</label>
                                   </a> 
                               </li>
@@ -255,11 +266,11 @@ Squeedr
                                     <div class="col-md-6">
                                         <label>Show availability in increments of</label>
                                         <select name="availability_increments" id="availability_increments">
-                                          <option value="10">10min</option>
-                                          <option value="15">15min</option>
-                                          <option value="20">20min</option>
-                                          <option value="30">30min</option>
-                                          <option value="60">60min</option>
+                                            <option value="10" <?php if($service_details->availability_increments == 10) { ?> selected="" <?php } ?> >10min</option>
+                                            <option value="15" <?php if($service_details->availability_increments == 15) { ?> selected="" <?php } ?> >15min</option>
+                                            <option value="20" <?php if($service_details->availability_increments == 20) { ?> selected="" <?php } ?> >20min</option>
+                                            <option value="30" <?php if($service_details->availability_increments == 30) { ?> selected="" <?php } ?> >30min</option>
+                                            <option value="60" <?php if($service_details->availability_increments == 60) { ?> selected="" <?php } ?> >60min</option>
                                         </select>
                                     </div>
                                   </div>
@@ -270,7 +281,7 @@ Squeedr
                                     <div class="col-md-6">Use this optional setting to limit the number of events that can be scheduled in a day.</div>
                                     <div class="col-md-6">
                                         <label>Max number of events per day</label>
-                                        <input type="number" name="max_service" id="max_service" min="1" step="1" class="form-control" style="width:40%;">
+                                 <input type="number" name="max_service" id="max_service" min="1" step="1" class="form-control" style="width:40%;" <?php if($service_details->max_service > 0) { ?> value="{{$service_details->max_service}}" <?php } ?> >
                                     </div>
                                   </div>
                               </div>
@@ -280,7 +291,7 @@ Squeedr
                                     <div class="col-md-6">Use this setting to prevent last minute events.</div>
                                     <div class="col-md-6">
                                         <label>Prevent events less than</label>
-                                        <input type="number" name="minimum_scheduling_notice" id="minimum_scheduling_notice" min="1" step="1" class="form-control" style="width:40%;"> hours away
+                                 <input type="number" name="minimum_scheduling_notice" id="minimum_scheduling_notice" min="1" step="1" class="form-control" style="width:40%;" <?php if($service_details->max_service > 0) { ?> value="{{$service_details->minimum_scheduling_notice}}" <?php } ?>> hours away
                                     </div>
                                   </div>
                               </div>
@@ -292,25 +303,25 @@ Squeedr
                                         <div class="form-group">
                                           <label>Buffer before service</label>
                                           <select name="buffer_before_service" id="buffer_before_service">
-                                              <option value="0">0min</option>
-                                              <option value="5">5min</option>
-                                              <option value="10">10min</option>
-                                              <option value="15">15min</option>
-                                              <option value="30">30min</option>
-                                              <option value="45">45min</option>
-                                              <option value="60">60min</option>
+                                              <option <?php if($service_details->buffer_before_service == 0) { ?> selected="" <?php } ?> value="0">0min</option>
+                                              <option <?php if($service_details->buffer_before_service == 5) { ?> selected="" <?php } ?> value="5">5min</option>
+                                              <option <?php if($service_details->buffer_before_service == 10) { ?> selected="" <?php } ?> value="10">10min</option>
+                                              <option <?php if($service_details->buffer_before_service == 15) { ?> selected="" <?php } ?> value="15">15min</option>
+                                              <option <?php if($service_details->buffer_before_service == 30) { ?> selected="" <?php } ?> value="30">30min</option>
+                                              <option <?php if($service_details->buffer_before_service == 45) { ?> selected="" <?php } ?> value="45">45min</option>
+                                              <option <?php if($service_details->buffer_before_service == 60) { ?> selected="" <?php } ?> value="60">60min</option>
                                           </select>
                                         </div>
                                         <div class="form-group">
                                           <label>Buffer after service</label>
                                           <select name="buffer_after_service" id="buffer_after_service">
-                                              <option value="0">0min</option>
-                                              <option value="5">5min</option>
-                                              <option value="10">10min</option>
-                                              <option value="15">15min</option>
-                                              <option value="30">30min</option>
-                                              <option value="45">45min</option>
-                                              <option value="60">60min</option>
+                                              <option <?php if($service_details->buffer_after_service == 0) { ?> selected="" <?php } ?> value="0">0min</option>
+                                              <option <?php if($service_details->buffer_after_service == 5) { ?> selected="" <?php } ?> value="5">5min</option>
+                                              <option <?php if($service_details->buffer_after_service == 10) { ?> selected="" <?php } ?> value="10">10min</option>
+                                              <option <?php if($service_details->buffer_after_service == 15) { ?> selected="" <?php } ?> value="15">15min</option>
+                                              <option <?php if($service_details->buffer_after_service == 30) { ?> selected="" <?php } ?> value="30">30min</option>
+                                              <option <?php if($service_details->buffer_after_service == 45) { ?> selected="" <?php } ?> value="45">45min</option>
+                                              <option <?php if($service_details->buffer_after_service == 60) { ?> selected="" <?php } ?> value="60">60min</option>
                                           </select>
                                         </div>
                                     </div>
@@ -321,7 +332,7 @@ Squeedr
                       </div>
                       <div class="form-details break20px">
                         <div>
-                            <input type="hidden" name="is_secret" id="is_secret" value="0">
+                            <input type="hidden" name="is_secret" id="is_secret" value="{{$service_details->is_secret}}">
                             <!--<label>Secret Service <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="To make an service type available to only select invitees, you'll want to make the service type secret. This will make that service type only visible to people with whom you choose to share the service type link and will not show up on your main Squdeer page."></i> </label>
                             <div class="clearfix"></div>
                             <p class="inlineBlock">Hide this Service from your main Squdeer page.</p>
@@ -329,7 +340,7 @@ Squeedr
                             <label>Secret Service <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="To make an service type available to only select invitees, you'll want to make the service type secret. This will make that service type only visible to people with whom you choose to share the service type link and will not show up on your main Squdeer page."></i> </label>
                             <div class="clearfix"></div>
                             <p class="inlineBlock">Hide this Service from your main Squdeer page.</p>
-                            <button type="button" id="change-secret" class="btn btn-sm btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off" >
+                            <button type="button" id="change-secret" class="btn btn-sm btn-toggle <?php if($service_details->is_secret == 1) echo 'Active'; ?>" data-toggle="button" aria-pressed="false" autocomplete="off" >
                               <div class="handle"></div>
                             </button> 
                         </div>
@@ -382,9 +393,9 @@ Squeedr
                   <div class="headRow whitebox  ds clearfix ">
                      <div class="leftbar">
                         <h5><i class="fa fa-envelope"></i> Invitee Notifications</h5>
-                        <ul>
+                        <!--<ul>
                            <li>Calender, Invitations, No Reminders</li>
-                        </ul>
+                        </ul>-->
                      </div>
                      <div class="rightbar">
                         <ul>
@@ -405,14 +416,14 @@ Squeedr
                            <p>Email notifications will be sent to your invitee if you cancel the service.<a> Personalize</a> </p>
                         </div>
                      </div>
-                     <div class="form-details break20px">
+                     <!--<div class="form-details break20px">
                         <div>
                            <label>Text reminders <i class="fa fa-question"></i> </label>
                            <div class="clearfix"></div>
                            <p class="inlineBlock">Your invitees will have the option to send text reminders. <a> Inactive</a> </p>
                            <a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a> 
                         </div>
-                     </div>
+                     </div>-->
                      <div class="form-details break20px">
                         <div>
                            <label>Email reminders <i class="fa fa-question"></i> </label>
@@ -632,7 +643,7 @@ Squeedr
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-  $('#add_service').validate({
+  $('#edit_service').validate({
       rules: {
           service_name: {
               required: true
@@ -685,8 +696,8 @@ Squeedr
                 if(response.response_status==1)
                 {
                     if(response.service_id != ''){
-                       var url = "{{url('/edit_service/')}}"+'/'+response.service_id;
-                       window.location.href = url; 
+                        var url = "{{url('/edit_service/'.$request_data)}}";
+                        window.location.href = url;
                     } else {
                         swal('Sorry!',response.message,'error');
                     }
@@ -938,6 +949,20 @@ Squeedr
         });
                
   });
+
+    $(document).on('change','#service_category',function() {
+        let val = $(this).val();
+        //alert(val);
+        if(val=="new")
+        {
+            $(".new-category-name").show();
+        }
+        else
+        {
+            $(".new-category-name").hide();
+            $('#new_category_name').val('');
+        }
+    });
 
 </script>
 @endsection
