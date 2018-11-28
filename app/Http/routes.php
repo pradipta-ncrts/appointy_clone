@@ -84,6 +84,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/email_customisation_update','Api\BookingsController@email_customisation_update');
     Route::post('/add_appoinment','Api\BookingsController@add_appoinment');
     Route::post('/appoinment_list','Api\BookingsController@appoinment_list');
+    Route::post('/appoinment_list_mobile','Api\BookingsController@appoinment_list_mobile');
     Route::post('/appointment_details','Api\BookingsController@appointment_details');
     Route::post('reschedule_appoitment','Api\BookingsController@reschedule_appoitment');
     Route::post('/appoinment-cancel','Api\BookingsController@appoinment_cancel');
@@ -248,7 +249,7 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/logout', 'Mobile\UsersController@logout');
     Route::get('/client-list/{search_param?}','Mobile\ClientsController@client_list');
     Route::get('/client-details/{search_param?}','Mobile\ClientsController@client_details');
-    Route::get('/booking-list/{search_param?}','Mobile\BookingsController@booking_list');
+    Route::get('/booking-list/{duration?}/{search_param?}','Mobile\BookingsController@booking_list');
     Route::get('/client-booking-list/{search_param?}','Mobile\BookingsController@client_booking_list');
 
     Route::get('/my-profile','Mobile\UsersController@my_profile');

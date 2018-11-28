@@ -8,7 +8,7 @@ Squeedr
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
    <h1>Bookings</h1>
    <ul>
-      <li><a href="" id="showpopup"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li>
+      <li><a onclick="popup();"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li>
    </ul>
 </header>
 <main>
@@ -18,43 +18,35 @@ Squeedr
          <!-- <a><i class="fa fa-angle-right"></i></a> -->
       </div>
       <ul class="clientSchedule">
-         <li><a href="#" class="active">Current</a> </li>
-         <li><a href="#">Next 3 Days</a> </li>
-         <li><a href="#">Last 1 Month</a> </li>
+         <li><a href="{{url('mobile/booking-list/all')}}" class="<?=$duration=='all' ? 'active' : ''; ?>">Current</a> </li>
+         <li><a href="{{url('mobile/booking-list/day')}}" class="<?=$duration=='day' ? 'active' : ''; ?>">Next 3 Days</a> </li>
+         <li><a href="{{url('mobile/booking-list/month')}}" class="<?=$duration=='month' ? 'active' : ''; ?>">Last 1 Month</a> </li>
       </ul>
       <div class="container-fluid">
          <div class="row">
             <div class="col-xs-12">
+               <?php
+               foreach ($appoinment_list as $key => $value)
+               {
+               ?>
                <div class="bluebg break20px namedate">
-                  <span>Thursday, Apr 26, 2018</span>
-                  <span>John G</span>
+                  <span><?=date('l', strtotime($value->date));?>, <?=date('M d, Y', strtotime($value->date));?></span>
+                  <span><?=$value->client_name;?></span>
                </div>
                <div class="whitebox border-box">
                   <div class="staffDetail">
-                     <span><label>With</label> Esther</span>
-                     <p>12:15 - 12:30 PM</p>
-                     <span class="bluetxt">$200</span>
+                     <span><label>With</label> <?=$value->staff_name;?></span>
+                     <p><?=$value->start_time;?> - <?=$value->end_time;?></p>
+                     <span class="bluetxt"><?=$value->currency;?><?=$value->cost;?></span>
                   </div>
                   <div class="staffInside">
-                     <h6>Smile Corrections</h6>
-                     <p><span>Notes :</span> Aeque enim contingit omnibus fidibus, ut incontentae sint semper enim ex eo, quod maximas partes <a>more</a></p>
+                     <h6><?=$value->service_name;?></h6>
+                     <p><span>Notes :</span> <?=$value->note;?> <!-- <a>more</a> --></p>
                   </div>
                </div>
-               <div class="bluebg break20px namedate">
-                  <span>Thursday, Apr 26, 2018</span>
-                  <span>John G</span>
-               </div>
-               <div class="whitebox border-box">
-                  <div class="staffDetail">
-                     <span><label>With</label> Esther</span>
-                     <p>12:15 - 12:30 PM</p>
-                     <span class="bluetxt">$200</span>
-                  </div>
-                  <div class="staffInside">
-                     <h6>Smile Corrections</h6>
-                     <p><span>Notes :</span> Aeque enim contingit omnibus fidibus, ut incontentae sint semper enim ex eo, quod maximas partes <a>details</a></p>
-                  </div>
-               </div>
+               <?php
+               }
+               ?>
             </div>
          </div>
       </div>
@@ -66,41 +58,30 @@ Squeedr
          <div class="row">
             <div class="col-xs-12">
                <div class="popupInside dashDateTime showMobile">
-                  <h3>Select Client</h3>
+                  <h3>Select Staff</h3>
                   <div class="mobile-control">
-                     <input type="radio" name="all" value="each time" />
+                     <!-- <input type="radio" name="all" value="all_client" checked="checked" />
                      <label>All Clients</label>
                      <div class="clearfix"></div>
-                     <div class="break20px"></div>
+                     <div class="break20px"></div> -->
                      <div class="input-group custom-group">
-                        <input class="form-control" type="text" onkeyup="searchFilter();" id="searchInput" placeholder="Select Clients by Name" />
-                        <span class="input-group-addon" onclick="searchFilter();"><img src="{{asset('public/assets/mobile/images/mobile-blue-search.png')}}"/> </span>
+                        <input class="form-control" type="text" placeholder="Select Staff by Name" id="booking_staff_filter" />
+                        <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-blue-search.png')}}"/> </span>
                      </div>
                      <div id="radioControl">
+                        <?php
+                        foreach ($staff_list as $key => $value)
+                        {
+                        ?>
                         <div class="radioEach">
-                           <input type="radio" name="staff" checked="checked" value="each time" />
-                           <label>Enrique J</label>
+                           <input type="radio" name="staff_id" value="<?=$value->staff_id;?>"  />
+                           <label><?=$value->full_name;?></label>
                            <div class="clearfix"></div>
                            <div class="break20px"></div>
                         </div>
-                        <div class="radioEach">
-                           <input type="radio" name="staff" value="each time" />
-                           <label>Sadie D</label>
-                           <div class="clearfix"></div>
-                           <div class="break20px"></div>
-                        </div>
-                        <div class="radioEach">
-                           <input type="radio" name="staff" value="each time" />
-                           <label>Tina D</label>
-                           <div class="clearfix"></div>
-                           <div class="break20px"></div>
-                        </div>
-                        <div class="radioEach">
-                           <input type="radio" name="staff" value="each time" />
-                           <label>Lucile M</label>
-                           <div class="clearfix"></div>
-                           <div class="break20px"></div>
-                        </div>
+                        <?php
+                        }
+                        ?>
                      </div>
                   </div>
                </div>
@@ -113,10 +94,5 @@ Squeedr
 
 
 @section('custom_js')
-<script type="text/javascript">
-$("#showpopup").on('click',function(e){
-   e.preventDefault();
-   $( "#popup" ).show();
-});
-</script>
+
 @endsection
