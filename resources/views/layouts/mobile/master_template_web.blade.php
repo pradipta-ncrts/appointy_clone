@@ -161,11 +161,13 @@
                 }
             });
             function ShowPopup(obj) {
+                alert('hii');
                 //$("#popup").fadeToggle();
                 $(obj).next("#popup").fadeToggle();
                 $(obj).toggleClass("rotatebtn");             
                 $("#blockDate").fadeOut('2000');
                 $("#blockTime").fadeOut('2000');
+                //$("#popup").fadeOut('2000');
                 $(".menuList").fadeIn('10');
             }
             function blockDate(){
@@ -175,6 +177,10 @@
             function blockTime(){
                 $(".menuList").fadeOut('fast');
                 $("#blockTime").fadeIn();
+            }
+            function popup(){
+                $(".menuList").fadeOut('fast');
+                $("#popup").fadeIn();
             }
             
             function activeColor(obj) {

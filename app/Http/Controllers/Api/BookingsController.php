@@ -1299,97 +1299,109 @@ class BookingsController extends ApiController {
         }
 
         //print_r($request->all()); die();
-
-        $filter_data = $request->input('filter_data');
-
-        //'in'=>array('grade_no'=>$garde_arr)
-
-        //appoinment data using id
-        if(!empty($filter_data))
+        $current_date = date('Y-m-d');
+        $duration = $request->input('duration');
+        if($duration=='day')
         {
-            $filter_data = explode(',', $filter_data);
+            $upto_date = strtotime($current_date);
+            $upto_date = date('Y-m-d', strtotime("+7 day", $upto_date));
             $appoinment_condition = array(
                 array('user_id', '=', $user_no),
-                'in'=>array('staff_id' => $filter_data)
+                array('date','>=',$current_date),
+                array('date','<=',$upto_date),
             );
-
-            $findCond = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-                'in'=>array('staff_id' => $filter_data)
+        }
+        else if($duration=='month')
+        {
+            $upto_date = strtotime($current_date);
+            $upto_date = date('Y-m-d', strtotime("+30 day", $upto_date));
+            $appoinment_condition = array(
+                array('user_id', '=', $user_no),
+                array('date','>=',$current_date),
+                array('date','<=',$upto_date),
             );
-
         }
         else
         {
             $appoinment_condition = array(
                 array('user_id', '=', $user_no),
             );
+        }
 
-            $findCond = array(
+        //appoinment data using id
+        /*$appoinment_condition = array(
+            array('user_id', '=', $user_no),
+            array('date','>=',$current_date),
+            array('date','<=',$upto_date),
+            'in'=>array('staff_id' => $filter_data)
+        );*/
+        
+        // Appoinment section //
+        $appoinment_fields = array('appointment_id', 'start_time', 'end_time', 'date','note');
+        $stuff_fields = array('full_name as staff_name');
+        $service_field = array('service_name', 'cost');
+        $currency_field = array('currency');
+        $client_field = array('client_name');
+
+        $joins = array(
+                    array(
+                        'join_table'=>$this->tableObj->tableNameStaff,
+                        //'join_table_alias'=>'invItemTb',
+                        'join_with'=>$this->tableObj->tableNameAppointment,
+                        'join_type'=>'left',
+                        'join_on'=>array('staff_id','=','staff_id'),
+                        'join_on_more'=>array(),
+                        'join_conditions' => array(array('is_deleted','=','0')),
+                        'select_fields' => $stuff_fields,
+                    ),
+                    array(
+                        'join_table'=>$this->tableObj->tableNameClient,
+                        //'join_table_alias'=>'invItemTb',
+                        'join_with'=>$this->tableObj->tableNameAppointment,
+                        'join_type'=>'left',
+                        'join_on'=>array('client_id','=','client_id'),
+                        'join_on_more'=>array(),
+                        'join_conditions' => array(array('is_deleted','=','0')),
+                        'select_fields' => $client_field,
+                    ),
+                    array(
+                        'join_table'=>$this->tableObj->tableUserService,
+                        //'join_table_alias'=>'invItemTb',
+                        'join_with'=>$this->tableObj->tableNameAppointment,
+                        'join_type'=>'left',
+                        'join_on'=>array('service_id','=','service_id'),
+                        'join_on_more'=>array(),
+                        'join_conditions' => array(array('is_deleted','=','0')),
+                        'select_fields' => $service_field,
+                    ),
+                    array(
+                        'join_table'=>$this->tableObj->tableNameCurrency,
+                        //'join_table_alias'=>'invItemTb',
+                        'join_with'=>$this->tableObj->tableUserService,
+                        'join_type'=>'left',
+                        'join_on'=>array('currency_id','=','currency_id'),
+                        'join_on_more'=>array(),
+                        'join_conditions' => array(array('is_deleted','=','0')),
+                        'select_fields' => $currency_field,
+                    ),
+        );
+        
+        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+
+        // Staff Section //
+        $findCond = array(
                 array('user_id','=',$user_no),
                 array('is_deleted','=','0'),
                 array('is_blocked','=','0'),
                 //'in' => array('')
             );
-        }
-
-
-        $filter_list_condition = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-        );
-        
-        // Appoinment section //
-        $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
-
-        $stuff_fields = array('full_name');
-
-        $joins = array(
-                    array(
-                    'join_table'=>$this->tableObj->tableNameStaff,
-                    //'join_table_alias'=>'invItemTb',
-                    'join_with'=>$this->tableObj->tableNameAppointment,
-                    'join_type'=>'left',
-                    'join_on'=>array('staff_id','=','staff_id'),
-                    'join_on_more'=>array(),
-                    'join_conditions' => array(array('is_deleted','=','0')),
-                    'select_fields' => $stuff_fields,
-                ),
-        );
-        
-        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
-        $appoinment_array = array();
-        foreach ($appoinment_list as $key => $value)
-        {
-            $appoinment_array[] = array(
-                    'service_name' => $value->full_name,
-                    'appointment_id' => $value->appointment_id,
-                    'start_date' => date('D d, M Y H:i:s e', strtotime($value->date.' '.$value->start_time)),
-                    'end_time' => date('D d, M Y H:i:s e', strtotime($value->date.' '.$value->end_time)),
-                    'colour_code' => $value->colour_code,
-                    'staff_id' => $value->staff_id,
-            );
-        }
-
-        // Staff Section //
         $selectFields = array('staff_id','full_name','email', 'staff_profile_picture');
         $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectFields);
-
-        // Staff Section for filter list//
-        $selectFieldsFilter = array('staff_id','full_name','email', 'staff_profile_picture');
-        $staff_list_filter = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$filter_list_condition,$selectFieldsFilter);
-
-
+    
 
         $response_data['staff_list'] = $staff_list;
-        $response_data['appoinment_list'] = $appoinment_array;
-        $response_data['staff_list_filter'] = $staff_list_filter;
-        //$response_data['calendar_settings'] = $calendar_settings;
-        $response_data['filter_data'] = $filter_data;
-        //$response_data['block_date_time'] = $block_date_array;
+        $response_data['appoinment_list'] = $appoinment_list;
+        $response_data['duration'] = $duration;
         $this->response_status='1';
         // generate the service / api response
         $this->json_output($response_data);

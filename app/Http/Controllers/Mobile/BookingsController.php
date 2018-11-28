@@ -20,7 +20,7 @@ class BookingsController extends ApiController {
 		parent::__construct($input);
 }
 
-	public function booking_list(Request $data)
+	public function booking_list(Request $data,$duration)
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -32,19 +32,21 @@ class BookingsController extends ApiController {
 		$post_data['page_no']=1;
 		$post_data['filter_data'] = '';
 
+		//echo $duration; die();
 		//filter staff
-		$filter_data = $data->input('appoinmnet_filter_stuff_id');
-		//print_r($filter_data); die();
+		/*$filter_data = $data->input('appoinmnet_filter_stuff_id');
 		if(!empty($filter_data))
 		{
 			$post_data['filter_data'] = implode(',', $filter_data);
-		}
+		}*/
+
+		$post_data['duration'] = $duration;
 		$data=array(
 			'appoinment_list'=>array(),
 			'authdata'=>$authdata
 		);
 		//print_r($post_data); die();
-		$url_func_name="appoinment_list";
+		$url_func_name="appoinment_list_mobile";
 		$return = $this->curl_call($url_func_name,$post_data);
 		
 		// Check response status. If success return data //		
@@ -53,13 +55,10 @@ class BookingsController extends ApiController {
 			if($return->response_status == 1)
 			{
 				$data['appoinment_list'] = $return->appoinment_list;
+				$data['duration'] = $duration;
 				$data['staff_list'] = $return->staff_list;
-				$data['staff_list_filter'] = $return->staff_list_filter;
-				$data['calendar_settings'] = $return->calendar_settings;
-				$data['filter_data'] = $return->filter_data;
-				$data['block_date_time'] = $return->block_date_time;
 			}
-			//echo '<pre>'; print_r($data['appoinment_list']); exit;
+			//echo '<pre>'; print_r($data); exit;
 			return view('mobile.booking.booking-list')->with($data);
 		}
 		else

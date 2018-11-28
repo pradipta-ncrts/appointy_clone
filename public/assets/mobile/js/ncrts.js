@@ -2902,4 +2902,13 @@ $(".choose-plan").on('click', (function() {
 }));
 
 //===============Plan Section ==========================================
+//===============Booking List filter
+$(document).ready(function(){
+  $("#booking_staff_filter").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".radioEach").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
 
