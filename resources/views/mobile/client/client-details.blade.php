@@ -6,7 +6,7 @@ Squeedr
 @section('content')
 <header class="mobileHeader showMobile" id="divBh">
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
- <h1>Client</h1>
+ <h1>Client Details</h1>
  <ul>
     <li>&nbsp;</li>
     <!-- <li><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></li>
@@ -27,32 +27,33 @@ Squeedr
              </div>
              <div id="openbox">
                 <ul>
-                   <li><a><i class="fa fa-user-plus" aria-hidden="true"></i> Invite</a></li>
-                   <li><a><i class="fa fa-share-alt" aria-hidden="true"></i> Share </a></li>
+                   <li><a id="invite" data-client-id="<?=$client_details->client_id;?>"><i class="fa fa-user-plus" aria-hidden="true"></i> Invite</a></li>
+                   <li><a><i class="fa fa-pencil" aria-hidden="true"></i> Edit </a></li>
                 </ul>
              </div>
-             <h4 class="text-center"> Latesha J</h4>
+             <h4 class="text-center"> <?=$client_details->client_name;?></h4>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/mobile.png')}}"/>
-             <label>802-438-0497</label>
+             <label><?=$client_details->client_mobile;?></label>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/>
-             <label>Jan 20, 1978</label>
+             <label><?=$client_details->client_dob=='0000-00-00' ? 'NIL' : date('M d, Y', strtotime($client_details->client_details));?></label>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/address.png')}}"/>
-             <label>Lauren Drive, Madison, WI 53705</label>
+             <label><?=$client_details->client_address ? $client_details->client_address : 'NIL';?></label>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/mail.png')}}"/>
-             <label>LateshaJ@gmail.com</label>
+             <label><?=$client_details->client_email;?></label>
           </div>
           <div class="whitebox cdDetails clearfix">
              <img src="{{asset('public/assets/mobile/images/customer-details/notes.png')}}"/>
-             <p>Aeque enim contingit omnibus fidibus, ut incontentae 
-                sint. Semper enim ex eo, quod maximas partes continet 
-                latissimeque funditur, tota res appellatur. <a>more</a>
+             <p><?=$client_details->client_note ? $client_details->client_note : 'NIL';?> <!-- <a>more</a> -->
              </p>
-             <p> 11:25 AM   May 8, 2018</p>
-             <label class="pull-right"><a href="{{url('mobile/client-booking-list/rajibjana')}}"> Bookings</a> </label>
+             <?php
+             $created_on = $client_details->created_on;
+             ?>
+             <p> <?=date("h:i A", strtotime($created_on));?>   <?=date("M d, Y", strtotime($created_on));?></p>
+             <label class="pull-right"><a href="{{url('mobile/client-booking-list/all')}}/<?=$client_details->client_id;?>"> Bookings</a> </label>
           </div>
           <div class="clearfix"></div>
           <div class="break20px"></div>
@@ -88,5 +89,45 @@ Squeedr
 
 
 @section('custom_js')
+<script type="text/javascript">
+$(document).on('click','#invite',function(e){
+    e.preventDefault();
+    var client_id = $(this).data('client-id');
+    //alert(client_id);
+    var data = addCommonParams([]);
+    data.push({name:'client_id', value:client_id});
 
+    swal({
+      text: "An invitation email will be sent to this client with an option to generate a new password. Would you like to send now?",
+      confirmButtonColor: '#3085d6',
+      //cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirm',
+      allowOutsideClick: false
+    }).then(function() {
+          $.ajax({
+            url: baseUrl2+"/api/send_reset_password_email", // Url to which the request is send
+            type: "POST", // Type of request to be send, called as method
+            data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+            dataType: "json",
+            success: function(response) // A function to be called if request succeeds
+            {
+                //console.log(response);
+                $('.animationload').hide();
+                if(response.result=='1')
+                {
+                    swal({title: "Success", text: response.message, type: "success"});
+                }
+                else
+                {
+                    swal("Error", response.message , "error");
+                }
+            },
+            beforeSend: function()
+            {
+                $('.animationload').show();
+            }
+        });
+    });
+});
+</script>
 @endsection

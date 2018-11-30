@@ -20,27 +20,31 @@ Squeedr
       </div>
       <div class="row showMobile break20px">
          <div class="col-xs-12">
+            <?php
+            foreach ($client_list as $key => $value)
+            {
+            ?>
             <div class="whitebox customers">
                <div class="customersLeft">
-                  <h3>Latesha J</h3>
+                  <h3><?=$value->client_name;?></h3>
                   <div class="cdetails">
                      <div>
                         <img src="{{asset('public/assets/mobile/images/customer-details/mobile.png')}}"/>
-                        <label>802-438-0497</label>
+                        <label><?=$value->client_mobile;?></label>
                      </div>
                      <div>
                         <img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/>
-                        <label>Jan 20, 1978</label>
+                        <label><?=$value->client_dob=='0000-00-00' ? 'NIL' : date('M d, Y', strtotime($value->client_dob));?></label>
                      </div>
                      <div>
                         <img src="{{asset('public/assets/mobile/images/customer-details/address.png')}}"/>
-                        <label>Lauren Drive, Madison, WI 53705</label>
+                        <label><?=$value->client_address;?></label>
                      </div>
                   </div>
                </div>
                <div class="customersRight">
                   <div>
-                     <a href="{{url('mobile/client-details/rajibjana')}}"><i class="fa fa-angle-right"></i></a>
+                     <a href="{{url('mobile/client-details')}}/<?=$value->client_id;?>"><i class="fa fa-angle-right"></i></a>
                   </div>
                   <div class="cunotes">
                      <!-- <img src="{{asset('public/assets/mobile/images/customer-details/black-notes.png')}}"/>
@@ -48,34 +52,9 @@ Squeedr
                   </div>
                </div>
             </div>
-            <div class="whitebox customers">
-               <div class="customersLeft">
-                  <h3>Latesha J</h3>
-                  <div class="cdetails">
-                     <div>
-                        <img src="{{asset('public/assets/mobile/images/customer-details/mobile.png')}}"/>
-                        <label>802-438-0497</label>
-                     </div>
-                     <div>
-                        <img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/>
-                        <label>Jan 20, 1978</label>
-                     </div>
-                     <div>
-                        <img src="{{asset('public/assets/mobile/images/customer-details/address.png')}}"/>
-                        <label>Lauren Drive, Madison, WI 53705</label>
-                     </div>
-                  </div>
-               </div>
-               <div class="customersRight">
-                  <div>
-                     <a href="{{url('mobile/client-details/rajibjana')}}"><i class="fa fa-angle-right"></i></a>
-                  </div>
-                  <div class="cunotes">
-                     <!-- <img src="{{asset('public/assets/mobile/images/customer-details/black-notes.png')}}"/>
-                     <label>Notes</label> -->
-                  </div>
-               </div>
-            </div>
+            <?php
+            }
+            ?>
          </div>
       </div>
    </div>
