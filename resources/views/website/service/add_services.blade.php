@@ -106,10 +106,20 @@ Squeedr
                                  <?php if(!empty($category_list)){ foreach($category_list as $category){ ?>
                                   <option value="<?php echo $category->category_id;?>"><?php echo $category->category;?></option>
                                 <?php } } ?>
+                                <option value="new">New Category </option>
                               </select>
                            </div>
                            <div class="clearfix"></div>
                            <div class="break10px"></div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 new-category-name" style="display: none;">
+                                <label for="new_category_name">Category Name</label>
+                                <input class="form-control" type="text" name="new_category_name" id="new_category_name" />
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                            <div class="break10px"></div>
+
                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <label for="service_color">Select Color <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Enter a name of your service." data-placement="right"></i> </label>
                                 <input type="text" name="togglePaletteOnly" id="togglePaletteOnly" style="display:none;">
@@ -135,82 +145,82 @@ Squeedr
 @section('custom_js')
 <script src="{{asset('public/assets/website/js/spectrum.js')}}"></script>
 <script>
-  $('#add_service').validate({
-      rules: {
-          service_name: {
-              required: true
-          },
-          service_currency: {
-              required: true
-          },
-          service_price: {
-              required: true,
-              number: true
-          },
-          service_link: {
-              required: true
-          },
-          service_category: {
-              required: true
-          }
-      },
+    $('#add_service').validate({
+        rules: {
+            service_name: {
+                required: true
+            },
+            service_currency: {
+                required: true
+            },
+            service_price: {
+                required: true,
+                number: true
+            },
+            service_link: {
+                required: true
+            },
+            service_category: {
+                required: true
+            }
+        },
 
-      messages: {
-          service_name: {
-              required: 'Please enter service name'
-          },
-          service_currency: {
-              required: 'Please choose currency'
-          },
-          service_price: {
-              required: 'Please enter price',
-              number: 'Please enter proper price'
-          },
-          service_link: {
-              required: 'Please enter service link'
-          },
-          service_category: {
-              required: 'Please choose category'
-          }
-      },
+        messages: {
+            service_name: {
+                required: 'Please enter service name'
+            },
+            service_currency: {
+                required: 'Please choose currency'
+            },
+            service_price: {
+                required: 'Please enter price',
+                number: 'Please enter proper price'
+            },
+            service_link: {
+                required: 'Please enter service link'
+            },
+            service_category: {
+                required: 'Please choose category'
+            }
+        },
 
-      submitHandler: function(form) {
-        var data = $(form).serializeArray();
-        //data.push({name: 'device_type', value: 1});
-        data = addCommonParams(data);
-        $.ajax({
-            url: form.action,
-            type: form.method,
-            data:data ,
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-                if(response.response_status==1)
-                {
-                    if(response.service_id != ''){
-                       var url = "{{url('/edit_service/')}}"+'/'+response.service_id;
-                       window.location.href = url; 
-                    } else {
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    if(response.response_status==1)
+                    {
+                        if(response.service_id != ''){
+                        var url = "{{url('/edit_service/')}}"+'/'+response.service_id;
+                        window.location.href = url; 
+                        } else {
+                            swal('Sorry!',response.message,'error');
+                        }
+                    }
+                    else{
                         swal('Sorry!',response.message,'error');
                     }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
                 }
-                else{
-                    swal('Sorry!',response.message,'error');
-                }
-            },
+            });
+        }
+    });
 
-            beforeSend: function(){
-                $('.animationload').show();
-            },
-
-            complete: function(){
-                $('.animationload').hide();
-            }
-        });
-      }
-  });
-
-  $("#togglePaletteOnly").spectrum({
+    $("#togglePaletteOnly").spectrum({
         showPaletteOnly: true,
         togglePaletteOnly: true,
         hideAfterPaletteSelect:true,
@@ -232,6 +242,20 @@ Squeedr
     $("#togglePaletteOnly").on('change.spectrum', function(e, tinycolor) {
         var hexcolor = tinycolor.toHexString();
         $('#service_color').val(hexcolor);
+    });
+
+    $(document).on('change','#service_category',function() {
+        let val = $(this).val();
+        //alert(val);
+        if(val=="new")
+        {
+            $(".new-category-name").show();
+        }
+        else
+        {
+            $(".new-category-name").hide();
+            $('#new_category_name').val('');
+        }
     });
 </script>
 @endsection
