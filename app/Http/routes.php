@@ -54,6 +54,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/add-new-service', 'Api\UsersController@add_new_service');
     Route::post('/update-service', 'Api\UsersController@update_service');
     Route::post('/update-service-duration', 'Api\UsersController@update_service_duration');
+    Route::post('/update-service-payment', 'Api\UsersController@update_service_payment');
+    Route::post('/update-service-confirmation', 'Api\UsersController@update_service_confirmation');
     Route::post('/add-invitee-question', 'Api\UsersController@add_invitee_question');
     Route::post('/payment_terms', 'Api\UsersController@payment_terms');
     Route::post('/service-details', 'Api\UsersController@service_details');

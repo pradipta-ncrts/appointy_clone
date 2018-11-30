@@ -452,36 +452,64 @@ Squeedr
                      </div>
                   </div>
                   <div class="headRow whitebox  dsinside padding10px clearfix">
+                    <form name="service_confirmation_form" id="service_confirmation_form" method="post" action="{{url('api/update-service-confirmation')}}">
+                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
                      <div class="form-details">
                         <div class="col-lg-6 col-md-6 col-sm-6 row">
                            <label for="Name">On confirmation <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="By default, service details will be displayed on a Squdeer hosted confirmation page after services are scheduled. Alternatively, you can choose to automatically redirect your invitees to an external URL upon confirmation."></i> </label>
                            <div class="form-inline break10px">
-                              <select>
-                                 <option>Display Squeedr confirmation page</option>
-                                 <option>Redirect to an external site</option>
+                              <select name="redirect_type" id="redirect_type">
+                                 <option value="1" <?php if($service_details->redirect_type == 1) { ?> selected="selected" <?php } ?>>Display Squeedr confirmation page</option>
+                                 <option value="2" <?php if($service_details->redirect_type == 2) { ?> selected="selected" <?php } ?>>Redirect to an external site</option>
                               </select>
                            </div>
                         </div>
                         <div class="clearfix"></div>
-                        <label for="Name">Display button to schedule another service? <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Direct your invitee back to your website or make it easy for them to schedule recurring services by adding a link to your service confirmation page."></i> </label>
-                        <div class="form-inline break10px">
-                           <input class="form-control nomarginbottom" disabled="disabled" type="text" />
-                           <a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a> 
+
+                        <div id="redirect_squdeer_section" <?php if($service_details->redirect_type == 2) { ?> style="display:none;"<?php } ?> >
+                            <label for="Name">Display button to schedule another service? <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Direct your invitee back to your website or make it easy for them to schedule recurring services by adding a link to your service confirmation page."></i> </label>
+                            <div class="form-inline break10px">
+                            <input class="form-control" type="text" name="display_button_name" id="display_button_name" <?php if($service_details->display_button_name != '') { ?> value = "{{$service_details->display_button_name}}" <?php } else { ?> value="" disabled="disabled" <?php } ?> />
+                            <button type="button" id="change_display_button" class="btn btn-sm btn-toggle <?php if($service_details->display_button_name != '') { echo 'active'; } ?>" data-toggle="button" aria-pressed="false" autocomplete="off" >
+                              <div class="handle"></div>
+                            </button>
+                            </div>
+                            <p class="footnote">Use this section to display custom links after this Service is confirmed.</p>
+                            <div class="alert alert-info alert-custom"> Custom links is a premium feature Upgrade your account</div>
+                            <a class="btn btn-info break20px" id="add_custom_link">Add Custom Link</a>
+                            <div class="clearfix"></div>
+                            <div id="add_custom_link_section" style="display: none;">
+                                <label for="add_link" class="break10px">Add Link </label>
+                                <div class="form-inline break10px form-details">
+                                    <input class="form-control nomarginbottom"  type="text" name="custom_button_name" id="custom_button_name" placeholder="Your Custom Link" <?php if($service_details->custom_button_name != '') { ?> value = "{{$service_details->custom_button_name}}" <?php } ?> />
+                                    <!--<button type="button" id="change_custom_button" class="btn btn-sm btn-toggle" data-toggle="button" aria-pressed="false" autocomplete="off" >
+                                        <div class="handle"></div>
+                                    </button>-->
+                                    <br>
+                                    <br>
+                                    <input class="form-control nomarginbottom"  type="text" name="custom_url" id="custom_url" placeholder="https://www.example.com" <?php if($service_details->custom_url != '') { ?> value = "{{$service_details->custom_url}}" <?php } ?> />
+                                </div>
+                                <a class="btn btn-info break20px" id="submit_custom_link">Add</a>
+                                <a class="btn btn-default break20px" id="cancel_custom_link">Cancel</a>
+                            </div>
                         </div>
+
+                        <div id="redirect_external_section" <?php if($service_details->redirect_type == 1) { ?> style="display:none;" <?php } ?>>
+                            <p class="footnote">Redirect is a Pro Feature. Upgrade your account to redirect after confirmation.</p>
+                            <div class="clearfix"></div>
+                            <label for="redirect_url" class="break10px">Redirect URL </label>
+                            <div class="form-inline break10px form-details">
+                                <input class="form-control nomarginbottom"  type="text" name="redirect_url" id="redirect_url" placeholder="https://www.example.com" <?php if($service_details->redirect_url != '') { ?> value = "{{$service_details->redirect_url}}" <?php } ?>/>
+                            </div>
+                        </div>
+
                      </div>
-                     <p class="footnote">Use this section to display custom links after this Service is confirmed.</p>
-                     <div class="alert alert-info alert-custom"><span class="text-warning"> Custom links is a premium feature</span><a> Upgrade your account</a></div>
-                     <a class="btn btn-info break20px">Add Custom Link</a>
-                     <div class="clearfix"></div>
-                     <label for="Name" class="break10px">Add Link </label>
-                     <div class="form-inline break10px form-details">
-                        <input class="form-control nomarginbottom"  type="text" />
-                        <a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off" ></i></a> 
-                     </div>
+                     
                      <div class="text-right break20px">
-                        <input type="submit" class="btn btn-grey" value="Cancel" />
+                        <input type="button" class="btn btn-grey" value="Cancel" />
                         <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                      </div>
+                    </form>
                   </div>
                </div>
                <div class=" break20px hidden-xs"></div>
@@ -497,23 +525,26 @@ Squeedr
                      </div>
                   </div>
                   <div class="headRow whitebox  dsinside p clearfix">
-                     <div class="alert alert-info alert-custom"> Payments is a pro Feature. <a>Upgrade your account</a> to add payments to this Service </div>
-                     <div class="break20px"></div>
-                     <div class="form-group">
-                        <input type="radio" checked="checked" name="payment" value="nopayment" />
-                        <label class="right35px">Do not collect payments for this service</label>
-                        <div class="clearfix break10px"></div>
-                        <input type="radio" name="payment" value="stripe" />
-                        <label class="right35px">Accept payment with stripe</label>
-                        <div class="clearfix break10px"></div>
-                        <input type="radio" name="payment" value="paypal" />
-                        <label class="right35px">Accept payments with PayPal</label>
-                     </div>
-                     <div class="break20px"></div>
-                     <div class="text-right break20px">
-                        <input type="submit" class="btn btn-grey" value="Cancel" />
-                        <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
-                     </div>
+                    <form name="service_payment_form" id="service_payment_form" method="post" action="{{url('api/update-service-payment')}}">
+                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
+                        <div class="alert alert-info alert-custom"> Payments is a pro Feature. <a>Upgrade your account</a> to add payments to this Service </div>
+                        <div class="break20px"></div>
+                        <div class="form-group">
+                            <input type="radio" name="payment_method" <?php if($service_details->payment_method == 1) { ?> checked="checked" <?php } ?> value="1" />
+                            <label class="right35px">Do not collect payments for this service</label>
+                            <div class="clearfix break10px"></div>
+                            <input type="radio" name="payment_method" <?php if($service_details->payment_method == 3) { ?> checked="checked" <?php } ?> value="3" />
+                            <label class="right35px">Accept payment with stripe</label>
+                            <div class="clearfix break10px"></div>
+                            <input type="radio" name="payment_method" <?php if($service_details->payment_method == 2) { ?> checked="checked" <?php } ?> value="2" />
+                            <label class="right35px">Accept payments with PayPal</label>
+                        </div>
+                        <div class="break20px"></div>
+                        <div class="text-right break20px">
+                            <input type="button" class="btn btn-grey" value="Cancel" />
+                            <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
+                        </div>
+                    <form>
                   </div>
                </div>
                <?php } ?>
@@ -643,312 +674,400 @@ Squeedr
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
-  $('#edit_service').validate({
-      rules: {
-          service_name: {
-              required: true
-          },
-          service_currency: {
-              required: true
-          },
-          service_price: {
-              required: true,
-              number: true
-          },
-          service_link: {
-              required: true
-          },
-          service_category: {
-              required: true
-          }
-      },
+    $('#edit_service').validate({
+        rules: {
+            service_name: {
+                required: true
+            },
+            service_currency: {
+                required: true
+            },
+            service_price: {
+                required: true,
+                number: true
+            },
+            service_link: {
+                required: true
+            },
+            service_category: {
+                required: true
+            }
+        },
 
-      messages: {
-          service_name: {
-              required: 'Please enter service name'
-          },
-          service_currency: {
-              required: 'Please choose currency'
-          },
-          service_price: {
-              required: 'Please enter price',
-              number: 'Please enter proper price'
-          },
-          service_link: {
-              required: 'Please enter service link'
-          },
-          service_category: {
-              required: 'Please choose category'
-          }
-      },
+        messages: {
+            service_name: {
+                required: 'Please enter service name'
+            },
+            service_currency: {
+                required: 'Please choose currency'
+            },
+            service_price: {
+                required: 'Please enter price',
+                number: 'Please enter proper price'
+            },
+            service_link: {
+                required: 'Please enter service link'
+            },
+            service_category: {
+                required: 'Please choose category'
+            }
+        },
 
-      submitHandler: function(form) {
-        var data = $(form).serializeArray();
-        //data.push({name: 'device_type', value: 1});
-        data = addCommonParams(data);
-        $.ajax({
-            url: form.action,
-            type: form.method,
-            data:data ,
-            dataType: "json",
-            success: function(response) {
-                console.log(response);
-                if(response.response_status==1)
-                {
-                    if(response.service_id != ''){
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    if(response.response_status==1)
+                    {
+                        if(response.service_id != ''){
+                            var url = "{{url('/edit_service/'.$request_data)}}";
+                            window.location.href = url;
+                        } else {
+                            swal('Sorry!',response.message,'error');
+                        }
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        }
+    });
+
+    $('#servie_duration_form').validate({
+        rules: {
+            service_duration: {
+                required: true,
+                min: 1,
+            }
+        },
+
+        messages: {
+            service_duration: {
+                required: 'Please select service duration',
+                min: 'Please enter value',
+            }
+        },
+
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    //console.log(response);
+                    if(response.response_status==1)
+                    {
+                        if(response.service_id != ''){
                         var url = "{{url('/edit_service/'.$request_data)}}";
-                        window.location.href = url;
-                    } else {
+                        window.location.href = url; 
+                        } else {
+                            swal('Sorry!',response.message,'error');
+                        }
+                    }
+                    else{
                         swal('Sorry!',response.message,'error');
                     }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
                 }
-                else{
-                    swal('Sorry!',response.message,'error');
-                }
-            },
-
-            beforeSend: function(){
-                $('.animationload').show();
-            },
-
-            complete: function(){
-                $('.animationload').hide();
-            }
-        });
-      }
-  });
-
-  $('#servie_duration_form').validate({
-      rules: {
-          service_duration: {
-              required: true,
-              min: 1,
-          }
-      },
-
-      messages: {
-          service_duration: {
-              required: 'Please select service duration',
-              min: 'Please enter value',
-          }
-      },
-
-      submitHandler: function(form) {
-        var data = $(form).serializeArray();
-        //data.push({name: 'device_type', value: 1});
-        data = addCommonParams(data);
-        $.ajax({
-            url: form.action,
-            type: form.method,
-            data:data ,
-            dataType: "json",
-            success: function(response) {
-                //console.log(response);
-                if(response.response_status==1)
-                {
-                    if(response.service_id != ''){
-                       var url = "{{url('/edit_service/'.$request_data)}}";
-                       window.location.href = url; 
-                    } else {
-                        swal('Sorry!',response.message,'error');
-                    }
-                }
-                else{
-                    swal('Sorry!',response.message,'error');
-                }
-            },
-
-            beforeSend: function(){
-                $('.animationload').show();
-            },
-
-            complete: function(){
-                $('.animationload').hide();
-            }
-        });
-      }
-  });
-
-  $('#add_invitee_question_form').validate({
-      rules: {
-        question: {
-            required: true
+            });
         }
-      },
+    });
 
-      messages: {
-        question: {
-            required: 'Please select service duration'
-        }
-      },
+    $('#service_confirmation_form').validate({
+        rules: {
+            redirect_url: {
+                required : function () {
+                                return $("#redirect_type").val() == '2';
+                            }
+            }
+        },
 
-      submitHandler: function(form) {
-        var data = $(form).serializeArray();
-        //data.push({name: 'device_type', value: 1});
-        data = addCommonParams(data);
-        $.ajax({
-            url: form.action,
-            type: form.method,
-            data:data ,
-            dataType: "json",
-            success: function(response) {
-                //console.log(response);
-                if(response.response_status==1)
-                {
-                    if(response.service_id != ''){
-                       var url = "{{url('/edit_service/'.$request_data)}}";
-                       window.location.href = url; 
-                    } else {
+        messages: {
+            redirect_url: {
+                required: 'Please enter redirect URL',
+            }
+        },
+
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    //console.log(response);
+                    if(response.response_status==1)
+                    {
+                        if(response.service_id != ''){
+                        var url = "{{url('/edit_service/'.$request_data)}}";
+                        window.location.href = url; 
+                        } else {
+                            swal('Sorry!',response.message,'error');
+                        }
+                    }
+                    else{
                         swal('Sorry!',response.message,'error');
                     }
-                }
-                else{
-                    swal('Sorry!',response.message,'error');
-                }
-            },
+                },
 
-            beforeSend: function(){
-                $('.animationload').show();
-            },
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
 
-            complete: function(){
-                $('.animationload').hide();
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        }
+    });
+
+    $('#service_payment_form').validate({
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    //console.log(response);
+                    if(response.response_status==1)
+                    {
+                        if(response.service_id != ''){
+                        var url = "{{url('/edit_service/'.$request_data)}}";
+                        window.location.href = url; 
+                        } else {
+                            swal('Sorry!',response.message,'error');
+                        }
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        }
+    });
+
+    $('#add_invitee_question_form').validate({
+        rules: {
+            question: {
+                required: true
             }
-        });
-      }
-  });
+        },
 
-  $("#togglePaletteOnly").spectrum({
-        showPaletteOnly: true,
-        togglePaletteOnly: true,
-        hideAfterPaletteSelect:true,
-        togglePaletteMoreText: 'more',
-        togglePaletteLessText: 'less',
-        color: '{{$service_details->color}}',
-        palette: [
-            ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
-            ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
-            ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
-            ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
-            ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
-            ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
-            ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
-            ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
-        ]
-  });
+        messages: {
+            question: {
+                required: 'Please select service duration'
+            }
+        },
 
-  $("#togglePaletteOnly").on('change.spectrum', function(e, tinycolor) {
-      var hexcolor = tinycolor.toHexString();
-      $('#service_color').val(hexcolor);
-  });
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    //console.log(response);
+                    if(response.response_status==1)
+                    {
+                        if(response.service_id != ''){
+                        var url = "{{url('/edit_service/'.$request_data)}}";
+                        window.location.href = url; 
+                        } else {
+                            swal('Sorry!',response.message,'error');
+                        }
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
 
-  $('.duration').click(function(){
-    var duration = $(this).data('duration');
-    $('.duration').removeClass('active');
-    $(this).addClass('active');
-    $('#service_duration').val(duration);
-    $('#custom_duration').val('');
-  });
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
 
-  $('#custom_duration').keyup(function(){
-    $('#service_duration').val($(this).val());
-  });
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        }
+    });
+
+    $("#togglePaletteOnly").spectrum({
+            showPaletteOnly: true,
+            togglePaletteOnly: true,
+            hideAfterPaletteSelect:true,
+            togglePaletteMoreText: 'more',
+            togglePaletteLessText: 'less',
+            color: '{{$service_details->color}}',
+            palette: [
+                ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
+                ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
+                ["#f4cccc","#fce5cd","#fff2cc","#d9ead3","#d0e0e3","#cfe2f3","#d9d2e9","#ead1dc"],
+                ["#ea9999","#f9cb9c","#ffe599","#b6d7a8","#a2c4c9","#9fc5e8","#b4a7d6","#d5a6bd"],
+                ["#e06666","#f6b26b","#ffd966","#93c47d","#76a5af","#6fa8dc","#8e7cc3","#c27ba0"],
+                ["#c00","#e69138","#f1c232","#6aa84f","#45818e","#3d85c6","#674ea7","#a64d79"],
+                ["#900","#b45f06","#bf9000","#38761d","#134f5c","#0b5394","#351c75","#741b47"],
+                ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]
+            ]
+    });
+
+    $("#togglePaletteOnly").on('change.spectrum', function(e, tinycolor) {
+        var hexcolor = tinycolor.toHexString();
+        $('#service_color').val(hexcolor);
+    });
+
+    $('.duration').click(function(){
+        var duration = $(this).data('duration');
+        $('.duration').removeClass('active');
+        $(this).addClass('active');
+        $('#service_duration').val(duration);
+        $('#custom_duration').val('');
+    });
+
+    $('#custom_duration').keyup(function(){
+        $('#service_duration').val($(this).val());
+    });
 
 
-  $(function() {
-    $('#date_range_section').hide(); 
-    $('#service_schedule_type').change(function(){
-        if($('#service_schedule_type').val() == '1') {
-            $('#rolling_date_section').show(); 
-            $('#date_range_section').hide();
-        } else if($('#service_schedule_type').val() == '2') {
+    $(function() {
+        $('#date_range_section').hide(); 
+        $('#service_schedule_type').change(function(){
+            if($('#service_schedule_type').val() == '1') {
+                $('#rolling_date_section').show(); 
+                $('#date_range_section').hide();
+            } else if($('#service_schedule_type').val() == '2') {
+                $('#rolling_date_section').hide(); 
+                $('#date_range_section').show(); 
+            } else {
             $('#rolling_date_section').hide(); 
-            $('#date_range_section').show(); 
-        } else {
-          $('#rolling_date_section').hide(); 
-          $('#date_range_section').hide();
-        }
-    });
-
-    $('input[name="date_range"]').daterangepicker();
-
-
-    $('#answer_type').change(function(){
-        if($('#answer_type').val() == '3') {
-            $('#answer_text').html('<small>Invitee can select one of the following:</small>');
-            $('#multiple_options').show();
-        } else if($('#answer_type').val() == '4'){
-            $('#answer_text').html('<small>Invitee can select one or many of the following:</small>');
-            $('#multiple_options').show();
-        } else {
-            $('#multiple_options').hide();
-        }
-    });
-
-  });
-
-  $('#daterangeModaledit').on('hidden.bs.modal', function () {
-      $(this).find('form').trigger('reset');
-      $('#rolling_date_section').show(); 
-      $('#date_range_section').hide();
-  });
-
-  $('#change-secret').click(function(){
-      var ariapressed = $(this).attr('aria-pressed');
-      if(ariapressed === 'false'){
-        $('#is_secret').val('1');
-      } else {
-        $('#is_secret').val('0');
-      }
-  });
-
-
-  $('#isBlocked').click(function(){
-      var ariapressed = $(this).attr('aria-pressed');
-      if(ariapressed === 'false'){
-        $('#is_question_active').val('1');
-      } else {
-        $('#is_question_active').val('0');
-      }
-  });
-
-  $(document).ready(function(){
-
-        var counter = 2;
-       
-        $("#addButton").click(function () {
-       // alert(counter);   
-        counter++;
-        $('#removeButton').show();
-            if(counter==10){
-                $('#addButton').hide();
-            } 
-               
-            var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
-            newTextBoxDiv.after().html('<div class="form-group"><input name="answers[]" id="answer'+counter+'" class="form-control" type="text" value="" placeholder="Answer '+counter+'" ></div>');
-           
-            newTextBoxDiv.appendTo("#TextBoxesGroup");
-               
-           $('#count').val(counter);
-        });
-
-        $("#removeButton").click(function () {
-        //alert(counter);
-             if(counter==10)
-            {
-                $('#addButton').show();
-            }  
-            $("#TextBoxDiv" + counter).remove();
-           
-             if(counter==3){
-             $("#TextBoxDiv" + counter).remove();
-            $('#removeButton').hide();
+            $('#date_range_section').hide();
             }
-            counter--;
-             $('#count').val(counter);
         });
-               
-  });
+
+        $('input[name="date_range"]').daterangepicker();
+
+
+        $('#answer_type').change(function(){
+            if($('#answer_type').val() == '3') {
+                $('#answer_text').html('<small>Invitee can select one of the following:</small>');
+                $('#multiple_options').show();
+            } else if($('#answer_type').val() == '4'){
+                $('#answer_text').html('<small>Invitee can select one or many of the following:</small>');
+                $('#multiple_options').show();
+            } else {
+                $('#multiple_options').hide();
+            }
+        });
+
+    });
+
+    $('#daterangeModaledit').on('hidden.bs.modal', function () {
+        $(this).find('form').trigger('reset');
+        $('#rolling_date_section').show(); 
+        $('#date_range_section').hide();
+    });
+
+    $('#change-secret').click(function(){
+        var ariapressed = $(this).attr('aria-pressed');
+        if(ariapressed === 'false'){
+            $('#is_secret').val('1');
+        } else {
+            $('#is_secret').val('0');
+        }
+    });
+
+
+    $('#isBlocked').click(function(){
+        var ariapressed = $(this).attr('aria-pressed');
+        if(ariapressed === 'false'){
+            $('#is_question_active').val('1');
+        } else {
+            $('#is_question_active').val('0');
+        }
+    });
+
+    $(document).ready(function(){
+
+            var counter = 2;
+        
+            $("#addButton").click(function () {
+        // alert(counter);   
+            counter++;
+            $('#removeButton').show();
+                if(counter==10){
+                    $('#addButton').hide();
+                } 
+                
+                var newTextBoxDiv = $(document.createElement('div')).attr("id", 'TextBoxDiv' + counter);
+                newTextBoxDiv.after().html('<div class="form-group"><input name="answers[]" id="answer'+counter+'" class="form-control" type="text" value="" placeholder="Answer '+counter+'" ></div>');
+            
+                newTextBoxDiv.appendTo("#TextBoxesGroup");
+                
+            $('#count').val(counter);
+            });
+
+            $("#removeButton").click(function () {
+            //alert(counter);
+                if(counter==10)
+                {
+                    $('#addButton').show();
+                }  
+                $("#TextBoxDiv" + counter).remove();
+            
+                if(counter==3){
+                $("#TextBoxDiv" + counter).remove();
+                $('#removeButton').hide();
+                }
+                counter--;
+                $('#count').val(counter);
+            });
+                
+    });
 
     $(document).on('change','#service_category',function() {
         let val = $(this).val();
@@ -963,6 +1082,56 @@ Squeedr
             $('#new_category_name').val('');
         }
     });
+
+    $(document).on('change','#redirect_type',function() {
+        let val = $(this).val();
+        //alert(val);
+        if(val=="1")
+        {
+            $("#redirect_squdeer_section").show();
+            $("#redirect_external_section").hide();
+            $('#display_button_name').val('');
+            $('#display_button_name').prop( "disabled", true );
+            $('#change_display_button').removeClass('active');
+            $('#redirect_url').val('');
+            $('#custom_button_name').val('');
+            $('#custom_url').val('');
+
+        }
+        else
+        {
+            $("#redirect_squdeer_section").hide();
+            $("#redirect_external_section").show();
+            $('#display_button_name').val('');
+            $('#display_button_name').prop( "disabled", true );
+            $('#change_display_button').removeClass('active');
+            $('#redirect_url').val('');
+            $('#custom_button_name').val('');
+            $('#custom_url').val('');
+        }
+    });
+
+    $('#add_custom_link').click(function(){
+        $('#add_custom_link').hide();
+        $('#add_custom_link_section').show();
+    });
+
+    $('#cancel_custom_link').click(function(){
+        $('#add_custom_link').show();
+        $('#add_custom_link_section').hide();
+    });
+
+    $('#change_display_button').click(function(){
+      var ariapressed = $(this).attr('aria-pressed');
+      if(ariapressed === 'false'){
+        $('#display_button_name').val('Schedule another service');
+        $('#display_button_name').prop( "disabled", false );
+      } else {
+        $('#display_button_name').val('');
+        $('#display_button_name').prop( "disabled", true );
+      }
+    });
+
 
 </script>
 @endsection

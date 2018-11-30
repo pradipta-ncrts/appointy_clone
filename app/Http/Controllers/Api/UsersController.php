@@ -1555,6 +1555,64 @@ class UsersController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+	public function update_service_payment(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$service_id = $request->input('service_id');
+		$payment_method = $request->input('payment_method');
+
+		$updateData = array(
+				'payment_method' => $payment_method
+		);
+
+		$updateCond=array(
+						array('service_id','=',$service_id),
+						array('is_deleted','=',0)
+					);
+
+		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
+
+
+		$this->response_status='1';
+		$this->response_message="Service updated successfully.";
+
+		$this->json_output($response_data);
+	}
+
+	public function update_service_confirmation(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$service_id = $request->input('service_id');
+		$redirect_type = $request->input('redirect_type');
+		$display_button_name = $request->input('display_button_name');
+		$custom_button_name = $request->input('custom_button_name');
+		$custom_url = $request->input('custom_url');
+		$redirect_url = $request->input('redirect_url');
+
+		$updateData = array(
+				'redirect_type' => $redirect_type,
+				'redirect_url' => $redirect_url,
+				'display_button_name' => $display_button_name,
+				'custom_button_name' => $custom_button_name,
+				'custom_url' => $custom_url,
+		);
+
+		$updateCond=array(
+						array('service_id','=',$service_id),
+						array('is_deleted','=',0)
+					);
+
+		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
+
+		$this->response_status='1';
+		$this->response_message="Service updated successfully.";
+
+		$this->json_output($response_data);
+	}
+
+
 	public function add_invitee_question(Request $request){
 		$response_data=array();
 		$this->validate_parameter(1);
