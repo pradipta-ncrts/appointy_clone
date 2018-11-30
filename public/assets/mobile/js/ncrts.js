@@ -2912,3 +2912,62 @@ $(document).ready(function(){
   });
 });
 
+$(".staff_id").on('click', (function() {
+    //e.preventDefault();
+    var staff_id = $(this).val();
+    var duration = $(this).data('duration');
+    var data = addCommonParams([]);
+    data.push({ name:'staff_id', value:staff_id }, { name:'duration', value:duration });
+    //console.log(data);
+    $.ajax({
+          url: baseUrl2+"/api/appoinment_list_mobile", // Url to which the request is send
+          type: "POST", // Type of request to be send, called as method
+          data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+          dataType: "json",
+          success: function(response) // A function to be called if request succeeds
+          {
+              //console.log(response);
+              //alert(response.response_status);
+              var html = '';
+              if(response.response_status=='1')
+              {
+                  if(response.appoinment_list.length>0)
+                  {
+                      for(i = 0;i<response.appoinment_list.length;i++)
+                      {
+                          var d = new Date(response.appoinment_list[i].date);
+                          var curr_date = d.getDate();
+                          var curr_month = d.getMonth();
+                          var curr_year = d.getFullYear();
+                          var day = d.getDay();
+                          var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                          var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                          html += '<div class="bluebg break20px namedate"><span>'+weekday[day]+' ,'+monthNames[curr_month]+' '+curr_date+' ,'+curr_year+'</span><span>'+response.appoinment_list[i].client_name+'</span></div><div class="whitebox border-box"><div class="staffDetail"><span><label>With</label>'+response.appoinment_list[i].staff_name+'</span><p>'+response.appoinment_list[i].start_time+' - '+response.appoinment_list[i].end_time+'</p><span class="bluetxt">'+response.appoinment_list[i].currency + response.appoinment_list[i].cost+'</span></div><div class="staffInside"><h6>'+response.appoinment_list[i].service_name+'</h6><p><span>Notes :</span>'+response.appoinment_list[i].note+' <!-- <a>more</a> --></p></div></div>';
+                      }
+                  }
+                  else
+                  {
+                      html += '<div class="bluebg break20px namedate">No data found.</div>';
+                  }
+                  $('#filter_data').html(html);
+                  $('.animationload').hide();
+                  $('#popup').hide();
+              }
+              else
+              {
+                  swal("Error", "Somthing wrong try again later." , "error");
+              }
+          },
+          beforeSend: function()
+          {
+              $('.animationload').show();
+          },
+          complete: function()
+          {
+              //$('.animationload').hide();
+          }
+      });
+
+    
+}));
+

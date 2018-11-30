@@ -19,7 +19,7 @@
       <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
       <link rel="stylesheet" href="{{asset('public/assets/website/css/bootstrap-timepicker.min.css')}}" />
       <link href="{{asset('public/assets/mobile/css/ncrts.css')}}" rel="stylesheet">
-      <!-- <link href="{{asset('public/assets/mobile/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet"> -->
+      <link href="{{asset('public/assets/mobile/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.2/sweetalert2.css" rel="stylesheet">
       <script type="text/javascript">
           var authDatas={user_no:0}; 
@@ -75,7 +75,7 @@
                             <div class="break20px"></div>
                             <h6>Block For</h6>
                             <div class="break10px"></div>
-                            <input class="form-control nice-select" type="text" placeholder="All Staff" data-target="#staffListModal1" data-toggle="modal"/>
+                            <input class="form-control nice-select" type="text" placeholder="All Staff" />
                             </div>
                             <a class="btn btn-block btn-mobile break10px">Block</a>
                         </div>
@@ -83,29 +83,6 @@
                 </div>
                 </div>
             </div>
-
-
-
-<div id="stafflm" class="showMobile">
-                <div class="container-fluid">
-                <div class="row">
-                    <div class="col-xs-10 col-xs-offset-1">
-                        <div class="popupInside dashDateTime showMobile">
-                            <h3>Staff List</h3>
-                            <div class="mobile-control">
-                           
-                           
-                            </div>
-                            <a class="btn btn-block btn-mobile break10px">Cancel</a>
-                        </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-
-
-
-
             <div id="blockTime" class="showMobile">
                 <div class="container-fluid">
                 <div class="row">
@@ -144,7 +121,7 @@
                             <div class="break20px"></div>
                             <h6>Block For</h6>
                             <div class="break10px"></div>
-                            <div class="custom-group" data-toggle="modal" data-target="#staffListModal">
+                            <div class="custom-group">
                                 <input class="form-control nice-select" type="text" placeholder="All Staff" />
                             </div>
                             </div>
@@ -155,129 +132,6 @@
                 </div>
             </div>
         </div>
-        
-        
-        
-<div class="modal fade mb-custmmodal" id="staffListModal" role="dialog">
-      <div class="modal-dialog">
-         <!-- Modal content--> 
-        <div class="popupInside new-modalcustm">
-            <form name="" id="" method="post" action="" enctype="multipart/form-data">
-                <div class="modal-header">
-                   <button type="button" class="close" data-dismiss="modal">×</button>
-                   <h4 class="modal-title">Staff List</h4>
-                </div>
-                <div class="filter-op"> 
-                <span><a href="" class="staff-select-all">Select All</a>  &nbsp; | &nbsp; 
-                 <a href="" class="staff-deselect-all">Deselect All</a></span></div>
-                <div class="modal-body">
-                   <div class="notify" >
-                      <input type="text" id="staffFilter" class="input-block-level form-control search-ap" placeholder="Search Staff" >
-                        <div class="user-bkd">
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded">
-                        <h2>john<br>
-                        <a href="mailto:johns1@gmail.com"><i class="fa fa-envelope-o"></i> johns1@gmail.com</a>
-                        </h2>
-                        <div class="check-ft">
-                        <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="9">
-                        </div>
-                        </div>
-                        <div class="user-bkd">
-                        <img src="http://runmobileapps.com/squeedr/uploads/profile_image/1541415532Desert.jpg" class="thumbnail rounded">
-                        <h2>Dr Gladden<br>
-                        <a href="mailto:rituparna.majumder@ncrtechnosolutions.com"><i class="fa fa-envelope-o"></i> 
-                        rituparna.majumder@ncrtechnosolutions.com</a>
-                        </h2>
-                        <div class="check-ft">
-                        <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="22">
-                        </div>
-                        </div>
-                        <div class="user-bkd">
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded">
-                        <h2>rituparna123 <br>
-                        <a href="mailto:ritu4mkol12@gmail.com"><i class="fa fa-envelope-o"></i> ritu4mkol12@gmail.com</a>
-                        </h2>
-                        <div class="check-ft">
-                        <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="23">
-                        </div>
-                        </div>
-                       </div>
-                       <div class="butt-pop-ft">
-                       <button type="submit" id="add-stuff-into-input" class="btn btn-primary butt-next">Done</button> 
-                       <a href="" id="cancel-staff-list" class="btn btn-primary butt-next">Cancel</a> 
-                    </div>
-                </div>
-            </form>
-          </div>
-      </div>
-   </div>
-   
-<div class="modal fade mb-custmmodal" id="staffListModal1" role="dialog">
-      <div class="modal-dialog">
-         <!-- Modal content--> 
-        <div class="popupInside new-modalcustm">
-            <form name="" id="" method="post" action="" enctype="multipart/form-data">
-                <div class="modal-header">
-                   <button type="button" class="close" data-dismiss="modal">×</button>
-                   <h4 class="modal-title">Staff List</h4>
-                </div>
-                <div class="filter-op"> 
-                <span><a href="" class="staff-select-all">Select All</a>  &nbsp; | &nbsp; 
-                 <a href="" class="staff-deselect-all">Deselect All</a></span></div>
-                <div class="modal-body">
-                   <div class="notify" >
-                      <input type="text" id="staffFilter" class="input-block-level form-control search-ap" placeholder="Search Staff" >
-                        <div class="user-bkd">
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded">
-                        <h2>john<br>
-                        <a href="mailto:johns1@gmail.com"><i class="fa fa-envelope-o"></i> johns1@gmail.com</a>
-                        </h2>
-                        <div class="check-ft">
-                        <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="9">
-                        </div>
-                        </div>
-                        <div class="user-bkd">
-                        <img src="http://runmobileapps.com/squeedr/uploads/profile_image/1541415532Desert.jpg" class="thumbnail rounded">
-                        <h2>Dr Gladden<br>
-                        <a href="mailto:rituparna.majumder@ncrtechnosolutions.com"><i class="fa fa-envelope-o"></i> 
-                        rituparna.majumder@ncrtechnosolutions.com</a>
-                        </h2>
-                        <div class="check-ft">
-                        <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="22">
-                        </div>
-                        </div>
-                        <div class="user-bkd">
-                        <img src="http://runmobileapps.com/squeedr/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded">
-                        <h2>rituparna123 <br>
-                        <a href="mailto:ritu4mkol12@gmail.com"><i class="fa fa-envelope-o"></i> ritu4mkol12@gmail.com</a>
-                        </h2>
-                        <div class="check-ft">
-                        <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="23">
-                        </div>
-                        </div>
-                       </div>
-                       <div class="butt-pop-ft">
-                       <button type="submit" id="add-stuff-into-input" class="btn btn-primary butt-next">Done</button> 
-                       <a href="" id="cancel-staff-list" class="btn btn-primary butt-next">Cancel</a> 
-                    </div>
-                </div>
-            </form>
-          </div>
-      </div>
-   </div>   
-   
-
-<style type="text/css">
-.mb-custmmodal .modal-header{padding:0;margin-bottom:10px;}
-.mb-custmmodal .form-control{border:1px solid #ccc;}
-.mb-custmmodal .user-bkd {display: flex;position: relative;margin: 12px 0 0;}
-.mb-custmmodal .rounded {height:40px;width:40px;margin-bottom: 0;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;-ms-border-radius: 50%;-o-border-radius: 50%;}
-.mb-custmmodal .user-bkd h2 {font-size: 15px;font-weight: 300;margin:4px 0 0 8px;width:100%;}
-.mb-custmmodal .user-bkd .check-ft {float: right;font-size:19px;color: #3097d5;}
-.mb-custmmodal .butt-pop-ft{margin:15px 0;text-align: center;}
-.mb-custmmodal .user-bkd a{word-wrap: break-word;float: left;display: inline-flex;word-break: break-all;font-size: 12px;width: 100%;margin: 6px 0 0;}
-.mb-custmmodal .user-bkd a i{float: left;margin: 0 5px 0 0;}
-</style>
 
         <script src="{{asset('public/assets/mobile/js/jquery.min.js')}}"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -314,7 +168,6 @@
                 $(obj).toggleClass("rotatebtn");             
                 $("#blockDate").fadeOut('2000');
                 $("#blockTime").fadeOut('2000');
-                $("#stafflm").fadeOut('2000');
                 //$("#popup").fadeOut('2000');
                 $(".menuList").fadeIn('10');
             }
@@ -326,15 +179,6 @@
                 $(".menuList").fadeOut('fast');
                 $("#blockTime").fadeIn();
             }
-
-            function stafflm(){
-                $(".menuList").fadeOut('fast');
-                $("#blockDate").fadeOut('fast');
-                $("#stafflm").fadeIn();
-
-            }
-
-
             function popup(){
                 $(".menuList").fadeOut('fast');
                 $("#popup").fadeIn();

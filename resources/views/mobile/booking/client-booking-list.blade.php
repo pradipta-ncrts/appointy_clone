@@ -17,9 +17,9 @@ Squeedr
       <h3>Mike J. Yelten</h3>
       <!-- <a><i class="fa fa-angle-right"></i></a> --> </div>
     <ul class="clientSchedule">
-      <li><a href="#" class="active">Current</a> </li>
-      <li><a href="#">Next 3 Days</a> </li>
-      <li><a href="#">Last 1 Month</a> </li>
+      <li><a href="{{url('mobile/client-booking-list/all')}}/<?=$client_id;?>" class="<?=$duration=='all' ? 'active' : ''; ?>">Current</a> </li>
+      <li><a href="{{url('mobile/client-booking-list/day')}}/<?=$client_id;?>" class="<?=$duration=='day' ? 'active' : ''; ?>">Next 3 Days</a> </li>
+      <li><a href="{{url('mobile/client-booking-list/month')}}/<?=$client_id;?>" class="<?=$duration=='month' ? 'active' : ''; ?>">Last 1 Month</a> </li>
     </ul>
     <div class="container-fluid">
       <div class="row">
