@@ -70,7 +70,7 @@ class PlanController extends ApiController {
 	{
         $authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-            return redirect('/login');
+            return redirect('/mobile/login');
         }
         $user_no = $authdata['user_no'];
         $data= Crypt::decrypt($parameter);
@@ -105,12 +105,12 @@ class PlanController extends ApiController {
                 if ($avaialable_currency_list[$payable_currency] < ($payble_amount * 100)) {
                     // Error Message //
                     //\Session::flash('payment_error_status', 'You have insufficient balance for this transaction.');
-                    return redirect(url('settings-membership/'))->with('payment_error','You have insufficient balance for this transaction.');
+                    return redirect(url('mobile/membership/'))->with('payment_error','You have insufficient balance for this transaction.');
                 }
             } else {
                 // Error Message //
                 //\Session::flash('payment_error_status', 'This card does not support this currency.');
-                return redirect(url('settings-membership/'))->with('payment_error','This card does not support this currency.');
+                return redirect(url('mobile/membership/'))->with('payment_error','This card does not support this currency.');
             }
 
             // Charge Payment //
@@ -154,11 +154,11 @@ class PlanController extends ApiController {
 
 						$this->sendmail(14,$user_email,$emailData);
 
-                    	return redirect(url('settings-membership/'))->with('payment_success','Payment successfully done.'); 
+                    	return redirect(url('mobile/membership/'))->with('payment_success','Payment successfully done.'); 
                     }
                     else
                     {
-                    	return redirect(url('settings-membership/'))->with('payment_error','This card does not support this currency.');
+                    	return redirect(url('mobile/membership/'))->with('payment_error','This card does not support this currency.');
                     }
                 }
 

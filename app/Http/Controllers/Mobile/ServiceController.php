@@ -25,47 +25,22 @@ class ServiceController extends ApiController {
 
 	}
 
-	public function service_list(Request $data,$type="")
+	public function service_list()
 	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
-		{
-			return redirect('/mobile/login');
-		}
 		// Check User Login. If not logged in redirect to login page //
-		/*$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
-		{
-			return redirect('/mobile/login');
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/mobile/login');
 		}
-		
 
 		// Call API //
 		$post_data = $authdata;
-		$post_data['duration'] = '';
-		$post_data['type'] = '';
-
-		$duration = $data->input('duration');
-		//$type = $data->input('type');
-		if(!empty($duration) || !empty($type))
-		{
-			$post_data['duration'] = $duration;
-			$post_data['type'] = $type;
-		}
+		$post_data['page_no']=1;
 		$data=array(
-			'total_appointments'=>0,
-			'total_sales'=>0,
-			'total_customers'=>0,
-			'appointments_difference' => 0,
-			'sales_difference' => 0,
-			'customers_difference' => 0,
-			'appointment_data'=>array(),
-			'sales_data'=>array(),
-			'customer_data'=>array(),
+			'service_list'=>array(),
 			'authdata'=>$authdata
 		);
-		//print_r($post_data); die();
-		$url_func_name="dashboard";
+		$url_func_name="service_list";
 		$return = $this->curl_call($url_func_name,$post_data);
 		
 		// Check response status. If success return data //		
@@ -73,31 +48,18 @@ class ServiceController extends ApiController {
 		{
 			if($return->response_status == 1)
 			{
-				$data['total_appointments'] = $return->total_appointments;
-				$data['total_sales'] = $return->total_sales;
-				$data['total_customers'] = $return->total_customers;
-				$data['appointments_difference'] = $return->appointments_difference;
-				$data['sales_difference'] = $return->sales_difference;
-				$data['customers_difference'] = $return->customers_difference;
 				$data['service_list'] = $return->service_list;
-				//$data['appointment_data'] = $return->appointment_data;
-				//$data['sales_data'] = $return->sales_data;
-				//$data['customer_data'] = $return->customer_data;
-				$data['dashboard_reports'] = $return->dashboard_reports;
-				$data['duration'] = $duration;
-				$data['type'] = $type;
-				
 			}
 			//echo '<pre>'; print_r($data); exit;
-			return view('mobile.user.dashboard.dashboard')->with($data);
+			return view('mobile.service.service-list')->with($data);
 		}
-		else
-		{
+		else{
 			return $return;
-		}*/
+		}
 
-		return view('mobile.service.service-list');
+		//return view('website.services');
 	}
+
 
 	public function add_service(Request $data,$type="")
 	{

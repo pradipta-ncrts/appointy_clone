@@ -149,16 +149,13 @@ class UsersController extends ApiController {
 
 	public function dashboard(Request $data,$type="")
 	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
-		{
-			return redirect('/mobile/login');
-		}
+		//echo '<pre>'; print_r($_COOKIE); exit;
 		// Check User Login. If not logged in redirect to login page //
-		/*$authdata = $this->website_login_checked();
+		$authdata = $this->website_login_checked();
+		
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
 		{
-			return redirect('/mobile/login');
+			return redirect('/login');
 		}
 		
 
@@ -216,10 +213,11 @@ class UsersController extends ApiController {
 		else
 		{
 			return $return;
-		}*/
+		}
 
-		return view('mobile.user.dashboard.dashboard');
+		//return view('website.user.dashboard.dashboard');
 	}
+	
 
 	public function my_profile()
 	{
@@ -491,7 +489,7 @@ class UsersController extends ApiController {
 		//return view('website.services');
 	}
 
-	public function business_hours($type="",$staff_search_text="")
+	public function business_hours()
 	{
 		// Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -501,29 +499,43 @@ class UsersController extends ApiController {
 		// Call API //
 		$post_data = $authdata;
 		$post_data['page_no']=1;
-		$post_data['staff_search_text']=$staff_search_text;
 
 		$data=array(
-			'staff_list'=>array(),
 			'authdata'=>$authdata
 		);
-		$url_func_name="staff_list";
+		$url_func_name="staff_service_availability_mobile";
 		$return = $this->curl_call($url_func_name,$post_data);
 
 		//$service_post_data = $authdata;
 		$service_url_func_name="service_list";
 		$service_return = $this->curl_call($service_url_func_name,$post_data);
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status)){
-			if($return->response_status == 1){
-				$data['staff_list'] = $return->staff_list;
-				$data['staff_search_text'] = $staff_search_text;
-				$data['service_list'] = $service_return->service_list;
-				$data['type'] = $type;
 
+		/*$staff_list = $return->staff_list;
+		$service_list = $return->service_list;
+		foreach ($staff_list as $key => $stf) 
+		{
+			foreach ($service_list as $key => $srv)
+			{
+				$array_set[] = $srv;
 			}
-			//echo '<pre>'; print_r($data); exit;
+		}
+		echo "<pre>";
+		print_r($staff_list);
+		echo "<pre>";
+		print_r($service_list);
+		die();
+		*/
+
+		// Check response status. If success return data //		
+		if(isset($return->response_status))
+		{
+			if($return->response_status == 1)
+			{
+				//$data['availability_list'] = $return->availability_list;
+				$data['staff_list'] = $return->staff_list;
+				$data['service_list'] = $return->service_list;
+			}
+
 			return view('mobile.business.business-hours')->with($data);
 		}
 		else{

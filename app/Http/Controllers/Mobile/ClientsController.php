@@ -83,7 +83,7 @@ class ClientsController extends ApiController {
 	{
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
+           return redirect('/mobile/login');
 		}
 
 		// Call API //
@@ -97,11 +97,12 @@ class ClientsController extends ApiController {
 		$url_func_name="client_details";
 		$return = $this->curl_call($url_func_name,$post_data);
 
-
 		// Check response status. If success return data //	
 		if($return->response_status == 1)
 		{
 			$data['client_details'] = $return->client_details;
+			$data['amount'] = $return->amount;
+			$data['total_appo'] = $return->count;
 			return view('mobile.client.client-details')->with($data);
 		}	
 		else
@@ -121,6 +122,34 @@ class ClientsController extends ApiController {
 		$data['time_zone'] = $this->time_zone();
 		return view('mobile.client.add-client')->with($data);
 	}
+
+	public function edit_client(Request $data, $client_id)
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('mobile/login');
+		}
+
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$post_data['client_id'] = $client_id;
+		$data=array(
+			'client_list'=>array(),
+			'authdata'=>$authdata
+		);
+		$url_func_name="client_details";
+		$return = $this->curl_call($url_func_name,$post_data);
+
+		$data['category_list'] = $this->category_list();
+		$data['time_zone'] = $this->time_zone();
+		$data['client_details'] = $return->client_details;
+
+
+		return view('mobile.client.edit-client')->with($data);
+	}
+
+	
 
 	
 	

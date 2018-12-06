@@ -75,6 +75,8 @@ class TablesController {
 
         $this->tableNameUserDashboardReport = config('constants.tables.user_dashboard_reports');
 
+        $this->tableNameFeedback = config('constants.tables.feedback');
+
         
 
     }

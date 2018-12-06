@@ -1655,4 +1655,70 @@ class StaffsController extends ApiController {
         $this->json_output($response_data);
     }
 
+    // User's Staff Listing //
+    public function staff_service_availability_mobile(Request $request){
+        $response_data=array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $pageNo = $request->input('page_no');
+        $pageNo = ($pageNo>1)?$pageNo:1;
+        $limit=$this->limit;
+        $offset=($pageNo-1)*$limit;
+
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_no = $other_user_no;
+        }
+        else{
+            $user_no = $this->logged_user_no;
+        }
+
+        //avability list
+        $findCond=array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
+        $tableUserService = $this->tableObj->tableUserService;
+        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
+        
+
+        $availability_list = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField);
+
+
+        //staff list
+        $staff_condition = array(
+                array('user_id','=',$user_no),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+        );
+        $staff_field = array('staff_id','full_name');
+        $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$staff_condition,$staff_field);
+
+        //service list
+        $servCond = array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+            //array('is_blocked','=','0'),
+        );
+
+        $serviceFields = array('service_id', 'service_name', 'duration');
+
+        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields);
+
+        $response_data['availability_list']=$availability_list;
+        $response_data['staff_list']=$staff_list;
+        $response_data['service_list']=$service_list;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+
+    public function availability_mobile()
+    {
+        return "good";
+    }
+    
+
 }

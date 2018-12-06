@@ -28,7 +28,7 @@ Squeedr
              <div id="openbox">
                 <ul>
                    <li><a id="invite" data-client-id="<?=$client_details->client_id;?>"><i class="fa fa-user-plus" aria-hidden="true"></i> Invite</a></li>
-                   <li><a><i class="fa fa-pencil" aria-hidden="true"></i> Edit </a></li>
+                   <li><a href="{{url('mobile/edit-client')}}/<?=$client_details->client_id;?>" data-client-id=""><i class="fa fa-pencil" aria-hidden="true"></i> Edit </a></li>
                 </ul>
              </div>
              <h4 class="text-center"> <?=$client_details->client_name;?></h4>
@@ -65,15 +65,15 @@ Squeedr
                    <div class="border-box">
                       <ul>
                          <li>
-                            <label>0</label>
+                            <label><?=$total_appo->count;?></label>
                             Booked 
                          </li>
                          <li>
-                            <label>$0</label>
+                            <label>$<?=$amount->remaining_balance;?></label>
                             Amount Due
                          </li>
                          <li>
-                            <label>$0</label>
+                            <label>$<?=$amount->paid_amount;?></label>
                             Paid
                          </li>
                       </ul>
@@ -98,6 +98,7 @@ $(document).on('click','#invite',function(e){
     data.push({name:'client_id', value:client_id});
 
     swal({
+      title: 'Are you sure?',
       text: "An invitation email will be sent to this client with an option to generate a new password. Would you like to send now?",
       confirmButtonColor: '#3085d6',
       //cancelButtonColor: '#d33',
@@ -129,5 +130,9 @@ $(document).on('click','#invite',function(e){
         });
     });
 });
+
+
 </script>
+
+
 @endsection

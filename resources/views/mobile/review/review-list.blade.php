@@ -19,24 +19,31 @@ Squeedr
                <div class="headRow">
                   <div class="padding15px clearfix">
                      <div class="mobileNote lon showMobile" >
+                      <?php
+                      if(!empty($review_list))
+                      {
+                          foreach ($review_list as $key => $value)
+                          {
+                      ?>
                         <div class="whitebox">
-                           <h2>30 Apr, 2018 <strong>10:15 AM</strong></h2>
-                           <label>Latesha J</label>
-                           <span><i class="fa fa-envelope"></i>LateshaJ@gmail.com </span>
-                           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis 
-                              suae urbis conservatorem Codrum, quis Erechthei filias non 
-                              maxime laudat Id quaeris, inquam, in quo <a>show more</a>
+                           <h2><?=date('d M, Y', strtotime($value->created_on));?><strong><?=date('h:m A', strtotime($value->created_on));?></strong></h2>
+                           <label><?=$value->client_name;?></label>
+                           <span><i class="fa fa-envelope"></i><?=$value->client_email;?> </span>
+                           <p><?=$value->feedback;?> <!-- <a>show more</a> -->
                            </p>
                         </div>
-                        <div class="whitebox">
-                           <h2>30 Apr, 2018 <strong>10:15 AM</strong></h2>
-                           <label>Latesha J</label>
-                           <span><i class="fa fa-envelope"></i>LateshaJ@gmail.com </span>
-                           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis 
-                              suae urbis conservatorem Codrum, quis Erechthei filias non 
-                              maxime laudat Id quaeris, inquam, in quo <a>show more</a>
-                           </p>
+                      <?php
+                          }
+                      }
+                      else
+                      {
+                      ?>
+                      <div class="whitebox">
+                           <h2>No data found.</h2>
                         </div>
+                      <?php
+                      }
+                      ?>
                      </div>
                   </div>
                </div>

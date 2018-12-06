@@ -176,9 +176,17 @@ class ClientsController extends ApiController {
         
         $selectFields=array();
         $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$findCond,$selectFields);
+        //amount
+        $query = "SELECT IFNULL(SUM(remaining_balance),0) AS remaining_balance, IFNULL(SUM(paid_amount),0) AS paid_amount FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
+        $amount = $this->common_model->customQuery($query,$query_type=1);
+
+        $count_query = "SELECT COUNT('appointment_id') as count FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
+        $count = $this->common_model->customQuery($count_query,$query_type=1);
 
         if(!empty($client_details)){
             $response_data['client_details']=$client_details;
+            $response_data['amount']=$amount[0];
+            $response_data['count']=$count[0];
             $this->response_status='1';
             $this->response_message="Client details.";
         } else {

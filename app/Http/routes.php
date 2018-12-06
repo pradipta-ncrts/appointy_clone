@@ -68,6 +68,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/delete-staff','Api\StaffsController@staff_delete');
     Route::post('/block-times','Api\StaffsController@block_times');
     Route::post('/staff_service_availability','Api\StaffsController@staff_service_availability');
+
+    Route::post('/staff_service_availability_mobile','Api\StaffsController@staff_service_availability_mobile');
     Route::post('/service_staff_availability','Api\StaffsController@service_staff_availability');
     Route::post('/add_staff_service_availability','Api\StaffsController@add_staff_service_availability');
     Route::post('/delete_staff_availability','Api\StaffsController@delete_staff_availability');
@@ -139,6 +141,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/settings_membership','Api\PlanController@settings_membership');
     Route::post('/change_plan_duration','Api\PlanController@change_plan_duration');
     Route::post('/send-to-stripe','Api\PlanController@send_to_stripe');
+    Route::post('/send-to-stripe-mobile','Api\PlanController@send_to_stripe_mobile');
     Route::post('/edit_service_list_staff','Api\StaffsController@edit_service_list_staff');
     Route::post('/update_staff_availability_form','Api\StaffsController@update_staff_availability_form');
     Route::post('/service-template','Api\UsersController@service_template');
@@ -258,6 +261,7 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/my-profile','Mobile\UsersController@my_profile');
     Route::get('/add-appointment','Mobile\BookingsController@add_appointment');
     Route::get('/add-client','Mobile\ClientsController@add_client');
+    Route::get('/edit-client/{client_id}','Mobile\ClientsController@edit_client');
     Route::get('/staff-list','Mobile\StaffController@staff_list');
     Route::get('/add-staff','Mobile\StaffController@add_staff');
     Route::get('/service-list','Mobile\ServiceController@service_list');
@@ -266,7 +270,7 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/settings','Mobile\SettingsController@settings');
     Route::get('/membership','Mobile\PlanController@membership');
     Route::get('/business-hours','Mobile\UsersController@business_hours');
-
+    Route::any('/make-payment/{parameter?}','Mobile\PlanController@make_payment');
   
 });
 

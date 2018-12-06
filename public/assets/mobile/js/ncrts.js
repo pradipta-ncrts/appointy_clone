@@ -377,10 +377,10 @@ $(".service-list").click(function (e) {
         success: function(response) {
            //Success//
           if (response.response_status == 1) {
-            $(form)[0].reset();
-            $('#myModaladdclient').modal('hide');
+            
             swal('Success!', response.response_message, 'success');
-            location.reload();
+            var url = baseUrl+'client-list';
+            window.location=url;
           } else {
             swal('Sorry!', response.response_message, 'error');
           }
@@ -398,6 +398,102 @@ $(".service-list").click(function (e) {
 $("#procesdddd").bind('click',function(e){
    e.preventDefault();
    $('#add_client_form').submit();
+});
+
+$('#edit_client_form').validate({
+        rules: {
+            edit_client_name: {
+                required: true
+            },
+            edit_client_email: {
+                required: true,
+                email: true
+            },
+            edit_client_mobile: {
+                required: true,
+                number: true,
+                minlength: 10,
+                maxlength: 10
+            },
+            edit_client_address: {
+                required: true
+            }
+        },
+        messages: {
+            edit_client_name: {
+                required: 'Please enter client name'
+            },
+            edit_client_email: {
+                required: 'Please enter email',
+                email: 'Please enter proper email'
+            },
+            edit_client_mobile: {
+                required: 'Please enter mobile no',
+                number: 'Please enter proper mobile no',
+                minlength: 'Please enter minimum 10 digit mobile no',
+                maxlength: 'Please enter maximum 10 digit mobile no'
+            },
+            edit_client_address: {
+                required: 'Please enter address'
+            }
+        },
+        /*errorPlacement: function(error, element) {
+            if (element.attr("name") == "client_name") {
+                error.insertAfter($('#edit_client_name_error'));
+            } else if (element.attr("name") == "client_email") {
+                error.insertAfter($('#edit_client_email_error'));
+            } else if (element.attr("name") == "staff_client_mobile") {
+                error.insertAfter($('#edit_client_mobile_error'));
+            } else if (element.attr("name") == "client_address") {
+                error.insertAfter($('#edit_client_address_error'));
+            }
+        },*/
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            data = addCommonParams(data);
+            /*var files = $("#edit_client_form input[type='file']")[0].files;
+            var form_data = new FormData();
+            if (files.length > 0) {
+                for (var i = 0; i < files.length; i++) {
+                    form_data.append('client_profile_picture', files[i]);
+                }
+            } 
+            // append all data in form data 
+            $.each(data, function(ia, l) {
+                form_data.append(l.name, l.value);
+            });*/
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: data,
+                //data: form_data,
+                dataType: "json",
+                //processData: false, // tell jQuery not to process the data 
+                //contentType: false, // tell jQuery not to set contentType 
+                success: function(response) {
+                    //alert(response.response_status);
+                    console.log(response); //Success//
+                    if (response.response_status == '1') {
+                        swal({title: "Success", text: response.response_message, type: "success"},
+                        function(){ 
+                            var url = baseUrl+'client-list';
+                            //alert(url);
+                            window.location=url;
+                            //location.reload();
+                        });
+                        
+                    } else {
+                        swal('Sorry!', response.response_message, 'error');
+                    }
+                },
+                beforeSend: function() {
+                    $('.animationload').show();
+                },
+                complete: function() {
+                    $('.animationload').hide();
+                }
+            });
+        }
 });
 
 
@@ -513,7 +609,7 @@ $(".email_cutomisation_form").submit(function(e) {
                     swal({title: "Success", text: response.message, type: "success"},
                        function(){ 
                            //location.reload();
-                           var url = baseUrl+'booking-list';
+                           var url = baseUrl+'booking-list/all';
                            window.location=url;
                        }
                     );
@@ -545,12 +641,12 @@ $(".email_cutomisation_form").submit(function(e) {
  $(".reschedule-appoinment").click(function (e) {
   e.preventDefault();
   let data = addCommonParams([]);
-  let id = $("#appoinment-id").val();
+  let id = $(this).attr('id');
   data.push({name:'appointment_id',value:id});
   if(id)
   {
        $.ajax({
-            url: baseUrl+"/api/appointment_details", 
+            url: baseUrl2+"/api/appointment_details", 
             type: "POST", 
             data: data, 
             dataType: "json",
@@ -623,13 +719,13 @@ $(".email_cutomisation_form").submit(function(e) {
            },
        },
 
-       errorPlacement: function(error, element) {
+       /*errorPlacement: function(error, element) {
             if (element.attr("name") == "reshedule_date") {
                 error.insertAfter($('#reshedule_date_error'));
             } else if (element.attr("name") == "reshedule_appointmenttime") {
                 error.insertAfter($('#reshedule_appointmenttime_error'));
             }
-        },
+        },*/
 
        submitHandler: function(form) {
          var data = $(form).serializeArray();
@@ -646,11 +742,8 @@ $(".email_cutomisation_form").submit(function(e) {
                {
                     $("#myModaladdappoinmentReschedule").modal('hide');
                     $('.animationload').hide();
-                    swal({title: "Success", text: response.message, type: "success"},
-                       function(){ 
-                           location.reload();
-                       }
-                    );
+                    swal({title: "Success", text: response.message, type: "success"});
+                    location.reload();
                     //swal("Success!", response.message, "success")
                     /*setTimeout(function()
                     {
@@ -793,7 +886,7 @@ $('#add-stuff-into-input').click(function(event) {
     let data = addCommonParams([]);
     data.push({name:'staf_id',value:staff_ids});
     $.ajax({
-          url: baseUrl+"/api/staffs_list", 
+          url: baseUrl2+"/api/staffs_list", 
           type: "POST", 
           data: data, 
           dataType: "json",
@@ -922,7 +1015,7 @@ $('#add-stuff-into-input-time').click(function(event) {
     let data = addCommonParams([]);
     data.push({name:'staf_id',value:staff_ids});
     $.ajax({
-          url: baseUrl+"/api/staffs_list", 
+          url: baseUrl2+"/api/staffs_list", 
           type: "POST", 
           data: data, 
           dataType: "json",
@@ -1430,7 +1523,7 @@ $(".chnage-service-status").click(function (e) {
     let id = $(this).data('id');
     data.push({name:'service_id',value:id});
     $.ajax({
-        url: baseUrl+"/api/chnage-service-status", 
+        url: baseUrl2+"/api/chnage-service-status", 
         type: "POST", 
         data: data, 
         dataType: "json",
@@ -1519,7 +1612,7 @@ $(".clone-srvice").click(function (event) {
   let id = $(this).data('id');
   data.push({name:'service_id', value:id});
   $.ajax({
-      url: baseUrl+"/api/clone-service", 
+      url: baseUrl2+"/api/clone-service", 
       type: "POST", 
       data: data, 
       dataType: "json",
@@ -1558,7 +1651,7 @@ $(".save-as-template").click(function (event) {
   let id = $(this).data('id');
   data.push({name:'service_id', value:id});
   $.ajax({
-      url: baseUrl+"/api/service-template", 
+      url: baseUrl2+"/api/service-template", 
       type: "POST", 
       data: data, 
       dataType: "json",
@@ -1612,7 +1705,7 @@ $(".delete-srvice").click(function (event) {
             //alert(serviceid);
             data.push({name:'service_id', value:serviceid});
             $.ajax({
-                url: baseUrl+"/api/delete-service", 
+                url: baseUrl2+"/api/delete-service", 
                 type: "POST", 
                 data: data, 
                 dataType: "json",
@@ -2849,14 +2942,16 @@ $(".change-plan-duration").on('click', (function() {
 $(".choose-plan").on('click', (function() {
     //e.preventDefault();
     //data = addCommonParams(data);   
-    if($(".change-plan-duration").prop('checked') == true)
+    /*if($(".change-plan-duration").prop('checked') == true)
     {
         var duration = "12";
     }
     else
     {
         var duration = "1";
-    }
+    }*/
+
+    var duration = "1";
 
     var plan_id = $(this).attr('id');
     var data = addCommonParams([]);
@@ -2870,7 +2965,7 @@ $(".choose-plan").on('click', (function() {
     else
     {
         $.ajax({
-            url: baseUrl+"/api/send-to-stripe", // Url to which the request is send
+            url: baseUrl2+"/api/send-to-stripe-mobile", // Url to which the request is send
             type: "POST", // Type of request to be send, called as method
             data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
             dataType: "json",
@@ -2880,6 +2975,7 @@ $(".choose-plan").on('click', (function() {
                 //alert(response.response_status);
                 if(response.response_status=='1')
                 {
+                    //alert(response.message); 
                     window.location.href = response.message;
                 }
                 else
@@ -2970,4 +3066,108 @@ $(".staff_id").on('click', (function() {
 
     
 }));
+
+$('#add_team_member_form').validate({
+        rules: {
+            staff_fullname: {
+                required: true
+            },
+            staff_username: {
+                required: true
+            },
+            staff_email: {
+                required: true,
+                email: true
+            },
+            staff_mobile: {
+                required: true,
+                number: true,
+                minlength: 10,
+                maxlength: 10
+            },
+            staff_description: {
+                required: true
+            }
+        },
+        messages: {
+            staff_fullname: {
+                required: 'Please enter fullname'
+            },
+            staff_username: {
+                required: 'Please enter username'
+            },
+            staff_email: {
+                required: 'Please enter email',
+                email: 'Please enter proper email'
+            },
+            staff_mobile: {
+                required: 'Please enter mobile no',
+                number: 'Please enter proper mobile no',
+                minlength: 'Please enter minimum 10 digit mobile no',
+                maxlength: 'Please enter maximum 10 digit mobile no'
+            },
+            staff_description: {
+                required: 'Please enter description'
+            }
+        },
+        /*errorPlacement: function(error, element) {
+            if (element.attr("name") == "staff_fullname") {
+                error.insertAfter($('#fullname_error'));
+            } else if (element.attr("name") == "staff_username") {
+                error.insertAfter($('#username_error'));
+            } else if (element.attr("name") == "staff_email") {
+                error.insertAfter($('#email_error'));
+            } else if (element.attr("name") == "staff_mobile") {
+                error.insertAfter($('#mobile_error'));
+            } else if (element.attr("name") == "staff_description") {
+                error.insertAfter($('#description_error'));
+            }
+        },*/
+        submitHandler: function(form) {
+                var data = $(form).serializeArray();
+                data = addCommonParams(data);
+                var files = $("#add_team_member_form input[type='file']")[0].files;
+                var form_data = new FormData();
+                if (files.length > 0) {
+                    for (var i = 0; i < files.length; i++) {
+                        form_data.append('staff_profile_picture', files[i]);
+                    }
+                } 
+      // append all data in form data 
+      $.each(data, function(ia, l) {
+      form_data.append(l.name, l.value);
+    });
+    $.ajax({
+        url: form.action,
+        type: form.method,
+        data: form_data,
+        dataType: "json",
+        processData: false, // tell jQuery not to process the data 
+        contentType: false, // tell jQuery not to set contentType 
+        success: function(response) {
+            console.log(response); //Success//
+
+            if (response.response_status == 1) {
+                swal('Success!', response.response_message, 'success');
+                var url = baseUrl+'staff-list';
+                window.location=url;
+            } else {
+                swal('Sorry!', response.response_message, 'error');
+            }
+        },
+        beforeSend: function() {
+            $('.animationload').show();
+        },
+        complete: function() {
+            $('.animationload').hide();
+        }
+});
+}
+});
+
+
+
+
+
+
 

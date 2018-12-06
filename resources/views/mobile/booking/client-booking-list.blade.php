@@ -14,7 +14,7 @@ Squeedr
 <main>
   <div class="showMobile">
     <div class="clientHead">
-      <h3>Mike J. Yelten</h3>
+      <h3><?=$client_name;?></h3>
       <!-- <a><i class="fa fa-angle-right"></i></a> --> </div>
     <ul class="clientSchedule">
       <li><a href="{{url('mobile/client-booking-list/all')}}/<?=$client_id;?>" class="<?=$duration=='all' ? 'active' : ''; ?>">Current</a> </li>
@@ -36,8 +36,8 @@ Squeedr
                   <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-share"
                       aria-hidden="true"></i></button>
                   <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#">Reschedule</a></li>
-                    <li><a href="#">Cancel </a></li>
+                    <li><a href="JavaScript:Void(0);" class="reschedule-appoinment" id="<?=$value->appointment_id;?>">Reschedule</a></li>
+                    <li><a href="JavaScript:Void(0);" class="cancel-appoinment" id="<?=$value->appointment_id;?>">Cancel </a></li>
                   </ul>
                 </div>
               </div>
@@ -78,10 +78,60 @@ Squeedr
 
 @section('custom_js')
 <script type="text/javascript">
-  function ShowPopup() {
-         
-             $("#popup").fadeToggle();
-         
-         }
+$(".cancel-appoinment").click(function (e) {
+    e.preventDefault();
+    let data = addCommonParams([]);
+    let id = $(this).attr('id');
+    //alert(id);
+    data.push({name:'appoinment_id',value:id});
+    if(id)
+    {
+        swal({
+          title: "Are you sure?",
+          text: "Once cancelled, you will loose all the details of the appointment!",
+          confirmButtonColor: '#3085d6',
+          //cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm',
+          //allowOutsideClick: false
+          }).then(function() {
+             $.ajax({
+                url: baseUrl2+"/api/appoinment-cancel", 
+                type: "POST", 
+                data: data, 
+                dataType: "json",
+                success: function(response) 
+                {
+                    console.log(response);
+                    $('.animationload').hide();
+                    if(response.result=='1')
+                    {
+                        swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                $('#myModalAppointmentContent').modal('hide');
+                                location.reload();
+                            }
+                        );  
+                    }
+                    else
+                    {
+                        swal("Error", response.message, "error");
+                    }
+                },
+                beforeSend: function()
+                {
+                    $('.animationload').show();
+                },
+                complete: function()
+                {
+                    $('#myModalAppointmentContent').modal('hide');
+                }
+            });
+        });
+    }
+    else
+    {
+        swal("Error", response.message , "error");
+    }
+});
 </script>
 @endsection

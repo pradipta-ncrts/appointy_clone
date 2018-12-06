@@ -152,6 +152,65 @@ class PlanController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+
+	public function send_to_stripe_mobile(Request $request)
+    {
+        $response_data=array();
+        $this->validate_parameter(1);
+
+        $user_id = $this->logged_user_no;
+        $plan_id = $request->input('plan_id');
+		$duration = $request->input('duration');
+		if($duration==1)
+		{
+			$duration_in_month = 1;
+			$duration_in_day = 30;
+		}
+		else
+		{
+			$duration_in_month = 12;
+			$duration_in_day = 365;
+		}
+
+		//user details
+        $user_condition = array(
+            array('id','=',$user_id),
+		);
+
+		
+		$selectFields = array('name','email');
+		$user = $this->common_model->fetchData($this->tableObj->tableNameUser, $user_condition, $selectFields);
+
+		//plan details
+		$planCondition = array(
+            array('plan_id','=',$plan_id),
+		);
+
+		
+		$selectFields = array();
+		$plan = $this->common_model->fetchData($this->tableObj->tableNamePlan, $planCondition, $selectFields);
+
+		$parameter = array(
+			'user_id' => $user_id,
+			'user_name' => $user->name,
+			'user_email' => $user->email,
+			'plan_id' => $plan->plan_id,
+			'plan_name' => $plan->plan_name,
+			'duration_in_day' => $duration_in_day,
+			'duration_in_month' => $duration_in_month,
+			'plan_price' => $plan->price,
+			'payble_amount' => $plan->price*$duration_in_month
+        );
+
+		$parameter= Crypt::encrypt($parameter);
+		$url = url('/mobile/make-payment',$parameter); 
+						
+		$this->response_status = '1';
+		// generate the service / api response
+		$this->response_message = $url;
+		$this->json_output($response_data);
+	}
+
 	
 	
 
