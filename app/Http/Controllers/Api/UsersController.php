@@ -2438,6 +2438,28 @@ class UsersController extends ApiController {
         // generate the service / api response
         $this->json_output($response_data);
 	}
+
+
+	public function update_service_availability(Request $request)
+	{
+		$response_data=array();
+		$this->validate_parameter(1);
+		$user_no = $this->logged_user_no;
+
+		$response_data=array();
+
+		//print_r($request->all()); die();
+
+		$start_time = $request->input('start_time');
+		$end_time = $request->input('end_time');
+		$start_date = $request->input('start_date');
+		$end_date = $request->input('end_date');
+		
+		$this->response_status='1';
+		$this->response_message="Successfully Updated.";
+		$this->json_output($response_data);
+
+	}
 	
 	
 }

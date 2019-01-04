@@ -8,14 +8,14 @@ Squeedr
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
   <h1>Bookings</h1>
   <ul>
-    <li>&nbsp;<!-- <img src="images/mobile-serach.png" /> --> </li>
+    <li data-toggle="modal" data-target="#client-filter-modal"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></li>
   </ul>
 </header>
 <main>
   <div class="showMobile">
     <div class="clientHead">
       <h3><?=$client_name;?></h3>
-      <!-- <a><i class="fa fa-angle-right"></i></a> --> </div>
+      <a><i class="fa fa-angle-right"></i></a></div>
     <ul class="clientSchedule">
       <li><a href="{{url('mobile/client-booking-list/all')}}/<?=$client_id;?>" class="<?=$duration=='all' ? 'active' : ''; ?>">Current</a> </li>
       <li><a href="{{url('mobile/client-booking-list/day')}}/<?=$client_id;?>" class="<?=$duration=='day' ? 'active' : ''; ?>">Next 3 Days</a> </li>
@@ -30,29 +30,31 @@ Squeedr
               foreach ($appoinment_list as $key => $value)
               {
               ?>
-              <div class="custm-share">
-                <div class="bluebg break20px namedate"> <span><?=date('l', strtotime($value->date));?>, <?=date('M d, Y', strtotime($value->date));?></span> </div>
-                <div class="dropdown btn-res">
-                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-share"
-                      aria-hidden="true"></i></button>
-                  <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="JavaScript:Void(0);" class="reschedule-appoinment" id="<?=$value->appointment_id;?>">Reschedule</a></li>
-                    <li><a href="JavaScript:Void(0);" class="cancel-appoinment" id="<?=$value->appointment_id;?>">Cancel </a></li>
-                  </ul>
+              <div class="filter-booking">
+                <div class="custm-share">
+                  <div class="bluebg break20px namedate"> <span><?=date('l', strtotime($value->date));?>, <?=date('M d, Y', strtotime($value->date));?></span> </div>
+                  <div class="dropdown btn-res">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-share"
+                        aria-hidden="true"></i></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <li><a href="JavaScript:Void(0);" class="reschedule-appoinment" id="<?=$value->appointment_id;?>">Reschedule</a></li>
+                      <li><a href="JavaScript:Void(0);" class="cancel-appoinment" id="<?=$value->appointment_id;?>">Cancel </a></li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
 
-              <div class="whitebox border-box">
-                 <div class="staffDetail">
-                    <span><label>With</label> <?=$value->staff_name;?></span>
-                    <p><?=$value->start_time;?> - <?=$value->end_time;?></p>
-                    <span class="bluetxt"><?=$value->currency;?><?=$value->cost;?></span>
-                 </div>
-                 <div class="staffInside">
-                    <h6><?=$value->service_name;?></h6>
-                    <p><span>Notes :</span> <?=$value->note;?> <!-- <a>more</a> --></p>
-                 </div>
-              </div>
+                <div class="whitebox border-box">
+                   <div class="staffDetail">
+                      <span><label>With</label> <?=$value->staff_name;?></span>
+                      <p><?=$value->start_time;?> - <?=$value->end_time;?></p>
+                      <span class="bluetxt"><?=$value->currency;?><?=$value->cost;?></span>
+                   </div>
+                   <div class="staffInside">
+                      <h6><?=$value->service_name;?></h6>
+                      <p><span>Notes :</span> <?=$value->note;?> <!-- <a>more</a> --></p>
+                   </div>
+                </div>
+            </div>
            <?php
                   }
                }
@@ -72,6 +74,24 @@ Squeedr
     </div>
   </div>
 </main>
+<div class="modal fade mb-custmmodal" id="client-filter-modal" role="dialog">
+  <div class="modal-dialog">
+     <!-- Modal content--> 
+    <div class="popupInside new-modalcustm">
+        <form name="" id="" method="post" action="" enctype="multipart/form-data">
+            <div class="modal-body">
+               <div class="notify" >
+                  <input type="text" id="client-name" class="input-block-level form-control search-ap" placeholder="Booking title" >
+               </div>
+               <div class="butt-pop-ft">
+                   <button type="submit" id="filter-client-list" class="btn btn-primary butt-next">Done</button> 
+                   <a href="JavaScript:Void(0);" id="close-client-filter-modal" class="btn btn-primary butt-next">Cancel</a> 
+                </div>
+            </div>
+        </form>
+      </div>
+  </div>
+</div>
 
 @endsection
 
@@ -133,5 +153,27 @@ $(".cancel-appoinment").click(function (e) {
         swal("Error", response.message , "error");
     }
 });
+
+
+//Staff Filter
+$(document).ready(function(){
+  $("#filter-client-list").on("click", function(e) 
+  {
+      e.preventDefault();
+      $("#client-filter-modal").modal('hide');
+      var value = $("#client-name").val().toLowerCase();
+      $(".filter-booking").filter(function() 
+      {
+         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+  });
+});
+
+$("#close-client-filter-modal").on("click", function(e) 
+{
+   e.preventDefault();
+   $("#client-filter-modal").modal('hide');
+});
+
 </script>
 @endsection

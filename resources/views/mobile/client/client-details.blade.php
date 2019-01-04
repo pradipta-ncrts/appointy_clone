@@ -8,9 +8,8 @@ Squeedr
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
  <h1>Client Details</h1>
  <ul>
-    <li>&nbsp;</li>
-    <!-- <li><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></li>
-    <li><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></li> -->
+    <li><a href="{{ url('mobile/add-client') }}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a></li>
+    <!-- <li><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></li> -->
  </ul>
 </header>
 <main>
@@ -57,7 +56,7 @@ Squeedr
           </div>
           <div class="clearfix"></div>
           <div class="break20px"></div>
-          <h5 class="text-center">Transactions</h5>
+          <h5 class="text-center trantxt">Transactions</h5>
           <div class="break10px"></div>
           <div class="cdList">
              <div class="row">

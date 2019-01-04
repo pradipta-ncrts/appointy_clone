@@ -67,6 +67,11 @@ class UsersController extends ApiController {
 	//***** User Registartion *****//
 	public function registration(Request $data)
 	{
+        return view('mobile.landing_page');
+	}
+
+	public function registration_step(Request $data)
+	{
 		$email = $data->input('email');
 		if($email)
 		{
@@ -77,7 +82,7 @@ class UsersController extends ApiController {
         	if(!empty($checkEmail))
         	{
         		\Session::flash('error_message', "Email already exists."); 
-                return redirect('/mobile');
+                return redirect('/mobile/registration_step/');
         	}
         	else
         	{
@@ -91,7 +96,7 @@ class UsersController extends ApiController {
 				$this->sendmail(1,$email,$emailData);
 
         		\Session::flash('success_message', "A email sent to your mail.");
-        		return redirect('/mobile');
+        		return redirect('/mobile/registration_step/');
         	}
 		}
         return view('mobile.user.registration.registration');
@@ -707,6 +712,9 @@ class UsersController extends ApiController {
 	}
 
 
+	public function booking_calendar(){
+		return view('mobile.user.squeedr.booking_calendar');
+	}
 	
 
 }
