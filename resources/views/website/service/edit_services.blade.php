@@ -728,7 +728,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
     <div class="modal-dialog add-pop">
     <!-- Modal content-->
     <div class="modal-content new-modalcustm">
-        <form name="update_availability_form" id="update_availability_form" method="post" action="{{url('api/update_service_availability')}}" enctype="multipart/form-data">
+        <form name="update_availability_form" id="update_availability_form" method="post" action="{{url('api/update-service-availability')}}" enctype="multipart/form-data">
         <input type="hidden" name="interval_count" id="interval_count" value="0">
         <input type="hidden" name="is_unavailable" id="is_unavailable" value="0">
         <input type="hidden" name="date_range_type" id="date_range_type" value="3">
@@ -1798,10 +1798,10 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             var data = $(form).serializeArray();
             data.push({name: 'apply_day', value: apply_day});
             data = addCommonParams(data);
-            //console.log(data);
+            console.log(data);
             $.ajax({
-                url: form.action,
-                type: form.method,
+                url: baseUrl+"/api/update-service-availability", 
+                type: "POST",
                 data:data ,
                 dataType: "json",
                 success: function(response) {
@@ -1831,10 +1831,10 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             var data = $(form).serializeArray();
             data.push({name: 'apply_day', value: apply_day});
             data = addCommonParams(data);
-            //console.log(data);
+            console.log(data);
             $.ajax({
-                url: form.action,
-                type: form.method,
+                url: baseUrl+"/api/update-service-availability", 
+                type: "POST", 
                 data:data ,
                 dataType: "json",
                 success: function(response) {
@@ -1865,10 +1865,10 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             var data = $(form).serializeArray();
             data.push({name: 'available_dates', value: available_dates});
             data = addCommonParams(data);
-            //console.log(data);
+            console.log(data);
             $.ajax({
-                url: form.action,
-                type: form.method,
+                url: baseUrl+"/api/update-service-availability", 
+                type: "POST",
                 data:data ,
                 dataType: "json",
                 success: function(response) {
@@ -1892,6 +1892,9 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             });
         });
 
+        $('#calendarModal').on('hidden.bs.modal', function (e) {
+            $(this).find('form').trigger('reset');
+        })
 
     });
 </script>
