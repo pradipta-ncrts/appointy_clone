@@ -53,7 +53,7 @@ Squeedr
                                        <h2><?=$srv_lst->service_name;?></h2>
                                        <p><span>Duration</span>: <?=$srv_lst->duration;?> mins</p>
                                     </div>
-                                    <div class="custm-tab team-memtab">
+                                    <div class="">
                                        <ul class="nav nav-tabs">
                                           <li class="active"><a data-toggle="tab" href="#home">Current Schedule</a></li>
                                        </ul>
@@ -264,7 +264,7 @@ $('#update_staff_availability_form').validate({
            if (response.response_status == 1) {
                //$(form)[0].reset();
                //$('#myModalregular').modal('hide');
-               swal('Success!', response.response_message, 'success');
+               //swal('Success!', response.response_message, 'success');
                location.reload();
            } else {
                swal('Sorry!', response.response_message, 'error');

@@ -38,20 +38,7 @@
          <div class="osahanloading"></div>
       </div>
       @yield('content')
-      <?php
-         if(Request::segment(2)=='my-profile')
-         {
-         ?>
-      <button class="popup-button" onclick="ShowPopup(this);"><img src="{{asset('public/assets/mobile/images/edit.png')}}" /> </button>
-      <?php
-         }
-         else
-         {
-         ?>
       <button class="popup-button" onclick="ShowPopup(this);"><img src="{{asset('public/assets/mobile/images/plus.png')}}" /> </button>
-      <?php
-         }
-         ?>
       <div id="popup">
          <ul class="showMobile menuList">
             <!-- <li><a>List of Notes <img src="{{asset('public/assets/mobile/images/add-menu/list-of-notes.png')}}"/></a></li> -->
@@ -152,7 +139,7 @@
                              </div>
                              <div class="input-group custom-group">
                                 <input id="block_time_reason" type="text" class="form-control" name="block_time_reason" placeholder="Reasons">   
-                                <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-calender.png')}}"/> </span>
+                                <!-- <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-calender.png')}}"/> </span> -->
                              </div>
 
                              <h6>Note</h6>
@@ -179,24 +166,24 @@
          </div>
       </div>
 
-      <div class="modal fade" id="staffListModalForTime" role="dialog">
-        <div class="modal-dialog add-pop">
+      <div class="modal fade mb-custmmodal" id="staffListModalForTime" role="dialog">
+        <div class="modal-dialog">
            <!-- Modal content--> 
-          <div class="modal-content new-modalcustm">
+          <div class="popupInside new-modalcustm">
               <form name="" id="" method="post" action="" enctype="multipart/form-data">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal">×</button>
                      <h4 class="modal-title">Staff List</h4>
                   </div>
                   <div class="filter-op"> <!-- All staff selected -->   <span><a href="JavaScript:Void(0);" class="staff-select-all-time">Select All</a>  &nbsp; | &nbsp;  <a href="JavaScript:Void(0);" class="staff-deselect-all-time">Deselect All</a></span></div>
-                  <div class="modal-body clr-modalbdy">
+                  <div class="modal-body">
                      <div class="notify" >
                         <input type="text" id="staffFilterTime" class="input-block-level form-control search-ap" placeholder="Search Staff" >
                         <?php
                         foreach ($stuffs_list['stuff_list'] as $key => $value)
                         {   
                         ?>
-                            <div class="user-bkd break20px">
+                            <div class="user-bkd">
                              <?php
                               if($value->staff_profile_picture)
                               {
@@ -214,13 +201,9 @@
                              <h2><?=$value->full_name;?>
                                 <br><a href="mailto:<?=$value->email;?>"><i class="fa fa-envelope-o"></i> <?=$value->email;?></a>
                              </h2>
-                             <div class="row">
                                 <div class="check-ft">
-                                   <div class="form-group"> 
                                     <input name="filter_stuff_id_time" class="calender-inpt" type="checkbox" value="<?=$value->staff_id;?>">
-                                  </div>
                                 </div>
-                             </div>
                            </div>
                         <?php
                         }
@@ -228,7 +211,7 @@
                      </div>
                      <div class="butt-pop-ft">
                          <button type="submit" id="add-stuff-into-input-time" class="btn btn-primary butt-next">Done</button> 
-                         <a href="JavaScript:Void(0);" id="cancel-staff-list-time" class="btn btn-primary butt-next" style="margin-bottom: -20px;">Cancel</a> 
+                         <a href="JavaScript:Void(0);" id="cancel-staff-list-time" class="btn btn-primary butt-next">Cancel</a> 
                       </div>
                   </div>
               </form>
@@ -236,24 +219,24 @@
         </div>
       </div>
 
-      <div class="modal fade" id="staffListModal" role="dialog">
-        <div class="modal-dialog add-pop">
+      <div class="modal fade mb-custmmodal" id="staffListModal" role="dialog">
+        <div class="modal-dialog">
            <!-- Modal content--> 
-          <div class="modal-content new-modalcustm">
+          <div class="popupInside new-modalcustm">
               <form name="" id="" method="post" action="" enctype="multipart/form-data">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal">×</button>
                      <h4 class="modal-title">Staff List</h4>
                   </div>
                   <div class="filter-op"> <!-- All staff selected -->   <span><a href="JavaScript:Void(0);" class="staff-select-all">Select All</a>  &nbsp; | &nbsp;  <a href="JavaScript:Void(0);" class="staff-deselect-all">Deselect All</a></span></div>
-                  <div class="modal-body clr-modalbdy">
+                  <div class="modal-body">
                      <div class="notify" >
                         <input type="text" id="staffFilter" class="input-block-level form-control search-ap" placeholder="Search Staff" >
                         <?php
                         foreach ($stuffs_list['stuff_list'] as $key => $value)
                         {   
                         ?>
-                            <div class="user-bkd break20px">
+                            <div class="user-bkd">
                              <?php
                               if($value->staff_profile_picture)
                               {
@@ -271,13 +254,9 @@
                              <h2><?=$value->full_name;?>
                                 <br><a href="mailto:<?=$value->email;?>"><i class="fa fa-envelope-o"></i> <?=$value->email;?></a>
                              </h2>
-                             <div class="row">
-                                <div class="check-ft">
-                                   <div class="form-group"> 
+                                <div class="check-ft"> 
                                     <input name="filter_stuff_id" class="calender-inpt" type="checkbox" value="<?=$value->staff_id;?>">
-                                  </div>
                                 </div>
-                             </div>
                            </div>
                         <?php
                         }
@@ -285,7 +264,7 @@
                      </div>
                      <div class="butt-pop-ft">
                          <button type="submit" id="add-stuff-into-input" class="btn btn-primary butt-next">Done</button> 
-                         <a href="JavaScript:Void(0);" id="cancel-staff-list" class="btn btn-primary butt-next" style="margin-bottom: -20px;">Cancel</a> 
+                         <a href="JavaScript:Void(0);" id="cancel-staff-list" class="btn btn-primary butt-next">Cancel</a> 
                       </div>
                   </div>
               </form>
@@ -294,10 +273,10 @@
       </div>
 
       <!-- Add Appoitment --> 
-      <div class="modal fade" id="myModaladdappoinmentReschedule" role="dialog">
-         <div class="modal-dialog add-pop">
+      <div class="modal fade mb-custmmodal" id="myModaladdappoinmentReschedule" role="dialog">
+         <div class="modal-dialog">
             <!-- Modal content--> 
-            <div class="modal-content new-modalcustm">
+            <div class="popupInside new-modalcustm">
                <form name="reschedule_appoitment" id="reschedule_appoitment" method="post" action="{{ url('api/reschedule_appoitment') }}" enctype="multipart/form-data">
                <input type="hidden" name="reshedule_appointment_id" value="" id="reshedule_appointment_id">
                <input type="hidden" name="reshedule_service_id" value="" id="reshedule_service_id">
@@ -306,7 +285,7 @@
                   <button type="button" class="close" data-dismiss="modal">&times;</button> 
                   <h4 class="modal-title"> Reschedule Appointments</h4>
                </div>
-               <div class="modal-body clr-modalbdy">
+               <div class="modal-body">
                   <div class="row">
                      <div class="col-sm-12">
                         <div class="form-group">

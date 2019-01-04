@@ -155,9 +155,18 @@ class UsersController extends ApiController {
 		
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key'])))
 		{
-			return redirect('/login');
+			return redirect('/mobile/login');
 		}
-		
+
+		//login user details
+		$user_id = $authdata['user_no'];
+		$findCond=array(
+            array('id','=',$user_id),
+        );
+        
+        $selectFields=array('id','name','profile_perosonal_image');
+        $user_details = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$selectFields);
+        	
 
 		// Call API //
 		$post_data = $authdata;
@@ -205,6 +214,7 @@ class UsersController extends ApiController {
 				$data['dashboard_reports'] = $return->dashboard_reports;
 				$data['duration'] = $duration;
 				$data['type'] = $type;
+				$data['user_details'] = $user_details;
 				
 			}
 			//echo '<pre>'; print_r($data); exit;
@@ -223,10 +233,85 @@ class UsersController extends ApiController {
 	{
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('mobile/login');
+           return redirect('/mobile/login');
 		}
 
-		return view('mobile.profile.my-profile');
+		$user_id = $authdata['user_no'];
+
+		$findCond = array(
+            array('id','=',$user_id),
+			array('is_deleted','=','0'),
+		);
+		$selectFields = array();
+		$profession_select_field = array('profession as prof');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameProfession,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableNameUser,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('profession','=','profession_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $profession_select_field,
+		            ),
+        );
+		$user_details = $this->common_model->fetchData($this->tableObj->tableNameUser, $findCond, $selectFields,$joins);
+
+		//staff list
+		$staffCondition = array(
+            array('user_id','=',$user_details->id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+		$staffFields = array();
+		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff, $staffCondition, $staffFields);
+		//echo "<pre>";
+		//print_r($staff_list); die();
+
+		//service list
+		$servCond = array(
+            array('user_id','=',$user_details->id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+		$serviceFields = array();
+		$currency_field = array('currency');
+		$category_select_field = array('category as cat');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameCurrency,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('currency_id','=','currency_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $currency_field,
+		            ),
+		            array(
+		                'join_table'=>$this->tableObj->tableNameCategory,
+		                'join_table_alias'=>'servTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                'join_type'=>'left',
+		                'join_on'=>array('category_id','=','category_id'),
+		                'join_on_more'=>array(),
+		                //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+		                'select_fields' => $category_select_field,
+	            	),
+        );
+
+		$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
+		$professions = $this->master_data_list($table=$this->tableObj->tableNameProfession);
+
+		
+		$data['user_details'] = $user_details;
+		$data['staff_list'] = $staff_list;
+		$data['service_list'] = $service_list;
+		$data['profession'] = $professions;
+		//echo "<pre>";
+		//print_r($data); die();
+		return view('mobile.profile.my-profile', $data);
 	}
 
 	public function business_contact_info()
@@ -542,6 +627,83 @@ class UsersController extends ApiController {
 			return $return;
 		}
 		//return view('website.settings-business-hours');
+	}
+
+	public function my_squeedr(Request $request, $username)
+	{
+		$findCond = array(
+            array('username','=',$username),
+			array('is_deleted','=','0'),
+		);
+		$selectFields = array();
+		$profession_select_field = array('profession as prof');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameProfession,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableNameUser,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('profession','=','profession_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $profession_select_field,
+		            ),
+        );
+		$user_details = $this->common_model->fetchData($this->tableObj->tableNameUser, $findCond, $selectFields,$joins);
+
+		//staff list
+		$staffCondition = array(
+            array('user_id','=',$user_details->id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+		$staffFields = array();
+		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff, $staffCondition, $staffFields);
+		//echo "<pre>";
+		//print_r($staff_list); die();
+
+		//service list
+		$servCond = array(
+            array('user_id','=',$user_details->id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+		$serviceFields = array();
+		$currency_field = array('currency');
+		$category_select_field = array('category as cat');
+		$joins = array(
+		             array(
+		                'join_table'=>$this->tableObj->tableNameCurrency,
+		                //'join_with_alias'=>'userTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                //'join_with_alias'=>'servTb',
+		                'join_type'=>'left',
+		                'join_on'=>array('currency_id','=','currency_id'),
+		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
+		                'select_fields' => $currency_field,
+		            ),
+		            array(
+		                'join_table'=>$this->tableObj->tableNameCategory,
+		                'join_table_alias'=>'servTb',
+		                'join_with'=>$this->tableObj->tableUserService,
+		                'join_type'=>'left',
+		                'join_on'=>array('category_id','=','category_id'),
+		                'join_on_more'=>array(),
+		                //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+		                'select_fields' => $category_select_field,
+	            	),
+        );
+
+		$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
+		$professions = $this->master_data_list($table=$this->tableObj->tableNameProfession);
+
+		
+		$data['user_details'] = $user_details;
+		$data['staff_list'] = $staff_list;
+		$data['service_list'] = $service_list;
+		$data['profession'] = $professions;
+
+		return view('mobile.user.squeedr.my-squeedr',$data);
 	}
 
 

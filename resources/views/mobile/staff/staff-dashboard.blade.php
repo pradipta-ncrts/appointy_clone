@@ -1,61 +1,81 @@
-@extends('../layouts/mobile/master_template_web')
+@extends('../layouts/mobile/master_template_staff')
 @section('title')
 Squeedr
 @endsection
 
 @section('content')
-<header class="mobileHeader showMobile" id="divBh"> 
-  <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
-  <h1>Staff List</h1>
-  <ul>
-    <li><a href="{{url('mobile/add-staff')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
-  </ul>
+<header class="mobileHeader showMobile" id="divBh">
+    <a class="showSidenav"><img src="{{asset('public/assets/mobile/images/menu-icon.png')}}" /> </a>
+    <h1>Dashboard</h1>
+    <ul>
+        <li>&nbsp;</li>
+        <!-- <li><a> <img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
+        <li><a> <img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li> -->
+    </ul>
 </header>
-<main>
-   <div class="container-fluid">
-      <div class="row">
-         <div class="mobileStaff break10px showMobile" >
+
+<div class="menuoverlay">
+    <div class="sideNavbar sideToggle">
+        <div class="profileMenuImg">
+          <a href="#">
             <?php
-            if(!empty($staff_list))
+            if($staff_details->staff_profile_picture)
             {
-              foreach ($staff_list as $key => $value)
-              {
             ?>
-            <div class="whitebox">
-               <h2><?=$value->full_name;?></h2>
-               <span><?=$value->expertise;?></span>
-               <ul>
-                  <li><i class="fa fa-envelope"></i><?=$value->email;?></li>
-                  <li><i class="fa fa-phone"></i><?=$value->mobile ? $value->mobile : 'NIL'; ?></li>
-               </ul>
-               <a href="javascript:void(0);" class="editStaff" data-staff-id="<?=$value->staff_id;?>" style=" position: absolute;  right: 17px;  bottom: 13px;"><i class="fa fa-pencil"></i> </a>
-               <ol>
-                  <li><?=$value->addess;?></li>
-                  <!-- <li>Sleep Medicine</li>
-                  <li><a>More </a></li> -->
-               </ol>
-            </div>
+            <img src="<?php echo $staff_details->staff_profile_picture;?>" />
             <?php
-                }
             }
             else
             {
             ?>
-              <div class="whitebox">
-               <h2>No data found.</h2>
-              </div>
+            <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" />
             <?php
             }
             ?>
+          </a>
+            <span><?=$staff_details->full_name;?></span>
+        </div>
+        <ul>
+            <li><a href="{{url('mobile/staff-dashboard')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Profile</span> </a> </li>
+            <li><a href="{{url('mobile/staff-booking-list/all')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Bookings</span> </a> </li>
+            <!-- <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/review.png')}}" /> <span>Feedback</span> </a> </li>
+            <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li>
+            <li><a href="{{url('mobile/settings')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Settings</span> </a> </li>
+             <li><a><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li>
+            <li><a><img src="{{asset('public/assets/mobile/images/sidenav/background.png')}}" /> <span>Change Background </span> </a> </li>
+            <li><a><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>About</span> </a> </li> -->
+            <li><a href="{{url('mobile/logout')}}"><img src="{{asset('public/assets/mobile/images/sidenav/logout.png')}}" /> <span>Logout</span> </a> </li>
+        </ul>
+    </div>
+</div>
+<main>
+   <div class="container-fluid">
+      <div class="row">
+         <div class="mobileStaff break10px showMobile" >
+            <div class="whitebox">
+               <h2><?=$staff_details->full_name;?></h2>
+               <span><?=$staff_details->expertise;?></span>
+               <ul>
+                  <li><i class="fa fa-envelope"></i><?=$staff_details->email;?></li>
+                  <li><i class="fa fa-phone"></i><?=$staff_details->mobile ? $staff_details->mobile : 'NIL'; ?></li>
+               </ul>
+               <a href="javascript:void(0);" class="editStaff" data-staff-id="<?=$staff_details->staff_id;?>" style=" position: absolute;  right: 17px;  bottom: 13px;"><i class="fa fa-pencil"></i> </a>
+               <ol>
+                  <li><?=$staff_details->addess;?></li>
+                  <!-- <li>Sleep Medicine</li>
+                  <li><a>More </a></li> -->
+               </ol>
+            </div>
          </div>
       </div>
    </div>
 </main>
+
 <div class="modal fade" id="myModaleditstaff" role="dialog">
     <div class="modal-dialog add-pop">
         <!-- Modal content-->
         <div class="modal-content new-modalcustm">
-            <form name="edit_team_member_form" id="edit_team_member_form" method="post" action="{{url('api/edit_staff')}}" enctype="multipart/form-data">
+            <form name="edit_team_member_form" id="edit_team_member_indiv" method="post" action="{{url('api/edit_team_member_indiv')}}" enctype="multipart/form-data">
                 <input type="hidden" name="staff_id" id="edit_staff_id" value="">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -125,10 +145,11 @@ Squeedr
                                     <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="staff_category" id="edit_staff_category" >
                                     <option value="">Select Category </option>
                                     <?php
-                                    if(!empty($category_list))
-                                    foreach ($category_list as $key => $value)
+                                    $basicdatas = App\Http\Controllers\BaseApiController::category_list();
+                                    if(!empty($basicdatas['category_list']))
+                                    foreach ($basicdatas['category_list'] as $key => $value)
                                     {
-                                        echo "<option value='".$value->category_id."'>".$value->cat."</option>";
+                                        echo "<option value='".$value->category_id."'>".$value->category."</option>";
                                     }
                                     ?>
                                     </select>
@@ -180,6 +201,7 @@ Squeedr
         </div>
     </div>
 </div>
+
 @endsection
 
 
@@ -187,14 +209,15 @@ Squeedr
 <script type="text/javascript">
 $('.editStaff').click(function(e){
       var staff_id = $(this).attr('data-staff-id');
-      //alert(staff_id);
-      var data = addCommonParams([]);
+      var post_data = staff_id;
+      
       //alert(serviceid);
-      data.push({name:'staff_id', value:staff_id});
       $.ajax({
-          url: baseUrl2+"/api/staff-details", 
+          url: baseUrl2+"/api/staff_details_mobile", 
           type: "POST", 
-          data: data, 
+          data: {
+                  post_data : post_data
+                }, 
           dataType: "json",
           success: function(response) 
           {
@@ -234,7 +257,7 @@ $('.editStaff').click(function(e){
       
   });
 
- $('#edit_team_member_form').validate({
+ $('#edit_team_member_indiv').validate({
       rules: {
           edit_staff_fullname: {
               required: true
@@ -277,7 +300,7 @@ $('.editStaff').click(function(e){
               required: 'Please enter description'
           }
       },
-      errorPlacement: function(error, element) {
+      /*errorPlacement: function(error, element) {
           if (element.attr("name") == "staff_fullname") {
               error.insertAfter($('#edit_fullname_error'));
           } else if (element.attr("name") == "staff_username") {
@@ -289,11 +312,10 @@ $('.editStaff').click(function(e){
           } else if (element.attr("name") == "staff_description") {
               error.insertAfter($('#edit_description_error'));
           }
-      },
+      },*/
       submitHandler: function(form) {
           var data = $(form).serializeArray();
-          data = addCommonParams(data);
-          var files = $("#edit_team_member_form input[type='file']")[0].files;
+          var files = $("#edit_team_member_indiv input[type='file']")[0].files;
           var form_data = new FormData();
           if (files.length > 0) {
               for (var i = 0; i < files.length; i++) {

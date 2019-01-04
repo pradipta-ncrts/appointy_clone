@@ -148,6 +148,14 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
     Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
 
+    Route::any('/staff_login/','Api\UsersController@staff_login');
+    Route::any('/staff_details_mobile','Api\StaffsController@staff_details_mobile');
+    Route::any('/edit_team_member_indiv','Api\StaffsController@edit_team_member_indiv');
+    Route::any('/update-profile-mobile','Api\ProfileController@update_profile_mobile');
+
+    
+    
+
 });
 
 
@@ -266,16 +274,17 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/add-staff','Mobile\StaffController@add_staff');
     Route::get('/service-list','Mobile\ServiceController@service_list');
     Route::get('/add-service','Mobile\ServiceController@add_service');
+    Route::get('/edit-service','Mobile\ServiceController@edit_service');
     Route::get('/review-list','Mobile\ReviewController@review_list');
     Route::get('/settings','Mobile\SettingsController@settings');
     Route::get('/membership','Mobile\PlanController@membership');
     Route::get('/business-hours','Mobile\UsersController@business_hours');
     Route::any('/make-payment/{parameter?}','Mobile\PlanController@make_payment');
-  
+    Route::any('/my-squeedr/{username?}','Mobile\UsersController@my_squeedr');
+    Route::get('/staff-dashboard','Mobile\StaffController@staff_dashboard');
+    Route::get('/staff-booking-list','Mobile\StaffController@staff_booking_list');
+    Route::get('/staff-booking-list/{duration?}/','Mobile\StaffController@staff_booking_list');
 });
-
-
-
 
 
 /*

@@ -532,9 +532,11 @@ ul.addons li a {
 	position:absolute;bottom:0px;
 }
 .sideNavbar ul li img {
-	width: 20px;
+	max-width: 20px;
 	vertical-align: middle;
 	margin-right: 10px;
+	height: 20px;
+	 filter:brightness(200%) grayscale(100%) contrast(200%);
 }
 .sideNavbar ul li a {
 	display: block;
@@ -804,6 +806,7 @@ label.note {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	left: 50%;
+	width: 22px;
 }
 #popup {
 	position: fixed;
@@ -1914,6 +1917,7 @@ a.gear {
 	font-size: 14px;
 	padding-bottom: 5px;
 	color: #333;
+	margin-top: 10px;
 }
 .form-details label i {
 	color: #ccc;
@@ -1929,6 +1933,10 @@ a.gear {
 	color: #666;
 	padding: 5px 0 15px 0;
 }
+.form-details span.current {
+	padding:0px; font-size: 14px;
+}
+
 .form-details p {
 	color: #bbb;
 	font-size: 12px;
@@ -2091,7 +2099,7 @@ position: absolute;right: 16px;top: 36px;}
 #openbox ul li:last-child{border: 0}
 #openbox ul li a{font-size: 13px;color: #000;float: left;position: inherit;text-decoration: none;}
 .share-cusbtn{float: right;}
-.cusbtn-style{float: right;border: 0;background: none;}
+.cusbtn-style{float: right;border: 0;background: none; margin-left:20px; }
 .custm-share{width:100%;position:relative;}
 .custm-share .dropdown{background:none;position:absolute;top:0;right:5px;}
 .custm-share .dropdown .btn{background:none;border:0;}
@@ -2259,7 +2267,7 @@ label.right35px,  label.right45px,  label.right47px,  label.right72px,  label.ri
 }
  @media(max-width:767px) {
 body {
-	padding-top: 0;
+	padding-top: 45px;
 }
 .showDekstop {
 	display: none;
@@ -2270,9 +2278,7 @@ body {
 main {
 	margin-left: 0;
 }
-.headRow {
-	background: #f6f8fa;
-}
+
 .nomarginbottommobile {
 	margin-bottom: 0 !important;
 }
@@ -2294,8 +2300,9 @@ main {
 .mobileHeader {
 	background: #35455d;
 	padding: 10px 15px;
-	position: static;
+	position: fixed;
 	height: auto;
+	top: 0px;
 }
 .dummy {
 	color: #35455d;
@@ -2306,6 +2313,8 @@ main {
 }
 .mobileHeader ul li {
 	margin-right: 10px;
+	width: 40px;
+	text-align:right;
 }
 .mobileHeader ul li img {
 	max-width: 20px;
@@ -2321,6 +2330,7 @@ main {
 	color: #fff;
 	text-transform: uppercase;
 	padding-top: 3px;
+	font-size: 16px;
 }
 .bhchildmobile {
 	display: flex;
@@ -2343,10 +2353,253 @@ main {
 .whitebox {
 	background: #fff;
 	position: relative;
-	padding: 15px;
-	margin: 10px;
+	padding: 0 0px;
+	margin:15px 10px;
 	position: relative;
 }
+
+
+
+.cust-box {box-shadow: 0px 0px 5px 0px #e6e4e4; padding: 15px 25px; height: auto; border: 0 !important; }
+
+.headRow {
+
+	background: #fff;
+
+	padding: 10px 0;
+
+	margin-bottom: 20px;
+
+}
+
+.mg { margin: 10px 0; }
+
+.break10px {
+
+	margin-top: 10px
+
+}
+
+.break20px {
+
+	margin-top: 20px
+
+}
+
+.break30px {
+
+	margin-top: 30px
+
+}
+
+.break50px {
+
+	margin-top: 50px
+
+}
+
+
+.ans-box { padding: 10px 15px; position: relative; margin: 15px 15px 0 15px;
+    border: 1px solid #ccc;}
+
+.ans-box:hover {
+	background: #f9f9f9;
+}
+
+.ans-box h3 { font-size: 15px;  }
+
+.edit-ans { position: absolute; right: 10px; top: 10px; }
+
+
+#ans-modal1 .modal-header, #ans-modal2 .modal-header   {
+	background: none;
+}
+#ans-modal1 .modal-header h4, #ans-modal2 .modal-header h4 {
+	color: #000;
+	font-size: 18px; 
+	padding:8px;
+} 
+#ans-modal1 .modal-header .close, #ans-modal2 .modal-header .close  { 
+	color: #000;
+ }
+
+#ans-modal1 .modal-body, #ans-modal2 .modal-body  { 
+	padding: 8px;
+}
+
+
+ul.minutes {
+
+	display: flex;
+
+	margin-top: 10px;
+
+}
+
+ul.minutes li {
+
+	border: 1px solid #ccc;
+
+	margin-right: 2px;
+
+	text-align: center;
+
+	font-size: 16px;
+
+}
+
+ul.minutes li:last-child {
+
+	margin-left: 0px;
+
+}
+
+ul.minutes li a {
+
+	display: block;
+
+	padding: 8px 15px;
+
+	color: #000;
+
+	cursor: pointer;
+
+}
+
+ul.minutes li.active {
+
+	border-color: #41a4c4;
+
+}
+
+ul.minutes li a label {
+
+	font-size: 11px;
+
+	font-weight: 300;
+
+	color: #8e8e8e;
+
+}
+
+
+
+
+
+.tab-menu  { border-bottom: 1px solid #d0d0d0; height: 47px; }
+
+
+.tab-menu  li {float: left;margin: 0 0px; height: 47px;}
+
+.tab-menu li:first-child  a{border-left:0; }
+
+
+
+.tab-menu li a { display: block; padding: 12px 17px; font-size: 16px; font-weight: 400; color: #000; position: relative;}
+
+.tab-menu li a::after {content: ""; background: #1f95cc; height: 2px; position: absolute; width: 100%; left: 0px; bottom: -2px; transition: all 250ms ease 0s; transform: scale(0);}
+
+.tab-menu li a:hover::after{ transform: scale(1); }
+
+.tab-menu li a.active::after{ transform: scale(1); }
+
+
+
+
+
+
+
+.dash-info {width:100%; margin:0 auto; padding-bottom:0px;}
+
+.dash-info .infobpx {box-shadow: 0px 0px 5px 0px #e6e4e4; padding: 15px; text-transform: uppercase; text-align: center; color:rgb(172, 172, 172); cursor: pointer; margin-bottom: 15px; }
+
+.dash-info .infobpx h3 { font-size: 36px; font-weight: 400; padding: 0 0 5px ;}
+
+.dash-info .infobpx h4 { font-size: 16px; font-weight: 400;padding: 0 0 10px;}
+
+.dash-info .infobpx p { font-size:14px; font-weight: 300;padding:0px;}
+
+.dash-info .infobpx.active { color: #1f95cc; border-bottom: 2px solid #1f95cc}
+
+.dash-info .infobpx:hover { color: #1f95cc; border-bottom: 2px solid #1f95cc}
+
+
+
+.dash-info .infobpx p span { color: #f00;}
+
+.dash-info .infobpx p span.green { color: rgb(0, 214, 96);}
+
+
+.rem-w {
+    position: absolute;
+    right: 25px;
+    top: 6px;
+    color: #888;
+    font-size: 16px;
+}
+.dshbrd-drp li {
+    display: block;
+    padding: 7px 12px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.arrow-d ul li img {
+    width: 13px;
+    margin-top: 16px;
+}
+
+#mydivheader {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    background-color: #2196F3;
+    color: #fff;
+}
+
+
+
+
+
+.serv-info {width: 95%; margin:0 auto; padding:15px; position: relative;}
+
+.serv-info .servbox {box-shadow: 0px 0px 5px 0px #e6e4e4; padding: 15px;  }
+
+.serv-info .servbox h4 { font-size: 16px; font-weight: 400;padding: 0 0 2px;}
+
+.serv-info .servbox p { font-size:14px; font-weight: 300;padding:0px; color:rgb(172, 172, 172);}
+
+.serv-info .pad8 { padding: 0 8px 0 8px}
+
+
+
+
+
+
+.add-w {     right: -40px !important;
+    top: 40px !important;
+    color: #337ab7 !important;
+    font-size: 22px !important;}
+
+
+
+
+.todate {
+    float: left;
+    float: left;
+    margin: 0 20px 0 0;
+    padding: 12px 12px;
+}
+
+
+
+
+
+
+
 .bhscheduleInside h2 {
 	font-size: 14px;
 }
@@ -2640,7 +2893,7 @@ a#showTn1 {
 }
 .mobileappointed {
 	display: block !important;
-	margin-top: 20px;
+	margin-top: 10px;
 }
 .mobileappointed .appointment {
 	background: #fff !important;
@@ -2677,12 +2930,17 @@ a#showTn1 {
 .mobilesettings {
 	display: flex;
 	justify-content: space-between;
+	box-shadow: 0px 0px 5px 0px #e6e4e4;
+	padding: 15px;
 }
 .settingslist {
 	display: flex;
 }
 .mobilesettings img {
-	margin-right: 10px;
+	max-width: 38px;
+    margin-right: 10px;
+    max-height: 35px;
+	
 }
 .mobilesettings label {
 	display: inline-block;
@@ -2696,6 +2954,7 @@ a#showTn1 {
 	display: inline-block;
 	line-height: 40px;
 	color: #666;
+	font-size: 22px;
 }
 .mobilesettings:first-child label,  .mobilesettings:first-child a {
 	line-height: 24px;
@@ -2779,15 +3038,21 @@ a#showTn1 {
 }
 .mobileStaff h2,  .mobileStaff span,  .mobileStaff ul {
 	display: block;
+	
 }
+.mobileStaff h2{
+	font-size: 18px !important;
+}
+
+
 .mobileStaff span {
 	color: #8d95a2;
 	font-size: 13px;
-	padding: 5px 0 10px 0;
+	padding: 0px 0 5px 0;
 }
 .mobileStaff ul li {
 	display: block;
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 	font-size: 14px;
 }
 .mobileStaff ul li i {
@@ -2798,10 +3063,10 @@ a#showTn1 {
 .mobileStaff ul li:last-child {
 	margin-bottom: 0;
 }
-.mobileStaff ol {
-	padding-top: 10px;
+.mobileStaff ol {	
 	border-top: 1px solid #ccc;
-	margin-top: 10px;
+	margin: 15px 0;
+	height: 1px;
 }
 .mobileStaff ol li {
 	display: inline-block;
@@ -3305,9 +3570,13 @@ a.share {
 	width: 65px;
 	margin-right: 20px;
 }
+
+
+
 .profileDetails h1 {
 	font-weight: bold;
-	padding-bottom: 5px;
+	padding-bottom: 0px;
+	font-size: 16px;
 }
 .profileDetails span {
 	display: block;
@@ -3334,23 +3603,36 @@ a.share {
 .profileMobileHeading {
 	display: flex;
 	justify-content: inherit;
+	    margin: 0 0 10px 15px;
 }
 .profileMobileHeading h1 {
-	margin-top: 15px;
+	margin-top: 5px;
+	margin-left: 5px;
+	display: inline-block;
 }
 .profileheading {
 	font-size: 13px;
 }
 .profileheading img {
 	vertical-align: middle;
-	margin-right: 5px;
-	width: 16px;
+	margin-right: 0px;
+	max-width: 18px;
+    max-height: 18px;
 }
 .profileheading h4 {
 	display: inline-block;
-	margin-top: 8px;
+	margin: 5px;
 	font-weight: bold;
+	font-size: 14px;
 }
+
+.input-group-addon {
+    padding: 6px 2px;
+}
+
+
+
+
 .rate span,  .payment span {
 	padding-left: 20px;
 	font-size: 13px;
@@ -3444,6 +3726,14 @@ ul.menuList li a {
 .whitebox {
 	padding: 10px;
 }
+
+.whitebox {
+	padding: 10px;
+}
+
+.mobileStaff .whitebox { m }
+
+
 .profileImg img {
 	width: 55px;
 }

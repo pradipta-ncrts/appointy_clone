@@ -119,6 +119,89 @@ class UsersController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+
+	//***** Staff Login *****//
+	public function staff_login(Request $request)
+	{
+		$response_data=array();
+		// validated the parameters
+		$validator = Validator::make($request->all(), [
+			'email' => 'bail|required',
+			'password' => 'bail|required',
+		]);
+		if(!$validator->fails())
+		{
+			//validate the user details
+
+			$table_name = $this->tableObj->tableNameStaff;
+			$password = $request->input('password');
+			$email = $request->input('email');
+			$conditions = array(
+				array('password','=',md5($password)),
+				'or'=>array('email'=>$email,'username'=>$email)
+			);
+			$selectFields=array();
+			$user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
+			if(empty($user))
+			{
+				$this->response_message="Email/Username and password does not match.";
+			}
+			else
+			{
+				//echo '<pre>'; print_r($user); exit;
+				$is_blocked = $user->is_blocked;
+				if($is_blocked == 0)
+				{
+					$created_on = strtotime($user->created_on);
+					//checked is the email is verified or not 
+					if($user->is_email_verified == 0 || $user->is_email_verified == 1)
+					{
+						//If user is registered within 3days
+						/*if(($created_on + (72*3600)) >= time() )
+						{*/
+							// create the user request key for validating the farther request of the user
+							$this->logged_user_no = $user->staff_id;
+							$user_request_key = $this->generate_request_key();
+							$user_details['user_no']=$this->logged_user_no;
+							$user_details['user_type']='Staff';
+							$user_details['user_request_key']=$user_request_key;
+							//$user_details['is_basic_data_saved']=$user->is_basic_data_saved;
+							$response_data['user']=$user_details;
+							$this->response_status='1';
+						/*}
+						else
+						{
+							$this->response_message="email_need_to_verify_for_login";
+						}*/
+					}
+					else
+					{
+						$this->logged_user_no = $user->staff_id;
+						$user_request_key = $this->generate_request_key();
+						$user_details['user_no']=$this->logged_user_no;
+						$user_details['user_type']='Staff';
+						$user_details['user_request_key']=$user_request_key;
+						//$user_details['is_basic_data_saved']=$user->is_basic_data_saved;
+						$response_data['user']=$user_details;
+						$this->response_status='1';
+					}
+				}
+				else
+				{
+					$this->response_message="account_blocked";
+				}
+			}
+		}
+		else
+		{
+			// if parameter validation checked faild
+			$errors = $validator->errors()->messages();
+			$this->response_message = $this->forErrorMessage($errors);
+		}
+		// generate the service / api response
+		$this->json_output($response_data);
+	}
+
 	/***Login ***/
 	public function logout(Request $request)
 	{

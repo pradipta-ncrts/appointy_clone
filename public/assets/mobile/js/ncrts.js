@@ -1622,11 +1622,12 @@ $(".clone-srvice").click(function (event) {
           $('.animationload').hide();
           if(response.result=='1')
           {
-              swal({title: "Success", text: response.message, type: "success"},
-               function(){ 
+              swal("Success", response.message, "success");
+               /*function(){ 
                    location.reload();
-               }
-            );
+               }*/
+            //);
+            location.reload();
           }
           else
           {
@@ -1685,7 +1686,7 @@ $(".save-as-template").click(function (event) {
 });
 
 
-$(".delete-srvice").click(function (event) {
+/*$(".delete-srvice").click(function (event) {
   event.preventDefault();
   let serviceid = $(this).attr('data-serviceid');
   swal({
@@ -1702,7 +1703,7 @@ $(".delete-srvice").click(function (event) {
 
         if (isConfirm){
             let data = addCommonParams([]);
-            //alert(serviceid);
+            alert(serviceid);
             data.push({name:'service_id', value:serviceid});
             $.ajax({
                 url: baseUrl2+"/api/delete-service", 
@@ -1737,7 +1738,60 @@ $(".delete-srvice").click(function (event) {
             });
         }
     });
-});
+});*/
+
+$(".delete-srvice").click(function (event) {
+  event.preventDefault();
+  let serviceid = $(this).attr('data-id');
+  swal({
+      title: "Are you sure?",
+      text: "Once cancelled, you will loose all the details of the appointment!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: '#DD6B55',
+      confirmButtonText: 'Yes, I am sure!',
+      cancelButtonText: "No, cancel it!"
+   }).then(
+         function () { 
+          let data = addCommonParams([]);
+            alert(serviceid);
+            data.push({name:'service_id', value:serviceid});
+            $.ajax({
+                url: baseUrl2+"/api/delete-service", 
+                type: "POST", 
+                data: data, 
+                dataType: "json",
+                success: function(response) 
+                {
+                    console.log(response);
+                    $('.animationload').hide();
+                    if(response.result=='1')
+                    {
+                        swal("Success", response.message, "success");
+                        location.reload();
+                         /*function(){ 
+                             location.reload();
+                         }
+                      );*/
+                    }
+                    else
+                    {
+                        swal("Error", response.message , "error");
+                    }
+                },
+                beforeSend: function()
+                {
+                    $('.animationload').show();
+                },
+                complete: function()
+                {
+                    //$('.animationload').hide();
+                }
+            });
+        });
+  });
+
+
 
 $("#submit_service_status_filter").click(function (event) {
   event.preventDefault();
