@@ -373,12 +373,15 @@ class ProfileController extends ApiController {
 		$date_range_type = $request->input('date_range_type'); 
 		$date_range_data = $request->input('date_range_data'); 
 		$rolling_day_data = $request->input('rolling_day_data'); 
-		$availability_from = $request->input('availability_from'); 
-		$availability_to = $request->input('availability_to'); 
 		$multiple_preference = $request->input('multiple_preference'); 
 		$apply_day = $request->input('apply_day'); 
+		$available_days = $request->input('available_days');
+		$available_dates = $request->input('available_dates');
+		if($multiple_preference==1)
+		{
+
+		}
 		
-               
    
         $response_data['response_status'] ='1';
         $response_data['response_message'] = "Staff successfully added.";
