@@ -1673,6 +1673,140 @@ class UsersController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+	public function update_invitee_question(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$invitee_question_id = $request->input('invitee_question_id');
+		$question = $request->input('question');
+		$isrequired = $request->input('is_required');
+		if(isset($isrequired) && $isrequired!=''){
+			$is_required = 1;
+		} else {
+			$is_required = 0;
+		}
+		$answer_type = $request->input('answer_type');
+		$answers = $request->input('answers'); 
+		$answer_options = '';
+		if(!empty($answers)){
+			$answer_options = implode('|',$answers);
+		}
+		
+		$is_question_active = $request->input('is_question_active');
+		/*if($is_question_active == 1){
+			$is_blocked = 0;
+		} else {
+			$is_blocked = 1;
+		}*/
+
+		$condition = array(
+			array('invitee_question_id','=',$invitee_question_id),
+			array('is_deleted','=','0')
+		);
+		$checkServiceInviteeQuestion = $this->common_model->fetchData($this->tableObj->tableServiceInviteeQuestion,$condition);
+
+		if(!empty($checkServiceInviteeQuestion))
+		{
+			$updateData=array(
+				'question' => $question,
+				'answer_options' => $answer_options,
+				'is_required' => $is_required,
+				'is_blocked' => $is_question_active
+			);
+			$updateCond=array(
+				array('invitee_question_id','=',$invitee_question_id),
+				array('is_deleted','=','0')
+			);
+			$this->common_model->update_data($this->tableObj->tableServiceInviteeQuestion,$updateCond,$updateData);
+			
+			$this->response_status='1';
+			$this->response_message="Successfully Updated.";
+
+		} else {
+			$this->response_message="Invalid Invitee Question.";
+		}
+
+		$this->json_output($response_data);
+	}
+
+	public function delete_invitee_question(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$invitee_question_id = $request->input('invitee_question_id');
+		
+		$condition = array(
+			array('invitee_question_id','=',$invitee_question_id),
+			array('is_deleted','=','0')
+		);
+		$checkServiceInviteeQuestion = $this->common_model->fetchData($this->tableObj->tableServiceInviteeQuestion,$condition);
+
+		if(!empty($checkServiceInviteeQuestion))
+		{
+			$updateData=array(
+				'is_deleted' => 1,
+				'deleted_on' => date('Y-m-d H:i:s')
+			);
+			$updateCond=array(
+				array('invitee_question_id','=',$invitee_question_id),
+				array('is_deleted','=','0')
+			);
+			$this->common_model->update_data($this->tableObj->tableServiceInviteeQuestion,$updateCond,$updateData);
+			
+			$this->response_status='1';
+			$this->response_message="Successfully Deleted.";
+
+		} else {
+			$this->response_message="Invalid Invitee Question.";
+		}
+
+		$this->json_output($response_data);
+	}
+
+	public function service_invitee_question(Request $request){
+		$response_data=array();	
+		// validate the requested param for access this service api
+		$this->validate_parameter(1); // along with the user request key validation
+		
+		$service_id = $request->input('service_id');
+
+		$findCond = array(
+	        array('service_id','=',$service_id),
+		);
+		
+		$selectFields = array();
+		$service_invitee_question = $this->common_model->fetchDatas($this->tableObj->tableServiceInviteeQuestion, $findCond, $selectFields);
+
+		$response_data['service_invitee_question'] = $service_invitee_question;
+		$this->response_status='1';
+		$this->response_message="Service Invitee Question.";
+
+		$this->json_output($response_data);
+	}
+
+	public function invitee_question_details(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$user_no = $this->logged_user_no;
+		$invitee_question_id = $request->input('invitee_question_id');
+
+		$findCond = array(
+			array('invitee_question_id','=',$invitee_question_id),
+			array('is_deleted','=',0)
+		);
+		$selectFields = array();
+
+		$invitee_question_details = $this->common_model->fetchData($this->tableObj->tableServiceInviteeQuestion, $findCond, $selectFields);
+
+		$response_data['invitee_question_details'] = $invitee_question_details;
+		$this->response_status='1';
+		$this->response_message="Service Invitee Question Details.";
+
+		$this->json_output($response_data);
+	}
+
+
 	public function payment_options(Request $request)
     {
         $response_data = array(); 

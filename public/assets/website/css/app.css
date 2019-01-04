@@ -2222,7 +2222,7 @@ span.limit {
 
 	box-shadow: 0px 0px 5px 0px #e6e4e4;
 
-	/*height: 650px;*/
+	height: 650px;
 
 	overflow-y: auto;
 
@@ -3862,13 +3862,15 @@ a.gear {
 
 	display: block;
 
-	font-size: 11px;
+	font-size: 14px;
 
-	text-align: right;
+	text-align: left;
 
 	color: #666;
 
-	padding: 5px 0 15px 0;
+	padding: 5px 0 15px 17px;
+
+	cursor: pointer;
 
 }
 
@@ -4076,6 +4078,46 @@ a.gear {
 
 }
 
+.duration  {
+	width: 70px !important; 
+}
+
+.duration input {
+	width: 100% !important; 
+}
+
+#add_invitee_question_form .form-control, #rolling_date_section .form-control, #date_range_section .form-control { border-left: 1px solid #ccc !important; }
+.daterangepicker {z-index: 999999 !important;}
+
+.ans-box { padding: 10px 15px; position: relative; margin: 15px 0 0 15px;
+    border: 1px solid #ccc;}
+
+.ans-box:hover {
+	background: #f9f9f9;
+}
+
+.ans-box h3 { font-size: 15px;  }
+
+.edit-ans { position: absolute; right: 10px; top: 10px; }
+
+
+#ans-modal1 .modal-header, #ans-modal2 .modal-header   {
+	background: none;
+}
+#ans-modal1 .modal-header h4, #ans-modal2 .modal-header h4 {
+	color: #000;
+	font-size: 18px; 
+	padding:8px;
+} 
+#ans-modal1 .modal-header .close, #ans-modal2 .modal-header .close  { 
+	color: #000;
+ }
+
+#ans-modal1 .modal-body, #ans-modal2 .modal-body  { 
+	padding: 8px;
+}
+
+
 ul.minutes {
 
 	display: flex;
@@ -4092,13 +4134,13 @@ ul.minutes li {
 
 	text-align: center;
 
-	font-size: 12px;
+	font-size: 16px;
 
 }
 
 ul.minutes li:last-child {
 
-	margin-left: 8px;
+	margin-left: 0px;
 
 }
 
@@ -4126,7 +4168,7 @@ ul.minutes li a label {
 
 	font-weight: 300;
 
-	color: #ccc;
+	color: #8e8e8e;
 
 }
 

@@ -707,6 +707,11 @@ class UsersController extends ApiController {
 			$url_func_name="service-details";
 			$return = $this->curl_call($url_func_name,$post_data);
 			//echo '<pre>'; print_r($return); exit;
+
+			$url_func_name_iq="service-invitee-question";
+			$return_iq = $this->curl_call($url_func_name_iq,$post_data);
+
+
 			// Check response status. If success return data //		
 			if(isset($return->response_status))
 			{
@@ -714,8 +719,8 @@ class UsersController extends ApiController {
 				{
 					$data['category_list'] = $return_cat->category_list;
 					$data['service_details'] = $return->service_details;
+					$data['service_invitee_question'] = $return_iq->service_invitee_question;
 					$data['request_data'] = $request_data;
-					
 				}
 				//echo '<pre>'; print_r($data); exit;
 				return view('website.service.edit_services')->with($data);

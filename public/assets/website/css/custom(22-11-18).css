@@ -2154,14 +2154,6 @@ to {
 .staffsinside .owl-carousel img{border-radius:50px;height: 50px;width: 50px !important;}
 .staffsinside .owl-custom .item span{word-wrap: break-word;}
 
-.calender-remark{width:100%;float: left;margin: 0 0 15px;}
-.calender-remark ul{margin: 0;padding: 0;list-style:none;}
-.calender-remark ul li{float: left;margin: 0 20px 0 0;}
-.calender-remark ul li .clbx{float: left;width: 60px;height: 60px;border-radius: 50%;text-align: center;color: #000;line-height: 65px;font-size: 18px;}
-.calender-remark ul li .clbxtxt{float: left;color: #000;font-size: 16px;line-height: 72px;margin: 0 0 0 8px;font-weight: 500;}
-
-
-
 /****** responsive ******/
 
 @media only screen and (min-width:900px) and (max-width: 1024px) {

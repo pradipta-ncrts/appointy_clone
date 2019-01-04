@@ -59,6 +59,10 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/add-invitee-question', 'Api\UsersController@add_invitee_question');
     Route::post('/payment_terms', 'Api\UsersController@payment_terms');
     Route::post('/service-details', 'Api\UsersController@service_details');
+    Route::post('/service-invitee-question', 'Api\UsersController@service_invitee_question');
+    Route::post('/invitee-question-details', 'Api\UsersController@invitee_question_details');
+    Route::post('/update-invitee-question', 'Api\UsersController@update_invitee_question');
+    Route::post('/delete-invitee-question', 'Api\UsersController@delete_invitee_question');
     Route::post('/add_staff','Api\StaffsController@add_staff');
     Route::post('/edit_staff','Api\StaffsController@edit_staff');
     Route::post('/change-status-staff','Api\StaffsController@change_status_staff');
