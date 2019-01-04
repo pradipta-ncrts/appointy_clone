@@ -368,15 +368,16 @@ class ProfileController extends ApiController {
 
 		$user_no = $authdata['user_no'];
 
-        $profile_name = $request->input('profile_name');
-        $profile_profession = $request->input('profile_profession');
-        $business_location = $request->input('business_location');
-        $business_description = $request->input('business_description');
-        $expertise = $request->input('expertise');
-        $transport = $request->input('transport');
-        $presentation = $request->input('presentation');
-        $parking = $request->input('parking');
-        $payment_mode = $request->input('payment_mode');
+		$interval_count = $request->input('interval_count'); 
+		$is_unavailable = $request->input('is_unavailable'); 
+		$date_range_type = $request->input('date_range_type'); 
+		$date_range_data = $request->input('date_range_data'); 
+		$rolling_day_data = $request->input('rolling_day_data'); 
+		$availability_from = $request->input('availability_from'); 
+		$availability_to = $request->input('availability_to'); 
+		$multiple_preference = $request->input('multiple_preference'); 
+		$apply_day = $request->input('apply_day'); 
+		
                
    
         $response_data['response_status'] ='1';
