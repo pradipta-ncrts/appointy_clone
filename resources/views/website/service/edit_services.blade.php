@@ -564,7 +564,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
     <div class="modal-dialog add-pop">
     <!-- Modal content-->
     <div class="modal-content new-modalcustm">
-        <form name="date_range_form" id="date_range_form" method="post" action="{{url('')}}" enctype="multipart/form-data">
+        <form name="date_range_form" id="date_range_form" method="post" action="" enctype="multipart/form-data">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
                 <h4 class="modal-title">Availability</h4>
@@ -728,12 +728,12 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
     <div class="modal-dialog add-pop">
     <!-- Modal content-->
     <div class="modal-content new-modalcustm">
-        <form name="date_range_form" id="date_range_form" method="post" action="{{url('')}}" enctype="multipart/form-data">
+        <form name="update_availability_form" id="update_availability_form" method="post" action="{{url('api/update_service_availability')}}" enctype="multipart/form-data">
         <input type="hidden" name="interval_count" id="interval_count" value="0">
         <input type="hidden" name="is_unavailable" id="is_unavailable" value="0">
-        <input type="text" name="date_range_type" id="date_range_type" value="3">
-        <input type="text" name="date_range_data" id="date_range_data" value="">
-        <input type="text" name="rolling_day_data" id="rolling_day_data" value="">
+        <input type="hidden" name="date_range_type" id="date_range_type" value="3">
+        <input type="hidden" name="date_range_data" id="date_range_data" value="">
+        <input type="hidden" name="rolling_day_data" id="rolling_day_data" value="">
 
             <div id="primary_div">
                 <div class="modal-header">
@@ -798,7 +798,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
-                                <button class="btn btn-primary" style="width: 100%">Apply to all <span id="today"></span></button>
+                                <button type="button" id="apply_all" data-day="" class="btn btn-primary" style="width: 100%">Apply to all <span id="today"></span></button>
                             </div>
                         </div>
                     </div>
@@ -806,7 +806,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-12">
-                                <button class="btn btn-primary" style="width: 100%">Apply to only selected date</button>
+                                <button type="button" id="apply_only" data-day="" class="btn btn-primary" style="width: 100%">Apply to only selected date</button>
                             </div>
                         </div>
                     </div>
@@ -828,10 +828,10 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     <h4 class="modal-title">Apply to multiple...</h4>
                 </div>   
                 <div class="modal-body clr-modalbdy">
-                    <input class="rb-email" name="contact-preference" id="rb-email" type="radio" checked="checked" />
+                    <input class="rb-email" name="multiple_preference" value="1" id="rb-email" type="radio" checked="checked" />
                     <label class="label" for="rb-email">specific dates</label>
                     <br>
-                    <input class="rb-phone" name="contact-preference" id="rb-phone" type="radio" />
+                    <input class="rb-phone" name="multiple_preference" value="2" id="rb-phone" type="radio" />
                     <label class="label" for="rb-phone">repeating days of the week</label>
                     <br>
                     <label class="label email" for="email">
@@ -847,19 +847,19 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     </label>
                     <label class="label phone" for="phone">
                         <div class="aply-dv">
-                            <label><input type="checkbox" name="available_days[]" value=""> Sunday</label>
-                            <label><input type="checkbox" name="available_days[]" value=""> Monday</label>
-                            <label><input type="checkbox" name="available_days[]" value=""> Tuesday</label>
-                            <label><input type="checkbox" name="available_days[]" value=""> Wednesday</label>
-                            <label><input type="checkbox" name="available_days[]" value=""> Thursday</label>
-                            <label><input type="checkbox" name="available_days[]" value=""> Friday</label>
-                            <label><input type="checkbox" name="available_days[]" value=""> Saturday</label>
+                            <label><input type="checkbox" name="available_days[]" value="1"> Sunday</label>
+                            <label><input type="checkbox" name="available_days[]" value="2"> Monday</label>
+                            <label><input type="checkbox" name="available_days[]" value="3"> Tuesday</label>
+                            <label><input type="checkbox" name="available_days[]" value="4"> Wednesday</label>
+                            <label><input type="checkbox" name="available_days[]" value="5"> Thursday</label>
+                            <label><input type="checkbox" name="available_days[]" value="6"> Friday</label>
+                            <label><input type="checkbox" name="available_days[]" value="7"> Saturday</label>
                         </div>    
                     </label>
 
                     <div class="form-group">
                         <div class="discount-btnbx mtop">
-                            <input type="button" id="secondary_form_submit" class="btn btn-primary pull-left" value="Apply">
+                            <input type="button" id="apply_multiple_submit" class="btn btn-primary pull-left" value="Apply">
                             <button class="btn pull-right" data-dismiss="modal">Cancel</button>
                         </div>
                     </div>
@@ -1258,8 +1258,16 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 
             // Update Values //
             $("#date_range_type").val(service_schedule_type);
-            $("#date_range_data").val(date_range);
-            $("#rolling_day_data").val(rolling_day);
+            if(service_schedule_type == 1){
+                $("#date_range_data").val('');
+                $("#rolling_day_data").val(rolling_day);
+            } else if(service_schedule_type == 2){
+                $("#date_range_data").val(date_range);
+                $("#rolling_day_data").val('');
+            } else {
+                $("#date_range_data").val('');
+                $("#rolling_day_data").val('');
+            }
 
 
             var validRange = "";
@@ -1348,6 +1356,8 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                 dayClick: function(date, jsEvent, view) {
                     $('#modalTitle').text(date.format());
                     $('#today').text(date.format('dddd'));
+                    $('#apply_all').attr('data-day',date.format('dddd'));
+                    $('#apply_only').attr('data-day',date.format());
                     $('#calendarModal').modal('show');
                 }
 
@@ -1703,6 +1713,8 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             dayClick: function(date, jsEvent, view) {
                 $('#modalTitle').text(date.format());
                 $('#today').text(date.format('dddd'));
+                $('#apply_all').attr('data-day',date.format('dddd'));
+                $('#apply_only').attr('data-day',date.format());
                 $('#calendarModal').modal('show');
             }
 
@@ -1777,6 +1789,109 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
         $("#available_dates").multiDatesPicker({
             minDate:0
         });   
+
+
+        // Edit Availability Form Submit //
+        $("#apply_all").click(function(){
+            var form = $(this).parents('form:first');
+            var apply_day = $(this).data('day');
+            var data = $(form).serializeArray();
+            data.push({name: 'apply_day', value: apply_day});
+            data = addCommonParams(data);
+            //console.log(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    if(response.response_status==1)
+                    {
+                        alert(response.response_status);
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        });
+
+        $("#apply_only").click(function(){
+            var form = $(this).parents('form:first');
+            var apply_day = $(this).data('day');
+            var data = $(form).serializeArray();
+            data.push({name: 'apply_day', value: apply_day});
+            data = addCommonParams(data);
+            //console.log(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    if(response.response_status==1)
+                    {
+                        alert(response.response_status);
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        });
+
+
+        $("#apply_multiple_submit").click(function(){
+            var form = $(this).parents('form:first');
+            var available_dates = $('#available_dates').val();
+            var data = $(form).serializeArray();
+            data.push({name: 'available_dates', value: available_dates});
+            data = addCommonParams(data);
+            //console.log(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    if(response.response_status==1)
+                    {
+                        alert(response.response_status);
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        });
+
 
     });
 </script>
