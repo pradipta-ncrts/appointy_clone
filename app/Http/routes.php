@@ -72,6 +72,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/delete-staff','Api\StaffsController@staff_delete');
     Route::post('/block-times','Api\StaffsController@block_times');
     Route::post('/staff_service_availability','Api\StaffsController@staff_service_availability');
+
+    Route::post('/staff_service_availability_mobile','Api\StaffsController@staff_service_availability_mobile');
     Route::post('/service_staff_availability','Api\StaffsController@service_staff_availability');
     Route::post('/add_staff_service_availability','Api\StaffsController@add_staff_service_availability');
     Route::post('/delete_staff_availability','Api\StaffsController@delete_staff_availability');
@@ -143,11 +145,20 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/settings_membership','Api\PlanController@settings_membership');
     Route::post('/change_plan_duration','Api\PlanController@change_plan_duration');
     Route::post('/send-to-stripe','Api\PlanController@send_to_stripe');
+    Route::post('/send-to-stripe-mobile','Api\PlanController@send_to_stripe_mobile');
     Route::post('/edit_service_list_staff','Api\StaffsController@edit_service_list_staff');
     Route::post('/update_staff_availability_form','Api\StaffsController@update_staff_availability_form');
     Route::post('/service-template','Api\UsersController@service_template');
     Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
     Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
+
+    Route::any('/staff_login/','Api\UsersController@staff_login');
+    Route::any('/staff_details_mobile','Api\StaffsController@staff_details_mobile');
+    Route::any('/edit_team_member_indiv','Api\StaffsController@edit_team_member_indiv');
+    Route::any('/update-profile-mobile','Api\ProfileController@update_profile_mobile');
+
+    
+    
 
 });
 
@@ -262,20 +273,22 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/my-profile','Mobile\UsersController@my_profile');
     Route::get('/add-appointment','Mobile\BookingsController@add_appointment');
     Route::get('/add-client','Mobile\ClientsController@add_client');
+    Route::get('/edit-client/{client_id}','Mobile\ClientsController@edit_client');
     Route::get('/staff-list','Mobile\StaffController@staff_list');
     Route::get('/add-staff','Mobile\StaffController@add_staff');
     Route::get('/service-list','Mobile\ServiceController@service_list');
     Route::get('/add-service','Mobile\ServiceController@add_service');
+    Route::get('/edit-service','Mobile\ServiceController@edit_service');
     Route::get('/review-list','Mobile\ReviewController@review_list');
     Route::get('/settings','Mobile\SettingsController@settings');
     Route::get('/membership','Mobile\PlanController@membership');
     Route::get('/business-hours','Mobile\UsersController@business_hours');
-
-  
+    Route::any('/make-payment/{parameter?}','Mobile\PlanController@make_payment');
+    Route::any('/my-squeedr/{username?}','Mobile\UsersController@my_squeedr');
+    Route::get('/staff-dashboard','Mobile\StaffController@staff_dashboard');
+    Route::get('/staff-booking-list','Mobile\StaffController@staff_booking_list');
+    Route::get('/staff-booking-list/{duration?}/','Mobile\StaffController@staff_booking_list');
 });
-
-
-
 
 
 /*

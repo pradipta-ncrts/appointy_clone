@@ -793,6 +793,30 @@ class BaseApiController extends BaseController
         return $data;
     }
 
+    public static function avability_list($staff_id, $service_id, $day_no)
+    {
+        $data = array();
+        $obj = new Request();
+        $ci = new BaseApiController($obj);
+        $table = $ci->tableObj->tableNameStaffServiceAvailability;
+        $user_id = $_COOKIE['sqd_user_no'];
+
+        $conditions = array(
+            array('is_blocked', '=', 0),
+            array('is_deleted', '=', 0),
+            array('staff_id', '=', $staff_id),
+            array('service_id', '=', $service_id),
+            array('day', '=', $day_no)
+        );
+
+        $avability_list = $ci->common_model->fetchData($table, $conditions);
+        $data = $avability_list;
+        //echo '<pre>'; print_r($data); exit;
+        return $data;
+    }
+
+    
+
     function convertToHoursMins($time, $format = '%2d:%2d')
     {
         if ($time < 1) {

@@ -46,7 +46,6 @@ Squeedr
                           <div class="row">
                              <div class="col-md-12">
                                 <div class="form-group">
-                                   <label for="Profession">Profession</label>
                                    <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="profile_profession" id="profile_profession" >
                                     <option value="">Select Profession </option>
                                     <?php

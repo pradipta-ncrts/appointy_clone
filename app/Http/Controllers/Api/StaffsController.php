@@ -243,6 +243,32 @@ class StaffsController extends ApiController {
 
     }
 
+    //Details//
+    public function staff_details_mobile(Request $request){
+    
+        $staff_id = $request->input('post_data');
+        
+        $findCond=array(
+            array('staff_id','=',$staff_id)
+        );
+        
+        $selectFields=array('staff_id','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
+        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
+
+        if(!empty($staff_details)){
+            $response_data['staff_details']=$staff_details;
+            $this->response_status='1';
+            $this->response_message="Staff details.";
+        } else {
+            $this->response_status='0';
+            $this->response_message="Staff is not valid.";
+        }
+        
+        // generate the service / api response
+        $this->json_output($response_data);
+
+    }
+
     public function edit_staff(Request $request){
         // Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
@@ -1654,5 +1680,150 @@ class StaffsController extends ApiController {
 
         $this->json_output($response_data);
     }
+
+    // User's Staff Listing //
+    public function staff_service_availability_mobile(Request $request){
+        $response_data=array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $pageNo = $request->input('page_no');
+        $pageNo = ($pageNo>1)?$pageNo:1;
+        $limit=$this->limit;
+        $offset=($pageNo-1)*$limit;
+
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_no = $other_user_no;
+        }
+        else{
+            $user_no = $this->logged_user_no;
+        }
+
+        //avability list
+        $findCond=array(
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
+        $tableUserService = $this->tableObj->tableUserService;
+        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
+        
+
+        $availability_list = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField);
+
+
+        //staff list
+        $staff_condition = array(
+                array('user_id','=',$user_no),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+        );
+        $staff_field = array('staff_id','full_name');
+        $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$staff_condition,$staff_field);
+
+        //service list
+        $servCond = array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+            //array('is_blocked','=','0'),
+        );
+
+        $serviceFields = array('service_id', 'service_name', 'duration');
+
+        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields);
+
+        $response_data['availability_list']=$availability_list;
+        $response_data['staff_list']=$staff_list;
+        $response_data['service_list']=$service_list;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+
+    public function availability_mobile()
+    {
+        return "good";
+    }
+
+
+    public function edit_team_member_indiv(Request $request)
+    {
+        $validate = Validator::make($request->all(),[
+                                         'staff_fullname'=>'required',
+                                         'staff_description'=>'required']);
+        
+        if ($validate->fails())
+        {
+            $this->response_message = $this->decode_validator_error($validate->errors());
+            $this->json_output($response_data);
+        }
+        else
+        {
+            $staff_id = $request->input('staff_id');
+            $full_name = $request->input('staff_fullname');
+            //$email = $request->input('staff_email');
+            //$username = $request->input('staff_username');
+            $mobile = $request->input('staff_mobile');
+            $home_phone = $request->input('staff_home_phone');
+            $work_phone = $request->input('staff_work_phone');
+            $category_id = $request->input('staff_category');
+            $expertise = $request->input('staff_expertise');
+            $description = $request->input('staff_description');
+            $staff_profile_picture = '';
+
+            $conditions = array(
+                array('staff_id','=',$staff_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+            );
+
+            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
+            //echo '<pre>'; print_r($result); exit;
+            if(empty($result))
+            {
+                $this->response_message = "Invalid staff details.";
+            }
+            else
+            {
+                $destinationPath = './uploads/profile_image/';
+                if (!empty($_FILES)) {
+                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
+                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
+                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
+                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
+                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
+
+                            /*if ($data->input('old_staff_profile_picture') != "") {
+                                if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
+                                    unlink($destinationPath . $data->input('old_staff_profile_picture'));
+                                }
+                            }*/
+                        }
+                    }
+                }
+
+                $staff_data['full_name'] = $full_name;
+                $staff_data['mobile'] = $mobile;
+                $staff_data['home_phone'] = $home_phone;
+                $staff_data['work_phone'] = $work_phone;
+                $staff_data['expertise'] = $expertise;
+                $staff_data['description'] = $description;
+                $staff_data['category_id'] = $category_id;
+
+                $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
+                
+                $response_data['response_status'] ='1';
+                $response_data['response_message'] = "Staff successfully updated.";
+
+            }
+
+            $this->json_output($response_data);
+
+        }
+        
+    }
+
+    
 
 }

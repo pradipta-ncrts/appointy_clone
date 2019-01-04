@@ -67,44 +67,6 @@ class BookingsController extends ApiController {
 		}
 	}
 
-	/*public function client_booking_list(Request $data,$duration,$client_id)
-	{
-		// Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-			return redirect('mobile/login');
-		}
-
-		$post_data['duration'] = $duration;
-		$post_data['client_id'] = $client_id;
-		$data=array(
-			'appoinment_list'=>array(),
-			'authdata'=>$authdata
-		);
-		//print_r($post_data); die();
-		$url_func_name="client_appoinment_list_mobile";
-		$return = $this->curl_call($url_func_name,$post_data);
-
-		//print_r($return); die();
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status))
-		{
-			if($return->response_status == 1)
-			{
-				$data['appoinment_list'] = $return->appoinment_list;
-				$data['duration'] = $duration;
-				$data['client_id'] = $client_id;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('mobile.booking.client-booking-list')->with($data);
-		}
-		else
-		{
-			return $return;
-		}
-	}*/
-
 	public function client_booking_list(Request $data,$duration,$client_id)
 	{
 		// Check User Login. If not logged in redirect to login page //
@@ -143,6 +105,7 @@ class BookingsController extends ApiController {
 				$data['appoinment_list'] = $return->appoinment_list;
 				$data['duration'] = $duration;
 				$data['client_id'] = $client_id;
+				$data['client_name'] = $return->client_name;
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('mobile.booking.client-booking-list')->with($data);

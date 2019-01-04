@@ -18,108 +18,105 @@ Squeedr
    <div class="container-fluid">
       <div class="row">
          <div class="col-lg-12">
-            <form class="form-inline">
                <div class="headRow headingBar padding15px showDekstop">
                   <div>
                      <h1>Membership Plan</h1>
                   </div>
                   <div class="text-right">
                      <button type="submit" class="btn btn-custom">Save</button>
-                     <button class="popup-button showDekstop" type="button" onclick="ShowPopup(this);"><img src="images/plus.png" /> </button>
+                     <button class="popup-button showDekstop" type="button" onclick="ShowPopup(this);"><img src="{{asset('public/assets/mobile/images/plus.png')}}" /> </button>
                   </div>
                </div>
                <div class="row showMobile break20px">
+                  @if(Session::has('payment_error'))
+
+                     <div class="alert alert-danger alert-dismissible margin-t-10" style="margin-bottom:15px;">
+                         <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                         <p><i class="icon fa fa-warning"></i><strong>Sorry!</strong>{{Session::get('payment_error')}}</p>
+                     </div>
+                  @endif
+
+                  @if(Session::has('payment_success'))
+
+                     <div class="alert alert-success alert-dismissible margin-t-10" style="margin-bottom:15px;">
+                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                        <p><i class="icon fa fa-check"></i><strong>Success!</strong> {{Session::get('payment_success')}}</p>
+                    </div>
+                  
+                  @endif
                   <div class="col-xs-12" id="planMobile">
-                     <div class="whitebox" onclick="changePlan(this);">
+                     <?php
+                     foreach ($plan_list as $key => $value) 
+                     {
+                     ?>
+                     <div class="whitebox <?=$key==0 ? "active" : ""; ?>" onclick="changePlan(this,<?=$value->plan_id;?>);">
                         <div class="pricecheck"></div>
-                        <h4>Free Plan</h4>
-                        <h5>Prime Monthly</h5>
-                        <h6><span>$12<sup>99</sup></span>/Month</h6>
+                        <h4><?=$value->plan_name;?></h4>
+                        <h5><?=$value->plan_tag_line;?></h5>
+                        <h6><span>$<?=number_format($value->price,0);?><sup>00</sup></span>/Month</h6>
                      </div>
-                     <div class="whitebox" onclick="changePlan(this);">
-                        <div class="pricecheck"></div>
-                        <h4>Pro Plan</h4>
-                        <h5>Prime Monthly</h5>
-                        <h6><span>$12<sup>99</sup></span>/Month</h6>
-                     </div>
-                     <div class="whitebox" onclick="changePlan(this);">
-                        <div class="pricecheck"></div>
-                        <h4>Business Plan</h4>
-                        <h5>Prime Monthly</h5>
-                        <h6><span>$12<sup>99</sup></span>/Month</h6>
-                     </div>
+                     <?php
+                     }
+                     ?>
                   </div>
                </div>
-               <div id="freeplan" class="padding15px">
-                  <label class="showMobile">Your Current Membership</label>
-                  <h2>Free Plan</h2>
-                  <span>Billed monthly</span> 
-                  <button class="btn showMobile">Compare Plans</button>      
-               </div>
-               <div id="planList">
-                  <div class="listItem">
-                     <h4>Free Plan</h4>
-                     <span>Prime Monthly</span>
-                     <h5><label>$12<sup>99</sup></label> /Month</h5>
-                     <button class="btn btn-large btn-grey">Choose Plan</button>
-                     <ul>
-                        <li>30 days subscription free</li>
-                        <li>Forum based support </li>
-                        <li>Email notification through priority gateway </li>
-                        <li>Appointment Details posted on Google Calendar</li>
-                     </ul>
+               <?php
+               foreach ($plan_list as $key => $value) 
+               {
+               ?>
+               <div id="plandetails<?=$value->plan_id;?>" class="planlist"style="<?=$key==0 ? '' : 'display: none;';?>">
+                  <div id="freeplan" class="padding15px">
+                     <label class="showMobile">Your Current Membership</label>
+                     <h2><?=$value->plan_name;?></h2>
+                     <span><?=$value->plan_tag_line;?></span> 
+                     <?php
+                        if(isset($check_plan_id->subscription_id) && $check_plan_id->subscription_id)
+                        {
+                           if($check_plan_id->subscription_id!=$value->plan_id)
+                           {
+                        ?>
+                        <button class="btn showMobile choose-plan" id="<?=$value->plan_id;?>">Choose Plan</button>
+                        <?php
+                           }
+                           else
+                           {
+                           ?>
+                           <button class="btn showMobile choose-plan" id="" disabled="">Subscribed</button>
+                           <?php
+                           }
+                        }
+                        else
+                        {
+                        ?>
+                        <button class="btn showMobile choose-plan" id="<?=$value->plan_id;?>">Choose Plan</button>
+                        <?php
+                        }
+                        ?>
+                     <!-- <button class="btn showMobile">Compare Plans</button>    -->   
                   </div>
-                  <div class="listItem">
-                     <h4>Pro Plan</h4>
-                     <span>Prime Monthly</span>
-                     <h5>
-                        <label>$16<sup>99</sup></label> /Month
-                     </h5>
-                     <button class="btn btn-large btn-green">Choose Plan</button>
-                     <ul>
-                        <li>Everything from Freemium Plan</li>
-                        <li>Two way Google Calendar linking</li>
-                        <li>Email notification through priority gateway</li>
-                        <li>Appointment Details posted on Google Calendar</li>
-                        <li>Email and other customization</li>
-                        <li>Handle complex schedules with precision scheduling</li>
-                        <li>Take custom information at the time of booking</li>
-                     </ul>
-                  </div>
-                  <div class="listItem">
-                     <h4>Business Plan</h4>
-                     <span>Prime Monthly</span>
-                     <h5><label>$25<sup>99</sup></label> /Month</h5>
-                     <button class="btn btn-large btn-green">Choose Plan</button>
-                     <ul>
-                        <li>Everything from Pro Plan</li>
-                        <li>Enhanced email marketing limit(500 email/day)</li>
-                        <li>Separate staff logins</li>
-                        <li>Separate staff google calendar linking</li>
-                        <li>Advanced Reporting</li>
-                     </ul>
+                  <div class="showMobile whitebox" id="listItem">
+                     <?=$value->description;?>
                   </div>
                </div>
-               <div class="showMobile whitebox" id="listItem">
-                  <ul>
-                     <li>30 days subscription free</li>
-                     <li>Forum based support </li>
-                     <li>Email notification through priority gateway </li>
-                     <li>Appointment Details posted on Google Calendar</li>
-                  </ul>
-               </div>
-               <a class="btn btn-block btn-mobile showMobile">Select Plan</a>
-            </form>
+               <?php
+               }
+               ?>
          </div>
       </div>
    </div>
 </main>
-
-
 @endsection
 
-
 @section('custom_js')
-
+<script type="text/javascript">
+function changePlan(obj,id){
+   $('.animationload').show();
+   $('.planlist').hide();
+   $('#plandetails'+id).show();
+   $(obj).addClass('active');
+   $('#planMobile .active').not($(obj)).removeClass('active');
+   $('.animationload').hide();
+}
+</script>
 
 @endsection

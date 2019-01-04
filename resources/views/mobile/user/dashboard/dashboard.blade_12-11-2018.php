@@ -17,7 +17,7 @@ Squeedr
 <div class="menuoverlay">
     <div class="sideNavbar sideToggle">
         <div class="profileMenuImg">
-           <a href="#">
+            <a href="#">
             <?php
             if($user_details->profile_perosonal_image)
             {
@@ -41,7 +41,6 @@ Squeedr
             <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li>
             <li><a href="{{url('mobile/my-profile')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Profile</span> </a> </li>
             <li><a href="{{url('mobile/settings')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Settings</span> </a> </li>
-            <!-- <li><a><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li> -->
             <li><a><img src="{{asset('public/assets/mobile/images/sidenav/background.png')}}" /> <span>Change Background </span> </a> </li>
             <li><a><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>About</span> </a> </li>
             <li><a href="{{url('mobile/logout')}}"><img src="{{asset('public/assets/mobile/images/sidenav/logout.png')}}" /> <span>Logout</span> </a> </li>
@@ -51,22 +50,23 @@ Squeedr
 
 <main>
     <div class="container-fluid">
-
-
-
         <div class="row">
-
+            <div class="col-lg-12">
+               <div class="container-custm">
+                  <div class="upper-cmnsection">
+                     <div class="upr-rgtsec">
+                        <div class="col-md-6">
                            <ul class="tab-menu ">
                                 <li><a href="{{url('mobile/dashboard/')}}" <?php if(!isset($type) || $type=='') { ?> class="active" <?php } ?> >My Squeedr</a></li>
                                 <li><a href="{{url('mobile/dashboard/group')}}" <?php if(isset($type) && $type=='group') { ?> class="active" <?php } ?> >Group</a></li>
                                 <li><a href="{{url('mobile/dashboard/users')}}" <?php if(isset($type) && $type=='users') { ?> class="active" <?php } ?> >Users</a></li>
                                 <li><a href="{{url('mobile/dashboard/template')}}" <?php if(isset($type) && $type=='template') { ?> class="active" <?php } ?> >Template</a></li>
                            </ul>
-                     
-<div class="col-md-12">
-                           
+                        </div>
+                        <div class="col-md-6">
+                           <div class="full-rgt">
                               <div class="todate"><?php echo date('M d, Y');?></div>
-                              <div class="dropdown custm-uperdrop" style=" margin:5px; ">
+                              <div class="dropdown custm-uperdrop">
                               <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"><span id="selected_duration">This Month</span> <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button>
                                  <ul class="dropdown-menu">
                                     <li><a href="javascript:void(0);" class="duration" data-duration = "1" data-selected-duration="This Week">This Week</a></li>
@@ -76,15 +76,13 @@ Squeedr
                                     <li><a href="javascript:void(0);" class="duration" data-duration = "5" data-selected-duration="This Year">This Year</a></li>
                                     <li><a href="javascript:void(0);" class="duration" data-duration = "6" data-selected-duration="Last Year">Last Year</a></li>
                                 </ul>
-                              </div>   
-                               <div class="clearfix"></div>                         
+                              </div>
+                              <!--<div class="filter-option"><a href="/">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div>-->
+                           </div>
                         </div>
-                         <div class="clearfix"></div>
-
-            <div class="col-lg-12 break20px">
-               <div class="container-custm ">
-                 
-                 
+                     </div>
+                  </div>
+                  <div class="clearfix"></div>
                   <?php
                   $dashboard_reports_array = array();
                   foreach($dashboard_reports as $value)
@@ -94,13 +92,23 @@ Squeedr
                   //echo "<pre>";
                   //print_r($dashboard_reports_array);
                   ?>
-                  <div style="position: relative;">
+                  <div class="rightpan full">
                      <!--<a class="add-w" data-toggle="tooltip" title="Add Widget"><i class="fa fa-plus"></i></a>-->
-                    
+                    <div class="dropdown custm-uperdrop">
+                        <button class="btn dropdown-toggle add-w" type="button" data-toggle="dropdown"><span id="selected_duration"><i class="fa fa-plus"></i></span></button>
+                        <ul class="dropdown-menu dshbrd-drp">
+                            <li><input name="dashboard_reports[]" type="checkbox" value="1" <?=in_array('1', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Appointement Reports</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="2" <?=in_array('2', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Sales Reports</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="3" <?=in_array('3', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Clients Reports</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="4" <?=in_array('4', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Cancellation Reports</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="5" <?=in_array('5', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Service Report</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="6" <?=in_array('6', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Credit Charges Reports</li>
+                        </ul>
+                    </div>
 
                      <div class="dash-info">
                      <?php if(!empty($dashboard_reports)) { foreach($dashboard_reports as $report) { ?>
-                        <div class="col-sm-12">
+                        <div class="col-sm-4 ">
                            <div class="infobpx active">
                               
                                 <?php if($report->report_id == '1') { ?> 
@@ -136,28 +144,6 @@ Squeedr
                         
                         <div class="clearfix"></div>
                      </div>
-
-                     <div class="dropdown custm-uperdrop" style=" float: none; text-align: center;">
-
-                       <button class="btn dropdown-toggle add-w" type="button" data-toggle="dropdown" style="margin: 0 auto"><span id="selected_duration"><i class="fa fa-plus"></i></span></button>
-                       
-                        <ul class="dropdown-menu dshbrd-drp" style="margin: 0 auto; width: 200px; left: 0; right: 0;">
-                            <li><input name="dashboard_reports[]" type="checkbox" value="1" <?=in_array('1', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Appointement Reports</li>
-                            <li><input name="dashboard_reports[]" type="checkbox" value="2" <?=in_array('2', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Sales Reports</li>
-                            <li><input name="dashboard_reports[]" type="checkbox" value="3" <?=in_array('3', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Clients Reports</li>
-                            <li><input name="dashboard_reports[]" type="checkbox" value="4" <?=in_array('4', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Cancellation Reports</li>
-                            <li><input name="dashboard_reports[]" type="checkbox" value="5" <?=in_array('5', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Service Report</li>
-                            <li><input name="dashboard_reports[]" type="checkbox" value="6" <?=in_array('6', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Credit Charges Reports</li>
-                        </ul>
-
-                        
-                    </div>
-
-
-
- <div class="clearfix"></div>
-
-
                      <hr>
                      <div class="clearfix"></div>
                      <div class="headRow mobileappointed arrow-d clearfix row-2"  id="row2">
@@ -195,82 +181,6 @@ Squeedr
         </div>
     </div>
 </main>
-
-<div class="modal fade" id="myModalQuickGuide" role="dialog">
-         <div class="modal-dialog quick-pop">
-            <!-- Modal content-->
-            <div class="modal-content new-modalcustm">
-            
-               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Quick Guide</h4>
-               </div>
-               <div class="modal-body clr-modalbdy">
-
-                  <h3>1. Sunc Calendars</h3>
-                  
-
-                  <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling cpnflicts when creating 
-                  new events.</p>
-
-                    <h5> 1.1 Personalize your email</h5>
-                    <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
-                    <hr >
-
-                    <h3>2. Manege your business hours</h3>
-                 
-
-                  <p>Events types lets you create an event according to your availability, meeting duration, lovation, etc..., for meetings 
-                      or for individual invitees.
-                  </p>
-
-                    <h5> 2.2 Setup your services, staff and location</h5>
-                    <ul>
-                        <li>Create events to define your services </li>
-                        <li>Setup scgeduling pages for individual team members </li>
-                        <li>Create location-based events.</li>
-                    </ul>
-
-                <hr >
-
-
-                    <h3>3. Share yourlink</h3>
-                 
-
-                  <p>Share yoru link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
-                      <br><br>
-                        <span class="cl-blue">
-                            Subject: Lets connect,<br>
-                            Hi matt,<br>
-                            It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
-                            <br>
-                            Let's Chat soon!<br><br>
-                            - Sam
-                        </span>
-                  </p>
-
- <hr >
-  <h3>4. Customize your Squeedr page</h3>
-    <hr style="margin-top:10px; margin-top:5px;">
-
-    <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
-        Customize the page to align it with your brand and coporate indentity.
-    </p>
-
-      <h5> 4.4 Business Details</h5>
-      <p></p>
-
-
-
-
-
-
-               </div>
-              
-              
-            </div>
-         </div>
-      </div>
 @endsection
 
 
@@ -350,13 +260,11 @@ $(document).ready(function(){
                 //console.log(response);
                 if(response.result=='1')
                 {
-                  swal("Success", response.message, "success");
-                  location.reload();
-                    /*swal({title: "Success", text: response.message, type: "success"},
+                    swal({title: "Success", text: response.message, type: "success"},
                         function(){ 
                             location.reload();
                         }
-                    );*/
+                    );
                 }
                 else
                 {
@@ -390,13 +298,11 @@ $(document).ready(function(){
                     //console.log(response);
                     if(response.result=='1')
                     {
-                       swal("Success", response.message, "success");
-                       location.reload();
-                        /*swal({title: "Success", text: response.message, type: "success"},
+                        swal({title: "Success", text: response.message, type: "success"},
                             function(){ 
                                 location.reload();
                             }
-                        );*/
+                        );
                     }
                     else
                     {
@@ -416,5 +322,4 @@ $(document).ready(function(){
 })
     
 </script>
-
 @endsection

@@ -301,6 +301,60 @@ class ProfileController extends ApiController {
 		
 		$this->json_output($response_data);
 	}
+
+	public function update_profile_mobile(Request $request)
+    {
+        // Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+
+		$user_no = $authdata['user_no'];
+
+        $profile_name = $request->input('profile_name');
+        $profile_profession = $request->input('profile_profession');
+        $business_location = $request->input('business_location');
+        $business_description = $request->input('business_description');
+        $expertise = $request->input('expertise');
+        $transport = $request->input('transport');
+        $presentation = $request->input('presentation');
+        $parking = $request->input('parking');
+        $payment_mode = $request->input('payment_mode');
+               
+        if($request->file('profile_perosonal_image'))
+        {
+			$image = $request->file('profile_perosonal_image');
+			$name = time().'.'.$image->getClientOriginalExtension();
+			$destinationPath = public_path('/image/profile_perosonal_image');
+			$image->move($destinationPath, $name);
+			$profile_perosonal_image = $name;
+
+			$profile_data['profile_perosonal_image'] = $profile_perosonal_image;
+        }
+        
+
+        $profile_data['name'] = $profile_name;
+        $profile_data['profession'] = $profile_profession;
+        $profile_data['business_location'] = $business_location;
+        $profile_data['payment_mode'] = $payment_mode;
+        $profile_data['business_description'] = $business_description;
+        $profile_data['presentation'] = $presentation;
+        $profile_data['expertise'] = $expertise;
+        $profile_data['transport'] = $transport;
+        $profile_data['parking'] = $parking;
+        
+        $findCond = array(
+			array('id', '=', $user_no),
+		);
+
+        $update = $this->common_model->update_data($this->tableObj->tableNameUser,$findCond,$profile_data);
+
+        $response_data['response_status'] ='1';
+        $response_data['response_message'] = "Staff successfully added.";
+
+        $this->json_output($response_data);
+	}
 	
 
 }

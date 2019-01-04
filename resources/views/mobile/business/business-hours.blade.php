@@ -2,16 +2,14 @@
 @section('title')
 Squeedr
 @endsection
-
 @section('content')
-
 <header class="mobileHeader showMobile" id="divBh">
    <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
    <h1>Business Hours</h1>
    <ul>
-    &nbsp;
+      &nbsp;
       <!-- <li><img src="images/mobile-notes.png" /></li>
-      <li><img src="images/mobile-calender.png" /></li> -->
+         <li><img src="images/mobile-calender.png" /></li> -->
    </ul>
 </header>
 <main>
@@ -24,61 +22,45 @@ Squeedr
                   <h1>Business Hours</h1>
                   <a><img src="{{asset('public/assets/mobile/images/arrownxt.gif')}}" /> </a> 
                </div>
-               <div class="headRow padding15px" id="bhlist">
-                  <div id="bh">
-                     <div class="bhchild active"> <img src="images/business-hours/blue-user.png" /> <span>Douglas N</span> <a class="gear"> <i class="fa fa-gear"></i> </a> </div>
-                     <div class="bhchild running"> <img src="images/business-hours/blue-user.png" /> <span>Janice D</span><a class="gear"> <i class="fa fa-gear"></i> </a></div>
-                     <div class="bhchild disabled"><img src="images/business-hours/grey-user.png" /> <span>Janice D</span><a class="gear"> <i class="fa fa-gear"></i> </a></div>
-                     <div class="bhchild running"> <img src="images/business-hours/blue-user.png" /> <span>Janice D</span><a class="gear"> <i class="fa fa-gear"></i> </a></div>
-                  </div>
-               </div>
                <div class="headRow">
-                  <ul class="schedulebh showDekstop clearfix">
-                     <li><a href="#" class="active">Work Schedule </a></li>
-                     <li><a href="#">Future Unavailability </a></li>
-                     <li><a href="#">Staff Details </a></li>
-                  </ul>
                   <div class="padding15px clearfix">
                      <div id="scheduleBar"> <span>Current Schedule</span> <span><a href="#">Add or Update Schedule</a></span> </div>
                      <div class="bhchildmobile showMobile">
                         <div class="panel-group custm-tab-hrs" id="accordion">
+                           <?php
+                           $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+
+                           foreach ($staff_list as $key => $value)
+                           {
+                           ?>
                            <div class="panel panel-default">
                               <div class="panel-heading">
                                  <h4 class="panel-title">
                                     <div class="bhInside"> <img src="{{asset('public/assets/mobile/images/business-hours/blue-user.png')}}" />
-                                       <label id="name">Douglas N</label>
+                                       <label id="name"><?=$value->full_name;?></label>
                                     </div>
-                                    <div class="time-slot">30 mins - 1 hr</div>
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1"><i class="fa fa-angle-down"></i></a> 
+                                    <!-- <div class="time-slot">30 mins - 1 hr</div> -->
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$value->staff_id;?>"><i class="fa fa-angle-down"></i></a> 
                                  </h4>
                               </div>
-                              <div id="collapse1" class="panel-collapse collapse">
+                              <div id="collapse<?=$value->staff_id;?>" class="panel-collapse collapse">
+                                 <?php
+                                 foreach ($service_list as $key => $srv_lst)
+                                 {
+                                 ?>
                                  <div class="panel-body">
                                     <div class="bhscheduleInside">
-                                       <h2>Dental Consultation</h2>
-                                       <p><span>Time Slot</span>: 30 mins - 1 hr</p>
+                                       <h2><?=$srv_lst->service_name;?></h2>
+                                       <p><span>Duration</span>: <?=$srv_lst->duration;?> mins</p>
                                     </div>
-                                    <div class="custm-tab team-memtab">
+                                    <div class="">
                                        <ul class="nav nav-tabs">
-                                          <li class="active"><a data-toggle="tab" href="#home">Work Schedule</a></li>
-                                          <li><a data-toggle="tab" href="#menu1">Feature Unavailability</a></li>
+                                          <li class="active"><a data-toggle="tab" href="#home">Current Schedule</a></li>
                                        </ul>
                                        <div class="tab-content">
                                           <div id="home" class="tab-pane fade in active">
                                              <div class="tableBH-table">
                                                 <table class="table table-bordered table-custom table-bh tableBhMobile" >
-                                                   <thead>
-                                                      <tr>
-                                                         <th></th>
-                                                         <th>Sunday</th>
-                                                         <th>Monday</th>
-                                                         <th>Tuesday</th>
-                                                         <th>Wednesday</th>
-                                                         <th>Thursday</th>
-                                                         <th>Friday</th>
-                                                         <th>Saturday</th>
-                                                      </tr>
-                                                   </thead>
                                                    <tbody>
                                                       <tr>
                                                          <td>
@@ -87,240 +69,57 @@ Squeedr
                                                             <img src="{{asset('public/assets/mobile/images/business-hours/tbl-delete.png')}}" />
                                                             <div class="clearfix"></div>
                                                          </td>
-                                                         <td data-column="Sunday">
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Monday">
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Tuesday">
+                                                         <?php
+                                                         for($i=0;$i<7;$i++)
+                                                         {
+                                                            $day_no = $i+1;
+                                                            $avability_list = App\Http\Controllers\BaseApiController::avability_list($value->staff_id, $srv_lst->service_id, $day_no);
+                                                         ?>
+                                                         <td data-column="<?=$dowMap[$i];?>">
+                                                            <?php
+                                                            if(!empty($avability_list))
+                                                            {
+                                                            ?>
                                                             <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
+                                                               <li>from: <strong><?=$avability_list->start_time;?></strong></li>
+                                                               <li>to: <strong> <?=$avability_list->end_time;?></strong></li>
                                                             </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
+                                                            <a href="" class="update_user_shedule" data-staff-id="<?=$value->staff_id;?>" data-service-id = "<?=$srv_lst->service_id;?>" data-day-no = "<?=$day_no;?>" data-start-date = "<?=$avability_list->start_time;?>" data-end-date = "<?=$avability_list->end_time;?>"><img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" /></a>
                                                             <div class="clearfix"></div>
-                                                         </td>
-                                                         <td></td>
-                                                         <td data-column="Wednesday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="images/business-hours/tbl-edit.png" />
+                                                            <?php
+                                                            }
+                                                            else
+                                                            {
+                                                            ?>
+                                                            <a href="" class="update_user_shedule" data-staff-id="<?=$value->staff_id;?>" data-service-id = "<?=$srv_lst->service_id;?>" data-day-no = "<?=$day_no;?>"><img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" /></a>
                                                             <div class="clearfix"></div>
+                                                            <?php
+                                                            }
+                                                            ?>
+                                                            
                                                          </td>
-                                                         <td data-column="Thursday"></td>
-                                                         <td data-column="Friday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
+                                                         <?php
+                                                         }
+                                                         ?>
+                                                         
                                                       </tr>
                                                    </tbody>
                                                 </table>
                                              </div>
                                           </div>
-                                          <div id="menu1" class="tab-pane fade">
-                                             <p>Some content in menu 1.</p>
-                                          </div>
                                        </div>
                                     </div>
                                  </div>
+                                 <?php
+                                 }
+                                 ?>
                               </div>
                            </div>
-                           <div class="panel panel-default">
-                              <div class="panel-heading">
-                                 <h4 class="panel-title">
-                                    <div class="bhInside"> <img src="{{asset('public/assets/mobile/images/business-hours/blue-user.png')}}" />
-                                       <label id="name">Douglas N1 </label>
-                                    </div>
-                                    <div class="time-slot">30 mins - 1 hr</div>
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2"><i class="fa fa-angle-down"></i></a> 
-                                 </h4>
-                              </div>
-                              <div id="collapse2" class="panel-collapse collapse">
-                                 <div class="panel-body">
-                                    <div class="bhscheduleInside">
-                                       <h2>Dental Consultation</h2>
-                                       <p><span>Time Slot</span>: 30 mins - 1 hr</p>
-                                    </div>
-                                    <div class="custm-tab team-memtab">
-                                       <ul class="nav nav-tabs">
-                                          <li class="active"><a data-toggle="tab" href="#home">Work Schedule</a></li>
-                                          <li><a data-toggle="tab" href="#menu1">Feature Unavailability</a></li>
-                                       </ul>
-                                       <div class="tab-content">
-                                          <div id="home" class="tab-pane fade in active">
-                                             <div class="tableBH-table">
-                                                <table class="table table-bordered table-custom table-bh tableBhMobile" >
-                                                   <thead>
-                                                      <tr>
-                                                         <th></th>
-                                                         <th>Sunday</th>
-                                                         <th>Monday</th>
-                                                         <th>Tuesday</th>
-                                                         <th>Wednesday</th>
-                                                         <th>Thursday</th>
-                                                         <th>Friday</th>
-                                                         <th>Saturday</th>
-                                                      </tr>
-                                                   </thead>
-                                                   <tbody>
-                                                      <tr>
-                                                         <td>
-                                                            <span>Dental Consultation (1h)</span>
-                                                            <label>Scale: <strong>30 mins</strong> </label>
-                                                            <img src="images/business-hours/tbl-delete.png" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Sunday">
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Monday">
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Tuesday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td></td>
-                                                         <td data-column="Wednesday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Thursday"></td>
-                                                         <td data-column="Friday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                             </div>
-                                          </div>
-                                          <div id="menu1" class="tab-pane fade">
-                                             <p>Some content in menu 1.</p>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="panel panel-default">
-                              <div class="panel-heading">
-                                 <h4 class="panel-title">
-                                    <div class="bhInside"> <img src="{{asset('public/assets/mobile/images/business-hours/blue-user.png')}}" />
-                                       <label id="name">Douglas N2</label>
-                                    </div>
-                                    <div class="time-slot">30 mins - 1 hr</div>
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3"><i class="fa fa-angle-down"></i></a> 
-                                 </h4>
-                              </div>
-                              <div id="collapse3" class="panel-collapse collapse">
-                                 <div class="panel-body">
-                                    <div class="bhscheduleInside">
-                                       <h2>Dental Consultation</h2>
-                                       <p><span>Time Slot</span>: 30 mins - 1 hr</p>
-                                    </div>
-                                    <div class="custm-tab team-memtab">
-                                       <ul class="nav nav-tabs">
-                                          <li class="active"><a data-toggle="tab" href="#home">Work Schedule</a></li>
-                                          <li><a data-toggle="tab" href="#menu1">Feature Unavailability</a></li>
-                                       </ul>
-                                       <div class="tab-content">
-                                          <div id="home" class="tab-pane fade in active">
-                                             <div class="tableBH-table">
-                                                <table class="table table-bordered table-custom table-bh tableBhMobile" >
-                                                   <thead>
-                                                      <tr>
-                                                         <th></th>
-                                                         <th>Sunday</th>
-                                                         <th>Monday</th>
-                                                         <th>Tuesday</th>
-                                                         <th>Wednesday</th>
-                                                         <th>Thursday</th>
-                                                         <th>Friday</th>
-                                                         <th>Saturday</th>
-                                                      </tr>
-                                                   </thead>
-                                                   <tbody>
-                                                      <tr>
-                                                         <td>
-                                                            <span>Dental Consultation (1h)</span>
-                                                            <label>Scale: <strong>30 mins</strong> </label>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-delete.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Sunday">
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Monday">
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Tuesday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td></td>
-                                                         <td data-column="Wednesday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                         <td data-column="Thursday"></td>
-                                                         <td data-column="Friday">
-                                                            <ul>
-                                                               <li>from: <strong>10:00 AM</strong></li>
-                                                               <li>to: <strong> 07:30 PM</strong></li>
-                                                            </ul>
-                                                            <img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" />
-                                                            <div class="clearfix"></div>
-                                                         </td>
-                                                      </tr>
-                                                   </tbody>
-                                                </table>
-                                             </div>
-                                          </div>
-                                          <div id="menu1" class="tab-pane fade">
-                                             <p>Some content in menu 1.</p>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
+                           <?php
+                           }
+                           ?>
                         </div>
                      </div>
-                     <span class="footlink pull-right break10px"><a href="#">Add additional work times</a> </span>
-                     <div class="clearfix"></div>
-                     <ul class="footnote">
-                        <li>As per lead time setting, booking will be allowed 120 minute from now for the next 90 days.</li>
-                        <li>Time will open in an interval of 30 minutes. <a href="#">Change interval</a></li>
-                        <li>You can create multiple schedules for example, "Winter Schedule" or "Summer Schedule" from here</li>
-                     </ul>
                   </div>
                </div>
             </form>
@@ -329,11 +128,157 @@ Squeedr
    </div>
 </main>
 
+<div class="modal fade" id="myModalregularShedule" role="dialog">
+   <div class="modal-dialog modal-md">
+      <div class="modal-content new-modalcustm">
+      <form name="update_staff_availability_form" id="update_staff_availability_form" method="post" action="{{url('api/update_staff_availability_form')}}">
+         <input type="hidden" name="stuff_id" value="" id="update_staff_availability_staff_id">
+         <input type="hidden" name="service_id" value="" id="update_staff_availability_service_id">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button> 
+            <h4 class="modal-title">Edit Schedule</h4>
+         </div>
+         <div class="modal-body clr-modalbdy">
+            <div class="regular-frmbx">
+              <?php
+              $weekdays = array('1'=>'MON','2'=>'TUE','3'=>'WED','4'=>'THU','5'=>'FRI','6'=>'SAT','7'=>'SUN');
+              foreach($weekdays as $key=>$val){
+              ?>
+                  <div class="row">
+                      <div class="col-md-3"> <input class="styled-checkbox-update" name="day[]" id="styled-checkbox-update-{{$key}}" type="checkbox" value="{{$key}}"> <label for="styled-checkbox-update-{{$key}}">{{$val}}</label></div>
+                      <div class="col-md-4">
+                          <div class="input-group">
+                              <span class="input-group-addon"></span>
+                              <div class="form-group nomarging color-b" >
+                              <!--<select >
+                                  <option>Start Time</option>
+                              </select>-->
+                              <input class="form-control availability_start_time" name="availability_update_start_time[]" id="availability_update_start_time_{{$key}}" type="text" value="" disabled="">
+                              <div class="clearfix"></div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-1">
+                          <div class="tocls">To</div>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="input-group">
+                              <span class="input-group-addon"></span>
+                              <div class="form-group nomarging color-b" >
+                              <!--<select >
+                                  <option>End Time</option>
+                              </select>-->
+                              <input class="form-control availability_end_time" name="availability_update_end_time[]" id="availability_updaet_end_time_{{$key}}" type="text" value="" disabled="">
+                              <div class="clearfix"></div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <br>
+              <?php
+              }
+              ?>
+              <!-- <div class="row">
+                  <div class="col-md-12">
+                     <div class="mlf-30" id="select_service" style="cursor:pointer"> <span class="child-outline child-outline--dark"></span> <span id="select_services">SELECT SERVICE<span>  </div>
+                     <input type="hidden" name="service_ids" id="service_ids" value="">
+                  </div>
+               </div> -->
 
+            </div>
+         </div>
+         <div class="modal-footer">
+            <div class="col-md-12 text-center"> <button type="submit" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">ADD</button> </div>
+         </div>
+      </form>
+      </div>
+   </div>
+   </div>
 @endsection
-
-
 @section('custom_js')
+<script type="text/javascript">
+$(document).on('click','.update_user_shedule',function(e){
+   e.preventDefault();
+   $('#update_staff_availability_form').trigger("reset");
+   var staff_id = $(this).data('staff-id');
+   var service_id = $(this).data('service-id');
+   var day_no = $(this).data('day-no');
+   var start_date = $(this).data('start-date');
+   var end_date = $(this).data('end-date');
 
+   $("#update_staff_availability_staff_id").val(staff_id);
+   $("#update_staff_availability_service_id").val(service_id);
 
+   var data = addCommonParams([]);
+    //alert(serviceid);
+   data.push({name:'service_id', value:service_id},
+                {name:'staff_id', value:staff_id});
+   $.ajax({
+        url: baseUrl2+"/api/edit_service_list_staff", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+               console.log(response.message);
+               $("#myModalregularShedule").modal('show');
+               var i;
+               for (i = 0; i < response.message.length; i++)
+               { 
+                  $("#styled-checkbox-update-"+response.message[i].day).prop('checked', true);
+                  //$("#styled-checkbox-update-"+response.message[i].day).trigger('click');
+                  $("#availability_update_start_time_"+response.message[i].day).prop('disabled', false);
+                  $("#availability_update_start_time_"+response.message[i].day).val(response.message[i].start_time);
+                  $("#availability_updaet_end_time_"+response.message[i].day).prop('disabled', false);
+                  $("#availability_updaet_end_time_"+response.message[i].day).val(response.message[i].end_time);
+               }
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+   });
+});
+
+$('#update_staff_availability_form').validate({
+   submitHandler: function(form) {
+   var data = $(form).serializeArray();
+   data = addCommonParams(data);
+   
+   //console.log(data);
+   $.ajax({
+       url: form.action,
+       type: form.method,
+       data: data,
+       dataType: "json",
+       success: function(response) {
+           //console.log(response); //Success//
+           if (response.response_status == 1) {
+               //$(form)[0].reset();
+               //$('#myModalregular').modal('hide');
+               //swal('Success!', response.response_message, 'success');
+               location.reload();
+           } else {
+               swal('Sorry!', response.response_message, 'error');
+           }
+       },
+       beforeSend: function() {
+           $('.animationload').show();
+       },
+       complete: function() {
+           $('.animationload').hide();
+       }
+   });
+}
+});
+
+</script>
 @endsection

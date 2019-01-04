@@ -11,6 +11,9 @@
       <link href="{{asset('public/assets/mobile/css/mobile.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/mobile/css/custom.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/mobile/css/ncrts.css')}}" rel="stylesheet">
+      <script type="text/javascript">
+        var baseUrl ="<?php echo url('')?>"; 
+      </script>
    </head>
    <body class="login-bg">
       <div class="animationload" style="display: none;">
@@ -44,7 +47,7 @@
                   <tr>
                      <td>Admin Login</td>
                      <td><label class="switch-m">
-                        <input type="checkbox">
+                        <input type="checkbox" name="type" id="type">
                         <span class="slider-m round-m"></span> </label>
                      </td>
                      <td>Team Login</td>
@@ -60,7 +63,7 @@
                <div class="form-group">
                   <img src="{{asset('public/assets/mobile/images/login-icon-passwod.png')}}">
                   <input type="password" class="form-control" id="pwd"  placeholder="Password" name="password">
-                  <i class="fa fa-eye log-i" aria-hidden="true"></i>
+                  <a onclick="myFunction()"><i class="fa fa-eye log-i" aria-hidden="true"></i></a>
                   <div class="clearfix"></div>
                </div>
                <!-- <label>Password must be 8 to 15 characters and include at least one 
@@ -119,24 +122,90 @@
             submitHandler: function(form) {
               var data = $(form).serializeArray();
               //data.push({name: 'device_type', value: 1});
-              data = addCommonParams(data);
-              $.ajax({
-                  url: form.action,
-                  type: form.method,
-                  data:data ,
-                  dataType: "json",
-                  success: function(response) {
-                      console.log(response);
-                      if(response.result==1)
-                      {
-                          if(response.message=='complete_step_two')
-                          {
-                             var url = "{{url('/mobile/registration-step2')}}";
-                             window.location.href = url; 
-                          }
-                          else
+              if ($("#type").prop('checked')==false)
+              { 
+                    data = addCommonParams(data);
+                    $.ajax({
+                        url: form.action,
+                        type: form.method,
+                        data:data ,
+                        dataType: "json",
+                        success: function(response) {
+                            console.log(response);
+                            if(response.result==1)
+                            {
+                                if(response.message=='complete_step_two')
+                                {
+                                   var url = "{{url('/mobile/registration-step2')}}";
+                                   window.location.href = url; 
+                                }
+                                else
+                                {
+                                    //console.log(response.user);
+                                    var user_no = response.user.user_no;
+                                    var user_type = response.user.user_type;
+                                    var user_request_key = response.user.user_request_key;
+                                    var device_token_key = "";//response.user.user_request_key;
+                                    //console.log(data['0']);
+                                    // get the user no and the request key for farther service calls
+                                    if($('input[name="remember_me"]').is(':checked')){
+                                        $.cookie("UserEmail", data['0'].value, { expires: 365 });
+                                        $.cookie("UserPassword", data['1'].value, { expires: 365 });
+                                    } else {
+                                        $.cookie("UserEmail", '');
+                                        $.cookie("UserPassword", '');
+                                    }
+
+                                    //alert(device_token_key);
+                                    //alert(user_request_key);
+
+                                    $.cookie("sqd_user_no", user_no, { expires: 30, path:'/' });
+                                    $.cookie("sqd_user_type", user_type, { expires: 30, path:'/' });
+                                    $.cookie("sqd_user_request_key", user_request_key, { expires: 30, path:'/' });
+                                    $.cookie("sqd_device_token_key", device_token_key, { expires: 30, path:'/' });
+
+                                    /*console.log($.cookie('sqd_user_no'));
+                                    console.log($.cookie('sqd_user_type'));
+                                    console.log($.cookie('sqd_user_request_key'));
+                                    console.log($.cookie('sqd_device_token_key'));
+                                    */
+                                    
+                                    var url = "{{url('/mobile/dashboard')}}";
+                                    console.log(url);
+                                    //alert(url);
+                                    window.location=url;
+                                }
+                            }
+                            else{
+                                
+                                swal('Sorry!',response.message,'error');
+                                
+                            }
+                        },
+
+                        beforeSend: function(){
+                            $('.animationload').show();
+                        },
+
+                        complete: function(){
+                            $('.animationload').hide();
+                        }
+                    });
+              }
+              else
+              {
+                  data = addCommonParams(data);
+                  $.ajax({
+                      url: baseUrl+'/api/staff_login',
+                      type: form.method,
+                      data:data ,
+                      dataType: "json",
+                      success: function(response) {
+                          console.log(response);
+                          if(response.result==1)
                           {
                               //console.log(response.user);
+                              //return false;
                               var user_no = response.user.user_no;
                               var user_type = response.user.user_type;
                               var user_request_key = response.user.user_request_key;
@@ -159,36 +228,50 @@
                               $.cookie("sqd_user_request_key", user_request_key, { expires: 30, path:'/' });
                               $.cookie("sqd_device_token_key", device_token_key, { expires: 30, path:'/' });
 
-                              /*console.log($.cookie('sqd_user_no'));
+                              console.log($.cookie('sqd_user_no'));
                               console.log($.cookie('sqd_user_type'));
                               console.log($.cookie('sqd_user_request_key'));
                               console.log($.cookie('sqd_device_token_key'));
-                              */
                               
-                              var url = "{{url('/mobile/dashboard')}}";
+                              
+                              var url = "{{url('/mobile/staff-dashboard')}}";
                               console.log(url);
                               //alert(url);
                               window.location=url;
                           }
-                      }
-                      else{
-                          
-                          swal('Sorry!',response.message,'error');
-                          
-                      }
-                  },
+                          else{
+                              
+                              swal('Sorry!',response.message,'error');
+                              
+                          }
+                      },
 
-                  beforeSend: function(){
-                      $('.animationload').show();
-                  },
+                      beforeSend: function(){
+                          $('.animationload').show();
+                      },
 
-                  complete: function(){
-                      $('.animationload').hide();
-                  }
-              });
+                      complete: function(){
+                          $('.animationload').hide();
+                      }
+                  });
+              }
+              console.log(data);
+              return false;
+             
             }
         });
       //================Submit AJAX request===================
+      //================Show password ==================
+         function myFunction() {
+          var x = document.getElementById("pwd");
+          if (x.type === "password") {
+              x.type = "text";
+          } else {
+              x.type = "password";
+          }
+      }
+      //================Show password end ==================
       </script>
+
    </body>
 </html>

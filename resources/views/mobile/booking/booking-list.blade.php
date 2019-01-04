@@ -14,7 +14,7 @@ Squeedr
 <main>
    <div class="showMobile">
       <div class="clientHead">
-         <h3>All Clients</h3>
+         <h3>All Bookings</h3>
          <!-- <a><i class="fa fa-angle-right"></i></a> -->
       </div>
       <ul class="clientSchedule">

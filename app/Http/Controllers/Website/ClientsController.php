@@ -207,7 +207,7 @@ class ClientsController extends ApiController {
         );
 
 		$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields, $joins, $orderBy=array());
-
+		
 		
 		$data['user_details'] = $user_details;
 		$data['staff_list'] = $staff_list;

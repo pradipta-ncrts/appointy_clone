@@ -593,6 +593,7 @@ class BookingsController extends ApiController {
         $appoinment_id = $request->input('appoinment_id');
         $user_id = $user_id;
 
+        $user_no = $user_id;
 
         $updateCond=array(
             array('user_id','=',$user_id),
@@ -735,6 +736,8 @@ class BookingsController extends ApiController {
                 $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$param);
 
                 // Event Viewer //
+
+                $user_no = $user_id;
                 $this->add_user_event_viewer($user_no,$type=5,$reshedule_staff_id);
                     
                 $this->response_status='1';
@@ -1516,10 +1519,21 @@ class BookingsController extends ApiController {
         );
         
         $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+
+        //client name
+        $client_condition = array(
+                array('client_id', '=', $client_id),
+            );
+
+        $client_name = $this->common_model->fetchData($this->tableObj->tableNameClient,$client_condition,$client_field);
+
+        $client_name = $client_name->client_name;
+
     
         $response_data['appoinment_list'] = $appoinment_list;
         $response_data['duration'] = $duration;
         $response_data['client_id'] = $client_id;
+        $response_data['client_name'] = $client_name;
         $this->response_status='1';
         // generate the service / api response
         $this->json_output($response_data);
