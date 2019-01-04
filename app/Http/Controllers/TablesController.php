@@ -77,6 +77,8 @@ class TablesController {
 
         $this->tableNameFeedback = config('constants.tables.feedback');
 
+        $this->tableNameServiceAvailability = config('constants.tables.service_availability');
+
         
 
     }

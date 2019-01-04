@@ -56,7 +56,7 @@ return [
 
         'feedback' => 'feedback',
 
-
+        'service_availability' => 'service_availability',
 
     ],
 

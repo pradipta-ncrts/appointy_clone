@@ -729,11 +729,13 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
     <!-- Modal content-->
     <div class="modal-content new-modalcustm">
         <form name="update_availability_form" id="update_availability_form" method="post" action="{{url('api/update-service-availability')}}" enctype="multipart/form-data">
+        <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
         <input type="hidden" name="interval_count" id="interval_count" value="0">
         <input type="hidden" name="is_unavailable" id="is_unavailable" value="0">
         <input type="hidden" name="date_range_type" id="date_range_type" value="3">
         <input type="hidden" name="date_range_data" id="date_range_data" value="">
         <input type="hidden" name="rolling_day_data" id="rolling_day_data" value="">
+        <input type="hidden" name="selected_dates" id="selected_dates" value="">
 
             <div id="primary_div">
                 <div class="modal-header">
@@ -745,11 +747,11 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="setting-lbl">From</label>
-                                <input type="time" class="form-control" name="interval_from[]">
+                                <input type="time" class="form-control" name="interval_from[]" value="09:00">
                             </div>
                             <div class="col-md-6">
                                 <label class="setting-lbl">To</label>
-                                <input type="time" class="form-control" name="interval_to[]">
+                                <input type="time" class="form-control" name="interval_to[]" value="17:00">
                             </div>
                         </div>
                     </div>
@@ -1796,7 +1798,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             var form = $(this).parents('form:first');
             var apply_day = $(this).data('day');
             var data = $(form).serializeArray();
-            data.push({name: 'apply_day', value: apply_day});
+            data.push({name: 'apply_day', value: apply_day},{name: 'from_submit', value: 1});
             data = addCommonParams(data);
             console.log(data);
             $.ajax({
@@ -1805,10 +1807,15 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                 data:data ,
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     if(response.response_status==1)
                     {
-                        alert(response.response_status);
+                        swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                $('#calendarModal').modal('hide');
+                                location.reload();
+                            }
+                        );
                     }
                     else{
                         swal('Sorry!',response.message,'error');
@@ -1829,7 +1836,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             var form = $(this).parents('form:first');
             var apply_day = $(this).data('day');
             var data = $(form).serializeArray();
-            data.push({name: 'apply_day', value: apply_day});
+            data.push({name: 'apply_day', value: apply_day},{name: 'from_submit', value: 2});
             data = addCommonParams(data);
             console.log(data);
             $.ajax({
@@ -1838,10 +1845,15 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                 data:data ,
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     if(response.response_status==1)
                     {
-                        alert(response.response_status);
+                        swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                $('#calendarModal').modal('hide');
+                                location.reload();
+                            }
+                        );
                     }
                     else{
                         swal('Sorry!',response.message,'error');
@@ -1858,12 +1870,12 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             });
         });
 
-
         $("#apply_multiple_submit").click(function(){
             var form = $(this).parents('form:first');
             var available_dates = $('#available_dates').val();
+            $('#selected_dates').val(available_dates);
             var data = $(form).serializeArray();
-            data.push({name: 'available_dates', value: available_dates});
+            data.push({name: 'from_submit', value: 3});
             data = addCommonParams(data);
             console.log(data);
             $.ajax({
@@ -1872,10 +1884,15 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                 data:data ,
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     if(response.response_status==1)
                     {
-                        alert(response.response_status);
+                        swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                $('#calendarModal').modal('hide');
+                                location.reload();
+                            }
+                        ); 
                     }
                     else{
                         swal('Sorry!',response.message,'error');
@@ -1892,9 +1909,23 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             });
         });
 
+
         $('#calendarModal').on('hidden.bs.modal', function (e) {
             $(this).find('form').trigger('reset');
-        })
+        });
+
+
+        /*$('input[type=radio][name=multiple_preference]').change(function() {
+            alert(this.value);
+            if (this.value == '1') {
+                // Clear Select //
+                $('input[name=available_days]').removeAttr('checked');
+            }
+            else if (this.value == '2') {
+                // Clear calendar //
+                $('#selected_dates').val('');
+            }
+        });*/
 
     });
 </script>

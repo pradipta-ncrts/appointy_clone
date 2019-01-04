@@ -364,24 +364,110 @@ class ProfileController extends ApiController {
            return redirect('/login');
 		}
 
-		print_r($request->all()); die();
+		//print_r($request->all()); die();
 
 		$user_no = $authdata['user_no'];
 
+		$service_id = $request->input('service_id');
 		$interval_count = $request->input('interval_count'); 
 		$is_unavailable = $request->input('is_unavailable'); 
 		$date_range_type = $request->input('date_range_type'); 
 		$date_range_data = $request->input('date_range_data'); 
 		$rolling_day_data = $request->input('rolling_day_data'); 
-		$availability_from = $request->input('availability_from'); 
-		$availability_to = $request->input('availability_to'); 
+		$selected_dates = $request->input('selected_dates');
+		$interval_from = $request->input('interval_from'); 
+		$interval_to = $request->input('interval_to'); 
 		$multiple_preference = $request->input('multiple_preference'); 
-		$apply_day = $request->input('apply_day'); 
+		$available_days = $request->input('available_days');
+		$from_submit = $request->input('from_submit');
 		
-               
-   
+		if($from_submit == 1){
+			if($date_range_type == 1){
+				$start_date = date('Y-m-d', strtotime("+1 day"))." 00:00:00";
+				$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"))." 23:59:59";
+			} else if($date_range_type == 2){
+				$result = explode(' - ',$date_range_data);
+				$start_date = date('Y-m-d', strtotime($result[0]))." 00:00:00";
+				$end_date = date('Y-m-d', strtotime($result[1]))." 23:59:59";
+			} else {
+				$start_date = date('Y-m-d')." 00:00:00";
+				$end_date = "";
+			}
+		} else if($from_submit == 2){
+			$start_date = date('Y-m-d', strtotime($apply_day))." 00:00:00";
+			$end_date = date('Y-m-d', strtotime($apply_day))." 23:59:59";
+		} 
+		
+		$insert_data = array();
+		if($is_unavailable == 0){
+			if($from_submit == 1 || $from_submit == 2){
+				for($i=0;$i<=$interval_count;$i++){
+					$insert_data[] = array(
+						'service_id' => $service_id,
+						'user_id' => $user_no,
+						'day' => '',
+						'start_time' => $interval_from[$i],
+						'end_time' => $interval_to[$i],
+						'start_date' => $start_date,
+						'end_date' => $end_date,
+						'created_on' => date('Y-m-d H:i:s')
+					);
+				} 
+			} else {
+				if($multiple_preference == 1){
+					$date_array = explode(',',$selected_dates);
+					for($j=0;$j<count($date_array);$j++){
+						for($i=0;$i<=$interval_count;$i++){
+							$insert_data[] = array(
+								'service_id' => $service_id,
+								'user_id' => $user_no,
+								'day' => '',
+								'start_time' => $interval_from[$i],
+								'end_time' => $interval_to[$i],
+								'start_date' => date('Y-m-d', strtotime($date_array[$j]))." 00:00:00",
+								'end_date' => date('Y-m-d', strtotime($date_array[$j]))." 23:59:59",
+								'created_on' => date('Y-m-d H:i:s')
+							);
+						} 
+					}
+				} else {
+					if($date_range_type == 1){
+						$start_date = date('Y-m-d', strtotime("+1 day"))." 00:00:00";
+						$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"))." 23:59:59";
+					} else if($date_range_type == 2){
+						$result = explode(' - ',$date_range_data);
+						$start_date = date('Y-m-d', strtotime($result[0]))." 00:00:00";
+						$end_date = date('Y-m-d', strtotime($result[1]))." 23:59:59";
+					} else {
+						$start_date = date('Y-m-d')." 00:00:00";
+						$end_date = "";
+					}
+	
+					for($j=0;$j<count($available_days);$j++){
+						for($i=0;$i<=$interval_count;$i++){
+							$insert_data[] = array(
+								'service_id' => $service_id,
+								'user_id' => $user_no,
+								'day' => $available_days[$j],
+								'start_time' => $interval_from[$i],
+								'end_time' => $interval_to[$i],
+								'start_date' => $start_date,
+								'end_date' => $end_date,
+								'created_on' => date('Y-m-d H:i:s')
+							);
+						}
+					}
+				}
+			}
+		}
+		
+		//print_r($insert_data); die();
+		if(!empty($insert_data)){
+			$insertdata = $this->common_model->insert_data($this->tableObj->tableNameServiceAvailability,$insert_data);
+		}
+		
         $response_data['response_status'] ='1';
-        $response_data['response_message'] = "Staff successfully added.";
+        $response_data['message'] = "Service availability updated successfully.";
 
         $this->json_output($response_data);
 	}
