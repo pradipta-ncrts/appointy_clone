@@ -745,11 +745,11 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                         <div class="row">
                             <div class="col-md-6">
                                 <label class="setting-lbl">From</label>
-                                <input type="time" class="form-control" name="availability_from">
+                                <input type="time" class="form-control" name="interval_from[]">
                             </div>
                             <div class="col-md-6">
                                 <label class="setting-lbl">To</label>
-                                <input type="time" class="form-control" name="availability_to">
+                                <input type="time" class="form-control" name="interval_to[]">
                             </div>
                         </div>
                     </div>
