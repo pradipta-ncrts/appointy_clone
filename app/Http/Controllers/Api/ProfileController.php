@@ -355,6 +355,37 @@ class ProfileController extends ApiController {
 
         $this->json_output($response_data);
 	}
+
+	public function update_service_availability(Request $request)
+    {
+        // Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+
+		print_r($request->all()); die();
+
+		$user_no = $authdata['user_no'];
+
+        $profile_name = $request->input('profile_name');
+        $profile_profession = $request->input('profile_profession');
+        $business_location = $request->input('business_location');
+        $business_description = $request->input('business_description');
+        $expertise = $request->input('expertise');
+        $transport = $request->input('transport');
+        $presentation = $request->input('presentation');
+        $parking = $request->input('parking');
+        $payment_mode = $request->input('payment_mode');
+               
+   
+        $response_data['response_status'] ='1';
+        $response_data['response_message'] = "Staff successfully added.";
+
+        $this->json_output($response_data);
+	}
+
+	
 	
 
 }

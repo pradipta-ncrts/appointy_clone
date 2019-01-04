@@ -156,9 +156,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/staff_details_mobile','Api\StaffsController@staff_details_mobile');
     Route::any('/edit_team_member_indiv','Api\StaffsController@edit_team_member_indiv');
     Route::any('/update-profile-mobile','Api\ProfileController@update_profile_mobile');
-
-    
-    
+    Route::any('/update-service-availability','Api\ProfileController@update_service_availability');
 
 });
 
@@ -261,6 +259,7 @@ Route::group(['prefix'=>''],function(){
 Route::group(['prefix'=>'mobile'],function(){
     Route::get('/login','Mobile\UsersController@login');
     Route::any('/','Mobile\UsersController@registration');
+    Route::any('/registration-step','Mobile\UsersController@registration_step');
     Route::get('/registration-step1/{request_url}','Mobile\UsersController@registration_step1');
     Route::get('/registration-step2/{request_url}','Mobile\UsersController@registration_step2');
     Route::get('/dashboard/{type?}','Mobile\UsersController@dashboard');
@@ -288,6 +287,7 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/staff-dashboard','Mobile\StaffController@staff_dashboard');
     Route::get('/staff-booking-list','Mobile\StaffController@staff_booking_list');
     Route::get('/staff-booking-list/{duration?}/','Mobile\StaffController@staff_booking_list');
+    Route::any('/client-note/{search_param?}','Mobile\ClientsController@client_note');
 });
 
 

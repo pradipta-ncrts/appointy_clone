@@ -149,6 +149,38 @@ class ClientsController extends ApiController {
 		return view('mobile.client.edit-client')->with($data);
 	}
 
+
+	public function client_note($client_search_text="")
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/mobile/login');
+		}
+
+
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$post_data['client_id']=$client_search_text;
+		$data=array(
+			'client_list'=>array(),
+			'authdata'=>$authdata
+		);
+		$url_func_name="client_details";
+		$return = $this->curl_call($url_func_name,$post_data);
+
+		// Check response status. If success return data //	
+		if($return->response_status == 1)
+		{
+			$data['client_details'] = $return->client_details;
+			return view('mobile.client.client-note')->with($data);
+		}	
+		else
+		{
+			return $return;
+		}
+	}
+
 	
 
 	
