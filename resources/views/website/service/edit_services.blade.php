@@ -859,7 +859,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                         </div>    
                     </label>
 
-                    <div class="form-group">
+                    <div class="form-group ">
                         <div class="discount-btnbx mtop">
                             <input type="button" id="apply_multiple_submit" class="btn btn-primary pull-left" value="Apply">
                             <button class="btn pull-right" data-dismiss="modal">Cancel</button>

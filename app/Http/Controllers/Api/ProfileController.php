@@ -358,6 +358,7 @@ class ProfileController extends ApiController {
 
 	public function update_service_availability(Request $request)
     {
+		$days_array = array('1'=>'Sunday','2'=>'Monday','3'=>'Tuesday','4'=>'Wednesday','5'=>'Thursday','6'=>'Friday','7'=>'Saturday');
         // Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
@@ -379,9 +380,11 @@ class ProfileController extends ApiController {
 		$interval_to = $request->input('interval_to'); 
 		$multiple_preference = $request->input('multiple_preference'); 
 		$available_days = $request->input('available_days');
+		$apply_day = $request->input('apply_day');
 		$from_submit = $request->input('from_submit');
 		
 		if($from_submit == 1){
+			$day = array_search($apply_day, $days_array);
 			if($date_range_type == 1){
 				$start_date = date('Y-m-d', strtotime("+1 day"))." 00:00:00";
 				$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"))." 23:59:59";
@@ -405,7 +408,7 @@ class ProfileController extends ApiController {
 					$insert_data[] = array(
 						'service_id' => $service_id,
 						'user_id' => $user_no,
-						'day' => '',
+						'day' => $day,
 						'start_time' => $interval_from[$i],
 						'end_time' => $interval_to[$i],
 						'start_date' => $start_date,
@@ -421,7 +424,7 @@ class ProfileController extends ApiController {
 							$insert_data[] = array(
 								'service_id' => $service_id,
 								'user_id' => $user_no,
-								'day' => '',
+								'day' => array_search(date('l', strtotime($date_array[$j])), $days_array),
 								'start_time' => $interval_from[$i],
 								'end_time' => $interval_to[$i],
 								'start_date' => date('Y-m-d', strtotime($date_array[$j]))." 00:00:00",
