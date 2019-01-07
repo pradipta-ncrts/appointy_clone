@@ -151,7 +151,10 @@ class ClientsController extends ApiController {
 		if(!empty($search_text)){
 			$findCond[]=array('client_name','like','%'.$search_text.'%');
 		}
-		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields=array());
+
+        $groupBy = array('client_id' => 'DESC');
+
+		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields=array(),$join = array(),$groupBy);
         $response_data['client_list']=$client_list;
 
 		$this->response_status='1';

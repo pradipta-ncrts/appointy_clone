@@ -1394,8 +1394,12 @@ class BookingsController extends ApiController {
                         'select_fields' => $currency_field,
                     ),
         );
+
+        $orderBy = array('appointment_id' => 'DESC');
+
+        //$orderBy = '';
         
-        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins,$orderBy);
 
         // Staff Section //
         $findCond = array(
@@ -1404,6 +1408,8 @@ class BookingsController extends ApiController {
                 array('is_blocked','=','0'),
                 //'in' => array('')
             );
+
+
         $selectFields = array('staff_id','full_name','email', 'staff_profile_picture');
         $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectFields);
     
