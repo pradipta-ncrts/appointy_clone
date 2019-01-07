@@ -43,7 +43,7 @@ Squeedr
                      </div>
                      <div class="staffInside">
                         <h6><?=$value->service_name;?></h6>
-                        <p><span>Notes :</span> <?=$value->note;?> <!-- <a>more</a> --></p>
+                        <p class="addReadMore showlesscontent"><span>Notes :</span> <?=$value->note;?> </p>
                      </div>
                   </div>
                   <?php

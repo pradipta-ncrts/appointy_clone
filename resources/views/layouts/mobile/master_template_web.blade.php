@@ -22,6 +22,28 @@
       <link href="{{asset('public/assets/mobile/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
       <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.29.2/sweetalert2.css" rel="stylesheet">
       <link href="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.css" rel="stylesheet"/>
+      <style type="text/css">
+        .addReadMore.showlesscontent .SecSec,
+        .addReadMore.showlesscontent .readLess {
+            display: none;
+        }
+
+        .addReadMore.showmorecontent .readMore {
+            display: none;
+        }
+
+        .addReadMore .readMore,
+        .addReadMore .readLess {
+            margin-left: 2px;
+            color: blue;
+            cursor: pointer;
+        }
+
+        .addReadMoreWrapTxt.showmorecontent .SecSec,
+        .addReadMoreWrapTxt.showmorecontent .readLess {
+            display: block;
+        }
+      </style>
       <script type="text/javascript">
          var authDatas={user_no:0}; 
          var device_token_key="<?php echo Session::getId()?>"; 
@@ -379,6 +401,11 @@
              $("ul.colors li.active").not($(obj)).removeClass("active");
              $(".selectcolor ul li.active").not($(obj)).removeClass("active");
          }
+         function showUl(obj) {
+			$(obj).find("ul").fadeToggle();
+			$(".mobSevices ul li ul").not($(obj).find("ul")).fadeOut();
+		}
+
       </script>
       <script type="text/javascript">
          function myFunction() {
@@ -424,17 +451,52 @@
          });
       </script>
       <script type="text/javascript">
-         $(".activeColor").click(function()
-         {
-            let colour_code = $(this).attr('data-colour');
-            $(".activeColor").removeClass('active');
-            $('#colour_code').val(colour_code);
-            $(this).addClass('active');
-         });
-         
-         $('#appointmenttime,#reshedule_appointmenttime,#bolck_start_time,#bolck_end_time').timepicker({defaultTime: ''});
-         
-         $('.availability_start_time,.availability_end_time').timepicker({defaultTime: ''});
+             $(".activeColor").click(function()
+             {
+                let colour_code = $(this).attr('data-colour');
+                $(".activeColor").removeClass('active');
+                $('#colour_code').val(colour_code);
+                $(this).addClass('active');
+             });
+             
+             $('#appointmenttime,#reshedule_appointmenttime,#bolck_start_time,#bolck_end_time').timepicker({defaultTime: ''});
+             
+             $('.availability_start_time,.availability_end_time').timepicker({defaultTime: ''});
+
+             /*Add More Section Start*/
+              function AddReadMore() {
+              //This limit you can set after how much characters you want to show Read More.
+              var carLmt = 280;
+              // Text to show when text is collapsed
+              var readMoreTxt = " ... show more";
+              // Text to show when text is expanded
+              var readLessTxt = " show less";
+
+
+              //Traverse all selectors with this class and manupulate HTML part to show Read More
+              $(".addReadMore").each(function() {
+                  if ($(this).find(".firstSec").length)
+                      return;
+
+                  var allstr = $(this).text();
+                  if (allstr.length > carLmt) {
+                      var firstSet = allstr.substring(0, carLmt);
+                      var secdHalf = allstr.substring(carLmt, allstr.length);
+                      var strtoadd = firstSet + "<span class='SecSec'>" + secdHalf + "</span><span class='readMore'  title='Click to Show More'>" + readMoreTxt + "</span><span class='readLess' title='Click to Show Less'>" + readLessTxt + "</span>";
+                      $(this).html(strtoadd);
+                  }
+
+              });
+              //Read More and Read Less Click Event binding
+              $(document).on("click", ".readMore,.readLess", function() {
+                  $(this).closest(".addReadMore").toggleClass("showlesscontent showmorecontent");
+              });
+          }
+          $(function() {
+              //Calling function after Page Load
+              AddReadMore();
+          });
+         /*Add More Section End*/
       </script>
       @yield('custom_js')
    </body>

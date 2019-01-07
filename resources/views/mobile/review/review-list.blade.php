@@ -29,8 +29,7 @@ Squeedr
                            <h2><?=date('d M, Y', strtotime($value->created_on));?><strong><?=date('h:m A', strtotime($value->created_on));?></strong></h2>
                            <label><?=$value->client_name;?></label>
                            <span><i class="fa fa-envelope"></i><?=$value->client_email;?> </span>
-                           <p><?=$value->feedback;?> <!-- <a>show more</a> -->
-                           </p>
+                           <p class="addReadMore showlesscontent"><?=$value->feedback;?> </p>
                         </div>
                       <?php
                           }
