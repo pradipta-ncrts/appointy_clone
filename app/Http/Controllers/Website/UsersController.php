@@ -711,15 +711,54 @@ class UsersController extends ApiController {
 			$url_func_name_iq="service-invitee-question";
 			$return_iq = $this->curl_call($url_func_name_iq,$post_data);
 
+			$url_func_name_service_availability="service-availability";
+			$return_service_availability = $this->curl_call($url_func_name_service_availability,$post_data);
+			$service_availability = array();
+			foreach($return_service_availability->service_availability as $rsa){
+				if($rsa->end_date!='0000-00-00'){
+					$datediff = round((strtotime($rsa->end_date) - strtotime($rsa->start_date)) / (60 * 60 * 24));
+					if($datediff > 1){
+						$current = strtotime($rsa->start_date);
+						$last = strtotime($rsa->end_date);
+					
+						while( $current <= $last ) {
+							$dates = date('N', $current);
+							if($rsa->day == $dates){
+								$service_availability[] = array('start_date_time' => date('Y-m-d',$current).' '.$rsa->start_time.':00',
+								'end_date_time' => date('Y-m-d',$current).' '.$rsa->end_time.':00');
+							}
+							$current = strtotime('+1 day', $current);
+						}
+					
+					} else {
+						$service_availability[] = array('start_date_time' => $rsa->start_date.' '.$rsa->start_time.':00',
+														'end_date_time' => $rsa->end_date.' '.$rsa->end_time.':00');
+					}
+				} else {
+					$current = strtotime($rsa->start_date);
+					//Add 1year//
+					$last = strtotime("+1 years", strtotime($rsa->start_date));
+				
+					while( $current <= $last ) {
+						$dates = date('N', $current);
+						if($rsa->day == $dates){
+							$service_availability[] = array('start_date_time' => date('Y-m-d',$current).' '.$rsa->start_time.':00',
+							'end_date_time' => date('Y-m-d',$current).' '.$rsa->end_time.':00');
+						}
+						$current = strtotime('+1 day', $current);
+					}
+				}
+			}
+			//echo '<pre>'; print_r($service_availability); exit;
+			// Check response status. If success return data //	
 
-			// Check response status. If success return data //		
 			if(isset($return->response_status))
 			{
 				if($return->response_status == 1)
 				{
 					$data['category_list'] = $return_cat->category_list;
 					$data['service_details'] = $return->service_details;
-					$data['service_invitee_question'] = $return_iq->service_invitee_question;
+					$data['service_availability_list'] = $service_availability;
 					$data['request_data'] = $request_data;
 				}
 				//echo '<pre>'; print_r($data); exit;

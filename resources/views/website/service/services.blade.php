@@ -57,7 +57,7 @@ Squeedr
             <form class="form-horizontal" action="">
               <div class="form-group nomarging color-b" >
                 <select name="create_new_service" id="create_new_service">
-                  <option value="">New Event Type</option>
+                  <option value="">New Service Type</option>
                   <option value="one-to-one">One to One</option>
                   <option value="group">Group</option>
                 </select>

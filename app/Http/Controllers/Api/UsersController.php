@@ -1889,6 +1889,27 @@ class UsersController extends ApiController {
 		$this->json_output($response_data);
 	}
 
+	public function service_availability(Request $request){
+		$response_data=array();	
+		// validate the requested param for access this service api
+		$this->validate_parameter(1); // along with the user request key validation
+		
+		$service_id = $request->input('service_id');
+
+		$findCond = array(
+	        array('service_id','=',$service_id),
+		);
+		
+		$selectFields = array();
+		$service_availability = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability, $findCond, $selectFields);
+
+		$response_data['service_availability'] = $service_availability;
+		$this->response_status='1';
+		$this->response_message="Service Availability.";
+
+		$this->json_output($response_data);
+	}
+
 
 	public function payment_options(Request $request)
     {

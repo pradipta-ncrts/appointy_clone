@@ -849,13 +849,13 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     </label>
                     <label class="label phone" for="phone">
                         <div class="aply-dv">
-                            <label><input type="checkbox" name="available_days[]" value="1"> Sunday</label>
-                            <label><input type="checkbox" name="available_days[]" value="2"> Monday</label>
-                            <label><input type="checkbox" name="available_days[]" value="3"> Tuesday</label>
-                            <label><input type="checkbox" name="available_days[]" value="4"> Wednesday</label>
-                            <label><input type="checkbox" name="available_days[]" value="5"> Thursday</label>
-                            <label><input type="checkbox" name="available_days[]" value="6"> Friday</label>
-                            <label><input type="checkbox" name="available_days[]" value="7"> Saturday</label>
+                            <label><input type="checkbox" name="available_days[]" value="1"> Monday</label>
+                            <label><input type="checkbox" name="available_days[]" value="2"> Tuesday</label>
+                            <label><input type="checkbox" name="available_days[]" value="3"> Wednesday</label>
+                            <label><input type="checkbox" name="available_days[]" value="4"> Thursday</label>
+                            <label><input type="checkbox" name="available_days[]" value="5"> Friday</label>
+                            <label><input type="checkbox" name="available_days[]" value="6"> Saturday</label>
+                            <label><input type="checkbox" name="available_days[]" value="7"> Sunday</label>
                         </div>    
                     </label>
 
@@ -1676,6 +1676,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             selectable: true,
             eventLimit: true, // allow "more" link when too many events
             navLinks: false, // can click day/week names to navigate views
+            displayEventTime: false,
 
             header: {
                 left: '',
@@ -1684,10 +1685,22 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             },
 
             events: [
-                { id: '1', resourceId: '2', start: '2018-12-21T09:00:00', end: '2018-12-21T10:00:00', title: 'event 1' },
-                { id: '2', resourceId: '3', start: '2018-12-21T09:30:00', end: '2018-12-21T10:30:00', title: 'event 2' },
-                { id: '3', resourceId: '2', start: '2018-12-25T07:30:00', end: '2018-12-25T08:30:00', title: 'event 3' },
-                { id: '4', resourceId: '3', start: '2018-12-25T10:00:00', end: '2018-12-25T11:15:00', title: 'event 4' }
+                <?php
+                foreach ($service_availability_list as $key => $value)
+                {
+                ?>
+                { 
+                    title: '<?=date('h:i A',strtotime($value['start_date_time'])).' - '.date('h:i A',strtotime($value['end_date_time']));?>',
+                    start: '<?=$value['start_date_time'];?>',
+                    end: '<?=$value['end_date_time'];?>',
+                },
+               <?php
+                }
+               ?>
+                /*{ id: '1', start: '2019-01-21T09:00:00', end: '2019-01-21T10:00:00', title: '9AM - 5PM' },
+                { id: '2', start: '2019-01-21T09:30:00', end: '2019-01-21T10:30:00', title: 'event 2' },
+                { id: '3', start: '2019-01-25T07:30:00', end: '2019-01-25T08:30:00', title: 'event 3' },
+                { id: '4', start: '2019-01-25T10:00:00', end: '2019-01-25T11:15:00', title: 'event 4' }*/
             ],
 
             /*selectConstraint: "businessHours",*/
