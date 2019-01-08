@@ -1501,17 +1501,17 @@
                         </div>
                      </div>
                   </div>
-                  <div class="row" id="colour-code-main-row">
+                  <div class="row" id="colour-code-main-row" style="display: none;">
                      <div class='col-sm-12'>
                         <div class="form-group">
                            <ul class="colors">
-                              <li class="bgred activeColor active" data-colour='#F74242'></li>
-                              <li class="bgyellow activeColor" data-colour="#E7B152" ></li>
+                              <li class="activeColor active" id="set_service_colour"></li>
+                              <!-- <li class="bgyellow activeColor" data-colour="#E7B152" ></li>
                               <li class="bggrn activeColor" data-colour="#4BB950" ></li>
                               <li class="bglightgrn activeColor" data-colour="#32C197" ></li>
-                              <li class="bgblue activeColor" data-colour="#4C80D4"></li>
+                              <li class="bgblue activeColor" data-colour="#4C80D4"></li> -->
                            </ul>
-                           <input type="hidden" name="colour_code" value="#F74242" id="colour_code">
+                           <input type="hidden" name="colour_code" value="" id="colour_code">
                            <h2>Set the Color</h2>
                         </div>
                      </div>

@@ -377,57 +377,6 @@ class UsersController extends ApiController {
         return view('website.user.login.login');
 	}
 
-
-
-	public function calendar(Request $data)
-	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-		// Call API //
-		$post_data = $authdata;
-		$post_data['page_no']=1;
-		$post_data['filter_data'] = '';
-
-		//filter staff
-		$filter_data = $data->input('appoinmnet_filter_stuff_id');
-		//print_r($filter_data); die();
-		if(!empty($filter_data))
-		{
-			$post_data['filter_data'] = implode(',', $filter_data);
-		}
-		$data=array(
-			'appoinment_list'=>array(),
-			'authdata'=>$authdata
-		);
-		//print_r($post_data); die();
-		$url_func_name="appoinment_list";
-		$return = $this->curl_call($url_func_name,$post_data);
-		
-		// Check response status. If success return data //		
-		if(isset($return->response_status))
-		{
-			if($return->response_status == 1)
-			{
-				$data['appoinment_list'] = $return->appoinment_list;
-				$data['staff_list'] = $return->staff_list;
-				$data['staff_list_filter'] = $return->staff_list_filter;
-				$data['calendar_settings'] = $return->calendar_settings;
-				$data['filter_data'] = $return->filter_data;
-				$data['block_date_time'] = $return->block_date_time;
-			}
-			//echo '<pre>'; print_r($data); exit;
-			return view('website.calendar')->with($data);
-		}
-		else
-		{
-			return $return;
-		}
-
-
-	}
-
 	public function staff_details($staff_search_text="")
 	{
 		// Check User Login. If not logged in redirect to login page //
@@ -715,6 +664,52 @@ class UsersController extends ApiController {
 	public function booking_calendar(){
 		return view('mobile.user.squeedr.booking_calendar');
 	}
-	
 
+	public function calendar(Request $data)
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/mobile/login');
+		}
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$post_data['filter_data'] = '';
+
+		//filter staff
+		$filter_data = $data->input('appoinmnet_filter_stuff_id');
+		//print_r($filter_data); die();
+		if(!empty($filter_data))
+		{
+			$post_data['filter_data'] = implode(',', $filter_data);
+		}
+		$data=array(
+			'appoinment_list'=>array(),
+			'authdata'=>$authdata
+		);
+		//print_r($post_data); die();
+		$url_func_name="appoinment_list";
+		$return = $this->curl_call($url_func_name,$post_data);
+		
+		// Check response status. If success return data //		
+		if(isset($return->response_status))
+		{
+			if($return->response_status == 1)
+			{
+				$data['appoinment_list'] = $return->appoinment_list;
+				$data['staff_list'] = $return->staff_list;
+				$data['staff_list_filter'] = $return->staff_list_filter;
+				$data['calendar_settings'] = $return->calendar_settings;
+				$data['filter_data'] = $return->filter_data;
+				$data['block_date_time'] = $return->block_date_time;
+			}
+			//echo '<pre>'; print_r($data); exit;
+			return view('mobile.user.calendar.calendar')->with($data);
+		}
+		else
+		{
+			return $return;
+		}
+	}
+	
 }

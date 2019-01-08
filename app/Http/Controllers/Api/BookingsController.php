@@ -1545,5 +1545,37 @@ class BookingsController extends ApiController {
         $this->json_output($response_data);
     }
 
+    public function get_service_colour_code(Request $request)
+    {
+        
+        //date_default_timezone_set('Asia/Kolkata');
+        // Check User Login. If not logged in redirect to login page /
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_no = $other_user_no;
+        }
+        else{
+            $user_no = $this->logged_user_no;
+        }
+
+        $service_id = $request->input('service_id');
+
+        $findCond = array(
+            array('service_id','=',$service_id),
+        );
+        
+        $selectFields = array('service_id','color');
+
+        $service_details = $this->common_model->fetchData($this->tableObj->tableUserService, $findCond, $selectFields);
+
+
+        $this->response_status='1';
+        $this->response_message = array('colors' => $service_details->color);;
+        $this->json_output($response_data);
+    }
+    
+
         
 }

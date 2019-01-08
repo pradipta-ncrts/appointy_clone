@@ -1928,25 +1928,13 @@ $("#create_new_service").change(function (event) {
   let val = $(this).val();
   if(val=='group')
   {
-      /*$(".user-status").parent().siblings(".capacity").show();
-      $(".user-status").addClass('tg-btn-ac');
-      $(".user-status").parent().prev(".capacity").find(".one-to-one").removeClass('tg-btn-ac');
-      $(".user-status").parent().prev(".capacity").find(".one-to-one").addClass('tg-btn');
-      $("#checkGroup").val('1');*/
-      $( ".group" ).trigger( "click" );
-      $("#checkGroup").val('1');
-      $('#myModalServices').modal('show');
+     var url = baseUrl+'/add_services/group';
+     window.location.replace(url);
   }
   if(val=='one-to-one')
   {
-      //$(".user-status").parent().next().next(".capacity").hide();
-      //$(".user-status").parent().next(".capacity").find(".group").removeClass('tg-btn-ac');
-      //$(".user-status").parent().next(".capacity").find(".group").addClass('tg-btn');
-      //$(".user-status").addClass('tg-btn-ac');
-      $("#service_capacity").val(0);
-      $('.one-to-one').trigger('click');
-      $("#checkGroup").val('');
-      $('#myModalServices').modal('show');
+     var url = baseUrl+'/add_services/solo';
+     window.location.replace(url);
   }
 
 });
@@ -2872,4 +2860,52 @@ $(".choose-plan").on('click', (function() {
 }));
 
 //===============Plan Section ==========================================
+
+//Set appointment colour
+
+$("#appoinment_service").on('change', (function(e) {
+    e.preventDefault();
+    var service_id = $(this).val();
+    if(service_id)
+    {
+        var data = addCommonParams([]);
+        data.push({name:'service_id', value:service_id});
+        console.log(data);
+        $.ajax({
+            url: baseUrl+"/api/get-service-colour-code", // Url to which the request is send
+            type: "POST", // Type of request to be send, called as method
+            data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+            dataType: "json",
+            success: function(response) // A function to be called if request succeeds
+            {
+                console.log(response);
+                //alert(response.response_status);
+                if(response.response_status=='1')
+                {
+                    //alert(response.response_message.colors)
+                    $("#set_service_colour").css('background-color', response.response_message.colors);
+                    $("#colour_code").val(response.response_message.colors);
+                    $("#colour-code-main-row").show();
+                }
+                else
+                {
+                    swal("Error", "Somthing wrong service colour not found." , "error");
+                }
+            },
+            beforeSend: function()
+            {
+                $('.animationload').show();
+            },
+            complete: function()
+            {
+                $('.animationload').hide();
+            }
+        });
+    }
+    else
+    {
+        $("#colour-code-main-row").hide();
+    }
+}));
+
 

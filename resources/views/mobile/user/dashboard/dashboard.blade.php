@@ -36,6 +36,7 @@ Squeedr
             <span><?=$user_details->name;?></span>
         </div>
         <ul>
+            <li><a href="{{url('mobile/calendar')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Calendar</span> </a> </li>
             <li><a href="{{url('mobile/booking-list/all')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Bookings</span> </a> </li>
             <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/review.png')}}" /> <span>Feedback</span> </a> </li>
             <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li>

@@ -158,6 +158,9 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/update-profile-mobile','Api\ProfileController@update_profile_mobile');
     Route::any('/update-service-availability','Api\ProfileController@update_service_availability');
 
+    Route::post('/get-service-colour-code','Api\BookingsController@get_service_colour_code');
+    
+
 });
 
 
@@ -288,6 +291,8 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/staff-booking-list','Mobile\StaffController@staff_booking_list');
     Route::get('/staff-booking-list/{duration?}/','Mobile\StaffController@staff_booking_list');
     Route::any('/client-note/{search_param?}','Mobile\ClientsController@client_note');
+    Route::any('/calendar','Mobile\UsersController@calendar');
+
 });
 
 
