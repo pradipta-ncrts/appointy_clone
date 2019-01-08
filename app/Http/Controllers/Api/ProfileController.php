@@ -358,7 +358,7 @@ class ProfileController extends ApiController {
 
 	public function update_service_availability(Request $request)
     {
-		$days_array = array('1'=>'Sunday','2'=>'Monday','3'=>'Tuesday','4'=>'Wednesday','5'=>'Thursday','6'=>'Friday','7'=>'Saturday');
+		$days_array = array('1'=>'Monday','2'=>'Tuesday','3'=>'Wednesday','4'=>'Thursday','5'=>'Friday','6'=>'Saturday','7'=>'Sunday');
         // Check User Login. If not logged in redirect to login page //
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
@@ -386,19 +386,19 @@ class ProfileController extends ApiController {
 		if($from_submit == 1){
 			$day = array_search($apply_day, $days_array);
 			if($date_range_type == 1){
-				$start_date = date('Y-m-d', strtotime("+1 day"))." 00:00:00";
-				$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"))." 23:59:59";
+				$start_date = date('Y-m-d', strtotime("+1 day"));
+				$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"));
 			} else if($date_range_type == 2){
 				$result = explode(' - ',$date_range_data);
-				$start_date = date('Y-m-d', strtotime($result[0]))." 00:00:00";
-				$end_date = date('Y-m-d', strtotime($result[1]))." 23:59:59";
+				$start_date = date('Y-m-d', strtotime($result[0]));
+				$end_date = date('Y-m-d', strtotime($result[1]));
 			} else {
-				$start_date = date('Y-m-d')." 00:00:00";
+				$start_date = date('Y-m-d');
 				$end_date = "";
 			}
 		} else if($from_submit == 2){
-			$start_date = date('Y-m-d', strtotime($apply_day))." 00:00:00";
-			$end_date = date('Y-m-d', strtotime($apply_day))." 23:59:59";
+			$start_date = date('Y-m-d', strtotime($apply_day));
+			$end_date = date('Y-m-d', strtotime($apply_day));
 		} 
 		
 		$insert_data = array();
@@ -427,22 +427,22 @@ class ProfileController extends ApiController {
 								'day' => array_search(date('l', strtotime($date_array[$j])), $days_array),
 								'start_time' => $interval_from[$i],
 								'end_time' => $interval_to[$i],
-								'start_date' => date('Y-m-d', strtotime($date_array[$j]))." 00:00:00",
-								'end_date' => date('Y-m-d', strtotime($date_array[$j]))." 23:59:59",
+								'start_date' => date('Y-m-d', strtotime($date_array[$j])),
+								'end_date' => date('Y-m-d', strtotime($date_array[$j])),
 								'created_on' => date('Y-m-d H:i:s')
 							);
 						} 
 					}
 				} else {
 					if($date_range_type == 1){
-						$start_date = date('Y-m-d', strtotime("+1 day"))." 00:00:00";
-						$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"))." 23:59:59";
+						$start_date = date('Y-m-d', strtotime("+1 day"));
+						$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"));
 					} else if($date_range_type == 2){
 						$result = explode(' - ',$date_range_data);
-						$start_date = date('Y-m-d', strtotime($result[0]))." 00:00:00";
-						$end_date = date('Y-m-d', strtotime($result[1]))." 23:59:59";
+						$start_date = date('Y-m-d', strtotime($result[0]));
+						$end_date = date('Y-m-d', strtotime($result[1]));
 					} else {
-						$start_date = date('Y-m-d')." 00:00:00";
+						$start_date = date('Y-m-d');
 						$end_date = "";
 					}
 	
