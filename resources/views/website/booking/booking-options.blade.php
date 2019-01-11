@@ -65,7 +65,7 @@ Squeedr
                            <tr>
                               <td>View service time on booking portal</td>
                               <td>
-                                    <button type="button" id="service_time" data-type-name="time_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                    <button type="button" id="service_time" data-type-name="time_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right <?php if($time_on_booking_portal == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
                                           <div class="handle"></div>
                                     </button>
                               </td>
@@ -74,7 +74,7 @@ Squeedr
                            <tr>
                            <td>View service cost on the booking portal</td>
                               <td>
-                                    <button type="button" id="service_cost" data-type-name="cost_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                    <button type="button" id="service_cost" data-type-name="cost_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right <?php if($cost_on_booking_portal == 1) echo 'active';?>" data-toggle="button"  autocomplete="off">
                                           <div class="handle"></div>
                                     </button>
                               </td>
@@ -83,7 +83,7 @@ Squeedr
                            <tr>
                            <td>Require clients to select categories first on the booking portal</td>
                               <td>
-                                    <button type="button" id="select_categories_first" data-type-name="categories_first_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                    <button type="button" id="select_categories_first" data-type-name="categories_first_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right <?php if($categories_first_on_booking_portal == 1) echo 'active';?>" data-toggle="button"  autocomplete="off">
                                           <div class="handle"></div>
                                     </button>
                               </td>
@@ -124,7 +124,7 @@ Squeedr
                            <tr>
                               <td>Show staff members on the booking portal</td>
                               <td>
-                                    <button type="button" id="show_staff_members" data-type-name="staff_members_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                    <button type="button" id="show_staff_members" data-type-name="staff_members_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right <?php if($staff_members_on_booking_portal == 1) echo 'active';?>" data-toggle="button"  autocomplete="off">
                                           <div class="handle"></div>
                                     </button>
                               </td>
@@ -132,7 +132,7 @@ Squeedr
                            <tr>
                            <td>Make selection of staff mandatory</td>
                               <td>
-                                    <button type="button" id="selection_staff_mandatory" data-type-name="selection_staff_mandatory" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                    <button type="button" id="selection_staff_mandatory" data-type-name="selection_staff_mandatory" class="service_option btn btn-sm btn-toggle pull-right <?php if($selection_staff_mandatory == 1) echo 'active';?>" data-toggle="button"  autocomplete="off">
                                           <div class="handle"></div>
                                     </button>
                               </td>
@@ -427,29 +427,29 @@ Squeedr
          </div>
          <div class="checkbox  col-md-4">
          <label class="check">
-         <input type="checkbox">
+<input type="checkbox" class="login_option" data-option-name="login_address" <?php if($login_address == 1) { ?> checked="" <?php } ?>>
          &nbsp;&nbsp; Address <span class="checkmark"></span> </label>
          </div>
          <div class="clearfix"></div>
          <div class="checkbox col-md-4">
          <label class="check">
-         <input type="checkbox">
+         <input type="checkbox" class="login_option" data-option-name="login_zip" <?php if($login_zip == 1) { ?> checked="" <?php } ?>>
          &nbsp;&nbsp; Zip <span class="checkmark"></span> </label>
          </div>
          <div class="checkbox  col-md-4">
          <label class="check">
-         <input type="checkbox">
+         <input type="checkbox" class="login_option" data-option-name="login_dob" <?php if($login_dob == 1) { ?> checked="" <?php } ?>>
          &nbsp;&nbsp; Date of Birth <span class="checkmark"></span> </label>
          </div>
          <div class="clearfix"></div>
          <div class="checkbox col-md-4">
          <label class="check">
-         <input type="checkbox">
+         <input type="checkbox" class="login_option" data-option-name="login_mobile" <?php if($login_mobile == 1) { ?> checked="" <?php } ?>>
          &nbsp;&nbsp; Mobile Phone <span class="checkmark"></span> </label>
          </div>
          <div class="checkbox  col-md-4">
          <label class="check">
-         <input type="checkbox">
+         <input type="checkbox" class="login_option" data-option-name="login_city" <?php if($login_city == 1) { ?> checked="" <?php } ?>>
          &nbsp;&nbsp; City & State <span class="checkmark"></span> </label>
          </div>
          </div>
@@ -515,6 +515,44 @@ Squeedr
                   }
             });
 
+      });
+      
+      $('.login_option').change(function() {
+            var service_type_name = $(this).data('option-name');
+            var status_value = 0;
+            if(this.checked) {
+                  status_value = 1;
+            }
+            //alert(service_type_name+'----'+status_value);  
+            var data = addCommonParams([]);
+            data.push({name:'type', value: service_type_name},{name:'status', value:status_value});
+            $.ajax({
+                  url: baseUrl+"/api/update_booking_flow", 
+                  type: "POST", 
+                  data: data, 
+                  dataType: "json",
+                  success: function(response) 
+                  {
+                  //console.log(response);
+                  $('.animationload').hide();
+                  if(response.result=='1')
+                  {
+                        swal({title: "Success", text: response.message, type: "success"});
+                  }
+                  else
+                  {
+                        swal("Error", response.message , "error");
+                  }
+                  },
+                  beforeSend: function()
+                  {
+                        $('.animationload').show();
+                  },
+                  complete: function()
+                  {
+                        //$('.animationload').hide();
+                  }
+            });      
       });
 </script>
 @endsection
