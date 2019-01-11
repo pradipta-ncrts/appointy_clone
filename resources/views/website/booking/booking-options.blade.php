@@ -65,17 +65,28 @@ Squeedr
                            <tr>
                               <td>View service time on booking portal</td>
                               <td>
-                                 <a onclick="togglebtn(this);" class="togg-btn active">
-                                    <i class="fa fa-toggle-on"></i>
+                                    <button type="button" id="service_time" data-type-name="time_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                          <div class="handle"></div>
+                                    </button>
                               </td>
                            </tr>
+
                            <tr>
-                           <td>View service cost on the booking portal></td>
-                           <td><a onclick="togglebtn(this);" class="togg-btn active"> <i class="fa fa-toggle-on"></i></td>
+                           <td>View service cost on the booking portal</td>
+                              <td>
+                                    <button type="button" id="service_cost" data-type-name="cost_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                          <div class="handle"></div>
+                                    </button>
+                              </td>
                            </tr>
+
                            <tr>
                            <td>Require clients to select categories first on the booking portal</td>
-                           <td><a onclick="togglebtn(this);" class="togg-btn active"> <i class="fa fa-toggle-on"></i></td>
+                              <td>
+                                    <button type="button" id="select_categories_first" data-type-name="categories_first_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                          <div class="handle"></div>
+                                    </button>
+                              </td>
                            </tr>
                         </table>
                         <div class="clearfix"></div>
@@ -113,13 +124,18 @@ Squeedr
                            <tr>
                               <td>Show staff members on the booking portal</td>
                               <td>
-                                 <a onclick="togglebtn(this);" class="togg-btn active">
-                                    <i class="fa fa-toggle-on"></i>
+                                    <button type="button" id="show_staff_members" data-type-name="staff_members_on_booking_portal" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                          <div class="handle"></div>
+                                    </button>
                               </td>
                            </tr>
                            <tr>
                            <td>Make selection of staff mandatory</td>
-                           <td><a onclick="togglebtn(this);" class="togg-btn active"> <i class="fa fa-toggle-on"></i></td>
+                              <td>
+                                    <button type="button" id="selection_staff_mandatory" data-type-name="selection_staff_mandatory" class="service_option btn btn-sm btn-toggle pull-right" data-toggle="button" aria-pressed="true" autocomplete="off">
+                                          <div class="handle"></div>
+                                    </button>
+                              </td>
                            </tr>
                         </table>
                         <div class="clearfix"></div>
@@ -458,4 +474,47 @@ Squeedr
       </div>
    </div>
 </div>
+@endsection
+
+@section('custom_js')
+<script>
+      $(document).on('click','.service_option',function(){
+            var service_type_name = $(this).data('type-name');
+            var status_value = 0;  
+            if ( $(this).hasClass("active") ) {
+                  status_value = 1;
+            }
+            //alert(service_type_name+' ==== '+status_value);
+            var data = addCommonParams([]);
+            data.push({name:'type', value: service_type_name},{name:'status', value:status_value});
+            $.ajax({
+                  url: baseUrl+"/api/update_booking_flow", 
+                  type: "POST", 
+                  data: data, 
+                  dataType: "json",
+                  success: function(response) 
+                  {
+                  //console.log(response);
+                  $('.animationload').hide();
+                  if(response.result=='1')
+                  {
+                        swal({title: "Success", text: response.message, type: "success"});
+                  }
+                  else
+                  {
+                        swal("Error", response.message , "error");
+                  }
+                  },
+                  beforeSend: function()
+                  {
+                        $('.animationload').show();
+                  },
+                  complete: function()
+                  {
+                        //$('.animationload').hide();
+                  }
+            });
+
+      });
+</script>
 @endsection
