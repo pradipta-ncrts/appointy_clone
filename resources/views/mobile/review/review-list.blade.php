@@ -6,7 +6,7 @@ Squeedr
 @section('content')
 <header class="mobileHeader showMobile" id="divBh"> 
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
-  <h1>Review List</h1>
+  <h1>Feedback list</h1>
   <ul>
     <li>&nbsp;<!-- <img src="images/mobile-serach.png" /> --> </li>
   </ul>

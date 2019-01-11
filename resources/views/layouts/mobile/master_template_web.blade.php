@@ -43,6 +43,7 @@
         .addReadMoreWrapTxt.showmorecontent .readLess {
             display: block;
         }
+        .nice-select{width: 100% !important;border: 1px solid #ccc;border-radius: 0;}
       </style>
       <script type="text/javascript">
          var authDatas={user_no:0}; 
@@ -338,7 +339,7 @@
 
       <!-- Add Appoitment --> 
       <div class="modal fade" id="myModaladdappoinment" role="dialog">
-         <div class="modal-dialog add-pop">
+         <div class="modal-dialog">
             <!-- Modal content--> 
             <div class="modal-content new-modalcustm">
                <form name="add_appointmentm_form" id="add_appointmentm_form" method="post" action="{{ url('api/add_appoinment') }}" enctype="multipart/form-data">
@@ -351,7 +352,8 @@
                      <div class="row">
                         <div class="col-sm-12">
                            <div class="form-group">
-                              <div class="input-group" id="client_error"> <span class="input-group-addon"><i class="fa fa-users"></i></span> 
+                              <div id="client_error">  
+                              <label >Select Client</label>
                                  <div class="form-group nomarging color-b" >
                                     <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="client" id="client"> 
                                        <option value="">Select Client</option>
@@ -372,8 +374,8 @@
                   <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
-                           <div class="input-group" id="appoinment_service_error">
-                              <span class="input-group-addon"><i class="fa fa-cog"></i></span> 
+                           <div id="appoinment_service_error">
+                           <label >Select Service</label>
                               <div class="form-group nomarging color-b" >
                                  <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="appoinment_service" id="appoinment_service"> 
                                     <option value="">Select Service</option>
@@ -396,8 +398,8 @@
                   <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
-                           <div class="input-group" id="staff_error">
-                              <span class="input-group-addon"><i class="fa fa-user"></i></span> 
+                           <div id="staff_error">
+                           <label >Select Staff</label>
                               <div class="form-group nomarging color-b selectStaff" >
                                  <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="staff" id="staff"> 
                                     <option value="">Select Staff</option>
@@ -420,14 +422,16 @@
                   <div class="row">
                      <div class="col-sm-12">
                         <div class="form-group">
-                           <div class="input-group" id="date_error"> <span class="input-group-addon"><i class="fa fa-calendar"></i></span> <input id="appointmentdate" type="text" class="form-control" name="date" placeholder="Date" style="position: relative; z-index: 100000;"> </div>
+                        <label >Date</label>
+                           <div id="date_error"> <input id="appointmentdate" type="text" class="form-control" name="date" placeholder="Date" style="position: relative; z-index: 100000;border-left: 1px solid #ccc;"> </div>
                         </div>
                      </div>
                   </div>
                   <div class="row">
                      <div class="col-sm-12">
                         <div class="form-group">
-                           <div class="input-group" id="appointmenttime_error"> <span class="input-group-addon"><i class="fa fa-calendar"></i></span> <input id="appointmenttime" type="text" class="form-control" name="appointmenttime" placeholder="Time"> </div>
+                        <label >Time</label>
+                           <div id="appointmenttime_error"> <input id="appointmenttime" type="text" class="form-control" name="appointmenttime" placeholder="Time" style="border-left: 1px solid #ccc;"> </div>
                         </div>
                      </div>
                   </div>
@@ -449,7 +453,8 @@
                   <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
-                           <div class="input-group textarea-md" id="appoinment_note_error"> <span class="input-group-addon"><i class="fa fa-file"></i></span>
+                        <label>Notes</label>
+                           <div class="textarea-md" id="appoinment_note_error"> 
                               <textarea style="width: 100%" name="appoinment_note" id="appoinment_note" placeholder="Note"></textarea>
                            </div>
                         </div>

@@ -1575,7 +1575,37 @@ class BookingsController extends ApiController {
         $this->response_message = array('colors' => $service_details->color);;
         $this->json_output($response_data);
     }
-    
 
+     public function update_booking_flow(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+            return redirect('/login');
+        }
         
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+
+        $user_id = $this->logged_user_no;
+        $type = $request->input('type');
+        $status = $request->input('status');
+
+        $conditions = array(
+            array('user_id','=',$user_id),
+            array('is_deleted','=','0'),
+        );
+        
+        $staff_data['updated_on'] = date('Y-m-d H:i:s');
+        $staff_data[$type] = $status;
+    
+        $update = $this->common_model->update_data($this->tableObj->tableNameBookinFlow,$conditions,$staff_data);
+
+        $this->response_status='1';
+        $this->response_message = "Successfully updated.";
+
+        $this->json_output($response_data);
+        
+    }
+    
 }
