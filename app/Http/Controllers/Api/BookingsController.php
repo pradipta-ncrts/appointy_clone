@@ -1593,13 +1593,22 @@ class BookingsController extends ApiController {
 
         $conditions = array(
             array('user_id','=',$user_id),
-            array('is_deleted','=','0'),
+            //array('is_deleted','=','0'),
         );
         
         $staff_data['updated_on'] = date('Y-m-d H:i:s');
         $staff_data[$type] = $status;
-    
-        $update = $this->common_model->update_data($this->tableObj->tableNameBookinFlow,$conditions,$staff_data);
+        $staff_data['user_id'] = $user_id;
+
+        $result = $this->common_model->fetchData($this->tableObj->tableNameBookinFlow,$conditions);
+        if(empty($result))
+        {
+            $insert = $this->common_model->insert_data_get_id($this->tableObj->tableNameBookinFlow,$staff_data);
+        }
+        else
+        {
+            $update = $this->common_model->update_data($this->tableObj->tableNameBookinFlow,$conditions,$staff_data);
+        }
 
         $this->response_status='1';
         $this->response_message = "Successfully updated.";
