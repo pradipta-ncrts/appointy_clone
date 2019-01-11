@@ -163,6 +163,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/get-service-colour-code','Api\BookingsController@get_service_colour_code');
 
     Route::post('/update_booking_flow','Api\BookingsController@update_booking_flow');
+    Route::any('/booking_flow_data','Api\BookingsController@booking_flow_data');
+
     
 
 });

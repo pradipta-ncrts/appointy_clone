@@ -1616,5 +1616,39 @@ class BookingsController extends ApiController {
         $this->json_output($response_data);
         
     }
+
+
+    public function booking_flow_data(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $other_user_no = $request->input('other_user_no');
+        $pageNo = $request->input('page_no');
+        $pageNo = ($pageNo>1)?$pageNo:1;
+        $limit=$this->limit;
+        $offset=($pageNo-1)*$limit;
+
+        if(!empty($other_user_no) && $other_user_no!=0)
+        {
+            $user_no = $other_user_no;
+        }
+        else
+        {
+            $user_no = $this->logged_user_no;
+        }
+        
+        $findCond=array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+        );
+        
+        $selectFields=array();
+        $booking_flow_data = $this->common_model->fetchData($this->tableObj->tableNameBookinFlow,$findCond,$selectFields);
+        $response_data['booking_flow_data']=$booking_flow_data;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
     
 }
