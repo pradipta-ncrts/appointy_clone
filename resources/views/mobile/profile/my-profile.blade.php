@@ -7,9 +7,8 @@ Squeedr
    <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
    <h1>Profile</h1>
    <ul>
-      &nbsp;
-      <!-- <li><img src="images/mobile-notes.png" /></li>
-         <li><img src="images/mobile-calender.png" /></li> -->
+    <li><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}"/></li>
+    <li><img src="{{asset('public/assets/mobile/images/mobile-calender.png')}}"/></li>
    </ul>
 </header>
 <style type="text/css">
@@ -45,7 +44,7 @@ left: -999em;
                   }
                   ?>
                </div>
-               <div class="profileDetails">
+               <div class="profileDetails" style="width:100%;">
                   <h1><?=$user_details->user_type==1 ? $user_details->name :  $user_details->business_name;?></h1>
                   <a href="#"  data-toggle="modal" data-target="#expertise"> <i class="fa fa-pencil"></i></a>
                   <span><?=$user_details->prof ? $user_details->prof : "No data found";?></span><!--  <span>Time Zone - Kolkata,WB, India</span>  -->
@@ -63,9 +62,44 @@ left: -999em;
                   </ul>
                </div>
             </div>
+            <div class="whitebox expertise clearfix border-add">
+               <div class="profileheading">
+                  <img src="{{asset('public/assets/mobile/images/profile/expertise.png')}}" />
+                  <h4>Expertise</h4>
+                  <a href="#"  data-toggle="modal" data-target="#expertise"> <i class="fa fa-pencil"></i></a>
+               </div>
+               <ul>
+               <?php
+               if(!empty($user_details->expertise))
+               {
+                  $expertise = explode(',', $user_details->expertise);
+                  foreach ($expertise as $key => $value)
+                  {
+               ?> 
+                  <li><?=$value;?></li>
+               <?php
+                  }
+               }
+               else
+               {
+                  echo "No expertise found.";
+               }
+               ?>
+               </ul>
+               <!-- <a class="pull-right more">More</a> --> 
+            </div>
+            <div class="whitebox pt border-add">
+               <div class="profileheading">
+                  <img src="{{asset('public/assets/mobile/images/profile/presentation.png')}}" />
+                  <h4>Presentation</h4>
+                  <a href="#"  data-toggle="modal" data-target="#expertise"> <i class="fa fa-pencil"></i></a>
+               </div>
+               <p><?=$user_details->presentation ? $user_details->presentation : "No data found";?></p>
+            </div>
             <div class="profile-mobaccordion">
                <div class="panel-group" id="accordion">
                   <div class="panel panel-default">
+
                      <div class="panel-heading">
                         <h4 class="panel-title">
                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
@@ -110,41 +144,8 @@ left: -999em;
                   </div>
                </div>
             </div>
-            <div class="whitebox expertise clearfix">
-               <div class="profileheading">
-                  <img src="{{asset('public/assets/mobile/images/profile/expertise.png')}}" />
-                  <h4>Expertise</h4>
-                  <a href="#"  data-toggle="modal" data-target="#expertise"> <i class="fa fa-pencil"></i></a>
-               </div>
-               <ul>
-               <?php
-               if(!empty($user_details->expertise))
-               {
-                  $expertise = explode(',', $user_details->expertise);
-                  foreach ($expertise as $key => $value)
-                  {
-               ?> 
-                  <li><?=$value;?></li>
-               <?php
-                  }
-               }
-               else
-               {
-                  echo "No expertise found.";
-               }
-               ?>
-               </ul>
-               <!-- <a class="pull-right more">More</a> --> 
-            </div>
-            <div class="whitebox pt">
-               <div class="profileheading">
-                  <img src="{{asset('public/assets/mobile/images/profile/presentation.png')}}" />
-                  <h4>Presentation</h4>
-                  <a href="#"  data-toggle="modal" data-target="#expertise"> <i class="fa fa-pencil"></i></a>
-               </div>
-               <p><?=$user_details->presentation ? $user_details->presentation : "No data found";?></p>
-            </div>
-            <div class="whitebox map">
+            
+            <div class="whitebox map border-add">
                <div class="profileheading">
                   <img src="{{asset('public/assets/mobile/images/profile/map.png')}}" />
                   <h4>Map and access Information</h4>
@@ -171,7 +172,7 @@ left: -999em;
                   <div class="mapright"> <img src="{{asset('public/assets/mobile/images/profile/map-pic.png')}}" class="gmap"/> <a><img src="{{asset('public/assets/mobile/images/profile/zoom-in.png')}}"/> </a> </div>
                </div>
             </div>
-            <div class="whitebox ">
+            <div class="whitebox border-add">
                <div class="profileheading">
                   <img src="{{asset('public/assets/mobile/images/profile/contact.png')}}" />
                   <h4>Contact</h4>
@@ -185,7 +186,7 @@ left: -999em;
                   </ul>
                </div>
             </div>
-            <div class="whitebox profileMobile">
+            <div class="whitebox profileMobile border-add">
                <div class="payment">
                   <div class="profileheading">
                      <img src="{{asset('public/assets/mobile/images/profile/payment-method.png')}}" />

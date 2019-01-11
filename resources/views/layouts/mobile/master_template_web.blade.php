@@ -43,6 +43,7 @@
         .addReadMoreWrapTxt.showmorecontent .readLess {
             display: block;
         }
+        .nice-select{width: 100% !important;border: 1px solid #ccc;border-radius: 0;}
       </style>
       <script type="text/javascript">
          var authDatas={user_no:0}; 
@@ -55,6 +56,8 @@
    <body>
       <?php
       $stuffs_list = App\Http\Controllers\BaseApiController::stuffs_list();
+      $services_list = App\Http\Controllers\BaseApiController::services_list();
+      $clients_list = App\Http\Controllers\BaseApiController::clients_list();
       ?>
       <div class="animationload" style="display: none;">
          <div class="osahanloading"></div>
@@ -333,6 +336,147 @@
          </div>
       </div>
       <!-- Reshedule Appoitment End-->
+
+      <!-- Add Appoitment --> 
+      <div class="modal fade" id="myModaladdappoinment" role="dialog">
+         <div class="modal-dialog">
+            <!-- Modal content--> 
+            <div class="modal-content new-modalcustm">
+               <form name="add_appointmentm_form" id="add_appointmentm_form" method="post" action="{{ url('api/add_appoinment') }}" enctype="multipart/form-data">
+
+               <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button> 
+                  <h4 class="modal-title"> Add Appointments</h4>
+               </div>
+               <div class="modal-body clr-modalbdy">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <div class="form-group">
+                              <div id="client_error">  
+                              <label >Select Client</label>
+                                 <div class="form-group nomarging color-b" >
+                                    <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="client" id="client"> 
+                                       <option value="">Select Client</option>
+                                       <?php
+                                       foreach ($clients_list['client_list'] as $key => $cli)
+                                       {
+                                       ?>
+                                       <option value="<?=$cli->client_id;?>"><?=$cli->client_name;?></option>
+                                       <?php
+                                       }
+                                       ?>
+                                    </select>
+                                 </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group">
+                           <div id="appoinment_service_error">
+                           <label >Select Service</label>
+                              <div class="form-group nomarging color-b" >
+                                 <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="appoinment_service" id="appoinment_service"> 
+                                    <option value="">Select Service</option>
+                                    <?php
+                                    foreach ($services_list['service_list'] as $key => $serv)
+                                    {
+                                    ?>
+                                    <option value="<?=$serv->service_id;?>"><?=$serv->service_name;?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                 </select>
+                                <div class="clearfix"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group">
+                           <div id="staff_error">
+                           <label >Select Staff</label>
+                              <div class="form-group nomarging color-b selectStaff" >
+                                 <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="staff" id="staff"> 
+                                    <option value="">Select Staff</option>
+                                    <?php
+                                    foreach ($stuffs_list['stuff_list'] as $key => $stf)
+                                    {
+                                    ?>
+                                    <option value="<?=$stf->staff_id;?>"><?=$stf->full_name;?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                 </select>
+                                <div class="clearfix"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <div class="form-group">
+                        <label >Date</label>
+                           <div id="date_error"> <input id="appointmentdate" type="text" class="form-control" name="date" placeholder="Date" style="position: relative; z-index: 100000;border-left: 1px solid #ccc;"> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-sm-12">
+                        <div class="form-group">
+                        <label >Time</label>
+                           <div id="appointmenttime_error"> <input id="appointmenttime" type="text" class="form-control" name="appointmenttime" placeholder="Time" style="border-left: 1px solid #ccc;"> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row" id="colour-code-main-row" style="display: none;">
+                     <div class='col-sm-12'>
+                        <div class="form-group">
+                           <ul class="colors">
+                              <li class="activeColor active" id="set_service_colour"></li>
+                              <!-- <li class="bgyellow activeColor" data-colour="#E7B152" ></li>
+                              <li class="bggrn activeColor" data-colour="#4BB950" ></li>
+                              <li class="bglightgrn activeColor" data-colour="#32C197" ></li>
+                              <li class="bgblue activeColor" data-colour="#4C80D4"></li> -->
+                           </ul>
+                           <input type="hidden" name="colour_code" value="" id="colour_code">
+                           <h2>Set the Color</h2>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group">
+                        <label>Notes</label>
+                           <div class="textarea-md" id="appoinment_note_error"> 
+                              <textarea style="width: 100%" name="appoinment_note" id="appoinment_note" placeholder="Note"></textarea>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row" id="apoinment-mail-notification">
+                     <div class="col-md-12">
+                        <div class="form-group"> <input name="apoinment_mail" type="checkbox" value="true"> Send Email confirmation </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <div class="col-md-12 text-center"> 
+                     <input type="submit" id="submit_appointmentm_form" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block" name="submit" value="submit">
+                     <!-- <button type="button" >Submit</button> --> </div>
+               </div>
+            </form>
+            </div>
+         </div>
+      </div>
+      <!-- End Appoitment -->
+      
       
 
       <script src="{{asset('public/assets/mobile/js/jquery.min.js')}}"></script>

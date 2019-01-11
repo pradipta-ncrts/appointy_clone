@@ -37,7 +37,7 @@ Squeedr
                  </div>
                  <div class="input-group">
                     <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-services.png')}}"/> </span>
-                    <select class="form-control" name="appoinment_service" id="appoinment_service">
+                    <select class="form-control" name="appoinment_service" id="appoinment_service_mobile">
                        <option value="">Select Service</option>
                         <?php
                         foreach ($services_list['service_list'] as $key => $serv)
@@ -70,14 +70,10 @@ Squeedr
                     <input id="appointmenttime" type="text" class="form-control" name="appointmenttime" placeholder="Time">
                  </div>
                  <textarea class="form-control notes" rows="6" placeholder="Notes" name="appoinment_note" id="appoinment_note"></textarea>
-                 <ul class="colors">
-                    <li class="bgred activeColor active" data-colour='#F74242'></li>
-                    <li class="bgyellow activeColor" data-colour="#E7B152" ></li>
-                    <li class="bggrn activeColor" data-colour="#4BB950" ></li>
-                    <li class="bglightgrn activeColor" data-colour="#32C197" ></li>
-                    <li class="bgblue activeColor" data-colour="#4C80D4"></li>
+                 <ul class="colors" style="display: none;" id="colour-code-main-row-mobile">
+                    <li id="set_service_colour_mobile" class="activeColor active"></li>
                  </ul>
-                <input type="hidden" name="colour_code" value="#F74242" id="colour_code">    
+                <input type="hidden" name="colour_code" value="" id="colour_code_mobile">    
                   <div class="input-group">
                     <div class="checkbox-cutm">
                        <input name="apoinment_mail" type="checkbox" value="true"> Confirmation Email
@@ -95,5 +91,51 @@ Squeedr
 
 
 @section('custom_js')
-
+<script type="text/javascript">
+//Set appointment colour
+$("#appoinment_service_mobile").on('change', (function(e) {
+    e.preventDefault();
+    var service_id = $(this).val();
+    if(service_id)
+    {
+        var data = addCommonParams([]);
+        data.push({name:'service_id', value:service_id});
+        console.log(data);
+        $.ajax({
+            url: baseUrl2+"/api/get-service-colour-code", // Url to which the request is send
+            type: "POST", // Type of request to be send, called as method
+            data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+            dataType: "json",
+            success: function(response) // A function to be called if request succeeds
+            {
+                console.log(response);
+                //alert(response.response_status);
+                if(response.response_status=='1')
+                {
+                    //alert(response.response_message.colors)
+                    $("#set_service_colour_mobile").css('background-color', response.response_message.colors);
+                    $("#colour_code_mobile").val(response.response_message.colors);
+                    $("#colour-code-main-row-mobile").show();
+                }
+                else
+                {
+                    swal("Error", "Somthing wrong service colour not found." , "error");
+                }
+            },
+            beforeSend: function()
+            {
+                $('.animationload').show();
+            },
+            complete: function()
+            {
+                $('.animationload').hide();
+            }
+        });
+    }
+    else
+    {
+        $("#colour-code-main-row-mobile").hide();
+    }
+}));
+</script>
 @endsection

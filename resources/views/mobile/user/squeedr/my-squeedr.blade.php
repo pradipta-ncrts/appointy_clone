@@ -55,6 +55,42 @@ Squeedr
                   </ul>
                </div> -->
             </div>
+            <div class="whitebox expertise clearfix">
+               <div class="profileheading">
+                  <img src="{{asset('public/assets/mobile/images/profile/expertise.png')}}" />
+                  <h4>Expertise</h4>
+                 
+
+               </div>
+               <ul>
+               <?php
+               if(!empty($user_details->expertise))
+               {
+                  $expertise = explode(',', $user_details->expertise);
+                  foreach ($expertise as $key => $value)
+                  {
+               ?> 
+                  <li><?=$value;?></li>
+               <?php
+                  }
+               }
+               else
+               {
+                  echo "No expertise found.";
+               }
+               ?>
+               </ul>
+               <!-- <a class="pull-right more">More</a> --> 
+            </div>
+            <div class="whitebox pt">
+               <div class="profileheading">
+                  <img src="{{asset('public/assets/mobile/images/profile/presentation.png')}}" />
+                  <h4>Presentation</h4>
+                  
+
+               </div>
+               <p><?=$user_details->presentation ? $user_details->presentation : "No data found";?></p>
+            </div>
             <div class="profile-mobaccordion">
                <div class="panel-group" id="accordion">
                   <div class="panel panel-default">
@@ -102,42 +138,7 @@ Squeedr
                   </div>
                </div>
             </div>
-            <div class="whitebox expertise clearfix">
-               <div class="profileheading">
-                  <img src="{{asset('public/assets/mobile/images/profile/expertise.png')}}" />
-                  <h4>Expertise</h4>
-                 
-
-               </div>
-               <ul>
-               <?php
-               if(!empty($user_details->expertise))
-               {
-                  $expertise = explode(',', $user_details->expertise);
-                  foreach ($expertise as $key => $value)
-                  {
-               ?> 
-                  <li><?=$value;?></li>
-               <?php
-                  }
-               }
-               else
-               {
-                  echo "No expertise found.";
-               }
-               ?>
-               </ul>
-               <!-- <a class="pull-right more">More</a> --> 
-            </div>
-            <div class="whitebox pt">
-               <div class="profileheading">
-                  <img src="{{asset('public/assets/mobile/images/profile/presentation.png')}}" />
-                  <h4>Presentation</h4>
-                  
-
-               </div>
-               <p><?=$user_details->presentation ? $user_details->presentation : "No data found";?></p>
-            </div>
+            
             <div class="whitebox map">
                <div class="profileheading">
                   <img src="{{asset('public/assets/mobile/images/profile/map.png')}}" />

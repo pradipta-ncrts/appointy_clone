@@ -36,14 +36,18 @@ Squeedr
             <span><?=$user_details->name;?></span>
         </div>
         <ul>
+          
+
+            <!-- <li><a href="{{url('mobile/calendar')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Calendar</span> </a> </li> -->
             <li><a href="{{url('mobile/booking-list/all')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Bookings</span> </a> </li>
             <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/review.png')}}" /> <span>Feedback</span> </a> </li>
-            <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li>
-            <li><a href="{{url('mobile/my-profile')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Profile</span> </a> </li>
+            <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Clients</span> </a> </li>
+            <li><a href="{{url('mobile/my-profile')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Profile Settings</span> </a> </li>
             <li><a href="{{url('mobile/settings')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Settings</span> </a> </li>
             <!-- <li><a><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li> -->
-            <li><a><img src="{{asset('public/assets/mobile/images/sidenav/background.png')}}" /> <span>Change Background </span> </a> </li>
-            <li><a><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>About</span> </a> </li>
+            <li><a href="{{url('mobile/scan')}}"><img src="{{asset('public/assets/mobile/images/sidenav/background.png')}}" /> <span>Scan </span> </a> </li>
+            <li><a href="{{url('mobile/membership')}}"><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>Upgrade</span> </a> </li>
+            <li><a href="{{url('mobile/help')}}"><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>Help</span> </a> </li>
             <li><a href="{{url('mobile/logout')}}"><img src="{{asset('public/assets/mobile/images/sidenav/logout.png')}}" /> <span>Logout</span> </a> </li>
         </ul>
     </div>

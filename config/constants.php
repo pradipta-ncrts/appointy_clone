@@ -58,6 +58,8 @@ return [
 
         'service_availability' => 'service_availability',
 
+        'booking_flow' => 'booking_flow',
+
     ],
 
     'google'=>[

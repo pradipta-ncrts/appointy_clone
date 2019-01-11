@@ -1545,5 +1545,110 @@ class BookingsController extends ApiController {
         $this->json_output($response_data);
     }
 
+    public function get_service_colour_code(Request $request)
+    {
         
+        //date_default_timezone_set('Asia/Kolkata');
+        // Check User Login. If not logged in redirect to login page /
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_no = $other_user_no;
+        }
+        else{
+            $user_no = $this->logged_user_no;
+        }
+
+        $service_id = $request->input('service_id');
+
+        $findCond = array(
+            array('service_id','=',$service_id),
+        );
+        
+        $selectFields = array('service_id','color');
+
+        $service_details = $this->common_model->fetchData($this->tableObj->tableUserService, $findCond, $selectFields);
+
+
+        $this->response_status='1';
+        $this->response_message = array('colors' => $service_details->color);;
+        $this->json_output($response_data);
+    }
+
+     public function update_booking_flow(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+            return redirect('/login');
+        }
+        
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+
+        $user_id = $this->logged_user_no;
+        $type = $request->input('type');
+        $status = $request->input('status');
+
+        $conditions = array(
+            array('user_id','=',$user_id),
+            //array('is_deleted','=','0'),
+        );
+        
+        $staff_data['updated_on'] = date('Y-m-d H:i:s');
+        $staff_data[$type] = $status;
+        $staff_data['user_id'] = $user_id;
+
+        $result = $this->common_model->fetchData($this->tableObj->tableNameBookinFlow,$conditions);
+        if(empty($result))
+        {
+            $insert = $this->common_model->insert_data_get_id($this->tableObj->tableNameBookinFlow,$staff_data);
+        }
+        else
+        {
+            $update = $this->common_model->update_data($this->tableObj->tableNameBookinFlow,$conditions,$staff_data);
+        }
+
+        $this->response_status='1';
+        $this->response_message = "Successfully updated.";
+
+        $this->json_output($response_data);
+        
+    }
+
+
+    public function booking_flow_data(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $other_user_no = $request->input('other_user_no');
+        $pageNo = $request->input('page_no');
+        $pageNo = ($pageNo>1)?$pageNo:1;
+        $limit=$this->limit;
+        $offset=($pageNo-1)*$limit;
+
+        if(!empty($other_user_no) && $other_user_no!=0)
+        {
+            $user_no = $other_user_no;
+        }
+        else
+        {
+            $user_no = $this->logged_user_no;
+        }
+        
+        $findCond=array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+        );
+        
+        $selectFields=array();
+        $booking_flow_data = $this->common_model->fetchData($this->tableObj->tableNameBookinFlow,$findCond,$selectFields);
+        $response_data['booking_flow_data']=$booking_flow_data;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+    
 }

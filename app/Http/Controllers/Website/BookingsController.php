@@ -38,9 +38,50 @@ class BookingsController extends ApiController {
 
 		}
 
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$data=array(
+			'authdata'=>$authdata
+		);
 
+		$url_func_name="booking_flow_data";
+		$return = $this->curl_call($url_func_name,$post_data);
+		$booking_flow_data = $return->booking_flow_data;
+		if(isset($booking_flow_data) && $booking_flow_data)
+		{
+			$data['time_on_booking_portal'] = $booking_flow_data->time_on_booking_portal;
+			$data['cost_on_booking_portal'] = $booking_flow_data->cost_on_booking_portal;
+			$data['categories_first_on_booking_portal'] = $booking_flow_data->categories_first_on_booking_portal;
+			$data['staff_members_on_booking_portal'] = $booking_flow_data->staff_members_on_booking_portal;
+			$data['selection_staff_mandatory'] = $booking_flow_data->selection_staff_mandatory;
+			$data['login_first_name'] = $booking_flow_data->login_first_name;
+			$data['login_last_name'] = $booking_flow_data->login_last_name;
+			$data['login_zip'] = $booking_flow_data->login_zip;
+			$data['login_mobile'] = $booking_flow_data->login_mobile;
+			$data['login_email'] = $booking_flow_data->login_email;
+			$data['login_address'] = $booking_flow_data->login_address;
+			$data['login_dob'] = $booking_flow_data->login_dob;
+			$data['login_city'] = $booking_flow_data->login_city;
+		}
+		else
+		{
+			$data['time_on_booking_portal'] = 0;
+			$data['cost_on_booking_portal'] = 0;
+			$data['categories_first_on_booking_portal'] = 0;
+			$data['staff_members_on_booking_portal'] = 0;
+			$data['selection_staff_mandatory'] = 0;
+			$data['login_first_name'] = 0;
+			$data['login_last_name'] = 0;
+			$data['login_zip'] = 0;
+			$data['login_mobile'] = 0;
+			$data['login_email'] = 0;
+			$data['login_address'] = 0;
+			$data['login_dob'] = 0;
+			$data['login_city'] = 0;
+		}
 
-		return view('website.booking.booking-options');
+		return view('website.booking.booking-options', $data);
 
 	}
 

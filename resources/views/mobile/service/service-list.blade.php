@@ -7,11 +7,24 @@ Squeedr
    <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
    <h1>Service List</h1>
    <ul>
-      <li><a href="{{url('mobile/add-service')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
+      <li><a href="{{url('mobile/create-service')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
    </ul>
 </header>
 <main>
-   <div class="container-fluid">
+  <ul class="clientSchedule">
+     <li><a href="{{url('mobile/service-list/all')}}" class="<?=Request::segment(4) == '' ? 'active' : ''; ?>">All</a> </li>
+      <?php 
+       foreach ($category_list as $key => $value) 
+       {
+       ?>
+        <li><a class="<?=Request::segment(4) == $value->category_id ? 'active' : ''; ?>" id="" href="{{ url('mobile/service-list/') }}/{{ Request::segment(3) }}/<?=$value->category_id;?>">
+          <?=$value->cat;?>
+          </a></li>
+        <?php
+       }
+       ?>
+  </ul>
+  <div class="container-fluid">
       <div class="row">
          <div class="col-lg-12">
             <div class="headRow  mobileappointed clearfix" id="row2">

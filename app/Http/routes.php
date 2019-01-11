@@ -160,6 +160,13 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/update-profile-mobile','Api\ProfileController@update_profile_mobile');
     Route::any('/update-service-availability','Api\ProfileController@update_service_availability');
 
+    Route::post('/get-service-colour-code','Api\BookingsController@get_service_colour_code');
+
+    Route::post('/update_booking_flow','Api\BookingsController@update_booking_flow');
+    Route::any('/booking_flow_data','Api\BookingsController@booking_flow_data');
+
+    
+
 });
 
 
@@ -277,9 +284,10 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/edit-client/{client_id}','Mobile\ClientsController@edit_client');
     Route::get('/staff-list','Mobile\StaffController@staff_list');
     Route::get('/add-staff','Mobile\StaffController@add_staff');
-    Route::get('/service-list','Mobile\ServiceController@service_list');
-    Route::get('/add-service','Mobile\ServiceController@add_service');
-    Route::get('/edit-service','Mobile\ServiceController@edit_service');
+    Route::get('/service-list/{type?}/{service_category?}','Mobile\ServiceController@service_list');
+    Route::get('/create-service','Mobile\ServiceController@create_service');
+    Route::get('/add_services/{type?}','Mobile\ServiceController@add_services');
+    Route::get('/edit_service/{service_id?}','Mobile\ServiceController@edit_service');
     Route::get('/review-list','Mobile\ReviewController@review_list');
     Route::get('/settings','Mobile\SettingsController@settings');
     Route::get('/membership','Mobile\PlanController@membership');
@@ -290,6 +298,8 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/staff-booking-list','Mobile\StaffController@staff_booking_list');
     Route::get('/staff-booking-list/{duration?}/','Mobile\StaffController@staff_booking_list');
     Route::any('/client-note/{search_param?}','Mobile\ClientsController@client_note');
+    Route::any('/calendar','Mobile\UsersController@calendar');
+
 });
 
 
