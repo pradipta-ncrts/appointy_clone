@@ -236,7 +236,7 @@ class common_model extends Model {
         // set contdition section 
         if(!empty($conditions)){
             if(is_array($conditions)){
-                $conditions[] = array('is_deleted','=',0);
+                //$conditions[] = array('is_deleted','=',0);
                 $this->set_condition($conditions,$tableName);
             }
             else{

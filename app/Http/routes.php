@@ -154,7 +154,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
     Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
 
-    Route::any('/staff_login/','Api\UsersController@staff_login');
+    Route::any('/staff_login','Api\UsersController@staff_login');
     Route::any('/staff_details_mobile','Api\StaffsController@staff_details_mobile');
     Route::any('/edit_team_member_indiv','Api\StaffsController@edit_team_member_indiv');
     Route::any('/update-profile-mobile','Api\ProfileController@update_profile_mobile');
@@ -165,8 +165,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/update_booking_flow','Api\BookingsController@update_booking_flow');
     Route::any('/booking_flow_data','Api\BookingsController@booking_flow_data');
 
-    
-
+    // Get appointments via API Key//
+    Route::any('/fetch_appointments','Api\BookingsController@fetch_appointments');
 });
 
 
