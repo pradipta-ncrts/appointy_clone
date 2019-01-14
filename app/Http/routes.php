@@ -248,7 +248,6 @@ Route::group(['prefix'=>''],function(){
     Route::get('/settings-membership','Website\PlanController@settings_membership');
 
     Route::any('/make-payment/{parameter?}','Website\PlanController@make_payment');
-
     
     
 });
@@ -299,6 +298,9 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::get('/staff-booking-list/{duration?}/','Mobile\StaffController@staff_booking_list');
     Route::any('/client-note/{search_param?}','Mobile\ClientsController@client_note');
     Route::any('/calendar','Mobile\UsersController@calendar');
+    Route::any('/scan','Mobile\ScanController@scan');
+    Route::any('/help','Mobile\helpController@help');
+
 
 });
 
