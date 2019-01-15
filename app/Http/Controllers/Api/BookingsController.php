@@ -1801,20 +1801,7 @@ class BookingsController extends ApiController {
         //appoinment data using id
         $appoinment_condition = array(
             array('user_id', '=', $user_no),
-        );
-
-        $findCond = array(
-            array('user_id','=',$user_no),
             array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-            //'in' => array('')
-        );
-
-
-        $filter_list_condition = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
         );
         
         // Appoinment section //
