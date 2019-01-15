@@ -454,120 +454,6 @@ class BookingsController extends ApiController {
         $this->json_output($response_data);
     }
 
-
-    // Get appointments via API Key //
-    public function fetch_appointments(Request $request)
-    {
-        $response_data = array(); 
-        $api_key = $request->input('api_key');
-        $last_updated_time = $request->input('last_updated_time');
-        $appointment_type = $request->input('appointment_type');
-
-        $tableNameAppointment = 'squ_'.$this->tableObj->tableNameAppointment;
-
-        $findCond = array();
-        //$findCond = array(array('is_deleted','=','0'));
-        //appoinment data using api key
-        if(!empty($api_key))
-        {
-            $selectCond = array(
-                array('api_key','=',$api_key),
-                array('is_deleted','=','0'),
-            );
-            $selectFields = array('id','email');
-            $user_details = $this->common_model->fetchData($this->tableObj->tableNameUser,$selectCond,$selectFields);
-            if(!empty($user_details)){
-                $user_no = $user_details->id;
-
-                $findCond = array(array('user_id','=',$user_no));
-
-            } else {
-                $response_data['response_status'] = FALSE;
-                $response_data['response_message'] = 'Error';
-                $response_data['message'] = 'Invalid API Key';
-            }
-
-        }
-        else
-        {
-            /*$findCond = array(
-                array('is_deleted','=','0')
-            );*/
-            $response_data['response_status'] = FALSE;
-            $response_data['response_message'] = 'Error';
-            $response_data['message'] = 'Please provide API Key';
-        }
-
-        if(!empty($last_updated_time)){
-            $findCond=array(
-                array('user_id','=',$user_no),
-                'raw'=>"($tableNameAppointment.created_on >= '$last_updated_time' OR $tableNameAppointment.updated_on >= '$last_updated_time' )"
-            );
-        }
-
-        if(!empty($appointment_type)){
-            $findCond[] = array('status','=',$appointment_type);
-        }
-        //echo '<pre>'; print_r($findCond); exit;
-        
-        // Appoinment section //
-        $appoinment_fields = array('appointment_id', 'service_id', 'staff_id', 'client_id', 'date', 'start_time', 'end_time', 'colour_code', 'note', 'payment_amount', 'additional_amount', 'discount_amount', 'gift_certificate_amount', 'gift_voucher_id', 'total_payable_amount', 'paid_amount', 'remaining_balance', 'payment_method', 'cancelled_by', 'cancelled_reason', 'created_on', 'updated_on', 'status');
-        $client_fields = array('client_name','client_email','client_profile_picture');
-        $service_fields = array('service_name','cost','duration');
-        $stuff_fields = array('full_name AS staff_name');
-        $currency_field = array('currency');
-        
-        $joins = array(
-            array(
-                'join_table'=>$this->tableObj->tableNameClient,
-                'join_with'=>$this->tableObj->tableNameAppointment,
-                'join_type'=>'left',
-                'join_on'=>array('client_id','=','client_id'),
-                'join_on_more'=>array(),
-                'select_fields' => $client_fields,
-            ),
-            array(
-                'join_table'=>$this->tableObj->tableNameStaff,
-                'join_with'=>$this->tableObj->tableNameAppointment,
-                'join_type'=>'left',
-                'join_on'=>array('staff_id','=','staff_id'),
-                'join_on_more'=>array(),
-                'select_fields' => $stuff_fields,
-            ),
-            array(
-                'join_table'=>$this->tableObj->tableUserService,
-                'join_with'=>$this->tableObj->tableNameAppointment,
-                'join_type'=>'left',
-                'join_on'=>array('service_id','=','service_id'),
-                'join_on_more'=>array(),
-                'select_fields' => $service_fields,
-            ),
-            array(
-                'join_table'=>$this->tableObj->tableNameCurrency,
-                'join_with'=>$this->tableObj->tableUserService,
-                'join_type'=>'left',
-                'join_on'=>array('currency_id','=','currency_id'),
-                'join_on_more'=>array(),
-                'select_fields' => $currency_field,
-            ),
-        );
-        
-        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$findCond,$appoinment_fields,$joins);
-        if(!empty($appoinment_list)){
-            $response_data['response_status'] = TRUE;
-            $response_data['response_message'] = 'Success';
-            $response_data['message'] = 'Appointment list';
-            $response_data['appoinment_list'] = $appoinment_list;
-        } else {
-            $response_data['response_status'] = FALSE;
-            $response_data['response_message'] = 'Error';
-            $response_data['message'] = 'No appointment found';
-        }
-        
-        
-        $this->json_output($response_data);
-    }
-
     public function appointment_details(Request $request)
     {
         // Check User Login. If not logged in redirect to login page /
@@ -1760,6 +1646,161 @@ class BookingsController extends ApiController {
         $selectFields=array();
         $booking_flow_data = $this->common_model->fetchData($this->tableObj->tableNameBookinFlow,$findCond,$selectFields);
         $response_data['booking_flow_data']=$booking_flow_data;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+    public function notification_appoinment_list(Request $request)
+    {
+        //date_default_timezone_set('Asia/Kolkata');
+        // Check User Login. If not logged in redirect to login page /
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_no = $other_user_no;
+        }
+        else{
+            $user_no = $this->logged_user_no;
+        }
+
+        //print_r($request->all()); die();
+        $current_date = date('dd-mm-yy');
+
+        //appoinment data using id
+        $appoinment_condition = array(
+            array('user_id', '=', $user_no),
+        );
+
+        $findCond = array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            //'in' => array('')
+        );
+
+
+        $filter_list_condition = array(
+                array('user_id','=',$user_no),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+        );
+        
+        // Appoinment section //
+        $appoinment_fields = array('appointment_id', 'service_id', 'staff_id', 'client_id', 'start_time', 'end_time', 'date','colour_code','total_payable_amount', 'payment_note', 'created_on');
+
+        $service_fields = array('service_name');
+
+        $stuff_fields = array('full_name', 'email');
+
+        $client_fields = array('client_name', 'client_email', 'client_profile_picture');
+
+        $currency = array('currency');
+
+        $joins = array(
+                    array(
+                    'join_table'=>$this->tableObj->tableNameStaff,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('staff_id','=','staff_id'),
+                    'join_on_more'=>array(),
+                    'join_conditions' => array(array('is_deleted','=','0')),
+                    'select_fields' => $stuff_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameClient,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('client_id','=','client_id'),
+                    'join_on_more'=>array(),
+                    'join_conditions' => array(array('is_deleted','=','0')),
+                    'select_fields' => $client_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableUserService,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('service_id','=','service_id'),
+                    'join_on_more'=>array(),
+                    'join_conditions' => array(array('is_deleted','=','0')),
+                    'select_fields' => $service_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameCurrency,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableUserService,
+                    'join_type'=>'left',
+                    'join_on'=>array('currency_id','=','currency_id'),
+                    'join_on_more'=>array(),
+                    'join_conditions' => array(array('is_deleted','=','0')),
+                    'select_fields' => $currency,
+                ),
+        );
+        
+        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+
+        $html = '';
+        if(!empty($appoinment_list))
+        {
+            foreach ($appoinment_list as $key => $value)
+            {
+                if($value->client_profile_picture)
+                {
+                    $client_profile_picture = $value->client_profile_picture;
+                }
+                else
+                {
+                    //$client_profile_picture = "http://localhost/squder/public/assets/website/images/user-pic-sm-default.png";
+                    $client_profile_picture = asset('public/assets/website/images/user-pic-sm-default.png');
+                }
+                $html .='<div class="notify">
+                   <a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_'.$value->appointment_id.'" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> 
+                   <div class="user-bkd">
+                      <img src="'.$client_profile_picture.'" class="thumbnail rounded"> 
+                      <h2> '.$value->client_name.' <br> <a href="mailto:'.$value->client_email.'"><i class="fa fa-envelope-o"></i> '.$value->client_email.'</a> </h2>
+                   </div>
+                   <div id="collapse_'.$value->appointment_id.'" class="panel-collapse collapse">
+                      <div class="usr-bkd-dt">
+                         <div class="notify-drops">
+                            <div class="dropdown custm-uperdrop">
+                               <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Check In <img src="'.asset('public/assets/website/images/arrow.png').'" alt=""/></button> 
+                               <ul class="dropdown-menu st-p">
+                                  <li><a href="#">As Scheduled</a></li>
+                                  <li><a href="#">Arrived Late</a></li>
+                                  <li><a href="#">No Show</a></li>
+                                  <li><a href="#">Gift Certificates</a></li>
+                                  <li><a href="#">New Status</a></li>
+                               </ul>
+                            </div>
+                         </div>
+                         <div class="name"> <i class="fa fa-circle-o "></i> '.$value->service_name.' ('.$value->currency.' '.$value->total_payable_amount.') <br> <i class="fa fa-user-o "></i> '.$value->full_name.' </div>
+                         <div class="datetime"> '.$value->start_time.' - '.$value->end_time.' <br> '.date('d, M Y', strtotime($value->date)).' </div>
+                      </div>
+                      <div class="clearfix">&nbsp;</div>
+                      Booked: '.date('d, M Y', strtotime($value->created_on)).' <br> <br> 
+                      <div class="link-e"> <a href="#" class="cancel-appoinment-notification" id="'.$value->appointment_id.'"><i class="fa fa-times"></i> Cancel</a> <a href="#"><i class="fa fa-repeat"></i> Reschedule</a> <a href="#"><i class="fa fa-star-half-o "></i> Request a review</a> </div>
+                      <div class="clearfix">&nbsp;</div>
+                      <br>
+                      <textarea rows="4"> Write here..</textarea>
+                      <br> 
+                      <div class="clearfix"></div>
+                      <button type="button" class="btn btn-primary butt-next break10px">Save</button> 
+                      <button type="button" class="btn btn-primary butt-next break10px" data-toggle="modal" data-target="#myModalPayment">Add Payment ($100.00) </button> 
+                   </div>
+                   <div class="clearfix"></div>
+                </div>
+                <hr class="notify-sep">';
+            }
+        }
+        else
+        {
+            $html = '<div class="noappointment">No appointment found</div>';
+        }
+        $response_data['html'] = $html;
         $this->response_status='1';
         // generate the service / api response
         $this->json_output($response_data);

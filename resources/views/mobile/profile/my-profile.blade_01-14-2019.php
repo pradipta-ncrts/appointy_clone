@@ -7,7 +7,6 @@ Squeedr
    <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
    <h1>Profile</h1>
    <ul>
-    <li><img src="{{asset('public/assets/mobile/images/chng-pass.png')}}" data-toggle="modal" data-target="#change-password" /></li>
     <li><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}"/></li>
     <li><img src="{{asset('public/assets/mobile/images/mobile-calender.png')}}"/></li>
    </ul>
@@ -388,62 +387,6 @@ left: -999em;
    </div>
 </div>
 <!--================================Modal area end==================================-->
-
-
-<div class="modal fade in" id="change-password" role="dialog" >
-   <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content new-modalcustm" style="float: none;">
-         <form name="change_passord" method="post" action="{{ url('api/changepssword') }}" id="change_passord">
-            <div class="modal-header">
-               <button type="button" class="close" data-dismiss="modal">×</button>
-               <h4 class="modal-title">Change Password</h4>
-            </div>
-            <div class="modal-body clr-modalbdy">
-            <div class="row">
-                  <div class="col-md-12">
-                     <div class="form-group">
-                         <label>Old Password</label> 
-                        <div class="input-group"> <span class="input-group-addon"></span>
-                           <input id="old_passsword" type="text" class="form-control" name="old_passsword" placeholder="Old Password">
-                        </div>
-                     </div>
-                  </div>
-               </div>
-
-            <div class="row">
-                  <div class="col-md-12">
-                     <div class="form-group">
-                         <label>New Password</label> 
-                        <div class="input-group"> <span class="input-group-addon"></span>
-                           <input id="new_password" type="text" class="form-control" name="new_password" placeholder="New Password">
-                        </div>
-                     </div>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-md-12">
-                     <div class="form-group">
-                         <label>Confirm Password</label> 
-                        <div class="input-group"> <span class="input-group-addon"></span>
-                           <input id="new_confirm_password" type="text" class="form-control" name="new_confirm_password" placeholder="Confirm Password" value="">
-                        </div>
-                     </div>
-                  </div>
-               </div>
-                <div class="modal-footer">
-               <div class="col-md-12 text-center">
-                  <button type="submit" class="btn btn-primary butt-next">Save</button>
-                  <a href="{{ url('mobile/my-profile') }}" class="btn btn-default butt-next">Cancel</a>
-               </div>
-            </div>
-
-
-            </div>
-        </form>
-     </div>
-    </div>
-</div>
 @endsection
 @section('custom_js')
 <script type="text/javascript">
@@ -646,94 +589,5 @@ $("#copy-link").click(function (event) {
     $('.animationload').hide();
   }
 });
-</script>
-
-<script type="text/javascript">
-//================Password Check====================
-$.validator.addMethod("passwordCk", function (pwd, element) {
-  //pwd = pwd.replace(/\s+/g, "");
-  return this.optional(element) && pwd.length > 8 && pwd.match(/^[ A-Za-z0-9_@./#&+-]*$/);
-}, "Password must be 8 character, alphaneumeric & one special character.");
-//================Password Check====================
-</script>
-
-<script type="text/javascript">
-$.validator.addMethod("pwcheck", function(value) {
-   return /[a-zA-Z]+/.test(value) // consists of only these
-      && /[0-9]+/.test(value) // has a digit
-      && /[*@&%!#$]+/.test(value) // has a Special character
-});
-//================Submit AJAX request ==================
-$('#change_passord').validate({
-      //ignore: ":hidden:not(.selectpicker)",
-      rules: {
-          old_passsword: {
-              required: true
-          },
-          new_password: {
-              required: true
-          },
-          new_password: {
-              required: true,
-         minlength: 8,
-         pwcheck: true
-              //passwordCk: true
-          },
-          new_confirm_password: {
-              required: true,
-              equalTo : "#new_password"
-          }
-      },
-      
-      messages: {
-          old_passsword: {
-              required: 'Please enter old password'
-          },
-          new_password: {
-              required: 'Please enter new password'
-          },
-          new_password: {
-              required: 'Please enter password',
-         minlength: 'Please enter minimum 8 character password',
-         pwcheck: 'Password must contain minimum 1 character, 1 digit and 1 special character.'
-          },
-         
-          new_confirm_password: {
-              required: 'Please enter new confirm password'
-          }
-      },
-
-      submitHandler: function(form) {
-        var data = $(form).serializeArray();
-        data = addCommonParams(data);
-        $.ajax({
-            url: form.action,
-            type: form.method,
-            data:data ,
-            dataType: "json",
-            success: function(response) {
-              //console.log(response);
-              if(response.result=='1')
-              {
-                  swal("Success", response.message , "success");
-                  $('#change_passord')[0].reset();
-                  $("#change-password").modal('hide');
-                  //console.log(response);
-              }
-              else
-              {
-                  swal("Error", response.message , "error");
-              }
-            },
-            beforeSend: function(){
-                $('.animationload').show();
-            },
-            complete: function(){
-                $('.animationload').hide();
-            }
-        });
-      }
-  });
-//================Submit AJAX request ==================
 </script>
 @endsection

@@ -96,7 +96,7 @@
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="#"   data-toggle="modal" data-target="#myModalsharelinks"> <i class="fa fa-share-alt" aria-hidden="true"></i> Share links</a> <a class="dropdown-item" href="{{ url('calendar') }}"> <i class="fa fa-calendar" aria-hidden="true"></i> Calendar Connections</a> <a class="dropdown-item" href="{{ url('profile-settings') }}"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> <a class="dropdown-item" href="#"> <i class="fa fa-id-card " aria-hidden="true"></i> Memebership</a><a class="dropdown-item" href="{{ url('invitees') }}"> <i class="fa fa-user" aria-hidden="true"></i> Invitees</a> <a class="dropdown-item" href="{{ url('staff-details') }}"> <i class="fa fa-user" aria-hidden="true"></i> Users</a> <a class="dropdown-item" href="{{ url('help') }}"> <i class="fa fa-question-circle " aria-hidden="true"></i> Help</a> <a class="dropdown-item" href="{{ url('/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> </div>
                   </div>
                   <div class="main-nav">
-                     <!--<a href="#" class="settings">Settings</a> --> <a href="{{ url('client-database') }}" class="sm"><i class="flaticon-multiple-users-silhouette"></i> <span>Clients</span></a> <a href="{{ url('reports') }}" class="sm"><i class="flaticon-progress-report"></i> <span>Reports</span></a> <a href="{{ url('gift-certificates') }}"><i class="flaticon-megaphone"></i> <span>Marketing</span></a> <a href="{{ url('calendar') }}"><i class="flaticon-calendar"></i><span> <span>Calendar</span></a> <a href="{{ url('dashboard') }}"><i class="flaticon-dashboard"></i> <span>Dashboard</span></a> 
+                     <!--<a href="#" class="settings">Settings</a> --> <a href="{{ url('client-database') }}" class="sm"><i class="flaticon-multiple-users-silhouette"></i> <span>Clients</span></a> <a href="{{ url('reports') }}" class="sm"><i class="flaticon-progress-report"></i> <span>Reports</span></a> <a href="{{ url('gift-certificates') }}"><i class="flaticon-megaphone"></i> <span>Marketing</span></a> <a href="{{ url('booking-list') }}"><i class="flaticon-calendar"></i><span> <span>Booking List</span></a><a href="{{ url('calendar') }}"><i class="flaticon-calendar"></i><span> <span>Calendar</span></a><a href="{{ url('dashboard') }}"><i class="flaticon-dashboard"></i> <span>Dashboard</span></a> 
                   </div>
                </div>
             </div>
@@ -139,12 +139,12 @@
       </div>
       <!--End /c-menu slide-right --> 
       <div id="c-menu--slide-alert" class="c-menu c-menu--slide-right alert-slide" >
-         <div class="dropdown custm-uperdrop conn-drop">
+         <!-- <div class="dropdown custm-uperdrop conn-drop">
             <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Connected App & Devices <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button> 
             <ul class="dropdown-menu ch-p">
                <li><a href="#">Connected <strong>Apps</strong></a></li>
             </ul>
-         </div>
+         </div> -->
          <div class="slide-rgt"><img src="{{asset('public/assets/website/images/icon-bell.png')}}" alt="">Alert</div>
          <button class="c-menu__close"><img src="{{asset('public/assets/website/images/cross-slide.png')}}" alt="" /></button> 
          <ul class="nav nav-tabs1">
@@ -155,23 +155,10 @@
          </ul>
          <div class="tab-content">
             <div id="tab1" class="tab-pane fade in active">
-               <div class="noti">
+               <div class="noti" id="get-booking-notify-list">
                   <div class="notify" >
-                     <!-- <a href="#" class="flip"><img src="images/arrow.png" alt=""/></a>--> <a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_2" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> 
+                     <a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_2" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> 
                      <div class="user-bkd">
-                        <div class="notify-drops">
-                           <div class="dropdown custm-uperdrop">
-                              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Status <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button> 
-                              <ul class="dropdown-menu st-p">
-                                 <li><a href="#">All</a></li>
-                                 <li><a href="#">Booked</a></li>
-                                 <li><a href="#">Cancelled</a></li>
-                                 <li><a href="#">Rescheduled</a></li>
-                                 <li><a href="#">Failed</a></li>
-                                 <li><a href="#">Unapproved</a></li>
-                              </ul>
-                           </div>
-                        </div>
                         <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded"> 
                         <h2> Steph Pouyet <br> <a href="mailto:steph.pouyet@gmail.com"><i class="fa fa-envelope-o"></i> Email</a> </h2>
                      </div>
