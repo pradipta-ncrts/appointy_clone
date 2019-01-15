@@ -293,4 +293,15 @@ class BookingsController extends ApiController {
 		return view('website.booking.notification-settings');
 	}
 
+	public function booking_list()
+	{
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+			return redirect('/login');
+		}
+
+		return view('website.booking.booking_list');
+	}
+
 }

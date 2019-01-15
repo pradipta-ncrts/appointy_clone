@@ -1046,15 +1046,4 @@ class UsersController extends ApiController {
 		exit;
 	}
 
-
-	//***** User Registartion *****//
-	public function help(Request $data)
-	{
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-        return view('website.help');
-	}
-
 }

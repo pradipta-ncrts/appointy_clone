@@ -2909,3 +2909,117 @@ $("#appoinment_service").on('change', (function(e) {
 }));
 
 
+//Set appointment colour
+
+$(".flaticon-alarm").on('click', (function(e) {
+    e.preventDefault();
+    var data = addCommonParams([]);
+    //data.push({name:'service_id', value:service_id});
+    //console.log(data);
+    $.ajax({
+        url: baseUrl+"/api/notification_appoinment_list", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+            console.log(response);
+            //alert(response.response_status);
+            if(response.response_status=='1')
+            {
+                /*var html = '';
+                for(let i=0 ; i<=response.appoinment_list.length; i++)
+                {
+                    html +='<div class="notify"><a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_2" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> <div class="user-bkd"><img src="http://localhost/squder/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded"> <h2> Steph Pouyet <br> <a href="mailto:steph.pouyet@gmail.com"><i class="fa fa-envelope-o"></i> Email</a> </h2></div><div id="collapse_2" class="panel-collapse collapse"><div class="usr-bkd-dt"><div class="notify-drops"><div class="dropdown custm-uperdrop"><button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Check In <img src="http://localhost/squder/public/assets/website/images/arrow.png" alt=""/></button> <ul class="dropdown-menu st-p"><li><a href="#">As Scheduled</a></li><li><a href="#">Arrived Late</a></li><li><a href="#">No Show</a></li><li><a href="#">Gift Certificates</a></li><li><a href="#">New Status</a></li></ul></div></div><div class="name"> <i class="fa fa-circle-o "></i> Dev ($120.00) <br> <i class="fa fa-user-o "></i> JASON </div><div class="datetime"> 12:00am - 01:00pm (1hr) <br> August 13 </div></div><div class="clearfix">&nbsp;</div>Booked: Aug 13th, 2018 <br> <br> <div class="link-e"> <a href="#"><i class="fa fa-times"></i> Cancel</a> <a href="#"><i class="fa fa-repeat"></i> Reschedule</a> <a href="#"><i class="fa fa-star-half-o "></i> Request a review</a> </div><div class="clearfix">&nbsp;</div><br><textarea rows="4"> Write here..</textarea><br> <div class="clearfix"></div><button type="button" class="btn btn-primary butt-next break10px" data-toggle="modal" data-target="#myModalPayment">Add Payment ($100.00) </button> </div><div class="clearfix"></div></div><hr class="notify-sep">';
+
+                }
+                alert(html);*/
+
+                $("#get-booking-notify-list").html(response.html);
+            }
+            else
+            {
+                swal("Error", "Somthing wrong service colour not found." , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            $('.animationload').hide();
+        }
+    });
+}));
+
+
+//notification cancel
+//$(".cancel-appoinment-notification").on('click', (function(e) {
+$(document).on("click", '.cancel-appoinment-notification', function(e) { 
+//$(".cancel-appoinment-notification").click(function (e) {
+    e.preventDefault();
+    let data = addCommonParams([]);
+    let id = $(this).attr('id');
+    alert(id);
+    data.push({name:'appoinment_id',value:id});
+    if(id)
+    {
+        swal({
+            title: "Are you sure?",
+            text: "Once cancelled, you will loose all the details of the appointment!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Yes, I am sure!',
+            cancelButtonText: "No, not now!",
+            closeOnConfirm: false,
+            closeOnCancel: false
+            },function(isConfirm){
+
+                if (isConfirm){
+                    $.ajax({
+                        url: baseUrl+"/api/appoinment-cancel", 
+                        type: "POST", 
+                        data: data, 
+                        dataType: "json",
+                        success: function(response) 
+                        {
+                            console.log(response);
+                            $('.animationload').hide();
+                            if(response.result=='1')
+                            {
+                                swal({title: "Success", text: response.message, type: "success"},
+                                    function(){ 
+                                        $('#myModalAppointmentContent').modal('hide');
+                                        location.reload();
+                                    }
+                                );  
+                            }
+                            else
+                            {
+                                swal("Error", response.message, "error");
+                            }
+                        },
+                        beforeSend: function()
+                        {
+                            $('.animationload').show();
+                        },
+                        complete: function()
+                        {
+                            $('#myModalAppointmentContent').modal('hide');
+                        }
+                    });
+                    
+                }
+            });
+    }
+    else
+    {
+        swal("Error", response.message , "error");
+    }
+});
+
+//c-menu--slide-alert
+
+

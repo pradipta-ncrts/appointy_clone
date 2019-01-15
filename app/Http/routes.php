@@ -94,6 +94,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/email_customisation_update','Api\BookingsController@email_customisation_update');
     Route::post('/add_appoinment','Api\BookingsController@add_appoinment');
     Route::post('/appoinment_list','Api\BookingsController@appoinment_list');
+    Route::post('/notification_appoinment_list','Api\BookingsController@notification_appoinment_list');
     Route::post('/appoinment_list_mobile','Api\BookingsController@appoinment_list_mobile');
     Route::post('/client_appoinment_list_mobile','Api\BookingsController@client_appoinment_list_mobile');
     Route::post('/appointment_details','Api\BookingsController@appointment_details');
@@ -172,6 +173,7 @@ Route::group(['prefix'=>'api'],function(){
 
     // Get appointments via API Key//
     Route::any('/fetch_appointments','Api\BookingsController@fetch_appointments');
+    Route::any('/changepssword','Api\UsersController@changepssword');
 });
 
 
@@ -253,6 +255,8 @@ Route::group(['prefix'=>''],function(){
     Route::get('/settings-membership','Website\PlanController@settings_membership');
 
     Route::any('/make-payment/{parameter?}','Website\PlanController@make_payment');
+
+    Route::any('/booking-list','Website\BookingsController@booking_list');
     
     
 });

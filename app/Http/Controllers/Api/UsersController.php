@@ -372,58 +372,46 @@ class UsersController extends ApiController {
 
 	/**** Change Password *****/
 
-	public function changepssword(Request $request){
-
+	public function changepssword(Request $request)
+	{
 		$response_data=array();
 		// validate the requested param for access this service api
-		$this->validate_parameter(1);
-		//validation section 
-		$validator = Validator::make($this->postParam->all(),
-			[
-				'old_password' => 'bail|required',
-				'password' => 'bail|required|min:8|different:old_password|regex:/[A-Z]+/|regex:/[0-9]+/|regex:/[*@&%!#$]+/',
-		]);
-
-
-
-		if(!$validator->fails()){
-			// all validations are passed
-			$user_no = $this->logged_user_no;
-			$old_password = $request->input('old_password');
-			$password = $request->input('password');
-			// find the user password 
-			$findCond=array(
-				array('password','=',md5($old_password)),
-				array('user_no','=',$user_no)
+		// all validations are passed
+		$this->validate_parameter(1); 
+		$user_no = $this->logged_user_no; 
+		//print_r($request->all()); die();
+		$old_password = $request->input('old_passsword');
+		$password = $request->input('new_password');
+		// find the user password 
+		$findCond=array(
+			array('password','=',md5($old_password)),
+			array('id','=',$user_no),
+		);
+		//$select_fields=array('user_no','email','first_name');
+		$user = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond);
+		if(empty($user))
+		{
+			$this->response_message="Old password not matched";
+		}
+		else
+		{
+			// now update the password with new one
+			$updateData=array(
+				'password'=>md5($password),
+				'updated_on'=>$this->date_format
 			);
-			$select_fields=array('user_no','email','first_name');
-			$user = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$select_fields);
-			if(empty($user)){
-				$this->response_message="old_password_not_matched";
-			}
-			else{
-				// now update the password with new one
-				$updateData=array(
-					'password'=>md5($password),
-					'updated_on'=>$this->date_format
-				);
-				$updateCond=array(
-					array('user_no','=',$user_no)
-				);
-				$this->common_model->update_data($this->tableObj->tableNameUser,$updateCond,$updateData);
-				// send mail
-				$email = $user->email;
-				$this->sendmail(4,$email,array('toName'=>$user->first_name));
-				// update your password 
-				$this->response_message="password_change_successfully";
-				$this->response_status='1';
-			}
+			$updateCond=array(
+				array('id','=',$user_no)
+			);
+			$this->common_model->update_data($this->tableObj->tableNameUser,$updateCond,$updateData);
+			// send mail
+			//$email = $user->email;
+			//$this->sendmail(4,$email,array('toName'=>$user->first_name));
+			// update your password 
+			$this->response_message="Password change successfully";
+			$this->response_status='1';
 		}
-		else{
-			// if parameter validation checked faild
-			$errors = $validator->errors()->messages();
-			$this->response_message = $this->forErrorMessage($errors);
-		}
+		
 		// generate the service / api response
 		$this->json_output($response_data);
 	}
