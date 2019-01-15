@@ -103,9 +103,22 @@ class BookingsController extends ApiController {
 
 		}
 
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		$data=array(
+			'authdata'=>$authdata
+		);
 
+		$url_func_name="booking_rule_data";
+		$return = $this->curl_call($url_func_name,$post_data);
+		if($return->response_status == 1)
+		{
+			$data['booking_rule_data'] = $return->booking_rule_data;
+		}
+		//echo '<pre>'; print_r($data); exit;
 
-		return view('website.booking.booking-rules');
+		return view('website.booking.booking-rules')->with($data);
 
 	}
 

@@ -157,6 +157,7 @@ class BookingsController extends ApiController {
             $colour_code = $request->input('colour_code');
             $apoinment_mail = $request->input('apoinment_mail');
             $reshedule_appointment_id = $request->input('reshedule_appointment_id');
+            $numeric_day = date('N', $date);
 
             //User data using id
             /*$user_condition = array(
@@ -172,27 +173,21 @@ class BookingsController extends ApiController {
             $client_condition = array(
                 array('client_id', '=', $client)
             );
-
             $client_fields = array('client_id', 'client_email', 'client_name');
-                        
             $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$client_condition, $client_fields);
 
             //Stuff data using id
             $stuff_condition = array(
                 array('staff_id', '=', $staff)
             );
-
             $stuff_fields = array('staff_id', 'email', 'full_name');
-                        
             $stuff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$stuff_condition, $stuff_fields);
 
             //Survice details
             $service_condition = array(
                 array('service_id', '=', $appoinment_service)
             );
-
-            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration');
-                        
+            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration');    
             $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
 
             //calculate end time
@@ -205,8 +200,7 @@ class BookingsController extends ApiController {
             $strto_start_time = strtotime($date.' '.$appointmenttime); 
             $strto_end_time = strtotime($date.' '.$endTime);
 
-            //check date time block or not
-
+            // Check Staff Availability //
             $condition = array(
                 array('block_date', '=', date('Y-m-d', strtotime($date))),
                 array('is_deleted', '=', '0'),
@@ -217,12 +211,25 @@ class BookingsController extends ApiController {
 
             $fields = array();                   
             $checkBlock = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$condition, $fields);
-
             //print_r($checkBlock); die();
-
             if(empty($checkBlock))
             {
-                $param = array(
+                // Check Service Availability Date//
+                $ser_ava_condition = array(
+                    array('user_id', '=', $user_id),
+                    array('service_id', '=', $appoinment_service),
+                    array('day', '=', $numeric_day),
+                    array('is_deleted', '=', '0'),
+                    'raw' => "((start_date >= $date AND end_date <= $date) OR (start_date >= $date AND end_date = '0000:00:00'))",
+                );
+    
+                $ser_ava_fields = array();                   
+                $checkServiceAvalibilityDate = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
+                //print_r($checkServiceAvalibilityDate); die();
+                if(!empty($checkServiceAvalibilityDate)){
+                    // Check Service Availability Time//
+                    
+                    $param = array(
                         'user_id' => $user_id,
                         'service_id' => $appoinment_service,
                         'staff_id' => $staff,
@@ -237,73 +244,78 @@ class BookingsController extends ApiController {
                         'payment_amount' => $service_price,
                         'total_payable_amount' => $service_price,
                     );      
-                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
-                if($insertdata > 0)
-                {
-                    if($apoinment_mail)
+                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
+                    if($insertdata > 0)
                     {
+                        if($apoinment_mail)
+                        {
 
-                        $parameter = [
-                            'appointment_id' => $insertdata,
-                            'client_id' => $client,
-                        ];
-                        $parameter= Crypt::encrypt($parameter);
-                        $cancel_url = url('/client/cancel_appointent',$parameter);
-                        $reschedule_url = url('/client/reschedule-appointment',$parameter);
-                        //send mail to client
-                        $client_email = $client_details->client_email;
-                        $client_name = $client_details->client_name;
-                        $staff_email = $stuff_details->email;
-                        $staff_name = $stuff_details->full_name;
-                        $service_name = $service_details->service_name;
-                        $service_cost = $service_details->cost;
-                        $service_duration = $service_details->duration;
-                        //$service_currency = $service_details->duration;
-                        $service_start_time = date('l d, Y h:i A',$strto_start_time);
+                            $parameter = [
+                                'appointment_id' => $insertdata,
+                                'client_id' => $client,
+                            ];
+                            $parameter= Crypt::encrypt($parameter);
+                            $cancel_url = url('/client/cancel_appointent',$parameter);
+                            $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                            //send mail to client
+                            $client_email = $client_details->client_email;
+                            $client_name = $client_details->client_name;
+                            $staff_email = $stuff_details->email;
+                            $staff_name = $stuff_details->full_name;
+                            $service_name = $service_details->service_name;
+                            $service_cost = $service_details->cost;
+                            $service_duration = $service_details->duration;
+                            //$service_currency = $service_details->duration;
+                            $service_start_time = date('l d, Y h:i A',$strto_start_time);
 
-                        $client_email_data['client_email'] = $client_email;
-                        $client_email_data['client_name'] = $client_name;
-                        $client_email_data['staff_email'] = $staff_email;
-                        $client_email_data['staff_name'] = $staff_name;
-                        $client_email_data['service_name'] = $service_name;
-                        $client_email_data['service_cost'] = $service_cost;
-                        $client_email_data['service_duration'] = $service_duration;
-                        $client_email_data['reschedule_url'] = $reschedule_url;
-                        $client_email_data['cancel_url'] = $cancel_url;
-                        $client_email_data['service_start_time'] = $service_start_time;
-                        //$client_email_data['service_currency'] = $service_currency;
-                        //$client_email_data['service_start_time'] = $service_start_time;
+                            $client_email_data['client_email'] = $client_email;
+                            $client_email_data['client_name'] = $client_name;
+                            $client_email_data['staff_email'] = $staff_email;
+                            $client_email_data['staff_name'] = $staff_name;
+                            $client_email_data['service_name'] = $service_name;
+                            $client_email_data['service_cost'] = $service_cost;
+                            $client_email_data['service_duration'] = $service_duration;
+                            $client_email_data['reschedule_url'] = $reschedule_url;
+                            $client_email_data['cancel_url'] = $cancel_url;
+                            $client_email_data['service_start_time'] = $service_start_time;
+                            //$client_email_data['service_currency'] = $service_currency;
+                            //$client_email_data['service_start_time'] = $service_start_time;
 
-                        $client_email_data['email_subject'] = "Booking confirmed: ".$service_name." with ".$staff_name." on ".$service_start_time;
-                       /* echo "<pre>";
-                        print_r($client_email_data); die();*/
-                        $this->sendmail(7,$client_email,$client_email_data);
+                            $client_email_data['email_subject'] = "Booking confirmed: ".$service_name." with ".$staff_name." on ".$service_start_time;
+                        /* echo "<pre>";
+                            print_r($client_email_data); die();*/
+                            $this->sendmail(7,$client_email,$client_email_data);
 
 
-                        //send mail to stuff
-                        $stuff_email = $stuff_details->email;
-                        $stuff_name = $stuff_details->full_name;
-                        $stuff_email_data['email_subject'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
+                            //send mail to stuff
+                            $stuff_email = $stuff_details->email;
+                            $stuff_name = $stuff_details->full_name;
+                            $stuff_email_data['email_subject'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
+                            
+                            $stuff_email_data['email_data'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
+                            $this->sendmail(8,$staff_email,$stuff_email_data);
+
+                        }
+
+                        // Event Viewer //
+                        $this->add_user_event_viewer($user_id,$type=4,$staff);
                         
-                        $stuff_email_data['email_data'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
-                        $this->sendmail(8,$staff_email,$stuff_email_data);
-
+                        $this->response_status='1';
+                        $this->response_message = "An appointment has been successfully booked.";
                     }
-
-                    // Event Viewer //
-				    $this->add_user_event_viewer($user_id,$type=4,$staff);
-                    
-                    $this->response_status='1';
-                    $this->response_message = "An appointment has been successfully booked.";
+                    else
+                    {
+                        $this->response_message = "Something went wrong. Please try agian later.";
+                    }
                 }
-                else
-                {
-                    $this->response_message = "Something went wrong. Please try agian later.";
+                else{
+                    $this->response_message = "Service is not availble, please try again with other time slots.";
                 }
+                
             }
             else
             {
-                $this->response_message = "Time slot has already blocked, please try again with other time slots.";
+                $this->response_message = "Staff is not availble, please try again with other time slots.";
             }
            
             $this->json_output($response_data);
@@ -1760,6 +1772,123 @@ class BookingsController extends ApiController {
         $selectFields=array();
         $booking_flow_data = $this->common_model->fetchData($this->tableObj->tableNameBookinFlow,$findCond,$selectFields);
         $response_data['booking_flow_data']=$booking_flow_data;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+
+    public function update_booking_rule(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+            return redirect('/login');
+        }
+        
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+
+        $user_id = $this->logged_user_no;
+        $type = $request->input('type');
+        $status = $request->input('status');
+
+        $conditions = array(
+            array('user_id','=',$user_id),
+            //array('is_deleted','=','0'),
+        );
+        
+        $booking_rule_data['updated_on'] = date('Y-m-d H:i:s');
+        $booking_rule_data[$type] = $status;
+        $booking_rule_data['user_id'] = $user_id;
+
+        $result = $this->common_model->fetchData($this->tableObj->tableNameBookingRule,$conditions);
+        if(empty($result))
+        {
+            $insert = $this->common_model->insert_data_get_id($this->tableObj->tableNameBookingRule,$booking_rule_data);
+        }
+        else
+        {
+            $update = $this->common_model->update_data($this->tableObj->tableNameBookingRule,$conditions,$booking_rule_data);
+        }
+
+        $this->response_status='1';
+        $this->response_message = "Successfully updated.";
+
+        $this->json_output($response_data);
+        
+    }
+
+    public function update_lead_cancellation_time(Request $request){
+        // Check User Login. If not logged in redirect to login page //
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+            return redirect('/login');
+        }
+        
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+
+        $user_id = $this->logged_user_no;
+        $min_notice_book = $request->input('min_notice_book');
+        $min_notice_book_type = $request->input('min_notice_book_type');
+        $min_notice_cancel = $request->input('min_notice_cancel');
+        $min_notice_cancel_type = $request->input('min_notice_cancel_type');
+        $min_notice_reschedule = $request->input('min_notice_reschedule');
+        $min_notice_reschedule_type = $request->input('min_notice_reschedule_type');
+        $min_time_interval = $request->input('min_time_interval');
+        $min_time_interval_type = $request->input('min_time_interval_type');
+
+        $conditions = array(
+            array('user_id','=',$user_id),
+            //array('is_deleted','=','0'),
+        );
+        
+        $booking_rule_data['updated_on'] = date('Y-m-d H:i:s');
+        $booking_rule_data['min_notice_book'] = $min_notice_book;
+        $booking_rule_data['min_notice_book_type'] = $min_notice_book_type;
+        $booking_rule_data['min_notice_cancel'] = $min_notice_cancel;
+        $booking_rule_data['min_notice_cancel_type'] = $min_notice_cancel_type;
+        $booking_rule_data['min_notice_reschedule'] = $min_notice_reschedule;
+        $booking_rule_data['min_notice_reschedule_type'] = $min_notice_reschedule_type;
+        $booking_rule_data['min_time_interval'] = $min_time_interval;
+        $booking_rule_data['min_time_interval_type'] = $min_time_interval_type;
+        $booking_rule_data['user_id'] = $user_id;
+
+        $result = $this->common_model->fetchData($this->tableObj->tableNameBookingRule,$conditions);
+        if(empty($result))
+        {
+            $insert = $this->common_model->insert_data_get_id($this->tableObj->tableNameBookingRule,$booking_rule_data);
+        }
+        else
+        {
+            $update = $this->common_model->update_data($this->tableObj->tableNameBookingRule,$conditions,$booking_rule_data);
+        }
+
+        $this->response_status='1';
+        $this->response_message = "Successfully updated.";
+
+        $this->json_output($response_data);
+
+
+    }
+
+
+    public function booking_rule_data(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        $user_no = $this->logged_user_no;
+        $findCond=array(
+            array('user_id','=',$user_no),
+            array('is_deleted','=','0'),
+        );
+        
+        $selectFields=array();
+        $booking_rule_data = $this->common_model->fetchData($this->tableObj->tableNameBookingRule,$findCond,$selectFields);
+        $response_data['booking_rule_data']=$booking_rule_data;
         $this->response_status='1';
         // generate the service / api response
         $this->json_output($response_data);

@@ -165,6 +165,11 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/update_booking_flow','Api\BookingsController@update_booking_flow');
     Route::any('/booking_flow_data','Api\BookingsController@booking_flow_data');
 
+    Route::post('/update_booking_rule','Api\BookingsController@update_booking_rule');
+    Route::post('/update_lead_cancellation_time','Api\BookingsController@update_lead_cancellation_time');
+    Route::any('/booking_rule_data','Api\BookingsController@booking_rule_data');
+
+
     // Get appointments via API Key//
     Route::any('/fetch_appointments','Api\BookingsController@fetch_appointments');
 });

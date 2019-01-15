@@ -7,7 +7,7 @@ Squeedr
    <div class="container-custm">
       <div class="upper-cmnsection">
          <div class="heading-uprlft">Booking Options</div>
-         <div class="upr-rgtsec">
+         <!--<div class="upr-rgtsec">
             <div class="col-sm-5">
                <div id="custom-search-input">
                   <div class="input-group ">
@@ -31,7 +31,7 @@ Squeedr
                   <div class="filter-option"><a href="/">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div>
                </div>
             </div>
-         </div>
+         </div>-->
       </div>
       <div class="leftpan">
          <div class="left-menu">

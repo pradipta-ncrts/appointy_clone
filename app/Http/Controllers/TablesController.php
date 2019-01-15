@@ -80,6 +80,8 @@ class TablesController {
         $this->tableNameServiceAvailability = config('constants.tables.service_availability');
 
         $this->tableNameBookinFlow = config('constants.tables.booking_flow');
+
+        $this->tableNameBookingRule = config('constants.tables.booking_rule');
         
 
         

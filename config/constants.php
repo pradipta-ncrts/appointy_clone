@@ -60,6 +60,8 @@ return [
 
         'booking_flow' => 'booking_flow',
 
+        'booking_rule' => 'booking_rule',
+
     ],
 
     'google'=>[
