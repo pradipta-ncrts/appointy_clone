@@ -149,132 +149,18 @@
          <button class="c-menu__close"><img src="{{asset('public/assets/website/images/cross-slide.png')}}" alt="" /></button> 
          <ul class="nav nav-tabs1">
             <li class="active"><a data-toggle="tab" href="#tab1">Booking Status</a></li>
-            <li><a data-toggle="tab" href="#tab2">Profile</a></li>
+            <li><a data-toggle="tab" href="#tab2" class="notification-profile-info">Profile</a></li>
             <li><a data-toggle="tab" href="#tab3">Update <img src="{{asset('public/assets/website/images/icon-squeedr.png')}}" height="20" style="vertical-align: middle;"></a></li>
-            <li><a data-toggle="tab" href="#tab4">Feedback</a></li>
+            <li><a data-toggle="tab" href="#tab4" class="notification-feedback">Feedback</a></li>
          </ul>
          <div class="tab-content">
             <div id="tab1" class="tab-pane fade in active">
                <div class="noti" id="get-booking-notify-list">
-                  <div class="notify" >
-                     <a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_2" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> 
-                     <div class="user-bkd">
-                        <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded"> 
-                        <h2> Steph Pouyet <br> <a href="mailto:steph.pouyet@gmail.com"><i class="fa fa-envelope-o"></i> Email</a> </h2>
-                     </div>
-                     <div id="collapse_2" class="panel-collapse collapse">
-                        <div class="usr-bkd-dt">
-                           <div class="notify-drops">
-                              <div class="dropdown custm-uperdrop">
-                                 <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Check In <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button> 
-                                 <ul class="dropdown-menu st-p">
-                                    <li><a href="#">As Scheduled</a></li>
-                                    <li><a href="#">Arrived Late</a></li>
-                                    <li><a href="#">No Show</a></li>
-                                    <li><a href="#">Gift Certificates</a></li>
-                                    <li><a href="#">New Status</a></li>
-                                 </ul>
-                              </div>
-                           </div>
-                           <div class="name"> <i class="fa fa-circle-o "></i> Dev ($120.00) <br> <i class="fa fa-user-o "></i> JASON </div>
-                           <div class="datetime"> 12:00am - 01:00pm (1hr) <br> August 13 </div>
-                        </div>
-                        <div class="clearfix">&nbsp;</div>
-                        Booked: Aug 13th, 2018 <br> <br> 
-                        <div class="link-e"> <a href="#"><i class="fa fa-times"></i> Cancel</a> <a href="#"><i class="fa fa-repeat"></i> Reschedule</a> <a href="#"><i class="fa fa-star-half-o "></i> Request a review</a> </div>
-                        <div class="clearfix">&nbsp;</div>
-                        <br> <!--<a href="#"><i class="fa fa-file-o"></i> Appointment Note</a>--> 
-                        <textarea rows="4"> Write here..</textarea>
-                        <br> 
-                        <div class="clearfix"></div>
-                        <button type="button" class="btn btn-primary butt-next break10px" data-toggle="modal" data-target="#myModalPayment">Add Payment ($100.00) </button> 
-                     </div>
-                     <div class="clearfix"></div>
-                  </div>
-                  <hr class="notify-sep">
-                  <div class="notify" >
-                     <!-- <a href="#" class="flip"><img src="images/arrow.png" alt=""/></a>--> <a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_1" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> 
-                     <div class="user-bkd">
-                        <div class="notify-drops">
-                           <div class="dropdown custm-uperdrop">
-                              <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Status <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button> 
-                              <ul class="dropdown-menu st-p">
-                                 <li><a href="#">All</a></li>
-                                 <li><a href="#">Booked</a></li>
-                                 <li><a href="#">Cancelled</a></li>
-                                 <li><a href="#">Rescheduled</a></li>
-                                 <li><a href="#">Failed</a></li>
-                                 <li><a href="#">Unapproved</a></li>
-                              </ul>
-                           </div>
-                        </div>
-                        <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded"> 
-                        <h2> Steph Pouyet <br> <a href="mailto:steph.pouyet@gmail.com"><i class="fa fa-envelope-o"></i> Email</a> </h2>
-                     </div>
-                     <div id="collapse_1" class="panel-collapse collapse">
-                        <div class="usr-bkd-dt">
-                           <div class="notify-drops">
-                              <div class="dropdown custm-uperdrop">
-                                 <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Check In <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button> 
-                                 <ul class="dropdown-menu st-p">
-                                    <li><a href="#">As Scheduled</a></li>
-                                    <li><a href="#">Arrived Late</a></li>
-                                    <li><a href="#">No Show</a></li>
-                                    <li><a href="#">Gift Certificates</a></li>
-                                    <li><a href="#">New Status</a></li>
-                                 </ul>
-                              </div>
-                           </div>
-                           <div class="name"> <i class="fa fa-circle-o "></i> Dev ($120.00) <br> <i class="fa fa-user-o "></i> JASON </div>
-                           <div class="datetime"> 12:00am - 01:00pm (1hr) <br> August 13 </div>
-                        </div>
-                        <div class="clearfix">&nbsp;</div>
-                        Booked: Aug 13th, 2018 <br> <br> 
-                        <div class="link-e"> <a href="#"><i class="fa fa-times"></i> Cancel</a> <a href="#"><i class="fa fa-repeat"></i> Reschedule</a> <a href="#"><i class="fa fa-star-half-o "></i> Request a review</a> </div>
-                        <div class="clearfix">&nbsp;</div>
-                        <br> <!--<a href="#"><i class="fa fa-file-o"></i> Appointment Note</a>--> 
-                        <textarea rows="4"> Write here..</textarea>
-                        <br> 
-                        <div class="clearfix"></div>
-                        <button type="button" class="btn btn-primary butt-next break10px">Add Payment ($100.00) </button> 
-                     </div>
-                     <div class="clearfix"></div>
-                  </div>
-                  <hr class="notify-sep">
                </div>
             </div>
             <div id="tab2" class="tab-pane fade in ">
-               <div class="noti">
-                  <div class="profile-nt">
-                     <h2>Profile Strength: Intermediate</h2>
-                     <div class="prof-st-bs">
-                        <div class="prof-st"></div>
-                     </div>
-                  </div>
-                  <div class="row">
-                     <div class="col-md-12">
-                        <div class="prof-box">
-                           <i class="fa fa-user-circle-o"></i> 
-                           <h2>Tell your story with your profile</h2>
-                           <p>You have listed your job! Now add a profile photo to help others recognize you.</p>
-                           <a href="#">Add a Photo</a> 
-                        </div>
-                     </div>
-                     <div class="col-md-12">
-                        <div class="prof-box">
-                           <i class="fa fa-check-circle-o "></i> 
-                           <h2>30 connections!</h2>
-                           <p>Keep adding connections to increase your visibilities with employers</p>
-                        </div>
-                     </div>
-                     <div class="col-md-12">
-                        <div class="prof-box">
-                           <i class="fa fa-check-circle-o "></i> 
-                           <h2>Sources followed!</h2>
-                           <p>You'll see news from these sources in your feed.</p>
-                        </div>
-                     </div>
-                  </div>
+               <div class="noti" id="get-notification-profile-info">
+                  
                </div>
             </div>
             <div id="tab3" class="tab-pane fade in ">
@@ -291,22 +177,8 @@
             </div>
             <div id="tab4" class="tab-pane fade in ">
                <div class="noti">
-                  <div class="feedb">
-                     <div class="feedb-list">
-                        <span class="tt">25h</span> <img src="{{asset('public/assets/website/images/user-img.png')}}"> 
-                        <p> <strong>Steph Pouyet</strong><br> Congratulate Robin Wethll and 2 others for starting new Positions<br> <small>10:30 AM</small> </p>
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="feedb-list">
-                        <span class="tt">25h</span> <img src="{{asset('public/assets/website/images/user-img.png')}}"> 
-                        <p> <strong>Steph Pouyet</strong><br> Congratulate Robin Wethll and 2 others for starting new Positions<br> <small>10:30 AM</small> </p>
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="feedb-list">
-                        <span class="tt">25h</span> <img src="{{asset('public/assets/website/images/user-img.png')}}"> 
-                        <p> <strong>Steph Pouyet</strong><br> Congratulate Robin Wethll and 2 others for starting new Positions<br> <small>10:30 AM</small> </p>
-                        <div class="clearfix"></div>
-                     </div>
+                  <div class="feedb" id="get-notification-feedback">
+                     
                   </div>
                </div>
             </div>

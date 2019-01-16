@@ -1805,7 +1805,7 @@ class BookingsController extends ApiController {
         );
         
         // Appoinment section //
-        $appoinment_fields = array('appointment_id', 'service_id', 'staff_id', 'client_id', 'start_time', 'end_time', 'date','colour_code','total_payable_amount', 'payment_note', 'created_on');
+        $appoinment_fields = array();
 
         $service_fields = array('service_name');
 
@@ -1886,11 +1886,10 @@ class BookingsController extends ApiController {
                             <div class="dropdown custm-uperdrop">
                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Check In <img src="'.asset('public/assets/website/images/arrow.png').'" alt=""/></button> 
                                <ul class="dropdown-menu st-p">
-                                  <li><a href="#">As Scheduled</a></li>
-                                  <li><a href="#">Arrived Late</a></li>
-                                  <li><a href="#">No Show</a></li>
-                                  <li><a href="#">Gift Certificates</a></li>
-                                  <li><a href="#">New Status</a></li>
+                                  <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="As Scheduled">As Scheduled</a></li>
+                                  <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="Arrived Late">Arrived Late</a></li>
+                                  <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="No Show">No Show</a></li>
+                                  <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="Gift Certificates">Gift Certificates</a></li>
                                </ul>
                             </div>
                          </div>
@@ -1899,14 +1898,16 @@ class BookingsController extends ApiController {
                       </div>
                       <div class="clearfix">&nbsp;</div>
                       Booked: '.date('d, M Y', strtotime($value->created_on)).' <br> <br> 
-                      <div class="link-e"> <a href="#" class="cancel-appoinment-notification" id="'.$value->appointment_id.'"><i class="fa fa-times"></i> Cancel</a> <a href="#"><i class="fa fa-repeat"></i> Reschedule</a> <a href="#"><i class="fa fa-star-half-o "></i> Request a review</a> </div>
+                      <div class="link-e"> <a href="#" class="cancel-appoinment-notification" id="'.$value->appointment_id.'"><i class="fa fa-times"></i> Cancel</a> <a href="JavaScript:Void(0);" class="reschedule-appoinment" id="'.$value->appointment_id.'"><i class="fa fa-repeat"></i> Reschedule</a> <a href="#"><i class="fa fa-star-half-o "></i> Request a review</a> </div>
                       <div class="clearfix">&nbsp;</div>
                       <br>
-                      <textarea rows="4"> Write here..</textarea>
+                      <form name="update_note_form" method="post" action="'.url('api/update_appointment_note').'">
+                      <textarea id="update_note_'.$value->appointment_id.'" name="booking_note" rows="4" placeholder="Write here..">'.$value->note.'</textarea>
                       <br> 
                       <div class="clearfix"></div>
-                      <button type="button" class="btn btn-primary butt-next break10px">Save</button> 
-                      <button type="button" class="btn btn-primary butt-next break10px" data-toggle="modal" data-target="#myModalPayment">Add Payment ($100.00) </button> 
+                      <button type="submit" class="btn btn-primary butt-next break10px saveNoteForNotification" id="'.$value->appointment_id.'">Save</button> 
+                      </form>
+                      <button type="button" class="btn btn-success butt-next break10px pull-right addPayment" data-payment-amount="'.$value->payment_amount.'" data-additional-amount="'.$value->additional_amount.'" data-discount-amount="'.$value->discount_amount.'" data-total-payable-amount="'.$value->total_payable_amount.'" data-paid-amount="'.$value->paid_amount.'" data-remaining-balance="'.$value->remaining_balance.'" data-payment-note="'.$value->payment_note.'" data-currency="'.$value->currency.'" data-appointment-id="'.$value->appointment_id.'">Add Payment</button> 
                    </div>
                    <div class="clearfix"></div>
                 </div>
@@ -1922,5 +1923,302 @@ class BookingsController extends ApiController {
         // generate the service / api response
         $this->json_output($response_data);
     }
+
+    public function notification_appointment_status(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_id = $other_user_no;
+        }
+        else{
+            $user_id = $this->logged_user_no;
+        }
+
+        $appoinment_id = $request->input('id');
+        $appoinment_status = $request->input('status');
+        $user_id = $user_id;
+
+        $updateCond=array(
+            array('user_id','=',$user_id),
+            array('appointment_id', '=', $appoinment_id),
+        );
+
+        $data['appointment_status'] = $appoinment_status;
+
+        $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data);
+
+        $this->response_status='1';
+        $this->response_message="Appointment status updated successfully.";
+        $this->json_output($response_data);
+        
+    }
+
+    public function notification_profile_info(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_id = $other_user_no;
+        }
+        else{
+            $user_id = $this->logged_user_no;
+        }
+
+        $findCond=array(
+            array('id','=',$user_id),
+            array('is_deleted','=','0'),
+        );
+        
+        $selectFields = array();
+        $user_data = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$selectFields);
+
+        $count = 0;
+        $name = $user_data->name;
+        if($name)
+        {
+            $count = $count+1;
+        }
+        $email = $user_data->email;
+        if($email)
+        {
+            $count = $count+1;
+        }
+        $mobile = $user_data->mobile;
+        if($mobile)
+        {
+            $count = $count+1;
+        }
+        $profile_image = $user_data->profile_image;
+        if($profile_image)
+        {
+            $count = $count+1;
+        }
+        $timeline_image = $user_data->timeline_image;
+        if($timeline_image)
+        {
+            $count = $count+1;
+        }
+        $profile_perosonal_image = $user_data->profile_perosonal_image;
+        if($profile_perosonal_image)
+        {
+            $count = $count+1;
+        }
+        $business_name = $user_data->business_name;
+        if($business_name)
+        {
+            $count = $count+1;
+        }
+        $business_location = $user_data->business_location;
+        if($business_location)
+        {
+            $count = $count+1;
+        }
+        $zip_code = $user_data->zip_code;
+        if($zip_code)
+        {
+            $count = $count+1;
+        }
+        $office_phone = $user_data->office_phone;
+        if($office_phone)
+        {
+            $count = $count+1;
+        }
+        $skype_id = $user_data->skype_id;
+        if($skype_id)
+        {
+            $count = $count+1;
+        }
+        $transport = $user_data->transport;
+        if($transport)
+        {
+            $count = $count+1;
+        }
+        $parking = $user_data->parking;
+        if($parking)
+        {
+            $count = $count+1;
+        }
+        $business_description = $user_data->business_description;
+        if($business_description)
+        {
+            $count = $count+1;
+        }
+        $presentation = $user_data->presentation;
+        if($presentation)
+        {
+            $count = $count+1;
+        }
+        $expertise = $user_data->expertise;
+        if($expertise)
+        {
+            $count = $count+1;
+        }
+        $facebook_link = $user_data->facebook_link;
+        if($facebook_link)
+        {
+            $count = $count+1;
+        }
+        $twitter_link = $user_data->twitter_link;
+        if($twitter_link)
+        {
+            $count = $count+1;
+        }
+        $linked_in_link = $user_data->linked_in_link;
+        if($linked_in_link)
+        {
+            $count = $count+1;
+        }
+        $user_wesite_link = $user_data->user_wesite_link;
+        if($user_wesite_link)
+        {
+            $count = $count+1;
+        }
+
+        $progress = ($count/20)*100;
+
+        if($progress>0 && $progress<30)
+        {
+            $capsum = "Poor";
+        }
+        if($progress>31 && $progress<65)
+        {
+            $capsum = "Intermediate";
+        }
+        if($progress>65 && $progress<100)
+        {
+            $capsum = "Excelent";
+        }
+
+        $findCond=array(
+            array('user_id','=',$user_id),
+        );
+        
+        $selectFields = array();
+        $appointment = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$findCond,$selectFields);
+        if(!empty($appointment))
+        {
+            $appointment_count = count($appointment);
+        }
+        else
+        {
+            $appointment_count = 0;
+        }
+
+        if($profile_image)
+        {
+            $imgDiv = '<div class="col-md-12">
+                            <div class="prof-box">
+                               <h2>Tell your story with your profile</h2>
+                               <p>You have listed your job! Now add a profile photo to help others recognize you.</p>
+                               <a href="'.url('/profile-settings').'">Update</a> 
+                            </div>
+                         </div>';
+        }
+        else
+        {
+            $imgDiv = '<div class="col-md-12">
+                            <div class="prof-box">
+                               <i class="fa fa-user-circle-o"></i> 
+                               <h2>Tell your story with your profile</h2>
+                               <p>You have listed your job! Now add a profile photo to help others recognize you.</p>
+                               <a href="'.url('/profile-picture').'">Add a Photo</a> 
+                            </div>
+                         </div>';
+        }
+
+
+        $html = '<div class="profile-nt">
+                     <h2>Profile Strength: '.$capsum.'</h2>
+                     <div class="prof-st-bs">
+                        <div class="prof-st" style="width: '.$progress.'%"></div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     '.$imgDiv.'
+                     <div class="col-md-12">
+                        <div class="prof-box">
+                           <i class="fa fa-check-circle-o "></i> 
+                           <h2>'.$appointment_count.' bookings!</h2>
+                           <p>Keep adding connections to increase your visibilities with employers</p>
+                        </div>
+                     </div>
+                  </div>';
+
+        $this->response_status='1';
+        $this->response_message = $html;
+        $this->json_output($response_data);
+        
+    }
+
+    public function notification_feedback(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_id = $other_user_no;
+        }
+        else{
+            $user_id = $this->logged_user_no;
+        }
+
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('user_id','=',$user_id),
+        );
+
+        $selectFields = array();
+        $client_field = array('client_name', 'client_email');
+
+        $joins = array(
+                array(
+                'join_table'=>$this->tableObj->tableNameClient,
+                'join_table_alias'=>'servTb',
+                'join_with'=>$this->tableObj->tableNameFeedback,
+                'join_type'=>'left',
+                'join_on'=>array('client_id','=','client_id'),
+                'join_on_more'=>array(),
+                //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                'select_fields' => $client_field,
+            ),
+        );
+        
+        $review_list = $this->common_model->fetchDatas($this->tableObj->tableNameFeedback, $findCond, $selectFields,$joins);
+        $html = '';
+        foreach ($review_list as $key => $value)
+        {
+            $post_time = $this->humanTiming(strtotime($value->created_on));
+            $html .=' <div class="feedb-list">
+                        <span class="tt">'.$post_time.' ago</span> <img src="'.asset('public/assets/website/images/user-pic-sm-default.png').'"> 
+                        <p> <strong>'.$value->client_name.'</strong><br> '.$value->feedback.'<br> <small>'.date('h:i A', strtotime($value->created_on)).'</small> </p>
+                        <div class="clearfix"></div>
+                     </div>';
+        }
+
+        $this->response_status='1';
+        $this->response_message = $html;
+        $this->json_output($response_data);
+    }
+
+
+    function humanTiming ($time)
+    { 
+        $time = time() - $time; 
+    // to get the time since that moment 
+        $time = ($time<1)? 1 : $time; 
+        $tokens = array ( 31536000 => 'year', 2592000 => 'month', 604800 => 'week', 86400 => 'day', 3600 => 'hour', 60 => 'minute', 1 => 'second' ); 
+        foreach ($tokens as $unit => $text) 
+        { 
+            if ($time < $unit) 
+                continue; 
+            $numberOfUnits = floor($time / $unit); 
+            return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':''); 
+        }
+    }
+
+    
     
 }
