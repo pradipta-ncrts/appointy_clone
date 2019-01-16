@@ -2123,16 +2123,16 @@ class BookingsController extends ApiController {
 
         $progress = ($count/20)*100;
 
-        echo $progress; die();
-        if($progress>0 && $progress<30)
+        $capsum = 'Poor';
+        if($progress>0 && $progress<=30)
         {
             $capsum = "Poor";
         }
-        if($progress>31 && $progress<65)
+        if($progress>30 && $progress<=65)
         {
             $capsum = "Intermediate";
         }
-        if($progress>65 && $progress<100)
+        if($progress>66 && $progress<=100)
         {
             $capsum = "Excelent";
         }
