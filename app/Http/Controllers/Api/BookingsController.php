@@ -152,12 +152,13 @@ class BookingsController extends ApiController {
             $appoinment_service = $request->input('appoinment_service');
             $staff = $request->input('staff');
             $date = $request->input('date');
+            $formatted_date = date('Y-m-d',strtotime($date));
             $appointmenttime = $request->input('appointmenttime');
             $appoinment_note = $request->input('appoinment_note');
             $colour_code = $request->input('colour_code');
             $apoinment_mail = $request->input('apoinment_mail');
             $reshedule_appointment_id = $request->input('reshedule_appointment_id');
-            $numeric_day = date('N', $date);
+            $numeric_day = date('N', strtotime($date));
 
             //User data using id
             /*$user_condition = array(
@@ -200,122 +201,165 @@ class BookingsController extends ApiController {
             $strto_start_time = strtotime($date.' '.$appointmenttime); 
             $strto_end_time = strtotime($date.' '.$endTime);
 
-            // Check Staff Availability //
-            $condition = array(
-                array('block_date', '=', date('Y-m-d', strtotime($date))),
-                array('is_deleted', '=', '0'),
+
+            // Check Service Availability Date//
+            $ser_ava_condition = array(
                 array('user_id', '=', $user_id),
-                array('staff_id', '=', $staff),
-                'raw' => "(($strto_start_time BETWEEN strto_start_time AND strto_end_time) OR ($strto_end_time BETWEEN strto_start_time AND strto_end_time))",
+                array('service_id', '=', $appoinment_service),
+                array('day', '=', $numeric_day),
+                array('is_deleted', '=', '0'),
+                'raw' => "((start_date <= '".$formatted_date."' AND end_date >= '".$formatted_date."') OR (start_date <= '".$formatted_date."' AND end_date = '0000:00:00'))",
             );
 
-            $fields = array();                   
-            $checkBlock = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$condition, $fields);
-            //print_r($checkBlock); die();
-            if(empty($checkBlock))
-            {
-                // Check Service Availability Date//
-                $ser_ava_condition = array(
-                    array('user_id', '=', $user_id),
-                    array('service_id', '=', $appoinment_service),
-                    array('day', '=', $numeric_day),
-                    array('is_deleted', '=', '0'),
-                    'raw' => "((start_date >= $date AND end_date <= $date) OR (start_date >= $date AND end_date = '0000:00:00'))",
-                );
+            $ser_ava_fields = array();                   
+            $checkServiceAvalibilityDate = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
+            //print_r($checkServiceAvalibilityDate); die();
+            if(!empty($checkServiceAvalibilityDate)){
+                // Check Service Availability Time//
+                $serviice_available = false;
+                foreach($checkServiceAvalibilityDate as $ser_ava_dt){
+                    $ava_starttime = strtotime($formatted_date.' '.$ser_ava_dt->start_time.':00');
+                    $ava_endtime = strtotime($formatted_date.' '.$ser_ava_dt->end_time.':00');
+                    if($strto_start_time >= $ava_starttime && $strto_end_time <= $ava_endtime){
+                        $serviice_available = true;
+                        break;
+                    }
+                }
+                if($serviice_available == true){
+                    // Check Staff Availability //
+                    $condition = array(
+                        array('block_date', '=', date('Y-m-d', strtotime($date))),
+                        array('is_deleted', '=', '0'),
+                        array('user_id', '=', $user_id),
+                        array('staff_id', '=', $staff),
+                        'raw' => "(($strto_start_time BETWEEN strto_start_time AND strto_end_time) OR ($strto_end_time BETWEEN strto_start_time AND strto_end_time))",
+                    );
+
+                    $fields = array();                   
+                    $checkBlock = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$condition, $fields);
+                    //print_r($checkBlock); die();
+                    if(empty($checkBlock)) {
+                        // Check Staff-Service Availability //
+                        $ser_staff_ava_condition = array(
+                            array('staff_id', '=', $staff),
+                            array('service_id', '=', $appoinment_service),
+                            array('day', '=', $numeric_day),
+                            array('is_blocked', '=', '0'),
+                            array('is_deleted', '=', '0'),
+                        );
     
-                $ser_ava_fields = array();                   
-                $checkServiceAvalibilityDate = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
-                //print_r($checkServiceAvalibilityDate); die();
-                if(!empty($checkServiceAvalibilityDate)){
-                    // Check Service Availability Time//
-                    
-                    $param = array(
-                        'user_id' => $user_id,
-                        'service_id' => $appoinment_service,
-                        'staff_id' => $staff,
-                        'client_id' => $client,
-                        'date' => date('Y-m-d', strtotime($date)),
-                        'start_time' => $appointmenttime,
-                        'end_time' => $endTime,
-                        'strto_start_time' => $strto_start_time,
-                        'strto_end_time' => $strto_end_time,
-                        'colour_code' => $colour_code,
-                        'note' => $appoinment_note,
-                        'payment_amount' => $service_price,
-                        'total_payable_amount' => $service_price,
-                    );      
-                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
-                    if($insertdata > 0)
-                    {
-                        if($apoinment_mail)
-                        {
+                        $fields = array();                   
+                        $checkStaffServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$ser_staff_ava_condition, $fields);
+                        if(!empty($checkStaffServiceAvalibility)){
+                            // Check Available Time //
+                            $staff_serviice_available = false;
+                            foreach($checkStaffServiceAvalibility as $staff_ser_ava){
+                                $available_starttime = strtotime($formatted_date.' '.$staff_ser_ava->start_time.':00');
+                                $available_endtime = strtotime($formatted_date.' '.$staff_ser_ava->end_time.':00');
+                                if($strto_start_time >= $available_starttime && $strto_end_time <= $available_endtime){
+                                    $staff_serviice_available = true;
+                                    break;
+                                }
+                            }
+                            if($staff_serviice_available == true){
+                                $param = array(
+                                    'user_id' => $user_id,
+                                    'service_id' => $appoinment_service,
+                                    'staff_id' => $staff,
+                                    'client_id' => $client,
+                                    'date' => date('Y-m-d', strtotime($date)),
+                                    'start_time' => $appointmenttime,
+                                    'end_time' => $endTime,
+                                    'strto_start_time' => $strto_start_time,
+                                    'strto_end_time' => $strto_end_time,
+                                    'colour_code' => $colour_code,
+                                    'note' => $appoinment_note,
+                                    'payment_amount' => $service_price,
+                                    'total_payable_amount' => $service_price,
+                                );      
+                                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
+                                if($insertdata > 0)
+                                {
+                                    if($apoinment_mail)
+                                    {
+            
+                                        $parameter = [
+                                            'appointment_id' => $insertdata,
+                                            'client_id' => $client,
+                                        ];
+                                        $parameter= Crypt::encrypt($parameter);
+                                        $cancel_url = url('/client/cancel_appointent',$parameter);
+                                        $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                                        //send mail to client
+                                        $client_email = $client_details->client_email;
+                                        $client_name = $client_details->client_name;
+                                        $staff_email = $stuff_details->email;
+                                        $staff_name = $stuff_details->full_name;
+                                        $service_name = $service_details->service_name;
+                                        $service_cost = $service_details->cost;
+                                        $service_duration = $service_details->duration;
+                                        //$service_currency = $service_details->duration;
+                                        $service_start_time = date('l d, Y h:i A',$strto_start_time);
+            
+                                        $client_email_data['client_email'] = $client_email;
+                                        $client_email_data['client_name'] = $client_name;
+                                        $client_email_data['staff_email'] = $staff_email;
+                                        $client_email_data['staff_name'] = $staff_name;
+                                        $client_email_data['service_name'] = $service_name;
+                                        $client_email_data['service_cost'] = $service_cost;
+                                        $client_email_data['service_duration'] = $service_duration;
+                                        $client_email_data['reschedule_url'] = $reschedule_url;
+                                        $client_email_data['cancel_url'] = $cancel_url;
+                                        $client_email_data['service_start_time'] = $service_start_time;
+                                        //$client_email_data['service_currency'] = $service_currency;
+                                        //$client_email_data['service_start_time'] = $service_start_time;
+            
+                                        $client_email_data['email_subject'] = "Booking confirmed: ".$service_name." with ".$staff_name." on ".$service_start_time;
+                                        /* echo "<pre>";
+                                        print_r($client_email_data); die();*/
+                                        $this->sendmail(7,$client_email,$client_email_data);
+            
+            
+                                        //send mail to stuff
+                                        $stuff_email = $stuff_details->email;
+                                        $stuff_name = $stuff_details->full_name;
+                                        $stuff_email_data['email_subject'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
+                                        
+                                        $stuff_email_data['email_data'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
+                                        $this->sendmail(8,$staff_email,$stuff_email_data);
+            
+                                    }
+            
+                                    // Event Viewer //
+                                    $this->add_user_event_viewer($user_id,$type=4,$staff);
+                                    
+                                    $this->response_status='1';
+                                    $this->response_message = "An appointment has been successfully booked.";
+                                }
+                                else
+                                {
+                                    $this->response_message = "Something went wrong. Please try agian later.";
+                                }
+                            } else {
+                                $this->response_message = "Staff is not available for this service. Please set staff availability aginst the service.";
+                            }
 
-                            $parameter = [
-                                'appointment_id' => $insertdata,
-                                'client_id' => $client,
-                            ];
-                            $parameter= Crypt::encrypt($parameter);
-                            $cancel_url = url('/client/cancel_appointent',$parameter);
-                            $reschedule_url = url('/client/reschedule-appointment',$parameter);
-                            //send mail to client
-                            $client_email = $client_details->client_email;
-                            $client_name = $client_details->client_name;
-                            $staff_email = $stuff_details->email;
-                            $staff_name = $stuff_details->full_name;
-                            $service_name = $service_details->service_name;
-                            $service_cost = $service_details->cost;
-                            $service_duration = $service_details->duration;
-                            //$service_currency = $service_details->duration;
-                            $service_start_time = date('l d, Y h:i A',$strto_start_time);
-
-                            $client_email_data['client_email'] = $client_email;
-                            $client_email_data['client_name'] = $client_name;
-                            $client_email_data['staff_email'] = $staff_email;
-                            $client_email_data['staff_name'] = $staff_name;
-                            $client_email_data['service_name'] = $service_name;
-                            $client_email_data['service_cost'] = $service_cost;
-                            $client_email_data['service_duration'] = $service_duration;
-                            $client_email_data['reschedule_url'] = $reschedule_url;
-                            $client_email_data['cancel_url'] = $cancel_url;
-                            $client_email_data['service_start_time'] = $service_start_time;
-                            //$client_email_data['service_currency'] = $service_currency;
-                            //$client_email_data['service_start_time'] = $service_start_time;
-
-                            $client_email_data['email_subject'] = "Booking confirmed: ".$service_name." with ".$staff_name." on ".$service_start_time;
-                        /* echo "<pre>";
-                            print_r($client_email_data); die();*/
-                            $this->sendmail(7,$client_email,$client_email_data);
-
-
-                            //send mail to stuff
-                            $stuff_email = $stuff_details->email;
-                            $stuff_name = $stuff_details->full_name;
-                            $stuff_email_data['email_subject'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
                             
-                            $stuff_email_data['email_data'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
-                            $this->sendmail(8,$staff_email,$stuff_email_data);
-
+                        } else {
+                            $this->response_message = "Staff is not available for this service. Please set staff availability aginst the service.";
                         }
-
-                        // Event Viewer //
-                        $this->add_user_event_viewer($user_id,$type=4,$staff);
                         
-                        $this->response_status='1';
-                        $this->response_message = "An appointment has been successfully booked.";
                     }
                     else
                     {
-                        $this->response_message = "Something went wrong. Please try agian later.";
+                        $this->response_message = "Staff is not availble, please try again with other time slots.";
                     }
-                }
-                else{
+                } else{
                     $this->response_message = "Service is not availble, please try again with other time slots.";
                 }
-                
-            }
-            else
-            {
-                $this->response_message = "Staff is not availble, please try again with other time slots.";
+
+            } else{
+                $this->response_message = "Service is not availble, please try again with other time slots.";
             }
            
             $this->json_output($response_data);
