@@ -2238,7 +2238,7 @@ class BookingsController extends ApiController {
             $post_time = $this->humanTiming(strtotime($value->created_on));
             $html .=' <div class="feedb-list">
                         <span class="tt">'.$post_time.' ago</span> <img src="'.asset('public/assets/website/images/user-pic-sm-default.png').'"> 
-                        <p> <strong>'.$value->client_name.'</strong><br> '.$value->feedback.'<br> <small>'.date('h:i A', strtotime($value->created_on)).'</small> </p>
+                        <p> <strong>'.$value->client_name.'</strong><br> '.$value->feedback.'<br> <small>'.date('d, M Y h:i A', strtotime($value->created_on)).'</small> </p>
                         <div class="clearfix"></div>
                      </div>';
         }
