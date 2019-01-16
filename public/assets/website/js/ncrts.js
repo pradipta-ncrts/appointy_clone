@@ -2961,7 +2961,7 @@ $(document).on("click", '.cancel-appoinment-notification', function(e) {
     e.preventDefault();
     let data = addCommonParams([]);
     let id = $(this).attr('id');
-    alert(id);
+    //alert(id);
     data.push({name:'appoinment_id',value:id});
     if(id)
     {
@@ -3019,6 +3019,243 @@ $(document).on("click", '.cancel-appoinment-notification', function(e) {
         swal("Error", response.message , "error");
     }
 });
+
+//Notification appointment reshedule
+//$(".reschedule-appoinment").click(function (e) {
+$(document).on("click", '.reschedule-appoinment', function(e) { 
+  e.preventDefault();
+  let data = addCommonParams([]);
+  let id = $(this).attr('id');
+  data.push({name:'appointment_id',value:id});
+  if(id)
+  {
+       $.ajax({
+            url: baseUrl+"/api/appointment_details", 
+            type: "POST", 
+            data: data, 
+            dataType: "json",
+            success: function(response) 
+            {
+                console.log(response);          
+                let appointment_id = response.appoinment_details.appointment_id;
+                let service_id = response.appoinment_details.service_id;
+                let date = response.appoinment_details.appoinment_raw_date;
+                let time = response.appoinment_details.appoinment_raw_time;
+                let staff_id = response.appoinment_details.staff_id;
+                $("#reshedule_appointment_id").val(appointment_id);
+                $("#reshedule_service_id").val(service_id);
+                $("#reshedule_appointmentdate").val(date);
+                $("#reshedule_appointmenttime").val(time);
+                $("#reshedule_staff_id").val(staff_id);
+                $('#myModaladdappoinmentReschedule').modal('show');
+                $('.animationload').hide();
+                
+                /*if(response.result=='1')
+                {
+                    swal({title: "Success", text: response.message, type: "success"},
+                        function(){ 
+                            $('#myModalAppointmentContent').modal('hide');
+                            location.reload();
+                        }
+                    );  
+                }*/
+                /*else
+                {
+                    swal("Error", response.message , "error");
+                }*/
+            },
+            beforeSend: function()
+            {
+                $('.animationload').show();
+            },
+            complete: function()
+            {
+                $('#myModalAppointmentContent').modal('hide');
+            }
+        });
+  }
+  else
+  {
+      swal("Error", response.message , "error");
+  }
+});
+
+//Notification add payment
+$(document).on("click", '.addPayment', function(e) {
+//$('.addPayment').click(function(event) { 
+    event.preventDefault();
+    var total_amount_tobe_paid = $(this).data('payment-amount');
+    var payment_amount = $(this).data('payment-amount');
+    var additional_amount = $(this).data('additional-amount');
+    var discount_amount = $(this).data('discount-amount');
+    var total_payable_amount = $(this).data('total-payable-amount');
+    var paid_amount = $(this).data('paid-amount');
+    var remaining_balance = $(this).data('remaining-balance');
+    var payment_note = $(this).data('payment-note');
+    var appointment_id = $(this).data('appointment-id');
+    var currency = $(this).data('currency');
+
+    $('#payment_method').val(1);
+    $('#total_amount_tobe_paid').val(total_amount_tobe_paid);
+    $('#payment_appointment_id').val(appointment_id);
+    $('#payment_amount').val(payment_amount); 
+    $('#additional_charges').val(additional_amount); 
+    $('#discount_amount').val(discount_amount); 
+    $('#payment_note').val(payment_note); 
+    $('#total-amount-currency').val(currency);
+    $('#total-amount').text(total_payable_amount);
+    $("#myModalPayment").modal('show');
+    
+});
+
+//Notification note add
+$(document).on("click", '.saveNoteForNotification', function(e) { 
+  e.preventDefault();
+  let data = addCommonParams([]);
+  let app_id = $(this).attr('id');
+  let app_note = $("#update_note_"+app_id).val();
+  data.push({name:'appoinment-id',value:app_id},{name:'booking_note',value:app_note});
+  console.log(data);
+  $.ajax({
+      url: baseUrl+"/api/update_appointment_note", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          console.log(response);          
+          if(response.result=='1')
+          {
+              $('.animationload').hide();
+              swal({title: "Success", text: response.message, type: "success"},
+                  function(){ 
+                      location.reload();
+                  }
+              );
+          }
+          else
+          {
+              swal("Error", response.message , "error");
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          $('#myModalAppointmentContent').modal('hide');
+      }
+  });
+});
+
+
+//Notification appointment status
+
+$(document).on("click", '.appointment_status', function(e) { 
+  e.preventDefault();
+  let data = addCommonParams([]);
+  let appo_id = $(this).data('id');
+  let appo_status = $(this).data('value');
+  data.push({name:'id',value:appo_id},{name:'status',value:appo_status});
+  console.log(data);
+  $.ajax({
+      url: baseUrl+"/api/notification_appointment_status", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          console.log(response);          
+          if(response.result=='1')
+          {
+              $('.animationload').hide();
+              swal({title: "Success", text: response.message, type: "success"},
+                  function(){ 
+                      location.reload();
+                  }
+              );
+          }
+          else
+          {
+              swal("Error", response.message , "error");
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          $('#myModalAppointmentContent').modal('hide');
+      }
+  });
+});
+
+//Notification Profile info
+$(document).on("click", '.notification-profile-info', function(e) { 
+  e.preventDefault();
+  //alert();
+  let data = addCommonParams([]);
+  $.ajax({
+      url: baseUrl+"/api/notification_profile_info", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          if(response.result=='1')
+          {
+              $('#get-notification-profile-info').html(response.response_message);
+          }
+          else
+          {
+              $('#get-notification-profile-info').html('<div>Somthing wron, try again.</div>');
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          $('.animationload').hide();
+      }
+  });
+});
+
+//Notification feedback
+$(document).on("click", '.notification-feedback', function(e) { 
+  e.preventDefault();
+  //alert();
+  let data = addCommonParams([]);
+  $.ajax({
+      url: baseUrl+"/api/notification_feedback", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          if(response.result=='1')
+          {
+              $('#get-notification-feedback').html(response.response_message);
+          }
+          else
+          {
+              $('#get-notification-feedback').html('<div>Somthing wron, try again.</div>');
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          $('.animationload').hide();
+      }
+  });
+});
+
 
 //c-menu--slide-alert
 

@@ -170,6 +170,13 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/update_lead_cancellation_time','Api\BookingsController@update_lead_cancellation_time');
     Route::any('/booking_rule_data','Api\BookingsController@booking_rule_data');
 
+    Route::any('/notification_appointment_status','Api\BookingsController@notification_appointment_status');
+    Route::any('/notification_profile_info','Api\BookingsController@notification_profile_info');
+
+    Route::any('/notification_feedback','Api\BookingsController@notification_feedback');
+
+    
+    
 
     // Get appointments via API Key//
     Route::any('/fetch_appointments','Api\BookingsController@fetch_appointments');
