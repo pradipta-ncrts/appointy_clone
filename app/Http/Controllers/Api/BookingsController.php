@@ -1451,7 +1451,7 @@ class BookingsController extends ApiController {
                     ),
         );
 
-        $orderBy = array('appointment_id' => 'DESC');
+        $orderBy = array('date' => 'DESC');
 
         //$orderBy = '';
         

@@ -111,6 +111,14 @@ class ClientsController extends ApiController {
                     $emailData['toName'] = $client_name;
 
                     $this->sendmail(6,$client_email,$emailData);
+
+                    //Notification Update start
+                    $notification_data['update_message'] = "You have added ".$client_name." as a client.";
+                    $notification_data['user_id'] = $user_id;
+
+                    $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+                    //Notification Update End
+
                     
                     $this->response_status='1';
                     $this->response_message = "Client successfully added.";
@@ -274,6 +282,13 @@ class ClientsController extends ApiController {
 
                 $update = $this->common_model->update_data($this->tableObj->tableNameClient,$conditions,$client_data);
                 
+                //Notification Update start
+                $notification_data['update_message'] = "You have updated ".$client_name."'s profile.";
+                $notification_data['user_id'] = $user_id;
+
+                $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+                //Notification Update End
+
                 $this->response_status='1';
                 $this->response_message = "Client successfully updated.";
 
