@@ -60,6 +60,14 @@ class StaffsController extends ApiController {
             $description = $request->input('staff_description');
             $staff_profile_picture = '';
 
+            //Notification Update start
+            $notification_data['update_message'] = "You have added ".$full_name." as a stuff.";
+            $notification_data['user_id'] = $user_id;
+
+            $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+            //Notification Update End
+
+
             $conditions = array(
 				'or'=>array('email'=>$email,'username'=>$username)
 			);
@@ -303,6 +311,13 @@ class StaffsController extends ApiController {
             $expertise = $request->input('staff_expertise');
             $description = $request->input('staff_description');
             $staff_profile_picture = '';
+
+            //Notification Update start
+            $notification_data['update_message'] = "You have updated ".$full_name."'s profile.";
+            $notification_data['user_id'] = $user_id;
+
+            $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+            //Notification Update End
 
             $conditions = array(
                 array('staff_id','=',$staff_id),

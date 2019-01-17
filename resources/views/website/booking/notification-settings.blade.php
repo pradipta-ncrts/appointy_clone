@@ -78,8 +78,10 @@ Squeedr
                               <td> <input id="email_send_time_duration" type="text" style="width:50px;" class="form-control" name="email_send_time_duration" value="<?=$notification_settings_data && $notification_settings_data->email_send_time ? $notification_settings_data->email_send_time : 0;?>"></td>
                               <td >hours prior to appointment</td>
                               <td >
-                                 <a data-value="<?=$is_email_send;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_email_send==1 ? "active" : "" ;?>" id="send_email_to_customer">
-                                 <i class="fa fa-toggle-<?=$is_email_send==1 ? "on" : "off" ;?>"></i></a>
+                                 <button data-value="<?=$is_email_send;?>" type="button" class="btn btn-sm btn-toggle pull-right <?=$is_email_send==1 ? "active" : "" ;?>" data-toggle="button" aria-pressed="true" id="send_email_to_customer" autocomplete="off">
+
+                                <!--  <a data-value="<?=$is_email_send;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_email_send==1 ? "active" : "" ;?>" id="send_email_to_customer">
+                                 <i class="fa fa-toggle-<?=$is_email_send==1 ? "on" : "off" ;?>"></i></a> -->
                               </td>
                            </tr>
                         </table>
@@ -103,8 +105,11 @@ Squeedr
                               }
                               ?>
                               <td >
-                                 <a data-value="<?=$is_sms_send;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_sms_send==1 ? "active" : "" ;?>" id="send_sms_to_customer">
-                                 <i class="fa fa-toggle-<?=$is_sms_send==1 ? "on" : "off" ;?>"></i></a>
+
+                                 <button data-value="<?=$is_sms_send;?>" type="button" class="btn btn-sm btn-toggle pull-right <?=$is_sms_send==1 ? "active" : "" ;?>" data-toggle="button" aria-pressed="true" id="send_sms_to_customer" autocomplete="off">
+
+                                 <!-- <a data-value="<?=$is_sms_send;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_sms_send==1 ? "active" : "" ;?>" id="send_sms_to_customer">
+                                 <i class="fa fa-toggle-<?=$is_sms_send==1 ? "on" : "off" ;?>"></i></a> -->
                               </td>
                            </tr>
                         </table>
@@ -128,59 +133,64 @@ Squeedr
                         <div class="col-md-8 booking-form">
                            <div class="form-group">
                               When to send
-                              <select class="form-control cust-select" name="when_to_send" id="when_to_send">
-                                 <option value="0" <?=$notification_settings_data && $notification_settings_data->is_admin==0 ? "selected" : "";?>>Never send an SMS</option>
-                                 <option value="1" <?=$notification_settings_data && $notification_settings_data->is_admin==1 ? "selected" : "";?>>Whenever an appointment requires approval</option>
-                                 <option value="2" <?=$notification_settings_data && $notification_settings_data->is_admin==2 ? "selected" : "";?>>Each time an appointment is booked</option>
+                              <select class="form-control" name="when_to_send" id="when_to_send">
+                                 <option value="0" <?=$notification_settings_data && $notification_settings_data->when_to_send==0 ? "selected" : "";?>>Never send an SMS</option>
+                                 <!-- <option value="1" <?=$notification_settings_data && $notification_settings_data->when_to_send==1 ? "selected" : "";?>>Whenever an appointment requires approval</option> --> 
+                                 <option value="2" <?=$notification_settings_data && $notification_settings_data->when_to_send=="2" ? "selected" : "";?>>Each time an appointment is booked</option>
                               </select>
                               <div class="clearfix"></div>
                            </div>
                         </div>
                         <div class="clearfix"></div>
-                        <table>
+                         <div id="send_sms_to_admin_customer_div" style="<?=$notification_settings_data && $notification_settings_data->when_to_send==2 ? "" : "display: none";?>" >
+                           <table>
 
-                           <?php
-                           //echo "<pre>";
-                           //print_r($notification_settings_data);
-                           if($notification_settings_data && $notification_settings_data->is_admin && $notification_settings_data->is_admin==1)
-                           {
-                              $is_admin = 1;
-                           }
-                           else
-                           {
-                              $is_admin = 0;
-                           }
-                           ?>
-                           <tr>
-                              <td>Admin</td>
-                              <td >
-                                 <a data-value="<?=$is_admin;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_admin==1 ? "active" : "" ;?>" id="is_admin_update">
-                                 <i class="fa fa-toggle-<?=$is_admin==1 ? "on" : "off" ;?>"></i></a>
-                              </td>
-                           </tr>
-                        </table>
-                        <div class="clearfix"></div>
-                        <table>
-                           <?php
-                           //echo "<pre>";
-                           //print_r($notification_settings_data);
-                           if($notification_settings_data && $notification_settings_data->is_stuff && $notification_settings_data->is_stuff==1)
-                           {
-                              $is_stuff = 1;
-                           }
-                           else
-                           {
-                              $is_stuff = 0;
-                           }
-                           ?>
-                           <tr>
-                              <td>Staff</td>
-                              <td >
-                                 <a data-value="<?=$is_stuff;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_stuff==1 ? "active" : "" ;?>" id="is_stuff_update">
-                                 <i class="fa fa-toggle-<?=$is_stuff==1 ? "on" : "off" ;?>"></i></a>
-                              </td>
-                           </tr>
-                        </table>
+                              <?php
+                              //echo "<pre>";
+                              //print_r($notification_settings_data);
+                              if($notification_settings_data && $notification_settings_data->is_admin && $notification_settings_data->is_admin==1)
+                              {
+                                 $is_admin = 1;
+                              }
+                              else
+                              {
+                                 $is_admin = 0;
+                              }
+                              ?>
+                              <tr>
+                                 <td>Admin</td>
+                                 <td >
+                                    <!-- <a data-value="<?=$is_admin;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_admin==1 ? "active" : "" ;?>" id="is_admin_update">
+                                    <i class="fa fa-toggle-<?=$is_admin==1 ? "on" : "off" ;?>"></i></a> -->
+                                    <button data-value="<?=$is_admin;?>" type="button" class="btn btn-sm btn-toggle pull-right <?=$is_admin==1 ? "active" : "" ;?>" data-toggle="button" aria-pressed="true" id="is_admin_update" autocomplete="off">
+                                 </td>
+                              </tr>
+                           </table>
+                           <div class="clearfix"></div>
+                           <table>
+                              <?php
+                              //echo "<pre>";
+                              //print_r($notification_settings_data);
+                              if($notification_settings_data && $notification_settings_data->is_stuff && $notification_settings_data->is_stuff==1)
+                              {
+                                 $is_stuff = 1;
+                              }
+                              else
+                              {
+                                 $is_stuff = 0;
+                              }
+                              ?>
+                              <tr>
+                                 <td>Staff</td>
+                                 <td >
+                                    <!-- <a data-value="<?=$is_stuff;?>" onclick="togglebtn(this);" class="togg-btn <?=$is_stuff==1 ? "active" : "" ;?>" id="is_stuff_update">
+                                    <i class="fa fa-toggle-<?=$is_stuff==1 ? "on" : "off" ;?>"></i></a> -->
+
+                                    <button data-value="<?=$is_stuff;?>" type="button" class="btn btn-sm btn-toggle pull-right <?=$is_stuff==1 ? "active" : "" ;?>" data-toggle="button" aria-pressed="true" id="is_stuff_update" autocomplete="off">
+                                 </td>
+                              </tr>
+                           </table>
+                         </div>
                         <div class="clearfix"></div>
                      </div>
                   <!-- </form> -->

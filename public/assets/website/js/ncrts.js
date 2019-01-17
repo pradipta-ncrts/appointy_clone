@@ -1268,6 +1268,7 @@ $('#send_email_to_customer').click(function(e) {
 $('#send_sms_to_customer').click(function(e) { 
     e.preventDefault();
     let val = $(this).data('value');
+    //alert(val);
     let data = addCommonParams([]);
     data.push({name:'post_veriable',value:val},
       {name:'field_name',value:"is_sms_send"});
@@ -1362,6 +1363,14 @@ $('#is_stuff_update').click(function(e) {
 $('#when_to_send').change(function(e) { 
     e.preventDefault();
     let val = $(this).val();
+    if(val==0)
+    {
+        $("#send_sms_to_admin_customer_div").hide();
+    }
+    else
+    {
+        $("#send_sms_to_admin_customer_div").show();
+    }
     let data = addCommonParams([]);
     data.push({name:'post_veriable',value:val},
       {name:'field_name',value:"when_to_send"});
@@ -3242,7 +3251,39 @@ $(document).on("click", '.notification-feedback', function(e) {
           }
           else
           {
-              $('#get-notification-feedback').html('<div>Somthing wron, try again.</div>');
+              $('#get-notification-feedback').html('<div>No data found.</div>');
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          $('.animationload').hide();
+      }
+  });
+});
+
+//Notification update
+$(document).on("click", '.notification-update', function(e) { 
+  e.preventDefault();
+  //alert();
+  let data = addCommonParams([]);
+  $.ajax({
+      url: baseUrl+"/api/notification_update", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          if(response.result=='1')
+          {
+              $('#get-notification-update').html(response.response_message);
+          }
+          else
+          {
+              $('#get-notification-update').html('<div>No data found.</div>');
           }
       },
       beforeSend: function()

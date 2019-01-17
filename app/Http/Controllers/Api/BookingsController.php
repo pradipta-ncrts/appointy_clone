@@ -2243,7 +2243,74 @@ class BookingsController extends ApiController {
                      </div>';
         }
 
-        $this->response_status='1';
+        if(!empty($review_list))
+        {
+            $this->response_status='1';
+        }
+        else
+        {
+            $this->response_status='0';
+        }
+
+        $this->response_message = $html;
+        $this->json_output($response_data);
+    }
+
+
+    public function notification_update(Request $request)
+    {
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_id = $other_user_no;
+        }
+        else{
+            $user_id = $this->logged_user_no;
+        }
+
+        $findCond = array(
+            array('is_deleted','=','0'),
+            array('user_id','=',$user_id),
+        );
+
+        $selectFields = array();
+        $user_field = array('name', 'email');
+
+        $joins = array(
+                array(
+                'join_table'=>$this->tableObj->tableNameUser,
+                'join_table_alias'=>'servTb',
+                'join_with'=>$this->tableObj->tableNameNotificationUpdates,
+                'join_type'=>'left',
+                'join_on'=>array('user_id','=','id'),
+                'join_on_more'=>array(),
+                //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                'select_fields' => $user_field,
+            ),
+        );
+        
+        $review_list = $this->common_model->fetchDatas($this->tableObj->tableNameNotificationUpdates, $findCond, $selectFields,$joins);
+        $html = '';
+        foreach ($review_list as $key => $value)
+        {
+            $post_time = $this->humanTiming(strtotime($value->created_on));
+            $html .=' <div class="feedb-list">
+                        <span class="tt">'.$post_time.' ago</span> <img src="'.asset('public/assets/website/images/user-pic-sm-default.png').'"> 
+                        <p> <strong>'.$value->name.'</strong><br> '.$value->update_message.'<br> <small>'.date('d, M Y h:i A', strtotime($value->created_on)).'</small> </p>
+                        <div class="clearfix"></div>
+                     </div>';
+        }
+
+        if(!empty($review_list))
+        {
+            $this->response_status='1';
+        }
+        else
+        {
+            $this->response_status='0';
+        }
+
         $this->response_message = $html;
         $this->json_output($response_data);
     }

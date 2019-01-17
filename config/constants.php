@@ -62,6 +62,8 @@ return [
 
         'booking_rule' => 'booking_rule',
 
+        'notification_updates' => 'notification_updates',
+
     ],
 
     'google'=>[

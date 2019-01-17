@@ -723,6 +723,13 @@ class UsersController extends ApiController {
 			$profession = $profession_id;
 		}*/
 
+		//Notification Update start
+		$notification_data['update_message'] = "You have successfully updeted your business details.";
+		$notification_data['user_id'] = $this->logged_user_no;
+
+		$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+		//Notification Update End
+
 		$updateData = array(
 				'business_name' => $business_name,
 				'business_location' => $business_location,
@@ -788,6 +795,13 @@ class UsersController extends ApiController {
         {
         	$timeline_image = $request->input('old_timeline_image');
         }
+
+        //Notification Update start
+		$notification_data['update_message'] = "You have successfully updeted your social information.";
+		$notification_data['user_id'] = $this->logged_user_no;
+
+		$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+		//Notification Update End
 
 
 		$updateData = array(

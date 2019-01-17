@@ -82,6 +82,11 @@ class TablesController {
         $this->tableNameBookinFlow = config('constants.tables.booking_flow');
 
         $this->tableNameBookingRule = config('constants.tables.booking_rule');
+
+        $this->tableNameNotificationUpdates = config('constants.tables.notification_updates');
+
+
+        
         
 
         

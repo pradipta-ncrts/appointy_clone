@@ -150,7 +150,7 @@
          <ul class="nav nav-tabs1">
             <li class="active"><a data-toggle="tab" href="#tab1">Booking Status</a></li>
             <li><a data-toggle="tab" href="#tab2" class="notification-profile-info">Profile</a></li>
-            <li><a data-toggle="tab" href="#tab3">Update <img src="{{asset('public/assets/website/images/icon-squeedr.png')}}" height="20" style="vertical-align: middle;"></a></li>
+            <li><a data-toggle="tab" href="#tab3" class="notification-update">Update <img src="{{asset('public/assets/website/images/icon-squeedr.png')}}" height="20" style="vertical-align: middle;"></a></li>
             <li><a data-toggle="tab" href="#tab4" class="notification-feedback">Feedback</a></li>
          </ul>
          <div class="tab-content">
@@ -164,15 +164,15 @@
                </div>
             </div>
             <div id="tab3" class="tab-pane fade in ">
-               <div class="noti">
+               <div class="noti" id="get-notification-update">
                  <!-- <h2 class="app-update">Update <img src="{{asset('public/assets/website/images/icon-squeedr.png')}}"></h2>-->
-                  <div class="feedb">
+                  <!-- <div class="feedb">
                      <div class="feedb-list">
                         <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}"> 
                         <p> <strong>Tell About App</strong><br> You have listed your job! Now add a profile photo to help others recognize you.</p>
                         <div class="clearfix"></div>
                      </div>
-                  </div>
+                  </div> -->
                </div>
             </div>
             <div id="tab4" class="tab-pane fade in ">

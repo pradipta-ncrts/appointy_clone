@@ -77,6 +77,13 @@ class ProfileController extends ApiController {
 		{
 			$user_no = $this->logged_user_no;
 		}
+
+		//Notification Update start
+		$notification_data['update_message'] = "You have successfully updeted your profile.";
+		$notification_data['user_id'] = $user_no;
+
+		$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+		//Notification Update End
 		
 		$name = $request->input('profile_name');
 		$profession = $request->input('profile_profession');
@@ -225,6 +232,13 @@ class ProfileController extends ApiController {
 			$destinationPath = public_path('/image/profile_perosonal_image');
 			$image->move($destinationPath, $name);
 			$profile_perosonal_image = $name;
+
+			//Notification Update start
+			$notification_data['update_message'] = "Successfully updated profile picture.";
+			$notification_data['user_id'] = $user_no;
+
+			$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+			//Notification Update End
         }
         else
         {
