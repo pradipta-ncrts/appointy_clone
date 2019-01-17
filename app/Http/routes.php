@@ -263,7 +263,7 @@ Route::group(['prefix'=>''],function(){
 
     Route::any('/make-payment/{parameter?}','Website\PlanController@make_payment');
 
-    Route::any('/booking-list','Website\BookingsController@booking_list');
+    Route::any('/booking-list/{duration?}','Website\BookingsController@booking_list');
     
     
 });
