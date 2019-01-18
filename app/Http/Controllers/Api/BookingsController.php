@@ -667,7 +667,7 @@ class BookingsController extends ApiController {
         );
 
         $data['status'] = '2';
-        $data['is_deleted'] = '1';
+        //$data['is_deleted'] = '1';
         $data['cancelled_by'] = '1';
 
         $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data);
