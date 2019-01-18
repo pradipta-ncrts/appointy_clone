@@ -4,6 +4,9 @@ Squeedr
 @endsection
 
 @section('content')
+<style type="text/css">
+.padleft30{margin:15px 0;}
+</style>
 <?php
 
 ?>
@@ -15,16 +18,16 @@ Squeedr
             <div class="col-sm-5">
                <div id="custom-search-input">
                   <div class="input-group ">
-                     <input type="text" class="  search-query form-control" placeholder="Search" />
+                     <!-- <input type="text" class="  search-query form-control" placeholder="Search" />
                      <span class="input-group-btn">
                      <button class="btn btn-danger" type="button"> <span class=" glyphicon glyphicon-search"></span> </button>
-                     </span> 
+                     </span>  -->
                   </div>
                </div>
             </div>
             <div class="col-md-7">
                <div class="full-rgt">
-                  <div class="dropdown custm-uperdrop">
+                  <!-- <div class="dropdown custm-uperdrop">
                      <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Upcoming Dates <img src="images/arrow.png" alt=""/></button>
                      <ul class="dropdown-menu">
                         <li><a href="#">JAN</a></li>
@@ -32,7 +35,7 @@ Squeedr
                         <li><a href="#">MARCH</a></li>
                      </ul>
                   </div>
-                  <div class="filter-option"><a href="">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div>
+                  <div class="filter-option"><a href="">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div> -->
                </div>
             </div>
          </div>
@@ -69,12 +72,12 @@ Squeedr
                      <form action="{{ url('api/email_customisation_update') }}" method="post" id="form1" class="email_cutomisation_form">
                         <input type="hidden" name="type" value="1">
                         <div id="collapse1" class="panel-collapse collapse booking-form1 ">
-                           <div class="form-group col-md-6">
+                           <div class="form-group col-md-12">
                               <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject1) && $subject1 ? $subject1: ''?>">
                               <div class="clearfix"></div>
                            </div>
                            <div class="padleft30">
-                              <textarea style="width: 600px; height: 200px;" id="area1" name="message"><?=isset($message1) && $message1 ? $message1: ''?></textarea>
+                              <textarea style="width: 100%; height: 200px;" id="area1" name="message"><?=isset($message1) && $message1 ? $message1: ''?></textarea>
                            </div>
                            <input class="btn btn-primary" type="submit" name="submit" value="save">
                         </div>
@@ -82,7 +85,7 @@ Squeedr
                </div>
             </div>
          </div>
-         <div class="container-fluid body-sec">
+         <!-- <div class="container-fluid body-sec">
             <div class="row ">
                <div class="col-md-12 booking-opt">
                   <div onclick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse2" style="cursor: pointer;">
@@ -101,14 +104,14 @@ Squeedr
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area2" name="message"><?=isset($message2) && $message2 ? $message2: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 600px; height: 200px;" id="area2" name="message"><?=isset($message2) && $message2 ? $message2: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
                   </form>
                </div>
             </div>
-         </div>
+         </div> -->
          <div class="container-fluid body-sec ">
             <div class="row ">
                <div class="col-md-12 booking-opt">
@@ -123,12 +126,12 @@ Squeedr
                      <form action="{{ url('api/email_customisation_update') }}" method="post" id="form3" class="email_cutomisation_form">
                         <input type="hidden" name="type" value="3">
                      <div id="collapse3" class="panel-collapse collapse booking-form1 ">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                            <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject3) && $subject3 ? $subject3: ''?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area3" name="message"><?=isset($message3) && $message3 ? $message3: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area3" name="message"><?=isset($message3) && $message3 ? $message3: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -136,7 +139,7 @@ Squeedr
                </div>
             </div>
          </div>
-         <div class="container-fluid body-sec">
+         <!-- <div class="container-fluid body-sec">
             <div class="row ">
                <div class="col-md-12 booking-opt">
                   <div onclick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse4" style="cursor: pointer;">
@@ -155,14 +158,14 @@ Squeedr
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area4" name="message"><?=isset($message4) && $message4 ? $message4: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 600px; height: 200px;" id="area4" name="message"><?=isset($message4) && $message4 ? $message4: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
                   </form>
                </div>
             </div>
-         </div>
+         </div> -->
          <div class="container-fluid body-sec ">
             <div class="row ">
                <div class="col-md-12 booking-opt">
@@ -176,12 +179,12 @@ Squeedr
                   <form action="{{ url('api/email_customisation_update') }}" method="post" id="form5" class="email_cutomisation_form">
                      <input type="hidden" name="type" value="5">
                      <div id="collapse5" class="panel-collapse collapse booking-form1 ">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                            <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject5) && $subject5 ? $subject5: ''?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area5" name="message"><?=isset($message5) && $message5 ? $message5: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area5" name="message"><?=isset($message5) && $message5 ? $message5: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -202,12 +205,12 @@ Squeedr
                   <form action="{{ url('api/email_customisation_update') }}" method="post" id="form6" class="email_cutomisation_form">
                      <input type="hidden" name="type" value="6">
                      <div id="collapse6" class="panel-collapse collapse booking-form1 ">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                            <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject6) && $subject6 ? $subject6: ''?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area6" name="message"><?=isset($message6) && $message6 ? $message6: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 100%; height: 200px;" id="area6" name="message"><?=isset($message6) && $message6 ? $message6: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -229,12 +232,12 @@ Squeedr
                   <form action="{{ url('api/email_customisation_update') }}" method="post" id="form7" class="email_cutomisation_form">
                      <input type="hidden" name="type" value="7">
                      <div id="collapse7" class="panel-collapse collapse booking-form1 ">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                            <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject7) && $subject7 ? $subject7: ''?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area7" name="message"><?=isset($message7) && $message7 ? $message7: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area7" name="message"><?=isset($message7) && $message7 ? $message7: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -242,7 +245,7 @@ Squeedr
                </div>
             </div>
          </div>
-         <div class="container-fluid body-sec ">
+         <!-- <div class="container-fluid body-sec ">
             <div class="row ">
                <div class="col-md-12 booking-opt">
                   <div onclick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse8" style="cursor: pointer;">
@@ -260,14 +263,14 @@ Squeedr
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area8" name="message"><?=isset($message8) && $message8 ? $message8: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 600px; height: 200px;" id="area8" name="message"><?=isset($message8) && $message8 ? $message8: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
                   </form>
                </div>
             </div>
-         </div>
+         </div> -->
          <div class="container-fluid body-sec">
             <div class="row ">
                <div class="col-md-12 booking-opt">
@@ -282,12 +285,12 @@ Squeedr
                   <form action="{{ url('api/email_customisation_update') }}" method="post" id="form9" class="email_cutomisation_form">
                      <input type="hidden" name="type" value="9">
                      <div id="collapse9" class="panel-collapse collapse booking-form1 ">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                            <input type="text" class="form-control" placeholder="Subject" value="<?=isset($subject9) && $subject9 ? $subject9: ''?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea style="width: 600px; height: 200px;" id="area9"><?=isset($message9) && $message9 ? $message9: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 100%; height: 200px;" id="area9"><?=isset($message9) && $message9 ? $message9: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -300,3 +303,17 @@ Squeedr
    </div>
 </div>
 @endsection
+@section('custom_js')
+<script src="https://cdn.ckeditor.com/4.11.2/standard/ckeditor.js"></script>
+<script>
+   CKEDITOR.replace( 'area1', {
+        height: 400
+    } );
+</script> 
+@endsection
+
+<!-- <style type="text/css">
+#area1{
+   display: block !important;
+}
+</style> -->
