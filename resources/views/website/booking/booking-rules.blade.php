@@ -66,175 +66,14 @@ Squeedr
                                  </p>
                               </td>
                               <td  class="col-md-4 text-right">
-                                    <button type="button" id="book_appointments_directly" data-type-name="book_appointments_directly" class="booking_rule_option btn btn-sm btn-toggle pull-right <?php if($booking_rule_data->book_appointments_directly == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
+                                    <button type="button" id="book_appointments_directly" data-type-name="book_appointments_directly" class="booking_rule_option btn btn-sm btn-toggle pull-right <?php if(!empty($booking_rule_data) && $booking_rule_data->book_appointments_directly == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
                                         <div class="handle"></div>
                                     </button>
                               </td>
                            </tr>
                         </table>
                         <div class="clearfix"></div>
-                        <!-- <h3 class="sub-head">Who can schedule</h3>
-                        <div class="col-md-6 booking-form">
-                           <div class="checkbox">
-                              <label class="check">
-                              <input type="checkbox"> &nbsp;&nbsp; Pre-Paying Members
-                              <span class="checkmark"></span>
-                              </label>
-                           </div>
-                        </div>
-                        <div class="col-md-3 ">
-                           <div class="form-group booking-form">
-                              <select class="form-control cust-select">
-                                 <option>Does not require Approval</option>
-                              </select>
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="col-md-6 ">
-                           <div class="checkbox">
-                              <label class="check">
-                              <input type="checkbox"> &nbsp;&nbsp; Phone Verified members
-                              <span class="checkmark"></span>
-                              </label>
-                           </div>
-                        </div>
-                        <div class="col-md-3 ">
-                           <div class="form-group booking-form">
-                              <select class="form-control cust-select">
-                                 <option>Does not require Approval</option>
-                              </select>
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="col-md-6 ">
-                           <div class="checkbox">
-                              <label class="check">
-                              <input type="checkbox"> &nbsp;&nbsp; Email Verified members
-                              <span class="checkmark"></span>
-                              </label>
-                           </div>
-                           <small style="margin-left: 28px;">Non Email Verrified Members</small>
-                        </div>
-                        <div class="col-md-3 ">
-                           <div class="form-group booking-form">
-                              <select class="form-control cust-select">
-                                 <option>Does not require Approval</option>
-                              </select>
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <h3 class="sub-head">Customer Booking Sequence </h3>
-                        <table class="radio-booking">
-                           <tr>
-                              <td>
-                                 <label class="radio" style="font-weight: 300">Service &RightArrow; Staff &RightArrow; Available tile slots
-                                 <input type="radio"  checked="checked"   name="radio">
-                                 <span class="radiomark"></span>
-                                 </label>
-                              </td>
-                           </tr>
-                           <tr>
-                              <td>
-                                 <label class="radio"style="font-weight: 300">Service &RightArrow; Available tile slots &RightArrow; Staff
-                                 <input type="radio"name="radio">
-                                 <span class="radiomark"></span>
-                                 </label>
-                              </td>
-                           </tr>
-                        </table>
-                        <div class="clearfix"></div>
-                        <h3 class="sub-head">Tracking Code </h3>
-                        <div class="col-md-6 padtop15">
-                           Google adwords script page URL
-                        </div>
-                        <div class="col-md-6 ">
-                           <div class="form-group booking-form">
-                              <input type="text" class="form-control"  placeholder="URL">
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <table class="col-md-12">
-                           <tr>
-                              <td  class="col-md-8 padtop15">
-                                 <p>Run script when user is redirected to payment getway
-                                 </p>
-                              </td>
-                              <td  class="col-md-4 text-right">
-                                 <a onclick="togglebtn(this);" class="togg-btn active">
-                                 <i class="fa fa-toggle-off"></i>
-                              </td>
-                           </tr>
-                        </table>
-                        <div class="clearfix"></div>
-                        <div class="notfy-msg"><i class="fa fa-warning"></i> &nbsp; Google tracking code is a premium feature available in Professional & above membership <span>Upgrade</span></div>
-                        <table class="col-md-12">
-                           <tr>
-                              <td  class="col-md-8 padtop15">
-                                 <p>If you want to show your customer's name with their reviews
-                                 </p>
-                              </td>
-                              <td  class="col-md-4 text-right">
-                                 <a onclick="togglebtn(this);" class="togg-btn active">
-                                 <i class="fa fa-toggle-off"></i>
-                              </td>
-                           </tr>
-                        </table>
-                        <div class="clearfix"></div>
-                        <table class="col-md-12">
-                           <tr>
-                              <td  class="col-md-8 padtop15">
-                                 <p>Allow your customers to promote their appointment on social networks
-                                 </p>
-                              </td>
-                              <td  class="col-md-4 text-right">
-                                 <a onclick="togglebtn(this);" class="togg-btn active">
-                                 <i class="fa fa-toggle-off"></i>
-                              </td>
-                           </tr>
-                        </table>
-                        <div class="clearfix"></div>
-                        <h3 class="sub-head">URL of calendar on your site </h3>
-                        <div class="col-md-12 ">
-                           <div class="form-group booking-form">
-                              <input type="text" class="form-control"  placeholder="URL">
-                              <small>
-                              If your are integrating Squeedr on your site enter the URL of that page in the text
-                              box below. We will use this URL to redirect users to your desired page after 
-                              payments, email verifications, rating, etc. Leave empty if you are not integrating 
-                              your calendar on your website. By default, user will be redirectd to https://booking.squeedr.com/user
-                              </small>
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <h3 class="sub-head">Social Channels </h3>
-                        <p>Direct happy and potential customers from booking portal to your social media
-                           profiles by adding their links here. This helps in building strong customer relationships and increases the social
-                           media engagement on your business page.
-                        </p>
-                        <div class="col-md-3 padtop15">
-                           Facebook page URL
-                        </div>
-                        <div class="col-md-6 booking-form1 ">
-                           <div class="form-group booking-form">
-                              <input type="text" class="form-control"  placeholder="URL">
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="col-md-3 padtop15">
-                           Twitter page URL
-                        </div>
-                        <div class="col-md-6 booking-form1 ">
-                           <div class="form-group booking-form">
-                              <input type="text" class="form-control"  placeholder="URL">
-                              <div class="clearfix"></div>
-                           </div>
-                        </div>
-                        <div class="clearfix"></div>
-                        <button class="btn btn-primary search-btn" type="submit">Save</button> -->
+                        
                      </form>
                   </div>
                </div>
@@ -254,15 +93,15 @@ Squeedr
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
-                              <input type="number" min=0 class="form-control" name="min_notice_book" id="min_notice_book" placeholder="" value="<?php if($booking_rule_data->min_notice_book!='') echo $booking_rule_data->min_notice_book; else echo '120';?>">
+                              <input type="number" min=0 class="form-control" name="min_notice_book" id="min_notice_book" placeholder="" value="<?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_book!='') echo $booking_rule_data->min_notice_book; else echo '120';?>">
                               <div class="clearfix"></div>
                            </div>
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
                               <select name="min_notice_book_type" id="min_notice_book_type" class="form-control cust-select">
-                                 <option <?php if($booking_rule_data->min_notice_book_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
-                                 <option <?php if($booking_rule_data->min_notice_book_type=='Hr') echo 'selected=""'; ?> value="Hr">Hr</option>
+                                 <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_book_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
+                                 <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_book_type=='Hr') echo 'selected=""'; ?> value="Hr">Hr</option>
                               </select>
                               <div class="clearfix"></div>
                            </div>
@@ -273,15 +112,15 @@ Squeedr
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
-                              <input type="number" min=0 class="form-control" name="min_notice_cancel" id="min_notice_cancel"  placeholder="" value="<?php if($booking_rule_data->min_notice_cancel!='') echo $booking_rule_data->min_notice_cancel; else echo '1';?>">
+                              <input type="number" min=0 class="form-control" name="min_notice_cancel" id="min_notice_cancel"  placeholder="" value="<?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_cancel!='') echo $booking_rule_data->min_notice_cancel; else echo '1';?>">
                               <div class="clearfix"></div>
                            </div>
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
                               <select class="form-control cust-select" name="min_notice_cancel_type" id="min_notice_cancel_type">
-                                    <option <?php if($booking_rule_data->min_notice_cancel_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
-                                    <option <?php if($booking_rule_data->min_notice_cancel_type=='Hr') echo 'selected=""'; ?> value="Hr">Hr</option>
+                                    <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_cancel_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
+                                    <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_cancel_type=='Hr') echo 'selected=""'; ?> value="Hr">Hr</option>
                               </select>
                               <div class="clearfix"></div>
                            </div>
@@ -292,15 +131,15 @@ Squeedr
                         </div>
                         <div class="col-md-2  col-sm-2">
                            <div class=" booking-form">
-                              <input type="number" min=0 class="form-control" name="min_notice_reschedule" id="min_notice_reschedule" placeholder="" value="<?php if($booking_rule_data->min_notice_reschedule!='') echo $booking_rule_data->min_notice_reschedule; else echo '1';?>">
+                              <input type="number" min=0 class="form-control" name="min_notice_reschedule" id="min_notice_reschedule" placeholder="" value="<?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_reschedule!='') echo $booking_rule_data->min_notice_reschedule; else echo '1';?>">
                               <div class="clearfix"></div>
                            </div>
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
                               <select name="min_notice_reschedule_type" id="min_notice_reschedule_type" class="form-control cust-select">
-                                    <option <?php if($booking_rule_data->min_notice_reschedule_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
-                                    <option <?php if($booking_rule_data->min_notice_reschedule_type=='Hr') echo 'selected=""'; ?> value="Hr">Hr</option>
+                                    <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_reschedule_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
+                                    <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_notice_reschedule_type=='Hr') echo 'selected=""'; ?> value="Hr">Hr</option>
                               </select>
                               <div class="clearfix"></div>
                            </div>
@@ -321,15 +160,15 @@ Squeedr
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
-                              <input type="number" min=0 class="form-control" name="min_time_interval" id="min_time_interval" placeholder="" value="<?php if($booking_rule_data->min_time_interval!='') echo $booking_rule_data->min_time_interval; else echo '0';?>">
+                              <input type="number" min=0 class="form-control" name="min_time_interval" id="min_time_interval" placeholder="" value="<?php if(!empty($booking_rule_data) && $booking_rule_data->min_time_interval!='') echo $booking_rule_data->min_time_interval; else echo '0';?>">
                               <div class="clearfix"></div>
                            </div>
                         </div>
                         <div class="col-md-2 col-sm-2">
                            <div class=" booking-form">
                               <select name="min_time_interval_type" id="min_time_interval_type" class="form-control cust-select">
-                                    <option <?php if($booking_rule_data->min_time_interval_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
-                                    <option <?php if($booking_rule_data->min_time_interval_type=='Hr') echo 'selected=""';?> value="Hr">Hr</option>
+                                    <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_time_interval_type=='Min') echo 'selected=""'; else echo 'selected=""';?> value="Min">Min</option>
+                                    <option <?php if(!empty($booking_rule_data) && $booking_rule_data->min_time_interval_type=='Hr') echo 'selected=""';?> value="Hr">Hr</option>
                               </select>
                               <div class="clearfix"></div>
                            </div>
@@ -386,7 +225,7 @@ Squeedr
                                  </p>
                               </td>
                               <td  class="col-md-4 text-right">
-                                 <button type="button" id="booking_limit" data-type-name="booking_limit" class="booking_rule_option btn btn-sm btn-toggle pull-right <?php if($booking_rule_data->booking_limit == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
+                                 <button type="button" id="booking_limit" data-type-name="booking_limit" class="booking_rule_option btn btn-sm btn-toggle pull-right <?php if(!empty($booking_rule_data) && $booking_rule_data->booking_limit == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
                                     <div class="handle"></div>
                                 </button>
                               </td>
@@ -442,7 +281,7 @@ Squeedr
                                  </p>
                               </td>
                               <td  class="col-md-4 text-right">
-                                <button type="button" id="recurring_booking" data-type-name="recurring_booking" class="booking_rule_option btn btn-sm btn-toggle pull-right <?php if($booking_rule_data->recurring_booking == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
+                                <button type="button" id="recurring_booking" data-type-name="recurring_booking" class="booking_rule_option btn btn-sm btn-toggle pull-right <?php if(!empty($booking_rule_data) && $booking_rule_data->recurring_booking == 1) echo 'active';?>" data-toggle="button" autocomplete="off">
                                     <div class="handle"></div>
                                 </button>
                                  
@@ -456,13 +295,13 @@ Squeedr
                             <div class="clearfix"></div>
                             <div class="checkbox col-md-3">                                                                           
                             <label class="check">
-                            <input type="checkbox" class="recurring_option" data-option-name="show_recurring_options_customer" <?php if($booking_rule_data->show_recurring_options_customer == 1) { ?> checked="" <?php } ?>> &nbsp;&nbsp; Customer
+                            <input type="checkbox" class="recurring_option" data-option-name="show_recurring_options_customer" <?php if(!empty($booking_rule_data) && $booking_rule_data->show_recurring_options_customer == 1) { ?> checked="" <?php } ?>> &nbsp;&nbsp; Customer
                             <span class="checkmark"></span>
                             </label>                                                                            
                             </div>
                             <div class="checkbox col-md-3">                                                                           
                             <label class="check">
-                            <input type="checkbox" class="recurring_option" data-option-name="show_recurring_options_admin" <?php if($booking_rule_data->show_recurring_options_admin == 1) { ?> checked="" <?php } ?>> &nbsp;&nbsp; Admin
+                            <input type="checkbox" class="recurring_option" data-option-name="show_recurring_options_admin" <?php if(!empty($booking_rule_data) && $booking_rule_data->show_recurring_options_admin == 1) { ?> checked="" <?php } ?>> &nbsp;&nbsp; Admin
                             <span class="checkmark"></span>
                             </label>                                                                            
                             </div>

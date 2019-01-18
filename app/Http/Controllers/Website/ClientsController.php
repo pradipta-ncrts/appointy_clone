@@ -215,9 +215,60 @@ class ClientsController extends ApiController {
 		return view('website.client.my-squeeder-page',$data);
 	}
 	
-	function client_service_details($parameter=NULL)
+	function client_service_details($service_link=NULL)
 	{
-		return view('website.client.client-service-details');
+		$service_list = array();
+		$service_details=array();
+
+		if($service_link!=NULL){
+			$findCond=array(
+				array('service_link','=',$service_link),
+				array('is_deleted','=','0'),
+				array('is_blocked','=','0'),
+			);
+			//echo '<pre>'; print_r($findCond); exit;
+			$selectFields=array();
+			$category_select_field = array('category');
+			$currency_field = array('currency');
+			$joins = array(
+						 array(
+							'join_table'=>$this->tableObj->tableNameCategory,
+							'join_with'=>$this->tableObj->tableUserService,
+							'join_type'=>'left',
+							'join_on'=>array('category_id','=','category_id'),
+							'select_fields' => $category_select_field,
+						),
+						array(
+							'join_table'=>$this->tableObj->tableNameCurrency,
+							'join_with'=>$this->tableObj->tableUserService,
+							'join_type'=>'left',
+							'join_on'=>array('currency_id','=','currency_id'),
+							'select_fields' => $currency_field,
+						),
+			);
+			$service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$findCond,$selectFields,$joins);
+			//echo '<pre>'; print_r($service_details); exit;
+			$user_id = $service_details->user_id;
+			// All services of service provider //
+			$findserviceCond=array(
+				array('user_id','=',$user_id),
+				array('is_deleted','=','0'),
+				array('is_blocked','=','0'),
+			);
+			
+			$selectserviceFields=array('service_id','service_name','description','service_link');
+			$service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$findserviceCond,$selectserviceFields);
+			
+	
+			$data=array(
+				'service_list'=>$service_list,
+				'service_details'=>$service_details
+			);
+	
+			//echo '<pre>'; print_r($data); exit;
+		}
+
+		return view('website.client.client-service-details',$data);
 	}
 
 	function client_login($parameter=NULL)
@@ -234,68 +285,66 @@ class ClientsController extends ApiController {
 		$staff_postal_code_list = array();
 		$staff_list=array();
 		$staff_details=array();
-		$username='';
+
+		if($username!=NULL){
+			$findCond=array(
+				array('username','=',$username),
+				array('is_internal_staff','=','0'),
+				array('is_deleted','=','0'),
+				array('is_blocked','=','0'),
+			);
+			//echo '<pre>'; print_r($findCond); exit;
+			$selectFields=array();
+			$category_select_field = array('category');
+			$joins = array(
+						 array(
+							'join_table'=>$this->tableObj->tableNameCategory,
+							'join_with'=>$this->tableObj->tableNameStaff,
+							'join_type'=>'left',
+							'join_on'=>array('category_id','=','category_id'),
+							'select_fields' => $category_select_field,
+						),
+			);
+			$staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields,$joins);
+			//echo '<pre>'; print_r($staff_details); exit;
+			if(!empty($staff_details)){
+				$user_id = $staff_details->user_id;
+				$staff_id = $staff_details->staff_id;
+				
 		
-		$findCond=array(
-			array('username','=',$username),
-			array('is_internal_staff','=',0),
-            array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-        );
-        
-		$selectFields=array();
-		$category_select_field = array('category');
-		$joins = array(
-		             array(
-		                'join_table'=>$this->tableObj->tableNameCategory,
-		                //'join_with_alias'=>'userTb',
-		                'join_with'=>$this->tableObj->tableNameStaff,
-		                //'join_with_alias'=>'servTb',
-		                'join_type'=>'left',
-		                'join_on'=>array('category_id','=','category_id'),
-		                //'join_conditions' => array(array('user_no','=','teacher_user_no')),
-		                'select_fields' => $category_select_field,
-		            ),
-        );
-        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields,$joins);
-		
-		if(!empty($staff_details)){
-			$user_id = $staff_details->user_id;
-			$staff_id = $staff_details->staff_id;
+				$findpostCond=array(
+					array('staff_id','=',$staff_id),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+				
+				$selectpostFields=array('postal_code','area');
+				$staff_postal_code_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findpostCond,$selectpostFields);
+				$staff_details->pincodes = $staff_postal_code_list;
+	
+				// All Staff List //
+				$findstaffCond=array(
+					array('user_id','=',$user_id),
+					array('is_internal_staff','=',0),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+				
+				$selectstaffFields=array('staff_id','full_name','username','email','staff_profile_picture');
+				$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findstaffCond,$selectstaffFields);
+				
+					
+			}
 			
 	
-			$findpostCond=array(
-				array('staff_id','=',$staff_id),
-				array('is_deleted','=','0'),
-				array('is_blocked','=','0'),
+			$data=array(
+				'staff_list'=>$staff_list,
+				'staff_details'=>$staff_details,
+				'username'=>$username
 			);
-			
-			$selectpostFields=array('postal_code','area');
-			$staff_postal_code_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaffPostalCode,$findpostCond,$selectpostFields);
-			$staff_details->pincodes = $staff_postal_code_list;
-
-			// All Staff List //
-			$findstaffCond=array(
-				array('user_id','=',$user_id),
-				array('is_internal_staff','=',0),
-				array('is_deleted','=','0'),
-				array('is_blocked','=','0'),
-			);
-			
-			$selectstaffFields=array('staff_id','full_name','username','email','staff_profile_picture');
-			$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findstaffCond,$selectstaffFields);
-			
-				
+	
+			//echo '<pre>'; print_r($data); exit;
 		}
-		
-
-		$data=array(
-			'staff_list'=>$staff_list,
-			'staff_details'=>$staff_details,
-			'username'=>$username
-		);
-
-		//echo '<pre>'; print_r($data); exit;
 
 		return view('website.client.view-staff-list',$data);
 	}

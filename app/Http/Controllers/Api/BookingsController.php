@@ -216,16 +216,17 @@ class BookingsController extends ApiController {
             //print_r($checkServiceAvalibilityDate); die();
             if(!empty($checkServiceAvalibilityDate)){
                 // Check Service Availability Time//
-                $serviice_available = false;
+                $service_available = 'false';
                 foreach($checkServiceAvalibilityDate as $ser_ava_dt){
                     $ava_starttime = strtotime($formatted_date.' '.$ser_ava_dt->start_time.':00');
                     $ava_endtime = strtotime($formatted_date.' '.$ser_ava_dt->end_time.':00');
                     if($strto_start_time >= $ava_starttime && $strto_end_time <= $ava_endtime){
-                        $serviice_available = true;
+                        $service_available = 'true';
                         break;
                     }
                 }
-                if($serviice_available == true){
+                //echo $service_available; exit;
+                if($service_available == true){
                     // Check Staff Availability //
                     $condition = array(
                         array('block_date', '=', date('Y-m-d', strtotime($date))),
@@ -250,17 +251,19 @@ class BookingsController extends ApiController {
     
                         $fields = array();                   
                         $checkStaffServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$ser_staff_ava_condition, $fields);
+                        //echo '<pre>'; print_r($checkStaffServiceAvalibility); exit;
                         if(!empty($checkStaffServiceAvalibility)){
                             // Check Available Time //
                             $staff_serviice_available = false;
                             foreach($checkStaffServiceAvalibility as $staff_ser_ava){
-                                $available_starttime = strtotime($formatted_date.' '.$staff_ser_ava->start_time.':00');
-                                $available_endtime = strtotime($formatted_date.' '.$staff_ser_ava->end_time.':00');
+                                $available_starttime = strtotime($formatted_date.' '.$staff_ser_ava->start_time);
+                                $available_endtime = strtotime($formatted_date.' '.$staff_ser_ava->end_time);
                                 if($strto_start_time >= $available_starttime && $strto_end_time <= $available_endtime){
                                     $staff_serviice_available = true;
                                     break;
                                 }
                             }
+                            //echo $staff_serviice_available; exit;
                             if($staff_serviice_available == true){
                                 $param = array(
                                     'user_id' => $user_id,
@@ -276,7 +279,8 @@ class BookingsController extends ApiController {
                                     'note' => $appoinment_note,
                                     'payment_amount' => $service_price,
                                     'total_payable_amount' => $service_price,
-                                );      
+                                );  
+                                //echo '<pre>'; print_r($param); exit;    
                                 $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
                                 if($insertdata > 0)
                                 {
@@ -393,6 +397,8 @@ class BookingsController extends ApiController {
             $filter_data = explode(',', $filter_data);
             $appoinment_condition = array(
                 array('user_id', '=', $user_no),
+                array('status', '!=', 2),
+                array('is_deleted','=','0'),
                 'in'=>array('staff_id' => $filter_data)
             );
 
@@ -408,6 +414,8 @@ class BookingsController extends ApiController {
         {
             $appoinment_condition = array(
                 array('user_id', '=', $user_no),
+                array('status', '!=', 2),
+                array('is_deleted','=','0'),
             );
 
             $findCond = array(
@@ -418,6 +426,7 @@ class BookingsController extends ApiController {
             );
         }
 
+        //print_r($appoinment_condition); exit;
 
         $filter_list_condition = array(
                 array('user_id','=',$user_no),
@@ -505,6 +514,7 @@ class BookingsController extends ApiController {
         $response_data['calendar_settings'] = $calendar_settings;
         $response_data['filter_data'] = $filter_data;
         $response_data['block_date_time'] = $block_date_array;
+        
         $this->response_status='1';
         // generate the service / api response
         $this->json_output($response_data);
@@ -584,7 +594,7 @@ class BookingsController extends ApiController {
         );
         
         $appoinment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
-
+        
         if($appoinment_details->duration > 60)
         {
             $app_duration = $this->convertToHoursMins($appoinment_details->duration);

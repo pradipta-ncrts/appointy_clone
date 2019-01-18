@@ -24,7 +24,7 @@ Squeedr
                     
                     </div>
                     
-                    </div>
+                </div>
                     
                 <div class="stf-list heightfull">
                     <?php if(!empty($staff_list)) { foreach($staff_list as $staffs) { ?>

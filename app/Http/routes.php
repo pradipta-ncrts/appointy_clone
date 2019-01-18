@@ -248,7 +248,7 @@ Route::group(['prefix'=>''],function(){
     //Route::get('/profile-settings','Website\UsersController@profile_settings');
     Route::get('/cancel_appointent_url','Website\UsersController@cancel_appointent_url');
     Route::get('/business-provider/{uesrname?}','Website\ClientsController@business_provider');
-    Route::get('/client-service-details/{service?}','Website\ClientsController@client_service_details');
+    //Route::get('/client-service-details/{service?}','Website\ClientsController@client_service_details');
 
 
     Route::get('/profile-settings','Website\ProfileController@profile_settings');
@@ -338,8 +338,9 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/client-info','Website\ClientsController@client_info');
     Route::get('/booking-verify','Website\ClientsController@booking_verify');
     Route::get('/booking-details','Website\ClientsController@booking_details');
-    Route::get('/view-staffs/{username}','Website\ClientsController@view_staff_list');
+    Route::get('/view-staffs/{username?}','Website\ClientsController@view_staff_list');
     Route::get('/forgot-password/{parameter?}','Website\ClientsController@forgot_password');
+    Route::get('/service-details/{service?}','Website\ClientsController@client_service_details');
 
 });
     
