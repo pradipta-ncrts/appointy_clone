@@ -286,7 +286,7 @@ class BookingsController extends ApiController {
 
 		//echo "<pre>";
 
-		//print_r($return); die();
+		//print_r($return->master_template_data); die();
 
 		
 
@@ -403,7 +403,7 @@ class BookingsController extends ApiController {
 			}
 
 			//echo '<pre>'; print_r($data); exit;
-
+			$data['master_template_data'] = $return->master_template_data;
 			return view('website.booking.email-customisation')->with($data);
 
 		}

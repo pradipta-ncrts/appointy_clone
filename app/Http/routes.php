@@ -179,6 +179,10 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/notification_feedback','Api\BookingsController@notification_feedback');
 
     Route::any('/notification_update','Api\BookingsController@notification_update');
+
+    Route::any('/request_for_review','Api\BookingsController@request_for_review');
+
+
  
 
     // Get appointments via API Key//

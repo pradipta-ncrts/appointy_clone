@@ -3302,6 +3302,42 @@ $(document).on("click", '.notification-update', function(e) {
   });
 });
 
+$(document).on("click", '.request-for-review', function(e) { 
+  e.preventDefault();
+  //alert();
+  let data = addCommonParams([]);
+  let appointemt_id = $(this).data('id');
+  data.push({name:'appointemt_id',value:appointemt_id});
+  $.ajax({
+      url: baseUrl+"/api/request_for_review", 
+      type: "POST", 
+      data: data, 
+      dataType: "json",
+      success: function(response) 
+      {
+          if(response.result=='1')
+          {
+              //$('#get-notification-update').html(response.response_message);
+              swal({title: "Success", text: response.message, type: "success"});
+          }
+          else
+          {
+              swal({title: "Error", text: response.message, type: "error"});
+          }
+      },
+      beforeSend: function()
+      {
+          $('.animationload').show();
+      },
+      complete: function()
+      {
+          $('.animationload').hide();
+      }
+  });
+});
+
+
+
 
 //c-menu--slide-alert
 

@@ -89,6 +89,8 @@ class TablesController {
         
         $this->tableNameEmailTemplateMaster = config('constants.tables.email_template_master');
 
+        $this->tableNameReviewRequest = config('constants.tables.request_for_review');
+
         
 
 
