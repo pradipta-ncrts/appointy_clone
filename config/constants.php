@@ -64,6 +64,8 @@ return [
 
         'notification_updates' => 'notification_updates',
 
+        'user_client' => 'user_client',
+
     ],
 
     'google'=>[

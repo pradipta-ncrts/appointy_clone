@@ -142,6 +142,9 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/change_postal_code_customer_interface','Api\StaffsController@change_postal_code_customer_interface');
 
     Route::post('/client_forgot_password','Api\ClientsController@client_forgot_password');
+
+    Route::post('/client_registration','Api\ClientsController@client_registration');
+    Route::any('/client_emailverification/{id}','Api\ClientsController@client_emailverification');
     
     
     Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
@@ -257,8 +260,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/profile-payment','Website\ProfileController@profile_payment');
     Route::get('/profile-login','Website\ProfileController@profile_login');
 
-    Route::get('/client-login','Website\ClientsController@client_login');
-
+    
     Route::get('/settings-membership','Website\PlanController@settings_membership');
 
     Route::any('/make-payment/{parameter?}','Website\PlanController@make_payment');
@@ -331,7 +333,8 @@ Route::group(['prefix'=>'mobile'],function(){
 */
 
 Route::group(['prefix'=>'client'],function(){
-    
+    Route::get('/login','Website\ClientsController@client_login');
+    Route::get('/registration','Website\ClientsController@client_registration');
     Route::get('/cancel_appointent/{parameter?}','Website\ClientsController@cancel_appointment');
     Route::get('/reschedule-appointment/{parameter?}','Website\ClientsController@reschedule_appointment');
     Route::get('/client-dashboard/{parameter?}','Website\ClientsController@client_dashboard');

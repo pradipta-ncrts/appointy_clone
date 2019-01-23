@@ -56,7 +56,7 @@ Squeedr
                 <?php 
                     } } else { 
                 ?>
-                    <a>No client created yet</a>
+                    <a>No records found</a>
                 <?php 
                     }   
                 ?>
@@ -120,7 +120,7 @@ Squeedr
                                         </div>
                                         <div>
                                             <h2>Last Appointment</h2>
-                                            <label>22 May 2018, 05:06 PM</label>
+                                            <label id="clientLastAppoDate">22 May 2018, 05:06 PM</label>
                                         </div>
                                     </div>
                                 </div>
@@ -324,7 +324,7 @@ Squeedr
                         </div>
                     </div>
 
-                    <div class="row">
+                    <?php /* <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
                             <div class="input-group" id="edit_category_error">
@@ -345,7 +345,7 @@ Squeedr
                             </div>
                         </div>
                         </div>
-                    </div>
+                    </div> */ ?>
 
                     <div class="row">
                         <div class="col-md-12">
@@ -486,6 +486,10 @@ $('.stafflistitem').click(function(){
     $('#clientRegDate').html("");
     if(data.created_on !== undefined){
         $('#clientRegDate').html(data.created_on);
+    }
+    $('#clientLastAppoDate').html("");
+    if(data.last_appointment_on !== undefined){
+        $('#clientLastAppoDate').html(data.last_appointment_on);
     }
     $('#clientEmail').html("");
     if(data.client_email !== undefined){
@@ -677,7 +681,7 @@ $(document).on('click','#approve_verify',function(e){
 
 $('#editClient').click(function(e){
     var data = addCommonParams([]);
-    //alert(serviceid);
+    //alert(client_id);
     data.push({name:'client_id', value:client_id});
     $.ajax({
         url: baseUrl+"/api/client_details", 
@@ -701,7 +705,7 @@ $('#editClient').click(function(e){
                 $('#edit_client_mobile').val(response.client_details.client_mobile);
                 $('#edit_client_home_phone').val(response.client_details.client_home_phone);
                 $('#edit_client_work_phone').val(response.client_details.client_work_phone);
-                $("#edit_client_category").val(response.client_details.client_category).trigger('change');
+                //$("#edit_client_category").val(response.client_details.client_category).trigger('change');
                 $("#edit_client_timezone").val(response.client_details.client_timezone).trigger('change');
                 $('#edit_client_address').val(response.client_details.client_address);
                 $('#edit_client_note').val(response.client_details.client_note);

@@ -42,7 +42,7 @@ class UsersController extends ApiController {
 				array('password','=',md5($password)),
 				'or'=>array('email'=>$email,'username'=>$email)
 			);
-			$selectFields=array('id','user_type','is_email_verified','created_on','is_deleted','is_blocked');
+			$selectFields=array('id','email','user_type','is_email_verified','created_on','is_deleted','is_blocked');
 			$user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
 			if(empty($user))
 			{
@@ -59,6 +59,7 @@ class UsersController extends ApiController {
 				if(empty($service))
 				{
 					setcookie('new_email', $email, time() + (86400 * 30), "/");
+					$response_data['enc_email'] = Crypt::encrypt($user->email);
 					$this->response_status='1';
 					$this->response_message = "complete_step_two";
 				}

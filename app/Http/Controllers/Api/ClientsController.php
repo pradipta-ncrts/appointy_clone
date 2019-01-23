@@ -52,7 +52,7 @@ class ClientsController extends ApiController {
             $client_mobile = $request->input('client_mobile');
             $client_home_phone = $request->input('client_home_phone');
             $client_work_phone = $request->input('client_work_phone');
-            $client_category = $request->input('client_category');
+            //$client_category = $request->input('client_category');
             $client_address = $request->input('client_address') ? $request->input('client_address'):"";
 
             $client_timezone = $request->input('client_timezone');
@@ -68,49 +68,66 @@ class ClientsController extends ApiController {
             $conditions = array(
 			     array('client_email', '=', $client_email),
 			);
-                        
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameClient,$conditions);
-
+            $selectFileds = array();            
+            $result = $this->common_model->fetchData($this->tableObj->tableNameClient,$conditions,$selectFileds);
             //echo '<pre>'; print_r($result); exit;
             if(!empty($result))
             {
-                $this->response_message = "This email is already exist.";
-            }
-            else
-            {
-                $token1 = md5($client_email);
-                $token = $token1;
-
-                $digits = 8;
-                $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
-
-
+                //$this->response_message = "This email is already exist.";
+                $client_id = $result->client_id;
+                $client_name = $result->client_name;
+                
                 $client_data['user_id'] = $user_id;
-                $client_data['client_name'] = $client_name;
-                $client_data['client_email'] = $client_email;
-                $client_data['client_mobile'] = $client_mobile;
-                $client_data['client_home_phone'] = $client_home_phone;
-                $client_data['client_work_phone'] = $client_work_phone;
-                $client_data['client_category'] = $client_category;
-                $client_data['client_address'] = $client_address;
-                $client_data['client_timezone'] = $client_timezone;
-                $client_data['client_note'] = $client_note;
+                $client_data['client_id'] = $client_id;
 
-                $client_data['password'] = md5($password);
-                $client_data['email_verification_code'] = $token;
-
-
-                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
+                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserClient,$client_data);
                 if($insertdata > 0){
-                    /* Send Email */
-                    //$other_params = "?device_type=0&device_token_key=".Session::getId();
-					//$verify_link = $this->base_url('api/emailverification/'.$token.$other_params);// need to change with website url
-                    $emailData['username']=$client_email;
-                    $emailData['password']=$password;
-                    $emailData['toName'] = $client_name;
 
-                    $this->sendmail(6,$client_email,$emailData);
+                    /* Send Email */
+                    if($send_email == true){
+                        
+                        //$emailData['toName'] = $client_name;
+
+                        $email_template = $this->email_template($user_id,$type = 9);
+                        
+                        $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                        <table width="100%">
+                            <tr>
+                                <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                                <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                            </tr>
+                        </table>
+                        </div>';
+                        $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                        <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                        <p style="text-align:center">For even easier management of your appointments.</p>
+                        <div style="text-align:center;">
+                            <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                            <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                        </div>
+                        </div>
+                        <div style="text-align:center">
+                        <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                        <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                        <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                        <br><br>
+                        <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                        <p>Copyright &copy; '.date('Y').'</p>
+                        </div>';
+
+                        $mail_body = $email_template->message;
+
+                        $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                        $mail_body = str_replace('{client_name}', $client_name, $mail_body);
+                        $mail_body = str_replace('{user_id}', $client_email, $mail_body);
+                        $mail_body = str_replace('{password}', ' ', $mail_body);
+                        
+                        $emailData['subject'] = $email_template->subject ? $email_template->subject : 'New User Registration';
+                        $emailData['content'] = $mail_body;
+
+                        $this->sendmail(6,$client_email,$emailData);
+                    }
+                    
 
                     //Notification Update start
                     $notification_data['update_message'] = "You have added ".$client_name." as a client.";
@@ -122,6 +139,108 @@ class ClientsController extends ApiController {
                     
                     $this->response_status='1';
                     $this->response_message = "Client successfully added.";
+                } else {
+                    $this->response_message = "Something went wrong. Please try agian later.";
+                }
+                
+            }
+            else
+            {
+                $token1 = md5($client_email);
+                $token2 = md5($client_name);
+                $token = $token1.$token2;
+
+                $digits = 8;
+                $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
+
+
+                //$client_data['user_id'] = $user_id;
+                $client_data['client_name'] = $client_name;
+                $client_data['client_email'] = $client_email;
+                $client_data['client_mobile'] = $client_mobile;
+                $client_data['client_home_phone'] = $client_home_phone;
+                $client_data['client_work_phone'] = $client_work_phone;
+                //$client_data['client_category'] = $client_category;
+                $client_data['client_address'] = $client_address;
+                $client_data['client_timezone'] = $client_timezone;
+                $client_data['client_note'] = $client_note;
+
+                $client_data['password'] = md5($password);
+                $client_data['email_verification_code'] = $token;
+
+
+                $client_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
+                if($client_id > 0){
+
+                    $user_client_data['user_id'] = $user_id;
+                    $user_client_data['client_id'] = $client_id;
+    
+                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserClient,$user_client_data);
+                    if($insertdata > 0){
+                        /* Send Email */
+                        if($send_email == true){
+                            //$other_params = "?device_type=0&device_token_key=".Session::getId();
+                            //$verify_link = $this->base_url('api/emailverification/'.$token.$other_params);// need to change with website url
+                            //$emailData['username']=$client_email;
+                            //$emailData['password']=$password;
+                            //$emailData['toName'] = $client_name;
+
+                            //
+                            $email_template = $this->email_template($user_id,$type = 9);
+
+                            $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                            <table width="100%">
+                                <tr>
+                                    <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                                    <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                                </tr>
+                            </table>
+                            </div>';
+                            $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                            <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                            <p style="text-align:center">For even easier management of your appointments.</p>
+                            <div style="text-align:center;">
+                                <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                                <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                            </div>
+                            </div>
+                            <div style="text-align:center">
+                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                            <br><br>
+                            <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                            <p>Copyright &copy; '.date('Y').'</p>
+                            </div>';
+
+                            $mail_body = $email_template->message;
+
+                            $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                            $mail_body = str_replace('{client_name}', $client_name, $mail_body);
+                            $mail_body = str_replace('{user_id}', $client_email, $mail_body);
+                            $mail_body = str_replace('{password}', $password, $mail_body);
+                            
+                            $emailData['subject'] = $email_template->subject ? $email_template->subject : 'New User Registration';
+                            $emailData['content'] = $mail_body;
+
+
+                            $this->sendmail(6,$client_email,$emailData);
+                        }
+
+                        //Notification Update start
+                        $notification_data['update_message'] = "You have added ".$client_name." as a client.";
+                        $notification_data['user_id'] = $user_id;
+
+                        $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+                        //Notification Update End
+
+                        
+                        $this->response_status='1';
+                        $this->response_message = "Client successfully added.";
+                    } else {
+                        $this->response_message = "Something went wrong. Please try agian later.";
+                    }
+                    
                 } else {
                     $this->response_message = "Something went wrong. Please try agian later.";
                 }
@@ -157,12 +276,31 @@ class ClientsController extends ApiController {
 			array('is_blocked','=','0'),
 		);
 		if(!empty($search_text)){
-			$findCond[]=array('client_name','like','%'.$search_text.'%');
-		}
+			$findCond[]=array($this->tableObj->tableNameClient.'.client_name','like','%'.$search_text.'%');
+        }
+        
+        $client_select_field = array('client_id','client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','client_profile_picture','email_verification_code');
+		$joins = array(
+                    array(
+                    'join_table'=>$this->tableObj->tableNameClient,
+                    'join_with'=>$this->tableObj->tableNameUserClient,
+                    'join_type'=>'left',
+                    'join_on'=>array('client_id','=','client_id'),
+                    'join_on_more'=>array('is_deleted','=','0'),
+                    'select_fields' => $client_select_field,
+                )
+            );
 
         $groupBy = array('client_id' => 'DESC');
 
-		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields=array(),$join = array(),$groupBy);
+		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserClient,$findCond,$selectFields=array('user_client_id','created_on'),$joins,$groupBy);
+        /*if(!empty($client_list)){
+            for($i=0;$i<count($client_list);$i++){
+                $count_query = "SELECT created_on FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_no."' AND `squ_appointment`.`client_id` = '".$client_list[$i]->client_id."' AND `squ_appointment`.`is_deleted` = '0' ORDER BY created_on DESC LIMIT 0,1";
+                $last_appointment = $this->common_model->customQuery($count_query,$query_type=1);
+                $client_list[$i]->last_appointment_on = $last_appointment[0]->created_on;
+            }
+        }*/
         $response_data['client_list']=$client_list;
 
 		$this->response_status='1';
@@ -182,29 +320,41 @@ class ClientsController extends ApiController {
             array('user_id','=',$user_no),
             array('client_id','=',$client_id),
             array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
         );
-        
-        $selectFields=array();
-        $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$findCond,$selectFields);
-        //amount
-        $query = "SELECT IFNULL(SUM(remaining_balance),0) AS remaining_balance, IFNULL(SUM(paid_amount),0) AS paid_amount FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
-        $amount = $this->common_model->customQuery($query,$query_type=1);
-
-        $count_query = "SELECT COUNT('appointment_id') as count FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
-        $count = $this->common_model->customQuery($count_query,$query_type=1);
-
-        if(!empty($client_details)){
-            $response_data['client_details']=$client_details;
-            $response_data['amount']=$amount[0];
-            $response_data['count']=$count[0];
-            $this->response_status='1';
-            $this->response_message="Client details.";
+        $findFields=array();
+        $client_check = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$findCond,$findFields);
+        //echo '<pre>'; print_r($client_check); exit;
+        if(!empty($client_check)){
+            $selectCond=array(
+                array('client_id','=',$client_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+            );
+            $selectFields=array();
+            $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$selectCond,$selectFields);
+            //echo '<pre>'; print_r($client_details); exit;
+            //amount
+            $query = "SELECT IFNULL(SUM(remaining_balance),0) AS remaining_balance, IFNULL(SUM(paid_amount),0) AS paid_amount FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
+            $amount = $this->common_model->customQuery($query,$query_type=1);
+    
+            $count_query = "SELECT COUNT('appointment_id') as count FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
+            $count = $this->common_model->customQuery($count_query,$query_type=1);
+    
+            if(!empty($client_details)){
+                $response_data['client_details']=$client_details;
+                $response_data['amount']=$amount[0];
+                $response_data['count']=$count[0];
+                $this->response_status='1';
+                $this->response_message="Client details.";
+            } else {
+                $this->response_status='0';
+                $this->response_message="Client is not valid.";
+            }
         } else {
             $this->response_status='0';
             $this->response_message="Client is not valid.";
         }
-        
+
         // generate the service / api response
         $this->json_output($response_data);
 
@@ -239,7 +389,7 @@ class ClientsController extends ApiController {
             $client_mobile = $request->input('client_mobile');
             $client_home_phone = $request->input('client_home_phone');
             $client_work_phone = $request->input('client_work_phone');
-            $client_category = $request->input('client_category');
+            //$client_category = $request->input('client_category');
             $client_timezone = $request->input('client_timezone');
             $client_address = $request->input('client_address');
             $client_note = $request->input('client_note');
@@ -252,7 +402,7 @@ class ClientsController extends ApiController {
                 array('is_blocked','=','0'),
             );
 
-            $result = $this->common_model->fetchData($this->tableObj->tableNameClient,$conditions);
+            $result = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$conditions);
             //echo '<pre>'; print_r($result); exit;
             if(empty($result))
             {
@@ -280,7 +430,13 @@ class ClientsController extends ApiController {
                 $client_data['client_timezone'] = $client_timezone;
                 $client_data['client_note'] = $client_note;
 
-                $update = $this->common_model->update_data($this->tableObj->tableNameClient,$conditions,$client_data);
+                $updateConditions = array(
+                    array('client_id','=',$client_id),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                );
+
+                $update = $this->common_model->update_data($this->tableObj->tableNameClient,$updateConditions,$client_data);
                 
                 //Notification Update start
                 $notification_data['update_message'] = "You have updated ".$client_name."'s profile.";
@@ -325,7 +481,7 @@ class ClientsController extends ApiController {
 			$excelData = Excel::load('/public/import_client_excel/'.$fileName, function($reader) {})->get();
 
 			//get data from client table
-			$condition = array(
+			/*$condition = array(
 	                array('is_deleted', '=', 0),
 	            );
             $selectField = array('client_email');
@@ -335,7 +491,7 @@ class ClientsController extends ApiController {
         	foreach ($check_client as $key => $value)
             {
             	$exist_client_email[] = $value->client_email;
-            }
+            }*/
 
             //echo "<pre>";print_r($exist_client_email);exit;
             $exist = 0;
@@ -352,18 +508,48 @@ class ClientsController extends ApiController {
                             //echo "<pre>";print_r($row);exit;
                             if(!empty($row)){
                                 
-                                if(in_array($row['email'],$exist_client_email))
+                                /*if(in_array($row['email'],$exist_client_email))
                                 {
                                     $exist++;
+                                }*/
+                                $condition = array(
+                                    array('client_email', '=', $row['email']),
+                                    array('is_deleted', '=', 0),
+                                );
+                                $selectField = array('client_id');
+                                $check_client = $this->common_model->fetchData($this->tableObj->tableNameClient,$condition,$selectField);
+                                if(!empty($check_client)){
+                                    $checkCondition = array(
+                                        array('user_id', '=', $user_id),
+                                        array('client_id', '=', $check_client->client_id),
+                                        array('is_deleted', '=', 0),
+                                    );
+                                    $checkselectField = array('user_client_id');
+                                    $check_client = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$checkCondition,$checkselectField);
+                                    if(!empty($check_client)){
+                                        $exist++;
+                                    } else {
+                                        
+                                        $client_user_data['user_id'] = $user_id;
+                                        $client_user_data['client_id'] = $check_client->client_id;
+                                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserClient,$client_user_data);
+                                        if($insertdata > 0)
+                                        {
+                                            $notExit++;
+                                        }
+                                    }
+                                    
                                 }
                                 else
                                 {
                                     $token1 = md5($row['email']);
-                                    $token = $token1;
+                                    $token2 = md5($row['client_name']);
+                                    $token = $token1.$token2;
+                                    
                                     $digits = 8;
                                     $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
             
-                                    $client_data['user_id'] = $user_id;
+                                    //$client_data['user_id'] = $user_id;
                                     $client_data['client_name'] = $row['client_name']; 
                                     $client_data['password'] = md5($password); 
                                     $client_data['client_email'] = $row['email'];
@@ -377,18 +563,33 @@ class ClientsController extends ApiController {
                                     $client_data['email_verification_code'] = $token;
                                     //print_r($client_data); die();
                                     
-                                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
-                                        if($insertdata)
-                                        {
+                                    $client_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
+                                    if($client_id)
+                                    {
+                                        $user_client_data['user_id'] = $user_id;
+                                        $user_client_data['client_id'] = $client_id;
+                        
+                                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserClient,$user_client_data);
+                                        if($insertdata > 0){
+                                            /* Send Email */
                                             $emailData['username'] = $row['email'];
                                             $emailData['password'] = $password;
                                             $emailData['toName'] = $row['client_name'];
                                             $this->sendmail(11,$row['email'],$emailData);
+                    
+                                            //Notification Update start
+                                            $notification_data['update_message'] = "You have added ".$client_name." as a client.";
+                                            $notification_data['user_id'] = $user_id;
+                    
+                                            $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+                                            //Notification Update End
+                    
                                         }
+                                        
+                                    }
                                     $notExit++;
                                 }
-                                
-                                
+                                 
                             } else {
                                 $this->response_message = "No records to import.";
                             }
@@ -432,7 +633,6 @@ class ClientsController extends ApiController {
 
         $condition = array(
             array('client_id', '=', $client_id),
-            array('user_id', '=', $user_id),
             array('is_deleted', '=', '0'),
         );
 
@@ -447,7 +647,6 @@ class ClientsController extends ApiController {
 
             $updateCond=array(
                 array('client_id', '=', $client_id),
-                array('user_id', '=', $user_id),
                 array('is_deleted', '=', '0'),
             );
             $this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$param);
@@ -484,31 +683,45 @@ class ClientsController extends ApiController {
         );
 
         $fields = array();                   
-        $checkClient = $this->common_model->fetchData($this->tableObj->tableNameClient,$condition, $fields);
-        if(!empty($checkClient))
-        {
-            // Send reset password email to client //
-            $parameter =[
-                'client_id' => $client_id,
-                'time' => time()
-            ];
-            $parameter= Crypt::encrypt($parameter);
-            $forgot_password_link = url('/client/forgot-password',$parameter);
-            
-            $client_email  = $checkClient->client_email;
-            $emailData['forgotPasswordLink'] = $forgot_password_link;            
-            $emailData['toName'] = $checkClient->client_name;
-
-            $this->sendmail(13,$client_email,$emailData);
-
-            $this->response_status='1';
-			$this->response_message="New password generation link has been sent successfully.";
-
-        }
-        else
-        {
+        $checkClient = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$condition, $fields);
+        if(!empty($checkClient)){
+            $condition = array(
+                array('client_id', '=', $client_id),
+                array('is_deleted', '=', '0'),
+            );
+    
+            $selectfields = array();                   
+            $clientDetails = $this->common_model->fetchData($this->tableObj->tableNameClient,$condition, $fields);
+            if(!empty($clientDetails))
+            {
+                // Send reset password email to client //
+                $parameter =[
+                    'client_id' => $client_id,
+                    'time' => time()
+                ];
+                $parameter= Crypt::encrypt($parameter);
+                $forgot_password_link = url('/client/forgot-password',$parameter);
+                
+                $client_email  = $clientDetails->client_email;
+                $emailData['forgotPasswordLink'] = $forgot_password_link;            
+                $emailData['toName'] = $clientDetails->client_name;
+    
+                $this->sendmail(13,$client_email,$emailData);
+    
+                $this->response_status='1';
+                $this->response_message="New password generation link has been sent successfully.";
+    
+            }
+            else
+            {
+                $this->response_message = "Client details is not valid.";
+            }
+        } else {
             $this->response_message = "Client details is not valid.";
         }
+
+
+        
 
         $this->json_output($response_data);
     }
@@ -531,7 +744,6 @@ class ClientsController extends ApiController {
 
         $condition = array(
             array('client_id', '=', $client_id),
-            array('user_id', '=', $user_id),
             array('is_deleted', '=', '0'),
         );
 
@@ -547,7 +759,6 @@ class ClientsController extends ApiController {
 
                 $updateCond=array(
                     array('client_id', '=', $client_id),
-                    array('user_id', '=', $user_id),
                     array('is_deleted', '=', '0'),
                 );
                 $this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$param);
@@ -1167,7 +1378,157 @@ class ClientsController extends ApiController {
         $this->json_output($response_data);
     }
 
-    // Regenerate Password //
+
+    public function client_registration(Request $request)
+    {
+        $response_data=array();
+        // validated the parameters
+        $validator = Validator::make($request->all(), [
+            'client_name' => 'required',
+            'client_email' => 'bail|required',
+            'password' => 'bail|required',
+            'client_mobile' => 'required',
+            'client_address' => 'required',
+            //'client_timezone' => 'required'
+        ]);
+        if(!$validator->fails())
+        {
+            //validate the user details
+            
+            $table_name = $this->tableObj->tableNameClient;
+            $client_name = $request->input('client_name');
+            $client_email = $request->input('client_email');
+            $password = $request->input('password');
+            $client_mobile = $request->input('client_mobile');
+            $client_address = $request->input('client_address') ? $request->input('client_address'):"";
+            $client_timezone = $request->input('client_timezone');
+            $conditions = array(
+                array('client_email', '=', $client_email),
+            );
+            $selectFields=array();
+            $client_details = $this->common_model->fetchData($table_name,$conditions,$selectFields);
+            //print_r($client_details); die();
+            if(!empty($client_details)){
+                $this->response_message="This Email address is already exists.";
+            } else {
+                
+                $token1 = md5($client_email);
+                $token2 = md5($client_name);
+                $token = $token1.$token2;
+
+                $client_data['client_name'] = $client_name;
+                $client_data['client_email'] = $client_email;
+                $client_data['client_mobile'] = $client_mobile;
+                $client_data['client_address'] = $client_address;
+                $client_data['client_timezone'] = $client_timezone;
+
+                $client_data['password'] = md5($password);
+                $client_data['email_verification_code'] = $token;
+
+
+                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
+                if($insertdata > 0){
+                    /* Send Email */
+                    //$other_params = "?device_type=0&device_token_key=".Session::getId();
+                    //$verify_link = $this->base_url('api/emailverification/'.$token.$other_params);// need to change with website url
+                    $verify_link = $this->base_url('api/client_emailverification/'.$token);
+                    $emailData['username']=$client_email;
+                    $emailData['toName'] = $client_name;
+                    $emailData['verify_link'] = $verify_link;
+
+                    $this->sendmail(1,$client_email,$emailData);
+                    
+                    $this->response_status='1';
+                    $this->response_message = "You have registered successfully. Please verify your email address.";
+                } else {
+                    $this->response_message = "Something went wrong. Please try agian later.";
+                }
+            }
+
+        }
+        else
+        {
+            // if parameter validation checked faild
+            $errors = $validator->errors()->messages();
+            $this->response_message = $this->forErrorMessage($errors);
+        }
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+    public function client_emailverification($verify_token='')
+	{
+		$response_data=array();
+		$redirectURl = $this->base_url('thank-you');
+		if(!empty($verify_token))
+		{
+			$find_cond=array(
+				array('email_verification_code','=',$verify_token),
+				array('is_deleted','=','0'),
+				array('is_email_verified','=','0')
+			);
+
+			$user = $this->common_model->fetchData($this->tableObj->tableNameClient,$find_cond);
+			if(empty($user))
+			{
+
+				//$message = $this->message_render('email_verification_token_expired');
+				//return redirect($redirectURl)->with('message',['type'=>'error','text'=>$message]);
+				\Session::flash('error_message', "Invalid Email verification token."); 
+                return redirect('/client/login');
+			}
+			else
+			{
+				// create email validation token :: format : md5(client_email).md5(client_name)
+				$client_email = $user->client_email;
+                $client_name = $user->client_name;
+                $client_id = $user->client_id;
+				$token1 = md5($client_email);
+				$token2 = md5($client_name);
+				$token = $token1.$token2;
+				$created_on = strtotime($user->created_on);
+				// validate the token 
+				if($token!=$verify_token){
+					//$this->response_message="email_verification_token_invalid";
+					//$this->json_output();
+					//$message = $this->message_render('email_verification_token_expired');
+					//return redirect($redirectURl)->with('message',['type'=>'error','text'=>$message]);
+					\Session::flash('error_message', "Invalid Email verification token."); 
+                	return redirect('/client/login');
+				}
+				else if($created_on + (72*3600) >= time() )
+				{
+					// do the neccessary work
+					$find_cond[]=array('client_id','=',$client_id);
+					// updatedata 
+					$updateData=array(
+						'is_email_verified'=>'1',
+						'updated_on'=>$this->date_format
+					);
+					$this->common_model->update_data($this->tableObj->tableNameClient,$find_cond,$updateData);
+					//$message = $this->message_render('email_verification_success');
+					//return redirect($redirectURl)->with('message',['type'=>'success','text'=>$message]);
+					\Session::flash('success_message', "Successfully email verified."); 
+	     			return redirect('/client/login');
+				} 
+				else
+				{
+					//$message = $this->message_render('email_verification_token_expired');
+					//return redirect($redirectURl)->with('message',['type'=>'error','text'=>$message]);
+					\Session::flash('error_message', "Email verification token expired."); 
+                	return redirect('/client/login');
+				}
+			}
+		}
+		else
+		{
+			\Session::flash('error_message', "Email verification token missing."); 
+            return redirect('/client/login');
+			//return redirect($redirectURl)->with('message',['type'=>'error','text'=>"email_verification_token_missing"]);
+		}
+	}
+
+    
     public function client_appointment_list(Request $request)
     {
         $authdata = $this->website_login_checked();
@@ -1267,6 +1628,45 @@ class ClientsController extends ApiController {
         $this->response_message = "Successfully Update";
         $this->json_output($response_data);
     }
+
+    function email_template($user_id, $type)
+    {
+        $sub_condition = array(
+            array('user_id', '=', $user_id)
+        );
+        $sub_field = array();    
+        $subcription_id = $this->common_model->fetchData($this->tableObj->tableNameUserSubscription,$sub_condition, $sub_field);
+
+        $subcription_id = $subcription_id->id;
+        if($subcription_id)
+        {
+            $email_template_condition = array(
+                array('user_id', '=', $user_id),
+                array('type', '=', $type)
+            );
+            $email_template_field = array();    
+            $email_template = $this->common_model->fetchData($this->tableObj->tableNameUserEmailCustomisation,$email_template_condition, $email_template_field);
+            if(empty($email_template))
+            {
+                $email_template_condition = array(
+                    array('type', '=', $type)
+                );
+                $email_template_field = array();    
+                $email_template = $this->common_model->fetchData($this->tableObj->tableNameEmailTemplateMaster,$email_template_condition, $email_template_field);
+            }
+        }
+        else
+        {
+            $email_template_condition = array(
+                array('type', '=', $type)
+            );
+            $email_template_field = array();    
+            $email_template = $this->common_model->fetchData($this->tableObj->tableNameEmailTemplateMaster,$email_template_condition, $email_template_field);
+        }
+        
+        return $email_template;
+    }
+
 
 }
 

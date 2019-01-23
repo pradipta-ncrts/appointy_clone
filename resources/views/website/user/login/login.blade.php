@@ -116,8 +116,9 @@ $('#loginform').validate({
                 {
                     if(response.message=='complete_step_two')
                     {
-                       var url = "{{url('/registration-step2')}}";
-                       window.location.href = url; 
+                        var redirect_param = response.enc_email;
+                        var url = "{{url('/registration-step2')}}"+'/'+redirect_param;
+                        window.location.href = url; 
                     }
                     else
                     {

@@ -38,15 +38,15 @@ Squeedr
 				<hr>
 				<div class="step">
 					<a id="step1" href="javascript:void(0);" class="active">1</a>
-					<span id="titlestep1" class="active">Date & Time</span>
+					<span id="titlestep1" class="active">Client Info.</span>
 				</div>
 				<div class="step">
 					<a id="step2" href="javascript:void(0);">2</a>
-					<span id="titlestep2">Client Info.</span>
+					<span id="titlestep2">Verification</span>
 				</div>
 				<div class="step">
 					<a id="step3" href="javascript:void(0);">3</a>
-					<span id="titlestep3">Verification</span>
+					<span id="titlestep3">Date & Time</span>
 				</div>
 				<div class="step">
 					<a id="step4" href="javascript:void(0);">4</a>
@@ -57,83 +57,13 @@ Squeedr
 
 			<div>
 			<form class="form-horizontal" name="application_booking_form" id="application_booking_form" action="{{url('api/reschedule_appointment_process')}}" method="post">
-			<input type="hidden" name="appointment_id" id="appointment_id" value="{{$appointment_details->appointment_id}}">
-			<input type="hidden" name="client_id" id="client_id" value="{{$appointment_details->client_id}}">
-			<input type="hidden" name="client_email" id="client_email" value="{{$appointment_details->client_email}}">
-			<input type="hidden" name="booking_date" id="booking_date" value="">
-			<input type="hidden" name="booking_time" id="booking_time" value="">
+				<input type="hidden" name="appointment_id" id="appointment_id" value="{{$appointment_details->appointment_id}}">
+				<input type="hidden" name="client_id" id="client_id" value="{{$appointment_details->client_id}}">
+				<input type="hidden" name="client_email" id="client_email" value="{{$appointment_details->client_email}}">
+				<input type="hidden" name="booking_date" id="booking_date" value="">
+				<input type="hidden" name="booking_time" id="booking_time" value="">
 
 				<div class="container-fluid break20px" id="section1">
-					<div class="row ">
-						<div class="col-md-12 booking-form ">
-							<div class="dp-fields  cust-box">
-								<div class="col-sm-6">
-								<div class="form-group  color-b" >
-									<select name="category_id" id="category_id">
-										<option>Select Category </option>
-										<?php if(!empty($category_list)) { foreach($category_list as $category) { ?>
-										<option <?php if($category->category_id == $appointment_details->category_id) { ?> selected="" <?php } ?> value="{{$category->category_id}}">{{$category->cat}}</option>
-										<?php } } ?>
-									</select>
-									<div class="clearfix"></div>
-								</div>
-								<div class="form-group  color-b" >
-									<select name="service_id" id="service_id">
-										<option>Select service</option>
-										<?php if(!empty($service_list)) { foreach($service_list as $service) { ?>
-										<option <?php if($service->service_id == $appointment_details->service_id) { ?> selected="" <?php } ?> value="{{$service->service_id}}">{{$service->service_name}}</option>
-										<?php } } ?>
-									</select>
-									<div class="clearfix"></div>
-								</div>
-								<div class="form-group  color-b" >
-									<select name="staff_id" id="staff_id">
-										<option>Select Staff </option>
-										<?php if(!empty($staff_list)) { foreach($staff_list as $staff) { ?>
-										<option <?php if($staff->staff_id == $appointment_details->staff_id) { ?> selected="" <?php } ?> value="{{$staff->staff_id}}">{{$staff->full_name}}</option>
-										<?php } } ?>
-										
-									</select>
-									<div class="clearfix"></div>
-								</div>
-								<div class="clearfix"></div>
-								</div>
-								<div class="col-sm-6">
-								<div class="next-available">
-									<a>Appointment On</a>
-									<h3>{{$appointment_details->appoinment_date}} {{date('h:i A',strtotime($appointment_details->start_time))}}</h3>
-								</div>
-								</div>
-								<div class="clearfix"></div>
-							</div>
-							<div class="book-cal col-sm-12 cust-box">
-								<p >Select appointment date
-									<span id="current_month">May 2018</span>
-								</p>
-								<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
-									<div class="carousel-inner">
-									<div class="item active">
-										<table class="day">
-											
-										</table>
-									</div>
-
-									</div>
-									<!-- Left and right controls -->
-									<a class="left carousel-control" href="#myCarousel" onclick="get_availibility_calender(2)" data-slide="prev">
-									<img src="{{asset('public/assets/website/images/arrow-left.png')}}">
-									</a>
-									<a class="right carousel-control" href="#myCarousel" onclick="get_availibility_calender()" data-slide="next">
-									<img src="{{asset('public/assets/website/images/arrow-right.png')}}">
-									</a>
-								</div>
-								<a href="#" class="view-more-schedule">View More Schedules</a>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="container-fluid cust-box pad5per" id="section2" style="display:none;">
 					<div class="row ">
 						<!--<table class="radio-booking">
 							<tr>
@@ -201,7 +131,7 @@ Squeedr
 					</div>
 				</div>
 
-				<div class="container-fluid body-sec" id="section3" style="display:none;">
+				<div class="container-fluid cust-box pad5per" id="section2" style="display:none;">
 					<div class="row">
 						<div class="col-md-12 booking-form verify pad5per" id="verification_section">
 							<h3> Enter here the code, sent on your email address</h3>
@@ -215,6 +145,76 @@ Squeedr
 							<h2> Verification code has been successfully verified.</h2>
 						</div>
 						<div class="clearfix">&nbsp;</div>
+					</div>
+				</div>
+
+				<div class="container-fluid body-sec" id="section3" style="display:none;">
+					<div class="row ">
+						<div class="col-md-12 booking-form ">
+							<div class="dp-fields  cust-box">
+								<div class="col-sm-6">
+								<div class="form-group  color-b" >
+									<select name="category_id" id="category_id">
+										<option>Select Category </option>
+										<?php if(!empty($category_list)) { foreach($category_list as $category) { ?>
+										<option <?php if($category->category_id == $appointment_details->category_id) { ?> selected="" <?php } ?> value="{{$category->category_id}}">{{$category->cat}}</option>
+										<?php } } ?>
+									</select>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group  color-b" >
+									<select name="service_id" id="service_id">
+										<option>Select service</option>
+										<?php if(!empty($service_list)) { foreach($service_list as $service) { ?>
+										<option <?php if($service->service_id == $appointment_details->service_id) { ?> selected="" <?php } ?> value="{{$service->service_id}}">{{$service->service_name}}</option>
+										<?php } } ?>
+									</select>
+									<div class="clearfix"></div>
+								</div>
+								<div class="form-group  color-b" >
+									<select name="staff_id" id="staff_id">
+										<option>Select Staff </option>
+										<?php if(!empty($staff_list)) { foreach($staff_list as $staff) { ?>
+										<option <?php if($staff->staff_id == $appointment_details->staff_id) { ?> selected="" <?php } ?> value="{{$staff->staff_id}}">{{$staff->full_name}}</option>
+										<?php } } ?>
+										
+									</select>
+									<div class="clearfix"></div>
+								</div>
+								<div class="clearfix"></div>
+								</div>
+								<div class="col-sm-6">
+								<div class="next-available">
+									<a>Appointment On</a>
+									<h3>{{$appointment_details->appoinment_date}} {{date('h:i A',strtotime($appointment_details->start_time))}}</h3>
+								</div>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							<div class="book-cal col-sm-12 cust-box">
+								<p >Select appointment date
+									<span id="current_month">May 2018</span>
+								</p>
+								<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+									<div class="carousel-inner">
+									<div class="item active">
+										<table class="day">
+											
+										</table>
+									</div>
+
+									</div>
+									<!-- Left and right controls -->
+									<a class="left carousel-control" href="#myCarousel" onclick="get_availibility_calender(2)" data-slide="prev">
+									<img src="{{asset('public/assets/website/images/arrow-left.png')}}">
+									</a>
+									<a class="right carousel-control" href="#myCarousel" onclick="get_availibility_calender()" data-slide="next">
+									<img src="{{asset('public/assets/website/images/arrow-right.png')}}">
+									</a>
+								</div>
+								<a href="#" class="view-more-schedule">View More Schedules</a>
+							</div>
+						</div>
 					</div>
 				</div>
 

@@ -523,7 +523,7 @@
                      </div>
                   </div>
 
-                  <div class="row">
+                  <?php /* <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
                            <div class="input-group">
@@ -547,7 +547,8 @@
                            </div>
                         </div>
                      </div>
-                  </div>
+                  </div> */ ?>
+
                   <!-- <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
@@ -1017,6 +1018,7 @@
             </div>
          </div>
       </div>
+
       <div class="modal fade" id="myModalnew-schedule" role="dialog">
          <div class="modal-dialog modal-md">
             <div class="modal-content new-modalcustm">
@@ -1051,6 +1053,7 @@
             </div>
          </div>
       </div>
+
       <div class="modal fade" id="myModallist-time" role="dialog">
          <div class="modal-dialog modal-md">
             <div class="modal-content new-modalcustm">
@@ -1139,6 +1142,7 @@
             </div>
          </div>
       </div>
+
       <!--Block date modal for user start-->
       <div class="modal fade" id="myModalblockdate" role="dialog">
          <div class="modal-dialog add-pop">
@@ -1265,6 +1269,7 @@
             </div>
          </div>
       </div>
+      
       <!-- Add Appoitment --> 
       <div class="modal fade" id="myModaladdappoinment" role="dialog">
          <div class="modal-dialog add-pop">

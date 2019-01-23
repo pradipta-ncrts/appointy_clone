@@ -443,11 +443,20 @@ class UsersController extends ApiController {
 						array('is_deleted','=','0'),
 						array('is_blocked','=','0'),
 					);
-			
-		$selectFields=array('client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','is_blocked','created_on');
-		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameClient,$findCond,$selectFields);
-			
-		$exportData[] = ['Client Name', 'Email','Mobile','Home Phone','Work Phone','Address','Timezone','Note','DOB','Is Login Allowed','Is Email Verified','Is Blocked','Created On'];
+		$client_select_field = array('client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified');
+		$joins = array(
+					array(
+					'join_table'=>$this->tableObj->tableNameClient,
+					'join_with'=>$this->tableObj->tableNameUserClient,
+					'join_type'=>'left',
+					'join_on'=>array('client_id','=','client_id'),
+					'join_on_more'=>array('is_deleted','=','0'),
+					'select_fields' => $client_select_field,
+				)
+			);
+		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserClient,$findCond,$selectFields=array('is_blocked','created_on'),$joins);
+						
+		$exportData[] = ['Client Name','Email','Mobile','Home Phone','Work Phone','Address','Timezone','Note','DOB','Is Login Allowed','Is Email Verified','Is Blocked','Created On'];
 		if(!empty($client_list)){
 			//$exportData = array('Product Name','Product Description','Regular Price','Sale Price','Product Code','Floor Location','Product Stock','Product Lot','Vendor Code','Second Language Value','Third Language Value','Tags');
 			foreach($client_list as $client){

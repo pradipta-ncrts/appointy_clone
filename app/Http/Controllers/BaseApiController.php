@@ -680,16 +680,32 @@ class BaseApiController extends BaseController
         $data = array();
         $obj = new Request();
         $ci = new BaseApiController($obj);
-        $table = $ci->tableObj->tableNameClient;
         $user_id = $_COOKIE['sqd_user_no'];
 
-        $conditions = array(
+        /*$conditions = array(
             array('is_blocked', '=', 0),
             array('is_deleted', '=', 0),
             array('user_id', '=', $user_id)
         );
+        $client_list = $ci->common_model->fetchDatas($table, $conditions);*/
 
-        $client_list = $ci->common_model->fetchDatas($table, $conditions);
+        $findCond=array(
+            array('user_id','=',$user_id),
+			array('is_deleted','=','0'),
+			array('is_blocked','=','0'),
+		);
+        $client_select_field = array('client_id','client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','client_profile_picture','email_verification_code');
+		$joins = array(
+                    array(
+                    'join_table'=>$ci->tableObj->tableNameClient,
+                    'join_with'=>$ci->tableObj->tableNameUserClient,
+                    'join_type'=>'left',
+                    'join_on'=>array('client_id','=','client_id'),
+                    'join_on_more'=>array('is_deleted','=','0'),
+                    'select_fields' => $client_select_field,
+                )
+            );
+		$client_list = $ci->common_model->fetchDatas($ci->tableObj->tableNameUserClient,$findCond,$selectFields=array('user_client_id','created_on'),$joins);
         $data = array('client_list'=>$client_list);
         //echo '<pre>'; print_r($data); exit;
         return $data;
