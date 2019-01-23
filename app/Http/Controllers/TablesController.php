@@ -86,6 +86,10 @@ class TablesController {
         $this->tableNameNotificationUpdates = config('constants.tables.notification_updates');
 
         $this->tableNameUserClient = config('constants.tables.user_client');
+        
+        $this->tableNameEmailTemplateMaster = config('constants.tables.email_template_master');
+
+        
 
 
         

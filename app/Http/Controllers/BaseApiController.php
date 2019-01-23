@@ -390,13 +390,10 @@ class BaseApiController extends BaseController
             $is_email_send=true;
             switch($mailType){
                 case 1:// email verification link 
-                    //$mail_subject = trans('message.mail.subject_email_verify');
                     $mail_subject = "Email verification link";
-                    $mail_body="Your verification link is : ".$emailData['verify_link'];
-                    $verify_link=$emailData['verify_link'];
-                    //$mailTemplateName="emails/general";
-                    $emailData['mailBody']=$mail_body;
-                    $emailData['verifyLink']=$verify_link;
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName = "emails/new_registration";
+                    //$emailData['mailBody']=$mail_body;
                 break;
                 case 2: // forgot password
                     $mail_subject = trans('message.mail.reset_password');
@@ -423,14 +420,17 @@ class BaseApiController extends BaseController
                     $emailData['mailBody']=$mail_body;
                 break;
                 case 6: // client Email Verification 
-                    $mail_subject = "Client Successfully Added.";
-                    $mail_body = "Dear ".$emailData['toName'].", <br>Here is the Login Credentails of your account. Username : ".$emailData['username']." Password : ".$emailData['password'];
+                    //$mail_subject = "Client Successfully Added.";
+                    //$mail_body = "Dear ".$emailData['toName'].", <br>Here is the Login Credentails of your account. Username : ".$emailData['username']." Password : ".$emailData['password'];
                     //$mailTemplateName="emails/general";
-                    $emailData['mailBody']=$mail_body;
+                    //$emailData['mailBody']=$mail_body;
+                    $mail_subject = $emailData['subject'];
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName="emails/new_user_registration";
                 break;
                 case 7: // appontment booking mail for client 
                     //$mail_subject = "An appointment has been successfully booked.";
-					$mail_subject = $emailData['email_subject'];
+					$mail_subject = $emailData['subject'];
                     //$mail_body = $emailData['email_data'];
                     $mailTemplateName="emails/appointment_booking_client";
                     //$emailData['mailBody']=$mail_body;
@@ -438,9 +438,11 @@ class BaseApiController extends BaseController
                 case 8: // appontment booking mail for stuff 
                     //$mail_subject = "An appointment has been successfully booked.";
 					$mail_subject = $emailData['email_subject'];
-                    $mail_body = $emailData['email_data'];
+                    //$mail_body = $emailData['email_data'];
                     //$mailTemplateName="emails/appointment_booking_staff";
-                    $emailData['mailBody']=$mail_body;
+                    //$emailData['mailBody']=$mail_body;
+                    $mailTemplateName="emails/appointment_booking_staff";
+
                 break;
                 case 9: // appontment booking mail for stuff 
                     $mail_subject = "Verification code for appointment booking.";
@@ -472,6 +474,28 @@ class BaseApiController extends BaseController
                     $mail_subject = "Successfully Subscribe";
                     $mail_body="Dear ".$emailData['name'].", You have successfully subscribe ".$emailData['plan_name']." for ".$emailData['duration_in_day']." and payment transuction ID : ".$emailData['transuction_id'];
                     $emailData['mailBody']=$mail_body;
+                break;
+                //cencel mail for client & staff
+                case 15: // User subcription mail //
+                    $mail_subject = $emailData['subject'];
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName="emails/appointment_cancilation_client";
+                break;
+                case 16: // User subcription mail //
+                    $mail_subject = $emailData['subject'];
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName="emails/appointment_cancilation_staff";
+                break;
+                //reshedule mail for client & staff
+                case 17: // User subcription mail //
+                    $mail_subject = $emailData['subject'];
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName="emails/appointment_reshedule_client";
+                break;
+                case 18: // User subcription mail //
+                    $mail_subject = $emailData['subject'];
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName="emails/appointment_reshedule_staff";
                 break;
 
                 

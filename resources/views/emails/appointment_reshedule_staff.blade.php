@@ -10,13 +10,13 @@
          </tr>
       </table>
    </div>
-   <div style="padding:20px; background: #FFF; border-radius:0 0 8px 8px ;">
-      <h2 style="margin:0; padding:0; font-size:20px; font-weight: normal">With : <?php echo ucwords($client_name);?></h2>
-      <span style="color:#888;font-size:18px;">What : <?php echo ucwords($service_name);?></span>
-      <!-- <span style="color:#888;font-size:14px;"><?php echo $service_cost;?></span> -->
-      <p style="font-size:15px; margin-bottom: 20px;">When : <?php echo $service_start_time;?> </p>
-      <p style="font-size:15px; margin-bottom: 20px;">Where : <?php echo $service_location;?> </p>
-   </div>
+   Hi <?=$staff_name;?>,<br><br>
+    Your appointment for <?=$service_name;?> with <?=$client_name;?> has been rescheduled due to ‘<?=$note;?>’. 
+    <br><br>   
+    You are now meeting on <?=$sheduled_time;?> at the <?=$location;?>.  
+    <br><br>                        
+    <br><br> 
+    <br><br><br>
    <div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
       <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
       <p style="text-align:center">For even easier management of your appointments.</p>

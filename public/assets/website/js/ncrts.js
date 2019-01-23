@@ -374,35 +374,40 @@ $(".service-list").click(function (e) {
         });
 
 
-$(".email_cutomisation_form").submit(function(e) {
-    // Getting the form ID
-    e.preventDefault();
-    var  formID = $(this).attr('id');
-    var formDetails = $('#'+formID);
-    data = formDetails.serializeArray();
-    data = addCommonParams(data);
+    $(".email_cutomisation_form").submit(function(e) {
+        // Getting the form ID
+        e.preventDefault();
 
-    var action = formDetails.attr('action');
-
-    $.ajax({
-      type: "POST",
-      url: action,
-      data: data,
-      dataType: "json",
-      beforeSend: function() {
-          $('.animationload').show();
-      },
-      success: function(response) {
-          console.log(response); //Success//
-          if (response.response_status == 1) {
-            $('.animationload').hide();
-            swal('Success!', response.response_message, 'success');
-          } else {
-            swal('Sorry!', response.response_message, 'error');
-          }
+        for (instance in CKEDITOR.instances) {
+            CKEDITOR.instances[instance].updateElement();
         }
+
+        var  formID = $(this).attr('id');
+        var formDetails = $('#'+formID);
+        data = formDetails.serializeArray();
+        data = addCommonParams(data);
+
+        var action = formDetails.attr('action');
+
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: data,
+          dataType: "json",
+          beforeSend: function() {
+              $('.animationload').show();
+          },
+          success: function(response) {
+              console.log(response); //Success//
+              if (response.response_status == 1) {
+                $('.animationload').hide();
+                swal('Success!', response.response_message, 'success');
+              } else {
+                swal('Sorry!', response.response_message, 'error');
+              }
+            }
+        });
     });
-});
 
 //================Submit AJAX request for add new appoinment ==================
  $('#add_appointmentm_form').validate({

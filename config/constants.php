@@ -65,6 +65,8 @@ return [
         'notification_updates' => 'notification_updates',
 
         'user_client' => 'user_client',
+        
+        'email_template_master' => 'email_template_master',
 
     ],
 

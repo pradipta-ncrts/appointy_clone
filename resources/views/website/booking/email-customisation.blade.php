@@ -176,15 +176,15 @@ Squeedr
                         This is automatically triggered email will be sent to alert customers if an admin or staff member reschedules their appointments
                      </p>
                   </div>
-                  <form action="{{ url('api/email_customisation_update') }}" method="post" id="form5" class="email_cutomisation_form">
+                  <form action="{{ url('api/email_customisation_update') }}" method="post" id="5" class="email_cutomisation_form">
                      <input type="hidden" name="type" value="5">
                      <div id="collapse5" class="panel-collapse collapse booking-form1 ">
                         <div class="form-group col-md-12">
-                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject5) && $subject5 ? $subject5: ''?>">
+                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject5) && $subject5 ? $subject5: ''?>" id="subject5">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area5" name="message"><?=isset($message5) && $message5 ? $message5: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="message5" name="message"><?=isset($message5) && $message5 ? $message5: ''?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -307,9 +307,26 @@ Squeedr
 <script src="https://cdn.ckeditor.com/4.11.2/standard/ckeditor.js"></script>
 <script>
    CKEDITOR.replace( 'area1', {
-        height: 400
+        height: 400,
     } );
 </script> 
+<script type="text/javascript">
+CKEDITOR.editorConfig = function( config ) {
+   config.toolbar = [
+      { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+      { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl' ] },
+      '/',
+      { name: 'document', groups: [ 'mode' ], items: [ 'Source' ] },
+      { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+      { name: 'editing', groups: [ 'find', 'selection' ], items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+      '/',
+      { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+      { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+   ];
+   config.allowedContent ='*(*)';
+};
+</script>
+
 @endsection
 
 <!-- <style type="text/css">
