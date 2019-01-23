@@ -73,11 +73,11 @@ Squeedr
                         <input type="hidden" name="type" value="1">
                         <div id="collapse1" class="panel-collapse collapse booking-form1 ">
                            <div class="form-group col-md-12">
-                              <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject1) && $subject1 ? $subject1: ''?>">
+                              <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject1) && $subject1 ? $subject1: $master_template_data[0]->subject;?>">
                               <div class="clearfix"></div>
                            </div>
                            <div class="padleft30">
-                              <textarea style="width: 100%; height: 200px;" id="area1" name="message"><?=isset($message1) && $message1 ? $message1: ''?></textarea>
+                              <textarea style="width: 100%; height: 200px;" id="area1" name="message"><?=isset($message1) && $message1 ? $message1: $master_template_data[0]->message;?></textarea>
                            </div>
                            <input class="btn btn-primary" type="submit" name="submit" value="save">
                         </div>
@@ -127,11 +127,11 @@ Squeedr
                         <input type="hidden" name="type" value="3">
                      <div id="collapse3" class="panel-collapse collapse booking-form1 ">
                         <div class="form-group col-md-12">
-                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject3) && $subject3 ? $subject3: ''?>">
+                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject3) && $subject3 ? $subject3: $master_template_data[2]->subject;?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area3" name="message"><?=isset($message3) && $message3 ? $message3: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area3" name="message"><?=isset($message3) && $message3 ? $message3: $master_template_data[2]->message;?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -180,11 +180,11 @@ Squeedr
                      <input type="hidden" name="type" value="5">
                      <div id="collapse5" class="panel-collapse collapse booking-form1 ">
                         <div class="form-group col-md-12">
-                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject5) && $subject5 ? $subject5: ''?>" id="subject5">
+                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject5) && $subject5 ? $subject5: $master_template_data[4]->subject;?>" id="subject5">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="message5" name="message"><?=isset($message5) && $message5 ? $message5: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="message5" name="message"><?=isset($message5) && $message5 ? $message5: $master_template_data[4]->message;?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -206,11 +206,11 @@ Squeedr
                      <input type="hidden" name="type" value="6">
                      <div id="collapse6" class="panel-collapse collapse booking-form1 ">
                         <div class="form-group col-md-12">
-                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject6) && $subject6 ? $subject6: ''?>">
+                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject6) && $subject6 ? $subject6: $master_template_data[5]->subject; ?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea class="ckeditor" style="width: 100%; height: 200px;" id="area6" name="message"><?=isset($message6) && $message6 ? $message6: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 100%; height: 200px;" id="area6" name="message"><?=isset($message6) && $message6 ? $message6: $master_template_data[5]->message;?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -233,11 +233,11 @@ Squeedr
                      <input type="hidden" name="type" value="7">
                      <div id="collapse7" class="panel-collapse collapse booking-form1 ">
                         <div class="form-group col-md-12">
-                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject7) && $subject7 ? $subject7: ''?>">
+                           <input type="text" class="form-control" placeholder="Subject" name="subject" value="<?=isset($subject7) && $subject7 ? $subject7: $master_template_data[6]->subject;?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area7" name="message"><?=isset($message7) && $message7 ? $message7: ''?></textarea>
+                           <textarea class="ckeditor" style="width:100%; height: 200px;" id="area7" name="message"><?=isset($message7) && $message7 ? $message7: $master_template_data[6]->message;?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
@@ -286,11 +286,11 @@ Squeedr
                      <input type="hidden" name="type" value="9">
                      <div id="collapse9" class="panel-collapse collapse booking-form1 ">
                         <div class="form-group col-md-12">
-                           <input type="text" class="form-control" placeholder="Subject" value="<?=isset($subject9) && $subject9 ? $subject9: ''?>">
+                           <input type="text" class="form-control" placeholder="Subject" value="<?=isset($subject9) && $subject9 ? $subject9: $master_template_data[8]->subject;?>">
                            <div class="clearfix"></div>
                         </div>
                         <div class="padleft30">
-                           <textarea class="ckeditor" style="width: 100%; height: 200px;" id="area9"><?=isset($message9) && $message9 ? $message9: ''?></textarea>
+                           <textarea class="ckeditor" style="width: 100%; height: 200px;" id="area9"><?=isset($message9) && $message9 ? $message9: $master_template_data[8]->message;?></textarea>
                         </div>
                         <input class="btn btn-primary" type="submit" name="submit" value="save">
                      </div>
