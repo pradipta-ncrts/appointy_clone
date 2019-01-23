@@ -488,20 +488,42 @@ class UsersController extends ApiController {
 				);
 
 				$user_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameUser, $param);
-	            if($user_id)
+	            if($user_id > 0)
 	            {
-	            	//if profession new update created by
-	            	$condition = array(
-			            array('profession_id', '=', $profession),
-			            array('is_blocked', '=', '1'),
-			        );
-			        
-			        $update_data['created_by'] = $user_id;
+					// Registered as Stafff //
+					$token1 = md5($email);
+					$token2 = md5($username);
+					$token = $token1.$token2;
 
-			        $update = $this->common_model->update_data($this->tableObj->tableNameProfession,$condition,$update_data);
+					$staff_data['user_id'] = $user_id;
+					$staff_data['username'] = $username;
+					$staff_data['full_name'] = $full_name;
+					$staff_data['email'] = $email;
+					$staff_data['mobile'] = $mobile;
+					$staff_data['password'] = md5($password);
+					$staff_data['email_verification_code'] = $token;
+					$staff_data['is_email_verified'] = 1;
+					$staff_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
+					if($staff_id > 0){
 
-			        $this->response_message = $request_url;
-			        $this->response_status = '1';
+						//if profession new update created by
+						$condition = array(
+							array('profession_id', '=', $profession),
+							array('is_blocked', '=', '1'),
+						);
+						
+						$update_data['created_by'] = $user_id;
+	
+						$update = $this->common_model->update_data($this->tableObj->tableNameProfession,$condition,$update_data);
+	
+						$this->response_message = $request_url;
+						$this->response_status = '1';
+
+					} else {
+						$this->response_message="Somthing wrong.Try again later.";
+						$this->response_status='0';
+					}
+
 	            }
 	            else
 	            {

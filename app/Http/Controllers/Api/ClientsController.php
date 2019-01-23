@@ -1635,11 +1635,11 @@ class ClientsController extends ApiController {
             array('user_id', '=', $user_id)
         );
         $sub_field = array();    
-        $subcription_id = $this->common_model->fetchData($this->tableObj->tableNameUserSubscription,$sub_condition, $sub_field);
+        $subcription = $this->common_model->fetchData($this->tableObj->tableNameUserSubscription,$sub_condition, $sub_field);
 
-        $subcription_id = $subcription_id->id;
-        if($subcription_id)
+        if(!empty($subcription))
         {
+            //$subcription_id = $subcription->id;
             $email_template_condition = array(
                 array('user_id', '=', $user_id),
                 array('type', '=', $type)

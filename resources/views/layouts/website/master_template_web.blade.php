@@ -615,7 +615,7 @@
                   <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
-                           <input name="client_send_email" id="client_send_email" type="checkbox" value=""> Send Email confirmation
+                           <input name="client_send_email" id="client_send_email" type="checkbox" value="1"> Send Email confirmation
                         </div>
                      </div>
                   </div>

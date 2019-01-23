@@ -56,7 +56,7 @@ Squeedr
                   
                     <div>
                         <h3><?php echo ucwords($staff->full_name);?></h3>
-                        <small>30min</small>
+                        <small><?php echo $staff->email;?></small>
                     </div>
                </a>
             <?php 
@@ -375,8 +375,8 @@ Squeedr
                                     <li><a data-toggle="tab" href="#tabnewadd1" aria-expanded="true">Time of Date</a></li>
                                     <!--<li><a data-toggle="tab" href="#tabnewadd2" aria-expanded="true">Calender</a></li>-->
                                     <li class="pull-right"> 
-                                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalblockdate">Block Date</button>
-                                        <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModalblocktime">Block Time</button>
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModalblockdate">Block Date</button>
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModalblocktime">Block Time</button>
                                     </li>
                                 </ul>
                             
@@ -411,7 +411,7 @@ Squeedr
                                     </ul>
                                 </div>
                                 <div class="pull-right">
-                                    <button type="button" class="btn btn-primary btn-xs add-area-code">Add</button>
+                                    <button type="button" class="btn btn-primary btn-sm add-area-code">Add</button>
                                 </div>
                                 <p class="tabnewp">Area codes are defined geographical boundaries within a location. Staff can be assigned to these area codes. Customers will only be shown staff members in the area code they select</p>
                                 <div class="staff-detailtab-bx">
