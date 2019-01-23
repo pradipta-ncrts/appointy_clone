@@ -52,6 +52,8 @@ class BookingsController extends ApiController {
             $data['subject'] = $subject;
             $data['message'] = $message;
 
+            //print_r($data); die();
+
             $insert = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserEmailCustomisation,$data);
             if($insert)
             {
@@ -74,6 +76,8 @@ class BookingsController extends ApiController {
             $data['type'] = $type;
             $data['subject'] = $subject;
             $data['message'] = $message;
+
+            //print_r($data); die();
 
             $update = $this->common_model->update_data($this->tableObj->tableNameUserEmailCustomisation,$updateCond,$data);
 
@@ -188,7 +192,7 @@ class BookingsController extends ApiController {
             $service_condition = array(
                 array('service_id', '=', $appoinment_service)
             );
-            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration');    
+            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location');    
             $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
 
             //calculate end time
@@ -302,35 +306,71 @@ class BookingsController extends ApiController {
                                         $service_name = $service_details->service_name;
                                         $service_cost = $service_details->cost;
                                         $service_duration = $service_details->duration;
+                                        $service_location = $service_details->location;
                                         //$service_currency = $service_details->duration;
                                         $service_start_time = date('l d, Y h:i A',$strto_start_time);
-            
-                                        $client_email_data['client_email'] = $client_email;
-                                        $client_email_data['client_name'] = $client_name;
-                                        $client_email_data['staff_email'] = $staff_email;
-                                        $client_email_data['staff_name'] = $staff_name;
-                                        $client_email_data['service_name'] = $service_name;
-                                        $client_email_data['service_cost'] = $service_cost;
-                                        $client_email_data['service_duration'] = $service_duration;
-                                        $client_email_data['reschedule_url'] = $reschedule_url;
-                                        $client_email_data['cancel_url'] = $cancel_url;
-                                        $client_email_data['service_start_time'] = $service_start_time;
-                                        //$client_email_data['service_currency'] = $service_currency;
-                                        //$client_email_data['service_start_time'] = $service_start_time;
-            
-                                        $client_email_data['email_subject'] = "Booking confirmed: ".$service_name." with ".$staff_name." on ".$service_start_time;
-                                        /* echo "<pre>";
-                                        print_r($client_email_data); die();*/
-                                        $this->sendmail(7,$client_email,$client_email_data);
+
+                                        //check user subscription
+                                        $email_template = $this->email_template($user_id,$type = 5);
+
+                                        $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                                           <table width="100%">
+                                              <tr>
+                                                 <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                                                 <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                                              </tr>
+                                           </table>
+                                        </div>';
+                                        $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                                           <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                                           <p style="text-align:center">For even easier management of your appointments.</p>
+                                           <div style="text-align:center;">
+                                              <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                                              <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                                           </div>
+                                        </div>
+                                        <div style="text-align:center">
+                                           <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                                           <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                                           <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                                           <br><br>
+                                           <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                                           <p>Copyright &copy; '.date('Y').'</p>
+                                        </div>';
+
+                                        $mail_body = $email_template->message;
+                                        $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                                        $mail_body = str_replace('{client_name}', $client_email, $mail_body);
+                                        $mail_body = str_replace('{service_name}', $service_name, $mail_body);
+                                        $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
+                                        $mail_body = str_replace('{booking_time}', $service_start_time, $mail_body);
+                                        $mail_body = str_replace('{location}', $service_location, $mail_body);
+                                        $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
+                                        $mail_body = str_replace('{reshedule_url}', $reschedule_url, $mail_body);
+                                        $mail_body = str_replace('{cancel_url}', $cancel_url, $mail_body);
+                                        $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+
+                                        $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Booking Confirm';
+                                        $emailData['content'] = $mail_body;
+
+                                        $this->sendmail(7,$client_email,$emailData);
             
             
                                         //send mail to stuff
-                                        $stuff_email = $stuff_details->email;
-                                        $stuff_name = $stuff_details->full_name;
-                                        $stuff_email_data['email_subject'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
-                                        
-                                        $stuff_email_data['email_data'] = "Booked: ".$service_name." with ".$client_name." on ".$service_start_time;
-                                        $this->sendmail(8,$staff_email,$stuff_email_data);
+
+                                        $stuff_email_data['client_name'] = $client_name;
+                                        $stuff_email_data['staff_email'] = $staff_email;
+                                        $stuff_email_data['staff_name'] = $staff_name;
+                                        $stuff_email_data['service_name'] = $service_name;
+                                        $stuff_email_data['service_cost'] = $service_cost;
+                                        $stuff_email_data['service_duration'] = $service_duration;
+                                        $stuff_email_data['service_location'] = $service_location;
+                                        $stuff_email_data['reschedule_url'] = $reschedule_url;
+                                        $stuff_email_data['cancel_url'] = $cancel_url;
+                                        $stuff_email_data['service_start_time'] = $service_start_time;
+                                       $stuff_email_data['email_subject'] = "Booking Confirm";
+
+                                       $this->sendmail(8,$staff_email,$stuff_email_data);
             
                                     }
             
@@ -675,6 +715,126 @@ class BookingsController extends ApiController {
         // Event Viewer //
         $this->add_user_event_viewer($user_no,$type=6);
 
+        //appintment details
+        $appoinment_condition = array(
+            array('user_id', '=', $user_id),
+            array('appointment_id', '=', $appoinment_id)
+        );
+
+        $appoinment_fields = array();
+
+        $client_fields = array('client_name','client_email','client_profile_picture');
+
+        $service_fields = array('service_name','cost','duration');
+
+        $stuff_fields = array('full_name','email');
+
+        //$currency_field = array('currency');
+
+        $joins = array(
+                    array(
+                    'join_table'=>$this->tableObj->tableNameClient,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('client_id','=','client_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $client_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameStaff,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('staff_id','=','staff_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $stuff_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableUserService,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('service_id','=','service_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $service_fields,
+                ),
+                /*array(
+                    'join_table'=>$this->tableObj->tableNameCurrency,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableUserService,
+                    'join_type'=>'left',
+                    'join_on'=>array('currency_id','=','currency_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $currency_field,
+                ),*/
+        );
+        
+        $appoinment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+
+
+        $email_template = $this->email_template($user_id,$type = 3);
+
+        $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+           <table width="100%">
+              <tr>
+                 <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                 <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+              </tr>
+           </table>
+        </div>';
+        $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+           <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+           <p style="text-align:center">For even easier management of your appointments.</p>
+           <div style="text-align:center;">
+              <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+              <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+           </div>
+        </div>
+        <div style="text-align:center">
+           <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+           <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+           <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+           <br><br>
+           <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+           <p>Copyright &copy; '.date('Y').'</p>
+        </div>';
+
+        $client_name = $appoinment_details->client_name;
+        $client_email = $appoinment_details->client_email;
+        $service_name = $appoinment_details->service_name;
+        $staff_name = $appoinment_details->full_name;
+        $staff_email = $appoinment_details->email;
+        $service_start_time = date('l d, Y h:i A',$appoinment_details->strto_start_time);
+
+        $mail_body = $email_template->message;
+
+        $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+        $mail_body = str_replace('{client_name}', $client_name, $mail_body);
+        $mail_body = str_replace('{service_name}', $service_name, $mail_body);
+        $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
+        $mail_body = str_replace('{appointment_time}', $service_start_time, $mail_body);
+        $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
+        $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+
+        $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Appointment Cancellation';
+        $emailData['content'] = $mail_body;
+
+        $this->sendmail(15,$client_email,$emailData);
+
+        //send mail to stuff
+        $stuff_email_data['client_name'] = $client_name;
+        $stuff_email_data['staff_name'] = $staff_name;
+        $stuff_email_data['service_name'] = $service_name;
+        $stuff_email_data['sheduled_time'] = $service_start_time;
+        $stuff_email_data['subject'] = "Appointment Cancellation";
+        $this->sendmail(16, $staff_email, $stuff_email_data);
+
+
         $this->response_status='1';
         $this->response_message="Appointment has been cancelled successfully.";
 
@@ -805,9 +965,136 @@ class BookingsController extends ApiController {
 
                 $user_no = $user_id;
                 $this->add_user_event_viewer($user_no,$type=5,$reshedule_staff_id);
+
+                //appintment details & send mail to client and stuff
+                $appoinment_condition = array(
+                    array('user_id', '=', $user_id),
+                    array('appointment_id', '=', $reshedule_appointment_id)
+                );
+
+                $appoinment_fields = array();
+
+                $client_fields = array('client_name','client_email','client_profile_picture');
+
+                $service_fields = array('service_name','cost','duration','location');
+
+                $stuff_fields = array('full_name','email');
+
+                //$currency_field = array('currency');
+
+                $joins = array(
+                            array(
+                            'join_table'=>$this->tableObj->tableNameClient,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableNameAppointment,
+                            'join_type'=>'left',
+                            'join_on'=>array('client_id','=','client_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                            'select_fields' => $client_fields,
+                        ),
+                        array(
+                            'join_table'=>$this->tableObj->tableNameStaff,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableNameAppointment,
+                            'join_type'=>'left',
+                            'join_on'=>array('staff_id','=','staff_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                            'select_fields' => $stuff_fields,
+                        ),
+                        array(
+                            'join_table'=>$this->tableObj->tableUserService,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableNameAppointment,
+                            'join_type'=>'left',
+                            'join_on'=>array('service_id','=','service_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                            'select_fields' => $service_fields,
+                        ),
+                        /*array(
+                            'join_table'=>$this->tableObj->tableNameCurrency,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableUserService,
+                            'join_type'=>'left',
+                            'join_on'=>array('currency_id','=','currency_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                            'select_fields' => $currency_field,
+                        ),*/
+                );
+                
+                $appoinment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+
+
+                $email_template = $this->email_template($user_id,$type = 6);
+
+                $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                   <table width="100%">
+                      <tr>
+                         <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                         <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                      </tr>
+                   </table>
+                </div>';
+                $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                   <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                   <p style="text-align:center">For even easier management of your appointments.</p>
+                   <div style="text-align:center;">
+                      <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                      <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                   </div>
+                </div>
+                <div style="text-align:center">
+                   <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                   <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                   <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                   <br><br>
+                   <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                   <p>Copyright &copy; '.date('Y').'</p>
+                </div>';
+
+                $client_name = $appoinment_details->client_name;
+                $client_email = $appoinment_details->client_email;
+                $service_name = $appoinment_details->service_name;
+                $staff_name = $appoinment_details->full_name;
+                $staff_email = $appoinment_details->email;
+                $service_location = $appoinment_details->location;
+                $note = $appoinment_details->note;
+                $service_start_time = date('l d, Y h:i A',$appoinment_details->strto_start_time);
+
+                $mail_body = $email_template->message;
+
+                $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                $mail_body = str_replace('{client_name}', $client_name, $mail_body);
+                $mail_body = str_replace('{service_name}', $service_name, $mail_body);
+                $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
+                $mail_body = str_replace('{location}', $service_location, $mail_body);
+                $mail_body = str_replace('{note}', $note, $mail_body);
+                $mail_body = str_replace('{appointment_time}', $service_start_time, $mail_body);
+                $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
+                $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+
+                $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Appointment Rescheduled';
+                $emailData['content'] = $mail_body;
+
+                $this->sendmail(17,$client_email,$emailData);
+
+                //send mail to stuff
+                $stuff_email_data['client_name'] = $client_name;
+                $stuff_email_data['staff_name'] = $staff_name;
+                $stuff_email_data['service_name'] = $service_name;
+                $stuff_email_data['sheduled_time'] = $service_start_time;
+                $stuff_email_data['note'] = $note;
+                $stuff_email_data['location'] = $service_location;
+                $stuff_email_data['subject'] = "Appointment Rescheduled";
+                $this->sendmail(18, $staff_email, $stuff_email_data);
                     
                 $this->response_status='1';
                 $this->response_message = "Appointment has been rescheduled successfully .";
+
+
             }
             else
             {
@@ -2339,6 +2626,44 @@ class BookingsController extends ApiController {
             $numberOfUnits = floor($time / $unit); 
             return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':''); 
         }
+    }
+
+    function email_template($user_id, $type)
+    {
+        $sub_condition = array(
+            array('user_id', '=', $user_id)
+        );
+        $sub_field = array();    
+        $subcription_id = $this->common_model->fetchData($this->tableObj->tableNameUserSubscription,$sub_condition, $sub_field);
+
+        $subcription_id = $subcription_id->id;
+        if($subcription_id)
+        {
+            $email_template_condition = array(
+                array('user_id', '=', $user_id),
+                array('type', '=', $type)
+            );
+            $email_template_field = array();    
+            $email_template = $this->common_model->fetchData($this->tableObj->tableNameUserEmailCustomisation,$email_template_condition, $email_template_field);
+            if(empty($email_template))
+            {
+                $email_template_condition = array(
+                    array('type', '=', $type)
+                );
+                $email_template_field = array();    
+                $email_template = $this->common_model->fetchData($this->tableObj->tableNameEmailTemplateMaster,$email_template_condition, $email_template_field);
+            }
+        }
+        else
+        {
+            $email_template_condition = array(
+                array('type', '=', $type)
+            );
+            $email_template_field = array();    
+            $email_template = $this->common_model->fetchData($this->tableObj->tableNameEmailTemplateMaster,$email_template_condition, $email_template_field);
+        }
+        
+        return $email_template;
     }
 
     

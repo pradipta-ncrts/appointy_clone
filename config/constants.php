@@ -64,6 +64,8 @@ return [
 
         'notification_updates' => 'notification_updates',
 
+        'email_template_master' => 'email_template_master',
+
     ],
 
     'google'=>[
