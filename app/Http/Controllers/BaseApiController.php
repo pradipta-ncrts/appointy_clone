@@ -502,6 +502,11 @@ class BaseApiController extends BaseController
                     //$mail_body = $emailData['email_data'];
                     $mailTemplateName="emails/thank_you";
                 break;
+                case 20: // User subcription mail //
+                    $mail_subject = $emailData['subject'];
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName="emails/new_registration_staff";
+                break;
 
                 
 

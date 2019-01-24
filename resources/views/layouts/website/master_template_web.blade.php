@@ -642,6 +642,22 @@
                   <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
+                           <div class="input-group" id="category_error">
+                              <span class="input-group-addon"><i class="fa fa-file-text"></i></span>
+                              <div class="form-group nomarging color-b" >
+                                  <select class="selectpicker" name="staff_type" id="staff_type" >
+                                    <option value="1">Manager</option>
+                                    <option value="2">Staff</option>
+                                  </select>
+                                 <div class="clearfix"></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group">
                            <div class="input-group" id="fullname_error"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
                               <input id="staff_fullname" type="text" class="form-control" name="staff_fullname" placeholder="Full Name">
                            </div>
