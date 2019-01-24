@@ -345,6 +345,11 @@ class UsersController extends ApiController {
 		//print_r($post_data); die();
 		$url_func_name="appoinment_list";
 		$return = $this->curl_call($url_func_name,$post_data);
+
+		// Service List //
+		$service_post_data = $authdata;
+		$service_url_func_name="service_list";
+		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
 		
 		// Check response status. If success return data //		
 		if(isset($return->response_status))
@@ -357,6 +362,7 @@ class UsersController extends ApiController {
 				$data['calendar_settings'] = $return->calendar_settings;
 				$data['filter_data'] = $return->filter_data;
 				$data['block_date_time'] = $return->block_date_time;
+				$data['service_list'] = $service_return->service_list;
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.calendar')->with($data);

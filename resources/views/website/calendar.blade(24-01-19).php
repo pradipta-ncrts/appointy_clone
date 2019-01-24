@@ -13,9 +13,6 @@ Squeedr
     .calender-mdlstyl h2{font-size: 20px;font-weight: 300;margin: 10px 0 0 15px;}
     .calender-mdlstyl span{font-size: 14px;font-weight: 300;}
     .scroll-calender{max-height:400px;overflow-y:auto;}
-    .fc-past { background-color: #F2F2F2;}
-    .fc-unthemed .fc-today{ background-color: #FFFFFF!important; }
-
 </style>
 @endsection
 @section('content')
@@ -77,17 +74,6 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
       </div>
       <div class="clearfix"></div>
       <div class="rightpan full" style="width: 100% !important">
-        <div class="calender-remark">
-            <ul>
-                <?php if(!empty($service_list)) { foreach($service_list as $service){ ?>
-                <li>
-                    <div class="clbx" style="background-color:<?php if($service->color!='') echo $service->color; else echo '#FFFFFF';?>; border: 1px solid #ccc;"><?php echo substr($service->service_name,0,2);?></div>
-                    <div class="clbxtxt"><?php echo $service->service_name;?></div>
-                </li>
-                <?php } } ?>
-            </ul>
-        </div>
-
          <!-- THE CALENDAR -->
          <div id="calendar"></div>
 
@@ -516,7 +502,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     $('#calendar').fullCalendar('unselect');
                     return false;
                 }*/
-                if(start.isBefore(moment().add(6,'hour').format())) {
+                if(start.isBefore(moment().add(1,'hour').format())) {
                     $('#calendar').fullCalendar('unselect');
                     return false;
                 }
