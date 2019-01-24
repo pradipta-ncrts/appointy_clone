@@ -49,6 +49,7 @@ class StaffsController extends ApiController {
         }
         else
         {
+            $staff_type = $request->input('staff_type');
             $full_name = $request->input('staff_fullname');
             $email = $request->input('staff_email');
             $username = $request->input('staff_username');
@@ -58,6 +59,7 @@ class StaffsController extends ApiController {
             $category_id = $request->input('staff_category');
             $expertise = $request->input('staff_expertise');
             $description = $request->input('staff_description');
+            $staff_send_email = $request->input('staff_send_email');
             $staff_profile_picture = '';
 
             $conditions = array(
@@ -107,6 +109,7 @@ class StaffsController extends ApiController {
                 $staff_data['category_id'] = $category_id;
                 $staff_data['password'] = md5($password);
                 $staff_data['email_verification_code'] = $token;
+                $staff_data['staff_type'] = $staff_type;
 
                 /*$data=array(
                     'user_id' => $user_id,
@@ -131,7 +134,19 @@ class StaffsController extends ApiController {
                     $notification_data['user_id'] = $user_id;
 
                     $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
-                    //Notification Update End
+
+                    //Send Notification mail
+                    if($staff_send_email && $staff_send_email==1)
+                    {
+                        $staff_type = $staff_type == 1 ? "Manager" : "Staff";
+                        $staff_email = $email;
+                        $emailData['staff_name'] = $full_name;
+                        $emailData['type'] = $staff_type;
+                        $emailData['password'] = $password;
+                        $emailData['username'] = $username;
+                        $emailData['subject'] = "Staff Resgistration";
+                        $this->sendmail(20,$staff_email,$emailData);
+                    }
 
                     $this->response_status='1';
                     $this->response_message = "Staff successfully added.";

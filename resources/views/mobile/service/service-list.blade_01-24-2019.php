@@ -8,7 +8,6 @@ Squeedr
    <h1>Service List</h1>
    <ul>
       <li><a href="{{url('mobile/create-service')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
-      <li><a data-toggle="modal" data-target="#servicelstModal"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li>
    </ul>
 </header>
 <main>
@@ -100,58 +99,22 @@ Squeedr
     </div>
   </div>
 </div>
-
-<div id="servicelstModal" class="modal fade" role="dialog">
-   <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Search Service</h4>
-         </div>
-         <div class="modal-body">
-            <form class="example" action="">
-               <input type="text" id="filterServiceText" placeholder="Search.." name="search">
-               <button type="submit" id="filterService"><i class="fa fa-search"></i></button>
-            </form>
-         </div>
-      </div>
-   </div>
-</div>
-
-
 @endsection
 @section('custom_js')
 <script type="text/javascript">
-function ShowPopup() {
-     $("#popup").fadeToggle();
- }
- function togglebtn(obj){
-     $(obj).toggleClass("active");
-     $(obj).find("i").toggleClass("fa-toggle-off fa-toggle-on");
-     $(".mobSevices ul li a.active").find("i").not($(obj).find("i")).removeClass("fa-toggle-on").addClass("fa-toggle-off");
-     $(".mobSevices ul li a.active").not($(obj)).removeClass("active");
- }
- function showUl(obj){
-     $(obj).find("ul").fadeToggle();
-     $(".mobSevices ul li ul").not($(obj).find("ul")).fadeOut();
-     
- }
-
-//Service Filter
-$(document).ready(function(){
-  $("#filterService").on("click", function(event) {
-    event.preventDefault();
-    var value = $("#filterServiceText").val().toLowerCase();
-    $(".whitebox").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-
-    $("#servicelstModal").modal('hide');
-
-  });
-});
-     
+   function ShowPopup() {
+         $("#popup").fadeToggle();
+     }
+     function togglebtn(obj){
+         $(obj).toggleClass("active");
+         $(obj).find("i").toggleClass("fa-toggle-off fa-toggle-on");
+         $(".mobSevices ul li a.active").find("i").not($(obj).find("i")).removeClass("fa-toggle-on").addClass("fa-toggle-off");
+         $(".mobSevices ul li a.active").not($(obj)).removeClass("active");
+     }
+     function showUl(obj){
+         $(obj).find("ul").fadeToggle();
+         $(".mobSevices ul li ul").not($(obj).find("ul")).fadeOut();
+     }
 </script>
 @endsection
 
