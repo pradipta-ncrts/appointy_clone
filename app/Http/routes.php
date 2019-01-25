@@ -94,10 +94,13 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/email_customisation_update','Api\BookingsController@email_customisation_update');
     Route::post('/add_appoinment','Api\BookingsController@add_appoinment');
     Route::post('/appoinment_list','Api\BookingsController@appoinment_list');
+    Route::post('/appoinment_list_staff','Api\StaffsloginController@appoinment_list_staff');
     Route::post('/notification_appoinment_list','Api\BookingsController@notification_appoinment_list');
     Route::post('/appoinment_list_mobile','Api\BookingsController@appoinment_list_mobile');
+    Route::post('/staff_appoinment_list_mobile','Api\StaffsloginController@staff_appoinment_list_mobile');
     Route::post('/client_appoinment_list_mobile','Api\BookingsController@client_appoinment_list_mobile');
     Route::post('/appointment_details','Api\BookingsController@appointment_details');
+    Route::post('/staff_appointment_details','Api\StaffsloginController@staff_appointment_details');
     Route::post('reschedule_appoitment','Api\BookingsController@reschedule_appoitment');
     Route::post('/appoinment-cancel','Api\BookingsController@appoinment_cancel');
     Route::post('/calendar_settings','Api\BookingsController@calendar_settings');
@@ -212,7 +215,8 @@ Route::group(['prefix'=>''],function(){
     Route::any('/thank-you','Website\UsersController@thank_you');
     Route::get('/business-contact-info','Website\UsersController@business_contact_info');
     Route::get('/business-logo-social-network','Website\UsersController@business_logo_social_network');
-
+    Route::any('/staff-dashboard','Website\StaffController@staff_dashboard');
+    
     //Only for link purpose
     Route::any('/calendar','Website\UsersController@calendar');
     Route::get('/gift-certificates','Website\UsersController@gift_certificates');
@@ -270,6 +274,8 @@ Route::group(['prefix'=>''],function(){
     Route::any('/make-payment/{parameter?}','Website\PlanController@make_payment');
 
     Route::any('/booking-list/{duration?}','Website\BookingsController@booking_list');
+
+    Route::any('/staff-booking-list/{duration?}','Website\StaffController@staff_booking_list');
     
     
 });
