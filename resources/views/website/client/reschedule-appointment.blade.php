@@ -7,7 +7,7 @@ Squeedr
 <div class="body-part">
 	<div class="container-custm">
 	   <div class="upper-cmnsection">
-	      <div class="heading-uprlft" id="sectionTitle">Book Your Date & Time</div>
+	      <div class="heading-uprlft" id="sectionTitle">Reachedule Date & Time</div>
 	      <div class="upr-rgtsec">
 	         <div class="col-sm-5">&nbsp;
 	            <!-- <div id="custom-search-input">
@@ -23,9 +23,9 @@ Squeedr
 	         </div>
 	         <div class="col-md-7">
 	            <div class="full-rgt">
-	               <a class="btn btn-primary butt-next1" id="next2">Next</a>
+	               <a class="btn btn-primary butt-next1" id="next1">Next</a>
+				   <a class="btn btn-primary butt-next1" id="next2" style="display:none;">Next</a>
 				   <a class="btn btn-primary butt-next1" id="next3" style="display:none;">Next</a>
-				   <a class="btn btn-primary butt-next1" id="next1" style="display:none;">Next</a>
 				   
 	            </div>
 	         </div>
@@ -58,6 +58,7 @@ Squeedr
 			<div>
 			<form class="form-horizontal" name="application_booking_form" id="application_booking_form" action="{{url('api/reschedule_appointment_process')}}" method="post">
 				<input type="hidden" name="appointment_id" id="appointment_id" value="{{$appointment_details->appointment_id}}">
+				<input type="hidden" name="service_id" id="service_id" value="{{$appointment_details->service_id}}">
 				<input type="hidden" name="client_id" id="client_id" value="{{$appointment_details->client_id}}">
 				<input type="hidden" name="client_email" id="client_email" value="{{$appointment_details->client_email}}">
 				<input type="hidden" name="booking_date" id="booking_date" value="">
@@ -365,21 +366,6 @@ Squeedr
 		});
 
 		$('#next1').click(function(){
-			$('#next1').hide();
-			$('#next2').show();
-			$('#next3').hide();
-			$('#step1').removeClass("active");
-			$('#step2').addClass("active");
-			$('#titlestep1').removeClass("active");
-			$('#titlestep2').addClass("active");
-			$('#sectionTitle').text('Client Info.');
-			$('#section1').hide();
-			$('#section2').show();
-			$('#section3').hide();
-			$('#section4').hide();
-		});
-
-		$('#next2').click(function(){
 			if($("#accept_cgu").prop('checked') == true){
 				var data = [];
                 var appointment_id = $('#appointment_id').val();
@@ -397,16 +383,16 @@ Squeedr
 						if(response.result==1)
 						{
 							$('#next1').hide();
-							$('#next2').hide();
-							$('#next3').show();
-							$('#step2').removeClass("active");
-							$('#step3').addClass("active");
-							$('#titlestep2').removeClass("active");
-							$('#titlestep3').addClass("active");
-							$('#sectionTitle').text('Verification');
+							$('#next2').show();
+							$('#next3').hide();
+							//$('#step1').removeClass("active");
+							$('#step2').addClass("active");
+							//$('#titlestep1').removeClass("active");
+							$('#titlestep2').addClass("active");
+							//$('#sectionTitle').text('Client Info.');
 							$('#section1').hide();
-							$('#section2').hide();
-							$('#section3').show();
+							$('#section2').show();
+							$('#section3').hide();
 							$('#section4').hide();
 						}
 						else{
@@ -427,6 +413,22 @@ Squeedr
 			} else {
 				swal('Warning!','Please accept Squeedr CGU','error');
 			}
+			
+		});
+
+		$('#next2').click(function(){
+			$('#next1').hide();
+			$('#next2').hide();
+			$('#next3').show();
+			//$('#step2').removeClass("active");
+			$('#step3').addClass("active");
+			//$('#titlestep2').removeClass("active");
+			$('#titlestep3').addClass("active");
+			//$('#sectionTitle').text('Verification');
+			$('#section1').hide();
+			$('#section2').hide();
+			$('#section3').show();
+			$('#section4').hide();
 			
 		});
 
@@ -487,11 +489,11 @@ Squeedr
 						$('#next1').hide();
 						$('#next2').hide();
 						$('#next3').hide();
-						$('#step3').removeClass("active");
+						//$('#step3').removeClass("active");
 						$('#step4').addClass("active");
-						$('#titlestep3').removeClass("active");
+						//$('#titlestep3').removeClass("active");
 						$('#titlestep4').addClass("active");
-						$('#sectionTitle').text('Confirmation');
+						//$('#sectionTitle').text('Confirmation');
 						$('#section1').hide();
 						$('#section2').hide();
 						$('#section3').hide();
@@ -590,6 +592,7 @@ Squeedr
 	$(document).ready(function(){
 		get_availibility_calender();
 	});
+
 	var cal_start = "";
 	function get_availibility_calender(order){
 		var data = [];
@@ -598,11 +601,13 @@ Squeedr
 		var duration = "<?php echo $appointment_details->duration;?>";
 		var client_id = "<?php echo $appointment_details->client_id;?>";
 		var appointment_id = "<?php echo $appointment_details->appointment_id;?>";
+		var service_id = "<?php echo $appointment_details->service_id;?>";
 		if(order == undefined){
 			order = 1; //next
 		}
 		data.push({name:'user_no',value:user_no},
 		{name:'staff_id',value:staff_id},
+		{name:'service_id',value:service_id},
 		{name:'duration',value:duration},
 		{name:'client_id',value:client_id},
 		{name:'appointment_id',value:appointment_id},
