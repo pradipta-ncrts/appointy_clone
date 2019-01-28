@@ -113,6 +113,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_appointment_details','Api\ClientsController@client_appointment_details');
     Route::post('/reschedule_appointment_process','Api\ClientsController@reschedule_appointment_process');
     Route::post('/cancel_appointment_process','Api\ClientsController@cancel_appointment_process');
+    Route::post('/business_provider_list','Api\ClientsController@business_provider_list');
     Route::post('/business_provider_category_list','Api\ClientsController@business_provider_category_list');
     Route::post('/business_provider_service_list','Api\ClientsController@business_provider_service_list');
     Route::post('/business_provider_staff_list','Api\ClientsController@business_provider_staff_list');
@@ -145,6 +146,10 @@ Route::group(['prefix'=>'api'],function(){
 
     Route::post('/client_registration','Api\ClientsController@client_registration');
     Route::any('/client_emailverification/{id}','Api\ClientsController@client_emailverification');
+    Route::post('/client_info','Api\ClientsController@client_info');
+    Route::post('/service_provicer_category_list','Api\ClientsController@service_provicer_category_list');
+    Route::post('/service_invitee_question','Api\ClientsController@service_invitee_question');
+    Route::post('/client_appointment_booking_process','Api\ClientsController@client_appointment_booking_process');
     
     
     Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
@@ -348,6 +353,10 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/view-staffs/{username?}','Website\ClientsController@view_staff_list');
     Route::get('/forgot-password/{parameter?}','Website\ClientsController@forgot_password');
     Route::get('/service-details/{service?}','Website\ClientsController@client_service_details');
+    Route::get('/verification/{parameter?}','Website\ClientsController@client_verification');
+    Route::get('/appointment-booking/{parameter?}','Website\ClientsController@client_appointment_booking');
+    Route::get('/appointment-confirmation/{parameter?}','Website\ClientsController@client_appointment_confirmation');
+    
 
 });
     

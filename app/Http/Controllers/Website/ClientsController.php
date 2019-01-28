@@ -283,8 +283,154 @@ class ClientsController extends ApiController {
 
 	function client_dashboard($parameter=NULL)
 	{
-		return view('website.client.client-dashboard');
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			$data=array(
+				'client_details'=>array()
+			);
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+	
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+	
+			if($return->response_status == 1)
+			{
+				$data['client_details'] = $return->client_details;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-dashboard',$data);
+		} else {
+			return redirect('client/login');
+		}
 	}
+
+	function client_verification($parameter=NULL){
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			$data=array(
+				'client_details'=>array()
+			);
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+	
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+	
+			if($return->response_status == 1)
+			{
+				$data['client_details'] = $return->client_details;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-verification',$data);
+		} else {
+			return redirect('client/login');
+		}
+		
+	}
+
+
+	function client_appointment_booking($parameter=NULL)
+	{
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			$data=array(
+				'client_details'=>array()
+			);
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+	
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+			
+	
+			if($return->response_status == 1)
+			{
+				// Call API //
+				$bp_url_func_name="business_provider_list";
+				$bp_return = $this->curl_call($bp_url_func_name,$post_data);
+				//echo "<pre>";print_r($bp_return); die();
+
+
+
+
+				$data['client_details'] = $return->client_details;
+				$data['business_provider_list'] = $bp_return->business_provider_list;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-appointment-booking',$data);
+		} else {
+			return redirect('client/login');
+		}
+		
+	}
+
+
+	function client_appointment_confirmation($parameter=NULL){
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			$data=array(
+				'client_details'=>array()
+			);
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+	
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+			
+	
+			if($return->response_status == 1)
+			{
+				// Call API //
+				$post_data['appointment_id'] = $param_data['appointment_id'];
+				$appo_url_func_name="client_appointment_details";
+				$appo_return = $this->curl_call($appo_url_func_name,$post_data);
+				//echo "<pre>";print_r($appo_return); die();
+
+
+				$data['client_details'] = $return->client_details;
+				$data['appoinment_details'] = $appo_return->appoinment_details;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['appoinment_details'] = array();
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-appointment-confirmation',$data);
+		} else {
+			return redirect('client/login');
+		}
+	}
+	
 
 	function view_staff_list($username=NULL){
 		$staff_postal_code_list = array();

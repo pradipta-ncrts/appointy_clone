@@ -45,11 +45,11 @@
     <div class="login-form">
       <form action="{{ url('api/login') }}" method="post" autocomplete="off" id="loginform">
         <div class="form-group"> <img src="{{asset('public/assets/website/images/login-icon-email.png')}}">
-          <input type="text" class="form-control" id="email" placeholder="Email/Username" name="email">
+          <input type="text" class="form-control" id="email" placeholder="Email/Username" name="email" autocomplete="off">
           <div class="clearfix"></div>
         </div>
         <div class="form-group"> <img src="{{asset('public/assets/website/images/login-icon-passwod.png')}}">
-          <input type="password" class="form-control" id="pwd"  placeholder="Password" name="password">
+          <input type="password" class="form-control" id="pwd"  placeholder="Password" name="password" autocomplete="off">
           <div class="clearfix"></div>
         </div>
         <button type="submit" class="btn btn-default">LOG IN</button>

@@ -45,18 +45,18 @@
                      <input type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
-                        <input type="text" class="form-control" placeholder="Personal Name" name="full_name" id="full_name">
+                        <input type="text" class="form-control" placeholder="Personal Name" name="full_name" id="full_name" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
-                        <input type="text" class="form-control" placeholder="User Name" name="user_name" id="user_name">
+                        <input type="text" class="form-control" placeholder="Username" name="user_name" id="user_name" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-pass.png')}}">
                         <a class="fa fa-eye" onclick="myFunction()"></a>
-                        <input type="password" class="form-control" placeholder="Password" name="password" id="password">
+                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
                      <div class="form-group">

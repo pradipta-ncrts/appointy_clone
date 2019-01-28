@@ -6,6 +6,7 @@
       <title>@yield('title')</title>
       <!--<link href="https://fonts.googleapis.com/css?family=Lato:300,400,500,600,700" rel="stylesheet">-->
       <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet" />
+      <link rel="stylesheet" type="text/css" href="{{asset('public/assets/website/my-icons-collection/font/flaticon.css')}}">
       <link href="{{asset('public/assets/website/css/bootstrap.min.css')}}" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="{{asset('public/assets/website/css/font-awesome.min.css')}}" />
       <link href="{{asset('public/assets/website/css/app.css')}}" rel="stylesheet">
@@ -15,19 +16,13 @@
       <link href="{{asset('public/assets/website/css/slide-menu.css')}}" rel="stylesheet">
 	  <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-      
-
-
-      
-      
-      
-	  
+      @yield('custom_css') 
    </head>
    <body class="dashboard-bg">
-	<div class="animationload" style="display: none;">
-	 <div class="osahanloading"></div>
-	</div>
       <div id="web">
+        <div class="animationload" style="display: none;">
+            <div class="osahanloading"></div>
+        </div>
          <header>
             <div class="container-custm">
                <div class="leftpan">
@@ -42,29 +37,19 @@
                   </div> -->
                </div>
                <div class="rightpan">
-                  <div class="top-nav">
-                     <div class="dropdown prof-menu" href="#">
-                        <!-- <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}">
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                           <a class="dropdown-item" href="#">
-                           <i class="fa fa-share-alt" aria-hidden="true"></i> Share links</a>
-                           <a class="dropdown-item" href="calendar-connections.html">
-                           <i class="fa fa-calendar" aria-hidden="true"></i> Calendar Connections</a>
-                           <a class="dropdown-item" href="#">
-                           <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a>
-                           <a class="dropdown-item" href="#">
-                           <i class="fa  fa-id-card " aria-hidden="true"></i> Memebership</a>
-                           <a class="dropdown-item" href="#">
-                           <i class="fa fa-user" aria-hidden="true"></i> Profile</a>
-                           <a class="dropdown-item" href="#">
-                           <i class="fa fa-question-circle " aria-hidden="true"></i> Help</a>
-                           <a class="dropdown-item" href="#">
-                           <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
-                        </div> -->
-                     </div>
-                  </div>
+                    <div class="top-nav">
+                        
+                        <div class="dropdown prof-menu" href="#">
+                            <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}"></a> 
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
+                                <a class="dropdown-item" href="{{ url('client/profile-settings') }}"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> 
+                                <a class="dropdown-item" href="{{ url('client/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> 
+                            </div>
+                        </div>
+                        <div class="main-nav">
+                        <a href="{{ url('client/booking-list/all') }}"><i class="flaticon-calendar"></i><span> <span>Booking List</span></a>
+                        </div>
+                    </div>
                </div>
             </div>
          </header>
