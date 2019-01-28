@@ -2150,7 +2150,7 @@ to {
 
 .img-boxrgt{float:left;}
 .paypal-iconbx{width:100%;float:left;}
-.paypal-iconbx img{margin:20px 15px 0 0;float:left;border:1px solid #ccc;padding:5px;border-radius:5px;height: 50px;}
+.paypal-iconbx img{margin:20px 15px 0 0;float:left;border:1px solid #ccc;padding:5px;border-radius:5px;}
 .staffsinside .owl-carousel img{border-radius:50px;height: 50px;width: 50px !important;}
 .staffsinside .owl-custom .item span{word-wrap: break-word;}
 
@@ -2159,9 +2159,7 @@ to {
 .calender-remark ul li{float: left;margin: 0 20px 0 0;}
 .calender-remark ul li .clbx{float: left;width: 60px;height: 60px;border-radius: 50%;text-align: center;color: #000;line-height: 65px;font-size: 18px;}
 .calender-remark ul li .clbxtxt{float: left;color: #000;font-size: 16px;line-height: 72px;margin: 0 0 0 8px;font-weight: 500;}
-.booking-listnw{width: 100%;float: left;}
-.booking-listnw-bx{width: 100%;float: left;}
-.booking-listnw-bx .staff-detailtab-bx ul li h4{margin: 0 0 5px;}
+
 
 
 /****** responsive ******/

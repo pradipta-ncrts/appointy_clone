@@ -23,9 +23,9 @@ Squeedr
 	         </div>
 	         <div class="col-md-7">
 	            <div class="full-rgt">
-	               <a class="btn btn-primary butt-next1" id="next1">Next</a>
-				   <a class="btn btn-primary butt-next1" id="next2" style="display:none;">Next</a>
+	               <a class="btn btn-primary butt-next1" id="next2">Next</a>
 				   <a class="btn btn-primary butt-next1" id="next3" style="display:none;">Next</a>
+				   <a class="btn btn-primary butt-next1" id="next1" style="display:none;">Next</a>
 				   
 	            </div>
 	         </div>
@@ -157,7 +157,7 @@ Squeedr
 									<select name="category_id" id="category_id">
 										<option>Select Category </option>
 										<?php if(!empty($category_list)) { foreach($category_list as $category) { ?>
-										<option <?php if($category->category_id == $appointment_details->category_id) { ?> selected="" <?php } ?> value="{{$category->category_id}}">{{$category->cat}}</option>
+										<option <?php if($category->category_id == $appointment_details->category_id) { ?> selected="" <?php } ?> value="{{$category->category_id}}">{{$category->category}}</option>
 										<?php } } ?>
 									</select>
 									<div class="clearfix"></div>
@@ -171,6 +171,7 @@ Squeedr
 									</select>
 									<div class="clearfix"></div>
 								</div>
+								<?php if(!empty($staff_list)) { ?>
 								<div class="form-group  color-b" >
 									<select name="staff_id" id="staff_id">
 										<option>Select Staff </option>
@@ -181,6 +182,7 @@ Squeedr
 									</select>
 									<div class="clearfix"></div>
 								</div>
+								<?php } ?>
 								<div class="clearfix"></div>
 								</div>
 								<div class="col-sm-6">
@@ -212,7 +214,7 @@ Squeedr
 									<img src="{{asset('public/assets/website/images/arrow-right.png')}}">
 									</a>
 								</div>
-								<a href="#" class="view-more-schedule">View More Schedules</a>
+								<!--<a href="#" class="view-more-schedule">View More Schedules</a>-->
 							</div>
 						</div>
 					</div>

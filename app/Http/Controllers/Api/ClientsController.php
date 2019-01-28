@@ -779,15 +779,47 @@ class ClientsController extends ApiController {
 
 
     //--------------------- //
+    public function business_provider_list(Request $request){
+        $response_data = array(); 
+        
+        $client_id = $request->input('client_id'); 
+        
+        $findCond = array(
+            array('client_id','=',$client_id),
+            array('is_blocked','=','0'),
+			array('is_deleted','=','0'),
+		);
+        $user_fields = array('user_type','name','business_name');
+        $joins = array(
+                array(
+                'join_table'=>$this->tableObj->tableNameUser,
+                'join_with'=>$this->tableObj->tableNameUserClient,
+                'join_type'=>'left',
+                'join_on'=>array('user_id','=','id'),
+                'join_on_more'=>array(),
+                'join_conditions' => array(array('is_deleted','=','0')),
+                'select_fields' => $user_fields,
+            ),
+        );
+
+		$business_provider_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserClient, $findCond, $selectFields=array('user_id'), $joins, $orderBy=array(),$groupBy='');        
+
+		$response_data['business_provider_list'] = $business_provider_list;
+
+        $this->json_output($response_data);
+        
+    }
+
     public function business_provider_category_list(Request $request){
         $response_data = array(); 
         
         $user_no = $request->input('user_no'); 
+        $type = $request->input('type'); 
         
         $findCond = array(
-            array('user_id','=',$user_no),
-			array('is_deleted','=','0'),
-			//array('is_blocked','=','0'),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+            'raw' => "(created_by = '".$user_no."' OR created_by = '0')",
 		);
 		
 		$selectFields = array();
@@ -818,7 +850,7 @@ class ClientsController extends ApiController {
 
 		//$service_list_full = $this->common_model->fetchDatas($this->tableObj->tableUserService, $findCond, $selectFields, $joins);
 
-		$service_category = $this->common_model->fetchDatas($this->tableObj->tableUserService, $findCond, $selectFields, $joins, $orderBy=array(),$groupBy='category_id');
+		$service_category = $this->common_model->fetchDatas($this->tableObj->tableNameCategory, $findCond, $selectFields, $joins=array(), $orderBy=array());
 
 
 		/*$service = array();
@@ -841,10 +873,22 @@ class ClientsController extends ApiController {
 			);
 
 			//$service_category_details = '';
-		}*/
-		$response_data['category_list'] = $service_category;
+        }*/
+        //print_r($service_category); die();
+        $response_data['category_list'] = $service_category;
+        
 
-        $this->json_output($response_data);
+        if(isset($type) && $type = 'html'){
+            $category_html = '<select name="category_id" id="category_id"><option value="">Select Category</option>';
+            foreach($service_category as $category){
+                $category_html .= '<option value="'.$category->category_id.'">'.$category->category.'</option>';
+            }
+            $category_html .= '</select>';
+            return $category_html;
+        } else {
+            $this->json_output($response_data);
+        }
+        
         
     }
 
@@ -852,7 +896,8 @@ class ClientsController extends ApiController {
         $response_data = array(); 
         
         $user_no = $request->input('user_no'); 
-        $category_id = $request->input('category_id'); 
+        $category_id = $request->input('category_id');
+        $type = $request->input('type'); 
         
         $findCond = array(
             array('user_id','=',$user_no),
@@ -864,25 +909,63 @@ class ClientsController extends ApiController {
 
 		$response_data['service_list'] = $service_list;
 
-        $this->json_output($response_data);
+        if(isset($type) && $type = 'html'){
+            $service_html = '<select name="service_id" id="service_id" ><option value="">Select Service</option>';
+            foreach($service_list as $service){
+                $service_html .= '<option value="'.$service->service_id.'" data-duration="'.$service->duration.'">'.$service->service_name.'</option>';
+            }
+            $service_html .= '</select>';
+            return $service_html;
+        } else {
+            $this->json_output($response_data);
+        }
         
     }
 
     public function business_provider_staff_list(Request $request){
         $response_data = array(); 
         
-        $user_no = $request->input('user_no'); 
+        $user_no = $request->input('user_no');
+        $service_id = $request->input('service_id');
+        $type = $request->input('type'); 
 
         $findCond = array(
-            array('user_id','=',$user_no),
+            array('service_id','=',$service_id),
 			array('is_deleted','=','0'),
-		);
-		
-		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff, $findCond, $selectFields=array('staff_id','full_name','email'), $joins=array(), $orderBy=array(),$groupBy='');        
+        );
+
+        $staff_fields = array('full_name','email','mobile');
+        $joins = array(
+                array(
+                'join_table'=>$this->tableObj->tableNameStaff,
+                'join_with'=>$this->tableObj->tableNameStaffServiceAvailability,
+                'join_type'=>'left',
+                'join_on'=>array('staff_id','=','staff_id'),
+                'join_on_more'=>array(),
+                'join_conditions' => array(array('is_deleted','=','0')),
+                'select_fields' => $staff_fields,
+            ),
+        );
+
+		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability, $findCond, $selectFields=array('staff_id'), $joins, $orderBy=array(),$groupBy='');        
 
 		$response_data['staff_list'] = $staff_list;
 
-        $this->json_output($response_data);
+
+        if(isset($type) && $type = 'html'){ 
+            $staff_html = "";
+            if(!empty($staff_list))  {
+                $staff_html = '<select name="staff_id" id="staff_id"><option value="">Select Staff</option>';
+                foreach($staff_list as $staff){
+                    $staff_html .= '<option value="'.$staff->staff_id.'">'.$staff->full_name.'</option>';
+                }
+                $staff_html .= '</select><div class="clearfix"></div>';
+            }     
+            
+            return $staff_html;
+        } else {
+            $this->json_output($response_data);
+        }
         
     }
 
@@ -903,7 +986,7 @@ class ClientsController extends ApiController {
 
         $appoinment_fields = array();
 
-        $client_fields = array('client_name','client_email','client_mobile','client_address','client_dob','client_profile_picture');
+        $client_fields = array('client_name','client_email','client_mobile','client_address','client_dob','client_profile_picture','is_email_verified');
 
         $service_fields = array('service_name','category_id','cost','duration');
 
@@ -970,6 +1053,17 @@ class ClientsController extends ApiController {
 
         $appoinmnet = array();
         if(!empty($appoinment_details)){
+            $parameter = [
+                'client_id' => $client_id,
+                ];
+            $parameter= Crypt::encrypt($parameter);
+
+            if($appoinment_details->is_email_verified == 0){
+                $redirect_url = url('/client/client-dashboard',$parameter);
+            } else {
+                $redirect_url = url('/client/appointment-booking',$parameter);
+            }
+
             /*if($appoinment_details->duration > 60)
             {
                 $app_duration = $this->convertToHoursMins($appoinment_details->duration);
@@ -994,7 +1088,7 @@ class ClientsController extends ApiController {
                     "currency" => $appoinment_details->currency,
                     "booked_on" => date('d, M Y',strtotime($appoinment_details->created_on)),
                     "updated_on" => date('d, M Y',strtotime($appoinment_details->updated_on)),
-                    "appoinment_date" => date('d, M Y',strtotime($appoinment_details->date)),
+                    "appoinment_date" => date('l d, M Y',strtotime($appoinment_details->date)),
                     "duration" => $app_duration,
                     "end_time" => $appoinment_details->end_time,
                     "paid_amount" => $appoinment_details->paid_amount,
@@ -1022,6 +1116,7 @@ class ClientsController extends ApiController {
                     "business_name" => $appoinment_details->business_name,
                     "business_location" => $appoinment_details->business_location,
                     "skype_id" => $appoinment_details->skype_id,
+                    "redirect_url" => $redirect_url,
             );
 
             $response_data['appoinment_details'] = $appoinmnet;
@@ -1146,22 +1241,390 @@ class ClientsController extends ApiController {
     }
 
 
+    public function client_appointment_booking_process(Request $request)
+    {
+        //print_r($request->all()); die();
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $validate = Validator::make($request->all(),[
+                                 'user_id'=>'required',
+                                 'client_id'=>'required',
+                                 'service_id'=>'required',
+                                 'booking_date'=>'required',
+                                 'booking_time'=>'required',
+                                 'client_email'=>'required'
+                                ]);
+
+        if ($validate->fails())
+        {
+            $this->response_message = $this->decode_validator_error($validate->errors());
+            $this->json_output($response_data);
+        }
+        else
+        {
+            $user_id = $request->input('user_id');
+            $client = $request->input('client_id');
+            $appoinment_service = $request->input('service_id');
+            $staff = $request->input('staff_id');
+            $date = $request->input('booking_date');
+            $formatted_date = date('Y-m-d',strtotime($date));
+            $appointmenttime = $request->input('booking_time');
+            $numeric_day = date('N', strtotime($date));
+
+            //Client data using id
+            $client_condition = array(
+                array('client_id', '=', $client)
+            );
+            $client_fields = array('client_id', 'client_email', 'client_name');
+            $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$client_condition, $client_fields);
+
+            //Staff data using id
+            if($staff > 0){
+                $stuff_condition = array(
+                    array('staff_id', '=', $staff)
+                );
+                $stuff_fields = array('staff_id', 'email', 'full_name');
+                $stuff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$stuff_condition, $stuff_fields);    
+            }
+            
+            //Survice details
+            $service_condition = array(
+                array('service_id', '=', $appoinment_service)
+            );
+            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color');    
+            $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
+            $colour_code = $service_details->color;
+
+            //calculate end time
+            $duration = $service_details->duration;
+            $service_price = $service_details->cost;
+            $service_currency_id = $service_details->currency_id;
+            $endTime = strtotime("+".$duration." minutes", strtotime($appointmenttime));
+            $endTime = date('h:i A', $endTime); 
+
+            $strto_start_time = strtotime($date.' '.$appointmenttime); 
+            $strto_end_time = strtotime($date.' '.$endTime);
+
+
+            // Check Service Availability Date//
+            $ser_ava_condition = array(
+                array('user_id', '=', $user_id),
+                array('service_id', '=', $appoinment_service),
+                array('day', '=', $numeric_day),
+                array('is_deleted', '=', '0'),
+                'raw' => "((start_date <= '".$formatted_date."' AND end_date >= '".$formatted_date."') OR (start_date <= '".$formatted_date."' AND end_date = '0000:00:00'))",
+            );
+
+            $ser_ava_fields = array();                   
+            $checkServiceAvalibilityDate = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
+            //print_r($checkServiceAvalibilityDate); die();
+            if(!empty($checkServiceAvalibilityDate)){
+                // Check Service Availability Time//
+                $service_available = 'false';
+                foreach($checkServiceAvalibilityDate as $ser_ava_dt){
+                    $ava_starttime = strtotime($formatted_date.' '.$ser_ava_dt->start_time.':00');
+                    $ava_endtime = strtotime($formatted_date.' '.$ser_ava_dt->end_time.':00');
+                    if($strto_start_time >= $ava_starttime && $strto_end_time <= $ava_endtime){
+                        $service_available = 'true';
+                        break;
+                    }
+                }
+                //echo $service_available; exit;
+                if($service_available == true){
+                    if($staff > 0){
+                        // Check Staff Availability //
+                        $condition = array(
+                            array('block_date', '=', date('Y-m-d', strtotime($date))),
+                            array('is_deleted', '=', '0'),
+                            array('user_id', '=', $user_id),
+                            array('staff_id', '=', $staff),
+                            'raw' => "(($strto_start_time BETWEEN strto_start_time AND strto_end_time) OR ($strto_end_time BETWEEN strto_start_time AND strto_end_time))",
+                        );
+
+                        $fields = array();                   
+                        $checkBlock = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$condition, $fields);
+                        //print_r($checkBlock); die();
+                        if(empty($checkBlock)) {
+                            // Check Staff-Service Availability //
+                            $ser_staff_ava_condition = array(
+                                array('staff_id', '=', $staff),
+                                array('service_id', '=', $appoinment_service),
+                                array('day', '=', $numeric_day),
+                                array('is_blocked', '=', '0'),
+                                array('is_deleted', '=', '0'),
+                            );
+        
+                            $fields = array();                   
+                            $checkStaffServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$ser_staff_ava_condition, $fields);
+                            //echo '<pre>'; print_r($checkStaffServiceAvalibility); exit;
+                            if(!empty($checkStaffServiceAvalibility)){
+                                // Check Available Time //
+                                $staff_serviice_available = false;
+                                foreach($checkStaffServiceAvalibility as $staff_ser_ava){
+                                    $available_starttime = strtotime($formatted_date.' '.$staff_ser_ava->start_time);
+                                    $available_endtime = strtotime($formatted_date.' '.$staff_ser_ava->end_time);
+                                    if($strto_start_time >= $available_starttime && $strto_end_time <= $available_endtime){
+                                        $staff_serviice_available = true;
+                                        break;
+                                    }
+                                }
+                                //echo $staff_serviice_available; exit;
+                                if($staff_serviice_available == true){
+                                    $param = array(
+                                        'user_id' => $user_id,
+                                        'service_id' => $appoinment_service,
+                                        'staff_id' => $staff,
+                                        'client_id' => $client,
+                                        'date' => date('Y-m-d', strtotime($date)),
+                                        'start_time' => date('H:i A', strtotime($appointmenttime)),
+                                        'end_time' => date('H:i A', strtotime($endTime)),
+                                        'strto_start_time' => $strto_start_time,
+                                        'strto_end_time' => $strto_end_time,
+                                        'colour_code' => $colour_code,
+                                        'payment_amount' => $service_price,
+                                        'total_payable_amount' => $service_price,
+                                    );  
+                                    //echo '<pre>'; print_r($param); exit;    
+                                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
+                                    if($insertdata > 0)
+                                    {
+                
+                                            $parameter = [
+                                                'appointment_id' => $insertdata,
+                                                'client_id' => $client,
+                                            ];
+                                            $parameter= Crypt::encrypt($parameter);
+                                            $cancel_url = url('/client/cancel_appointent',$parameter);
+                                            $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                                            //send mail to client
+                                            $client_email = $client_details->client_email;
+                                            $client_name = $client_details->client_name;
+                                            $staff_email = $stuff_details->email;
+                                            $staff_name = $stuff_details->full_name;
+                                            $service_name = $service_details->service_name;
+                                            $service_cost = $service_details->cost;
+                                            $service_duration = $service_details->duration;
+                                            $service_location = $service_details->location;
+                                            //$service_currency = $service_details->duration;
+                                            $service_start_time = date('l d, Y h:i A',$strto_start_time);
+
+                                            //check user subscription
+                                            $email_template = $this->email_template($user_id,$type = 5);
+
+                                            $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                                                    <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                                                </tr>
+                                            </table>
+                                            </div>';
+                                            $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                                            <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                                            <p style="text-align:center">For even easier management of your appointments.</p>
+                                            <div style="text-align:center;">
+                                                <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                                                <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                                            </div>
+                                            </div>
+                                            <div style="text-align:center">
+                                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                                            <br><br>
+                                            <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                                            <p>Copyright &copy; '.date('Y').'</p>
+                                            </div>';
+
+                                            $mail_body = $email_template->message;
+                                            $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                                            $mail_body = str_replace('{client_name}', $client_email, $mail_body);
+                                            $mail_body = str_replace('{service_name}', $service_name, $mail_body);
+                                            $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
+                                            $mail_body = str_replace('{booking_time}', $service_start_time, $mail_body);
+                                            $mail_body = str_replace('{location}', $service_location, $mail_body);
+                                            $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
+                                            $mail_body = str_replace('{reshedule_url}', $reschedule_url, $mail_body);
+                                            $mail_body = str_replace('{cancel_url}', $cancel_url, $mail_body);
+                                            $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+
+                                            $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Booking Confirm';
+                                            $emailData['content'] = $mail_body;
+
+                                            $this->sendmail(7,$client_email,$emailData);
+                
+                
+                                            //send mail to stuff
+
+                                            $stuff_email_data['client_name'] = $client_name;
+                                            $stuff_email_data['staff_email'] = $staff_email;
+                                            $stuff_email_data['staff_name'] = $staff_name;
+                                            $stuff_email_data['service_name'] = $service_name;
+                                            $stuff_email_data['service_cost'] = $service_cost;
+                                            $stuff_email_data['service_duration'] = $service_duration;
+                                            $stuff_email_data['service_location'] = $service_location;
+                                            $stuff_email_data['reschedule_url'] = $reschedule_url;
+                                            $stuff_email_data['cancel_url'] = $cancel_url;
+                                            $stuff_email_data['service_start_time'] = $service_start_time;
+                                            $stuff_email_data['email_subject'] = "Booking Confirm";
+
+                                            $this->sendmail(8,$staff_email,$stuff_email_data);
+                
+                
+                                        // Event Viewer //
+                                        //$this->add_user_event_viewer($user_id,$type=4,$staff);
+                                        $response_data['parameter'] = $parameter;
+                                        
+                                        $this->response_status='1';
+                                        $this->response_message = "Your appointment has been successfully booked.";
+                                    }
+                                    else
+                                    {
+                                        $this->response_message = "Something went wrong. Please try agian later.";
+                                    }
+                                } else {
+                                    $this->response_message = "Staff is not available for this service.";
+                                }
+
+                                
+                            } else {
+                                $this->response_message = "Staff is not available for this service.";
+                            }
+                            
+                        }
+                        else
+                        {
+                            $this->response_message = "Staff is not availble, please try again with other time slots.";
+                        }
+                    } else {
+                        $param = array(
+                            'user_id' => $user_id,
+                            'service_id' => $appoinment_service,
+                            //'staff_id' => $staff,
+                            'client_id' => $client,
+                            'date' => date('Y-m-d', strtotime($date)),
+                            'start_time' => date('H:i A', strtotime($appointmenttime)),
+                            'end_time' => date('H:i A', strtotime($endTime)),
+                            'strto_start_time' => $strto_start_time,
+                            'strto_end_time' => $strto_end_time,
+                            'colour_code' => $colour_code,
+                            'payment_amount' => $service_price,
+                            'total_payable_amount' => $service_price,
+                        );  
+                        //echo '<pre>'; print_r($param); exit;    
+                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
+                        if($insertdata > 0)
+                        {
+    
+                                $parameter = [
+                                    'appointment_id' => $insertdata,
+                                    'client_id' => $client,
+                                ];
+                                $parameter= Crypt::encrypt($parameter);
+                                $cancel_url = url('/client/cancel_appointent',$parameter);
+                                $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                                //send mail to client
+                                $client_email = $client_details->client_email;
+                                $client_name = $client_details->client_name;
+                                $staff_email = "N/A";
+                                $staff_name = "N/A";
+                                $service_name = $service_details->service_name;
+                                $service_cost = $service_details->cost;
+                                $service_duration = $service_details->duration;
+                                $service_location = $service_details->location;
+                                //$service_currency = $service_details->duration;
+                                $service_start_time = date('l d, Y h:i A',$strto_start_time);
+
+                                //check user subscription
+                                $email_template = $this->email_template($user_id,$type = 5);
+
+                                $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                                <table width="100%">
+                                    <tr>
+                                        <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                                        <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                                    </tr>
+                                </table>
+                                </div>';
+                                $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                                <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                                <p style="text-align:center">For even easier management of your appointments.</p>
+                                <div style="text-align:center;">
+                                    <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                                    <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                                </div>
+                                </div>
+                                <div style="text-align:center">
+                                <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                                <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                                <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                                <br><br>
+                                <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                                <p>Copyright &copy; '.date('Y').'</p>
+                                </div>';
+
+                                $mail_body = $email_template->message;
+                                $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                                $mail_body = str_replace('{client_name}', $client_email, $mail_body);
+                                $mail_body = str_replace('{service_name}', $service_name, $mail_body);
+                                $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
+                                $mail_body = str_replace('{booking_time}', $service_start_time, $mail_body);
+                                $mail_body = str_replace('{location}', $service_location, $mail_body);
+                                $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
+                                $mail_body = str_replace('{reshedule_url}', $reschedule_url, $mail_body);
+                                $mail_body = str_replace('{cancel_url}', $cancel_url, $mail_body);
+                                $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+
+                                $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Booking Confirm';
+                                $emailData['content'] = $mail_body;
+
+                                $this->sendmail(7,$client_email,$emailData);
+    
+    
+                            // Event Viewer //
+                            //$this->add_user_event_viewer($user_id,$type=4,$staff);
+                            $response_data['parameter'] = $parameter;
+                            
+                            $this->response_status='1';
+                            $this->response_message = "Your appointment has been successfully booked.";
+                        }
+                        else
+                        {
+                            $this->response_message = "Something went wrong. Please try agian later.";
+                        }
+                    }
+                    
+                } else{
+                    $this->response_message = "Service is not availble, please try again with other time slots.";
+                }
+
+            } else{
+                $this->response_message = "Service is not availble, please try again with other time slots.";
+            }
+           
+            $this->json_output($response_data);
+        }
+    }
+
+
+
 
     public function send_client_verification_code(Request $request){
         $response_data = array(); 
         
-        $appointment_id = $request->input('appointment_id');
+        //$appointment_id = $request->input('appointment_id');
         $client_id = $request->input('client_id');
         $client_email = $request->input('client_email');
 
         $chkCond=array(
             array('client_id','=',$client_id),
-            array('appointment_id', '=', $appointment_id),
-            array('is_deleted', '=', 0)
+            //array('appointment_id', '=', $appointment_id),
+            array('is_deleted', '=', 0),
+            array('is_blocked', '=', 0)
         );
 
-		$check_appointment = $this->common_model->row_present_check($this->tableObj->tableNameAppointment,$chkCond);
-        if($check_appointment){
+		$check_client = $this->common_model->row_present_check($this->tableObj->tableNameClient,$chkCond);
+        if($check_client){
             $updateCond=array(
                 array('client_id','=',$client_id),
                 array('is_deleted', '=', 0)
@@ -1172,7 +1635,12 @@ class ClientsController extends ApiController {
             // Send Mail //
             $emailData['verification_code']=$verification_code;
             $this->sendmail(9,$client_email,$emailData);
-	
+    
+            $parameter = [
+                'client_id' => $client_id,
+                ];
+            $response_data['parameter']= Crypt::encrypt($parameter);
+
 			$this->response_status='1';
 			$this->response_message="Verification code has been sent successfully.";
         }else {
@@ -1197,6 +1665,13 @@ class ClientsController extends ApiController {
 
 		$check_verification = $this->common_model->row_present_check($this->tableObj->tableNameClient,$chkCond);
         if($check_verification){
+            $data['is_email_verified'] = 1;	
+            $update = $this->common_model->update_data($this->tableObj->tableNameClient,$chkCond,$data);
+            
+            $parameter = [
+                'client_id' => $client_id,
+                ];
+            $response_data['parameter']= Crypt::encrypt($parameter);
 			$this->response_status='1';
 			$this->response_message="Verification code has been successfully verified.";
         }else {
@@ -1211,12 +1686,15 @@ class ClientsController extends ApiController {
     public function calendar_availability_list(Request $request){
         $response_data = array(); 
         
+        $user_id = $request->input('user_no');
         $appointment_id = $request->input('appointment_id');
         $client_id = $request->input('client_id');
+        $service_id = $request->input('service_id');
         $staff_id = $request->input('staff_id');
         $duration = $request->input('duration');
         $order = $request->input('order');
         $cal_start = $request->input('cal_start');
+
 
         $chkCond=array(
             array('client_id','=',$client_id),
@@ -1224,30 +1702,67 @@ class ClientsController extends ApiController {
             array('is_deleted', '=', 0)
         );
 
-		$check_appointment = $this->common_model->row_present_check($this->tableObj->tableNameAppointment,$chkCond);
+		/*$check_appointment = $this->common_model->row_present_check($this->tableObj->tableNameAppointment,$chkCond);
         if($check_appointment){
-            $date_array = array();
-            $date_array_header = array();
-            $current_month = "";
-            if($cal_start==""){
-                $today_date = date('Y-m-d');
-            } else {
-                $today_date = $cal_start;
-                if($order == 2){
-                    $today_date = date('Y-m-d', strtotime($cal_start . '-12 day'));
-                    if($today_date < date('Y-m-d')){
-                        $today_date = date('Y-m-d');
-                    }
+            
+        }else {
+			$this->response_message="Appointment is not associated with the client.";
+        }*/
+        
+        $date_array = array();
+        $date_array_header = array();
+        $current_month = "";
+        if($cal_start==""){
+            $today_date = date('Y-m-d');
+        } else {
+            $today_date = $cal_start;
+            if($order == 2){
+                $today_date = date('Y-m-d', strtotime($cal_start . '-12 day'));
+                if($today_date < date('Y-m-d')){
+                    $today_date = date('Y-m-d');
                 }
             }
-            
-            for($i=0;$i<7;$i++){
-                $next_date = date('Y-m-d', strtotime($today_date . '+'.$i.' day'));
-                $date_array_header[$next_date] = array(date('D',strtotime($next_date)),date('d',strtotime($next_date)));
-                $time_slots = array();
+        }
+        
+        for($i=0;$i<7;$i++){
+            $next_date = date('Y-m-d', strtotime($today_date . '+'.$i.' day'));
+            $numeric_day = date('N', strtotime($next_date));
+            $date_array_header[$next_date] = array(date('D',strtotime($next_date)),date('d',strtotime($next_date)));
+            $time_slots = array();
 
-                $time_slot_start = $next_date." 00:00:00";
-                $time_slot_end = $next_date." 23:59:59";
+            $time_slot_start = $next_date." 00:00:00";
+            $time_slot_end = $next_date." 23:59:59";
+
+            $service_avalibility_date = array();
+            $staff_service_avalibility = array();
+            $blockDateTime = array();
+            $appoinment_list = array();
+            /************Get service availability************* */
+            $ser_ava_condition = array(
+                array('user_id', '=', $user_id),
+                array('service_id', '=', $service_id),
+                array('day', '=', $numeric_day),
+                array('is_deleted', '=', '0'),
+                'raw' => "((start_date <= '".$next_date."' AND end_date >= '".$next_date."') OR (start_date <= '".$next_date."' AND end_date = '0000:00:00'))",
+            );
+            $ser_ava_fields = array();                   
+            $service_avalibility_date = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
+            //echo '<pre>'; print_r($service_avalibility_date);
+            /************Get service availability************* */
+
+            if($staff_id != ''){
+                /************Get service staff availability************* */
+                $ser_staff_ava_condition = array(
+                    array('staff_id', '=', $staff_id),
+                    array('service_id', '=', $service_id),
+                    array('day', '=', $numeric_day),
+                    array('is_blocked', '=', '0'),
+                    array('is_deleted', '=', '0'),
+                );
+                $fields = array();                   
+                $staff_service_avalibility = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$ser_staff_ava_condition, $fields);
+                /************Get service staff availability************* */
+                
                 /************Get blocked time************* */
                 $blockCondition = array(
                     array('staff_id','=',$staff_id),
@@ -1268,60 +1783,103 @@ class ClientsController extends ApiController {
                 $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
                 $joins = array();
                 $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
-                    
                 /***************get booked time************************** */
 
-                for($j = strtotime($time_slot_start); $j < strtotime($time_slot_end); ){
-                    $tmp = date('H:i:s',$j);
-                    $tmp_end = strtotime(date('Y-m-d H:i:s',$j) . '+'.$duration.' minutes');;
-                    $blocked = 0;
-                    $booked = 0;
-                    /****************check if time is blocked*************** */
-                    if(!empty($blockDateTime) && is_array($blockDateTime)){
-                        foreach($blockDateTime as $bdt){
-                            if
-                            (
-                            ($j >= strtotime($next_date." ".$bdt->start_time) && $j <= strtotime($next_date." ".$bdt->end_time))
-                            ||
-                            ($tmp_end >= strtotime($next_date." ".$bdt->start_time) && $tmp_end <= strtotime($next_date." ".$bdt->end_time))
-                            ){
-                                $blocked = 1;
-                            }
-                        }
-                    }
-                    /*****************check if time is blocked************** */
-                    /****************check if time is booked*************** */
-                    if(!empty($appoinment_list) && is_array($appoinment_list)){
-                        foreach($appoinment_list as $al){
-                            if(
-                                ($j >= strtotime($next_date." ".$al->start_time) && $j <= strtotime($next_date." ".$al->end_time))
-                                ||
-                                ($tmp_end >= strtotime($next_date." ".$al->start_time) && $tmp_end <= strtotime($next_date." ".$al->end_time))                                
-                            )
-                                {
-                                $booked = 1;
-                            }
-                        }
-                    }
-                    /*****************check if time is booked************** */
-                    $time_slots[$tmp] = array('date'=>$next_date,'slot'=>$tmp,'date_time_formatted'=>date('D - d M, Y - h:i A',strtotime($next_date." ".$tmp)),'slot_formatted'=>date('h:i A',strtotime($tmp)),'blocked'=>$blocked,'booked'=>$booked);
-                    $j = $tmp_end;
-                }
-                $date_array[$next_date] = $time_slots;
-
-               $current_month = date('M, Y',strtotime($next_date));
             }
-            //echo '<pre>'; print_r($date_array); exit;
-    
-            $response_data['calendar_availability_list'] = $date_array;
-            $response_data['date_array_header'] = $date_array_header;
-            $response_data['current_month'] = $current_month;
-            $response_data['current_date'] = date('Y-m-d');            
-			$this->response_status='1';
-			$this->response_message="Available Calendar List";
-        }else {
-			$this->response_message="Appointment is not associated with the client.";
-		}
+            
+            for($j = strtotime($time_slot_start); $j < strtotime($time_slot_end); ){
+                $tmp = date('H:i:s',$j);
+                $tmp_end = strtotime(date('Y-m-d H:i:s',$j) . '+'.$duration.' minutes');
+                $blocked = 0;
+                $booked = 0;
+
+                /****************check if service is available*************** */
+                if(!empty($service_avalibility_date) && is_array($service_avalibility_date)){
+                    foreach($service_avalibility_date as $sad){
+                        $ava_starttime = strtotime($next_date.' '.$sad->start_time.':00');
+                        $ava_endtime = strtotime($next_date.' '.$sad->end_time.':00');
+                        if(
+                            ($j >= $ava_starttime && $j <= $ava_endtime)
+                            ||
+                            ($tmp_end >= $ava_starttime && $tmp_end <= $ava_endtime)                                
+                        )
+                            {
+                            $booked = 0;
+                        } else {
+                            $booked = 1;
+                        }
+                    }
+                } else {
+                    $booked = 1;
+                }
+                /*****************check if service is available************** */
+
+                /****************check if time is blocked*************** */
+                if(!empty($blockDateTime) && is_array($blockDateTime)){
+                    foreach($blockDateTime as $bdt){
+                        if
+                        (
+                        ($j >= strtotime($next_date." ".$bdt->start_time) && $j <= strtotime($next_date." ".$bdt->end_time))
+                        ||
+                        ($tmp_end >= strtotime($next_date." ".$bdt->start_time) && $tmp_end <= strtotime($next_date." ".$bdt->end_time))
+                        ){
+                            $blocked = 1;
+                        }
+                    }
+                }
+                /*****************check if time is blocked************** */
+
+                /****************check if staff-service is available*************** */
+                if(!empty($staff_service_avalibility) && is_array($staff_service_avalibility)){
+                    foreach($staff_service_avalibility as $ssad){
+                        $ssa_starttime = strtotime($next_date.' '.$ssad->start_time.':00');
+                        $ssa_endtime = strtotime($next_date.' '.$ssad->end_time.':00');
+                        if(
+                            ($j >= $ssa_starttime && $j <= $ssa_endtime)
+                            ||
+                            ($tmp_end >= $ssa_starttime && $tmp_end <= $ssa_endtime)                                
+                        )
+                            {
+                            $booked = 0;
+                        } else {
+                            $booked = 1;
+                        }
+                    }
+                }
+                /*****************check if staff-service is available************** */
+
+                /****************check if time is booked*************** */
+                if(!empty($appoinment_list) && is_array($appoinment_list)){
+                    foreach($appoinment_list as $al){
+                        if(
+                            ($j >= strtotime($next_date." ".$al->start_time) && $j <= strtotime($next_date." ".$al->end_time))
+                            ||
+                            ($tmp_end >= strtotime($next_date." ".$al->start_time) && $tmp_end <= strtotime($next_date." ".$al->end_time))                                
+                        )
+                            {
+                            $booked = 1;
+                        }
+                    }
+                }
+                /*****************check if time is booked************** */
+                
+
+                $time_slots[$tmp] = array('date'=>$next_date,'slot'=>$tmp,'date_time_formatted'=>date('D - d M, Y - h:i A',strtotime($next_date." ".$tmp)),'slot_formatted'=>date('h:i A',strtotime($tmp)),'blocked'=>$blocked,'booked'=>$booked);
+                $j = $tmp_end;
+            }
+            $date_array[$next_date] = $time_slots;
+
+           $current_month = date('M, Y',strtotime($next_date));
+        }
+        //exit;
+        //echo '<pre>'; print_r($date_array); exit;
+
+        $response_data['calendar_availability_list'] = $date_array;
+        $response_data['date_array_header'] = $date_array_header;
+        $response_data['current_month'] = $current_month;
+        $response_data['current_date'] = date('Y-m-d');            
+        $this->response_status='1';
+        $this->response_message="Available Calendar List";
 
         $this->json_output($response_data);
     }
@@ -1349,23 +1907,26 @@ class ClientsController extends ApiController {
             $selectFields=array();
             $user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
             //print_r($user); die();
-            //Redirect url
-            $parameter = [
-                    'appointment_id' => '',
-                    'client_id' => $user->client_id,
-                    ];
-            $parameter= Crypt::encrypt($parameter);
-            //$cancel_url = url('/client/cancel_appointent',$parameter);
-            $reschedule_url = url('/client/client-dashboard',$parameter);
-
             if(empty($user))
             {
                 $this->response_message="Email/Username and password does not match.";
             }
             else
             {
+                //Redirect url
+                $parameter = [
+                    'client_id' => $user->client_id,
+                    ];
+                $parameter= Crypt::encrypt($parameter);
+
+                if($user->is_email_verified == 0){
+                    $redirect_url = url('/client/client-dashboard',$parameter);
+                } else {
+                    $redirect_url = url('/client/appointment-booking',$parameter);
+                }
+                
                 $this->response_status='1';
-                $this->response_message = $reschedule_url;
+                $this->response_message = $redirect_url;
             }
         }
         else
@@ -1528,6 +2089,42 @@ class ClientsController extends ApiController {
 		}
 	}
 
+    // Client Details //
+    public function client_info(Request $request){
+        $response_data=array();	
+        // validate the requested param for access this service api
+        $client_id = $request->input('client_id');
+
+        $selectCond=array(
+            array('client_id','=',$client_id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        $selectFields=array();
+        $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$selectCond,$selectFields);
+        //echo '<pre>'; print_r($client_details); exit;
+        //amount
+        $query = "SELECT IFNULL(SUM(remaining_balance),0) AS remaining_balance, IFNULL(SUM(paid_amount),0) AS paid_amount FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
+        $amount = $this->common_model->customQuery($query,$query_type=1);
+
+        $count_query = "SELECT COUNT('appointment_id') as count FROM `squ_appointment` WHERE `squ_appointment`.`client_id` = '".$client_id."' AND `squ_appointment`.`is_deleted` = 0 ";
+        $count = $this->common_model->customQuery($count_query,$query_type=1);
+
+        if(!empty($client_details)){
+            $response_data['client_details']=$client_details;
+            $response_data['amount']=$amount[0];
+            $response_data['count']=$count[0];
+            $this->response_status='1';
+            $this->response_message="Client details.";
+        } else {
+            $this->response_status='0';
+            $this->response_message="Client is not valid.";
+        }
+
+        // generate the service / api response
+        $this->json_output($response_data);
+
+    }
     
     public function client_appointment_list(Request $request)
     {
@@ -1601,6 +2198,86 @@ class ClientsController extends ApiController {
         $this->json_output($response_data);
     }  
 
+    public function service_invitee_question(Request $request){
+        $response_data=array();	
+        // validate the requested param for access this service api
+        $user_no = $request->input('user_no');
+        $service_id = $request->input('service_id');
+
+        $chkCond=array(
+            array('user_id','=',$user_no),
+            array('service_id','=',$service_id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        $chkFields=array();
+        $check_service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$chkCond,$chkFields);
+        //echo '<pre>'; print_r($check_service_details); exit;
+        if(!empty($check_service_details)){ 
+
+            $selectCond=array(
+                array('service_id','=',$service_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+            );
+            $selectFields=array();
+            $service_invitee_question = $this->common_model->fetchDatas($this->tableObj->tableServiceInviteeQuestion,$selectCond,$selectFields);
+
+            if(!empty($service_invitee_question)){
+                $service_invitee_question_html = "";
+                $req_mark = "";
+                $req_filed = "";
+
+                $service_invitee_question_html = '<div class="book-cal col-sm-12 cust-box mb-20">';
+                foreach($service_invitee_question as $question){
+                    if($question->is_required == 1){
+                        $req_mark = '<b class="error">*</b>';
+                        $req_filed = 'required="required"';
+                    }
+                    if($question->answer_type == 1){
+                        $service_invitee_question_html .= '<div class="reschedule-qus"><span>'.$question->question.''.$req_mark.'</span>
+                        <input type="text" class="form-control" name="question_'.$question->invitee_question_id.'" '.$req_filed.'>
+                        </div>';
+                    } else if($question->answer_type == 2){
+                        $service_invitee_question_html .= '<div class="reschedule-qus"><span>'.$question->question.''.$req_mark.'</span>
+                        <textarea rows="4" cols="3" name="question_'.$question->invitee_question_id.'" '.$req_filed.'></textarea>
+                        </div>';
+                    } else if($question->answer_type == 3){
+                        $answer_options_str = $question->answer_options;
+                        $answer_options = explode('|',$answer_options_str);
+                        if(!empty($answer_options)){
+                            $service_invitee_question_html .= '<div class="reschedule-qus"><span>'.$question->question.''.$req_mark.'</span><div class="qus-chkinpt">';
+                            foreach($answer_options as $key=>$val){
+                                $service_invitee_question_html .= '<span><input name="question_'.$question->invitee_question_id.'" id="" type="radio" value="'.$val.'"> '.$val.'</span>';
+                            }
+                            $service_invitee_question_html .= '</div></div>';
+                        }
+                    } else if($question->answer_type == 4){
+                        $answer_options_str = $question->answer_options;
+                        $answer_options = explode('|',$answer_options_str);
+                        if(!empty($answer_options)){
+                            $service_invitee_question_html .= '<div class="reschedule-qus"><span>'.$question->question.''.$req_mark.'</span><div class="qus-chkinpt">';
+                            foreach($answer_options as $key=>$val){
+                                $service_invitee_question_html .= '<span><input name="question_'.$question->invitee_question_id.'[]" id="" type="checkbox" value="'.$val.'"> '.$val.'</span>';
+                            }
+                            $service_invitee_question_html .= '</div></div>';
+                        }
+                    }
+                    
+                }
+                $service_invitee_question_html .= '</div>';
+
+                $response_data['is_exist'] = '1';
+                $response_data['html'] = $service_invitee_question_html;
+
+            } else {
+                $response_data['is_exist'] = '0';
+            }    
+            
+            $this->json_output($response_data);
+        } 
+    }
+
     
     public function client_appointment_status(Request $request)
     {
@@ -1666,6 +2343,7 @@ class ClientsController extends ApiController {
         
         return $email_template;
     }
+
 
 
 }
