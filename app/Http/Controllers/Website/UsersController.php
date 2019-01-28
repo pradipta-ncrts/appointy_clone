@@ -95,12 +95,15 @@ class UsersController extends ApiController {
 					        </table>
 					    </div>
 					   <div style="padding:20px; margin-top: 15px; background: #FFF; border-radius:8px;">
-					      <p style="text-align:center; font-size:18px; margin-top: 0 ">My Account</p>
-					      <p style="text-align:center">Access your account, manage your appointments and your loved ones.</p>
+					      <p style="text-align:center; font-size:18px; margin-top: 0 ">Welcome to squeedr!</p>
+					      <p style="text-align:center">Click the button below in order to activate your account.</p>
 					      <div style="text-align:center;">
-					         <a href="{verifiactinlink}" style="border-radius: 4px;background-color: #2ba2da; color: #FFF; padding: 10px 25px; width:150px; display:inline-block; text-decoration: none;">Register Here!</a>  &nbsp;
+					         <a href="{verifiactinlink}" style="border-radius: 4px;background-color: #2ba2da; color: #FFF; padding: 10px 25px; width:150px; display:inline-block; text-decoration: none;">Verify Here!</a>  &nbsp;
 					      </div>
 					   </div>
+					   <br />
+						<em>- Squeedr, Your friendly Assistant</em><br />
+						<br />
 					   <div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
 					      <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
 					      <p style="text-align:center">For even easier management of your appointments.</p>
@@ -1108,5 +1111,7 @@ class UsersController extends ApiController {
 		}
         return view('website.help');
 	}
+
+		
 
 }
