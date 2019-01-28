@@ -113,6 +113,7 @@ class StaffController extends ApiController {
 				$data['appoinment_list'] = $return->appoinment_list;
 				$data['duration'] = $duration;
 				$data['staff_list'] = $return->staff_list;
+				$data['staff_data'] = $return->staff_data;
 			}
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.staff.booking_list')->with($data);

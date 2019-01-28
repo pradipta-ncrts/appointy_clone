@@ -21,1201 +21,6 @@ class StaffsloginController extends ApiController {
 		parent::__construct($input);
 	}
 	
-
-	//*user staff add*//
-    public function add_staff(Request $request)
-    {
-        // Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
-		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-		}
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-
-        $validate = Validator::make($request->all(),[
-                                 'staff_fullname'=>'required',
-                                 'staff_email'=>'required|email',
-                                 'staff_mobile'=>'required|numeric',
-                                 'staff_description'=>'required'
-                                             ]);
-
-        if ($validate->fails())
-        {
-            $this->response_message = $this->decode_validator_error($validate->errors());
-            $this->json_output($response_data);
-        }
-        else
-        {
-            $staff_type = $request->input('staff_type');
-            $full_name = $request->input('staff_fullname');
-            $email = $request->input('staff_email');
-            $username = $request->input('staff_username');
-            $mobile = $request->input('staff_mobile');
-            $home_phone = $request->input('staff_home_phone');
-            $work_phone = $request->input('staff_work_phone');
-            $category_id = $request->input('staff_category');
-            $expertise = $request->input('staff_expertise');
-            $description = $request->input('staff_description');
-            $staff_send_email = $request->input('staff_send_email');
-            $staff_profile_picture = '';
-
-            $conditions = array(
-				'or'=>array('email'=>$email,'username'=>$username)
-			);
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-            //echo '<pre>'; print_r($result); exit;
-            if(!empty($result))
-            {
-                $this->response_message = "This username or email is already exist.";
-            }
-            else
-            {
-                $token1 = md5($email);
-                $token2 = md5($username);
-                $token = $token1.$token2;
-                $digits = 8;
-                $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
-
-                $destinationPath = './uploads/profile_image/';
-                if (!empty($_FILES)) {
-                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
-                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
-                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
-                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
-                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
-
-                            /*if ($data->input('old_staff_profile_picture') != "") {
-                                if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
-                                    unlink($destinationPath . $data->input('old_staff_profile_picture'));
-                                }
-                            }*/
-                        }
-                    }
-                }
-
-                $staff_data['user_id'] = $user_id;
-                $staff_data['username'] = $username;
-                $staff_data['full_name'] = $full_name;
-                $staff_data['email'] = $email;
-                $staff_data['mobile'] = $mobile;
-                $staff_data['home_phone'] = $home_phone;
-                $staff_data['work_phone'] = $work_phone;
-                $staff_data['expertise'] = $expertise;
-                $staff_data['description'] = $description;
-                $staff_data['category_id'] = $category_id;
-                $staff_data['password'] = md5($password);
-                $staff_data['email_verification_code'] = $token;
-                $staff_data['staff_type'] = $staff_type;
-
-                /*$data=array(
-                    'user_id' => $user_id,
-                    'username' => $username,
-                    'full_name' => $full_name,
-                    'email' => $email,
-                    'mobile' => $mobile,
-                    'home_phone' => $home_phone,
-                    'work_phone' => $work_phone,
-                    'expertise' => $expertise,
-                    'description' => $description,
-                    'category_id' => $category_id,
-                    'password' => md5($password),
-                    'email_verification_code' => $token
-                );*/
-
-                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
-                if($insertdata > 0){
-
-                    //Notification Update start
-                    $notification_data['update_message'] = "You have added ".$full_name." as a stuff.";
-                    $notification_data['user_id'] = $user_id;
-
-                    $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
-
-                    //Send Notification mail
-                    if($staff_send_email && $staff_send_email==1)
-                    {
-                        $staff_type = $staff_type == 1 ? "Manager" : "Staff";
-                        $staff_email = $email;
-                        $emailData['staff_name'] = $full_name;
-                        $emailData['type'] = $staff_type;
-                        $emailData['password'] = $password;
-                        $emailData['username'] = $username;
-                        $emailData['subject'] = "Staff Resgistration";
-                        $this->sendmail(20,$staff_email,$emailData);
-                    }
-
-                    $this->response_status='1';
-                    $this->response_message = "Staff successfully added.";
-                } else {
-                    $this->response_message = "Something went wrong. Please try agian later.";
-                }
-                
-            }
-
-            $this->json_output($response_data);
-
-        }
-
-    }
-
-
-    // User's Staff Listing //
-    public function staff_list(Request $request){
-		$response_data=array();	
-		// validate the requested param for access this service api
-		$this->validate_parameter(1); // along with the user request key validation
-		$other_user_no = $request->input('other_user_no');
-        $pageNo = $request->input('page_no');
-        $search_text = $request->input('staff_search_text');
-		$pageNo = ($pageNo>1)?$pageNo:1;
-		$limit=$this->limit;
-		$offset=($pageNo-1)*$limit;
-
-		if(!empty($other_user_no) && $other_user_no!=0){
-			$user_no = $other_user_no;
-		}
-		else{
-			$user_no = $this->logged_user_no;
-		}
-
-
-		$findCond=array(
-            array('user_id','=',$user_no),
-			array('is_deleted','=','0'),
-		);
-
-		if(!empty($search_text)){
-			$findCond[]=array('full_name','like','%'.$search_text.'%');
-		}
-
-		$selectFields=array('staff_id','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
-		$staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectFields);
-		$response_data['staff_list']=$staff_list;
-		$this->response_status='1';
-		// generate the service / api response
-		$this->json_output($response_data);
-    }
-
-
-    //Delete//
-    public function staff_delete(Request $request){
-        $response_data=array();	
-        // validate the requested param for access this service api
-        $this->validate_parameter(1); // along with the user request key validation
-        $user_no = $this->logged_user_no;
-        $staff_id = $request->input('staff_id');
-
-        $findCond=array(
-                        array('staff_id','=',$staff_id),
-                        array('user_id','=',$user_no),
-                        array('is_deleted','=','0'),
-                        array('is_blocked','=','0'),
-                    );
-        $selectField = array('full_name','email','mobile');
-        $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectField);
-        if($check_staff){
-            $updateData=array(
-                'is_deleted'=>1,
-                'deleted_on'=>$this->date_format
-            );
-            $this->common_model->update_data($this->tableObj->tableNameStaff,$findCond,$updateData);
-            $this->response_status='1';
-            $this->response_message = "Staff successfully deleted.";
-        } else {
-            $this->response_message = "Staff is not associated with this user.";
-        }
-        
-        // generate the service / api response
-        $this->json_output($response_data);
-        
-    }
-
-    //Details//
-    public function staff_details(Request $request){
-        $response_data=array();	
-        // validate the requested param for access this service api
-        $this->validate_parameter(1); // along with the user request key validation
-        $staff_id = $request->input('staff_id');
-        $user_no = $this->logged_user_no;
-
-        $findCond=array(
-            array('user_id','=',$user_no),
-            array('staff_id','=',$staff_id),
-            array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-        );
-        
-        $selectFields=array('staff_id','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
-        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
-
-        if(!empty($staff_details)){
-            $response_data['staff_details']=$staff_details;
-            $this->response_status='1';
-            $this->response_message="Staff details.";
-        } else {
-            $this->response_status='0';
-            $this->response_message="Staff is not valid.";
-        }
-        
-        // generate the service / api response
-        $this->json_output($response_data);
-
-    }
-
-    //Details//
-    public function staff_details_mobile(Request $request){
-    
-        $staff_id = $request->input('post_data');
-        
-        $findCond=array(
-            array('staff_id','=',$staff_id)
-        );
-        
-        $selectFields=array('staff_id','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
-        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
-
-        if(!empty($staff_details)){
-            $response_data['staff_details']=$staff_details;
-            $this->response_status='1';
-            $this->response_message="Staff details.";
-        } else {
-            $this->response_status='0';
-            $this->response_message="Staff is not valid.";
-        }
-        
-        // generate the service / api response
-        $this->json_output($response_data);
-
-    }
-
-    public function edit_staff(Request $request){
-        // Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-            return redirect('/login');
-        }
-        
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-        
-        $validate = Validator::make($request->all(),[
-                                         'staff_fullname'=>'required',
-                                         'staff_description'=>'required']);
-        
-        if ($validate->fails())
-        {
-            $this->response_message = $this->decode_validator_error($validate->errors());
-            $this->json_output($response_data);
-        }
-        else
-        {
-            $staff_id = $request->input('staff_id');
-            $full_name = $request->input('staff_fullname');
-            //$email = $request->input('staff_email');
-            //$username = $request->input('staff_username');
-            $mobile = $request->input('staff_mobile');
-            $home_phone = $request->input('staff_home_phone');
-            $work_phone = $request->input('staff_work_phone');
-            $category_id = $request->input('staff_category');
-            $expertise = $request->input('staff_expertise');
-            $description = $request->input('staff_description');
-            $staff_profile_picture = '';
-
-            //Notification Update start
-            $notification_data['update_message'] = "You have updated ".$full_name."'s profile.";
-            $notification_data['user_id'] = $user_id;
-
-            $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
-            //Notification Update End
-
-            $conditions = array(
-                array('staff_id','=',$staff_id),
-                array('user_id','=',$user_id),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-            );
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-            //echo '<pre>'; print_r($result); exit;
-            if(empty($result))
-            {
-                $this->response_message = "Invalid staff details.";
-            }
-            else
-            {
-                $destinationPath = './uploads/profile_image/';
-                if (!empty($_FILES)) {
-                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
-                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
-                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
-                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
-                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
-
-                            /*if ($data->input('old_staff_profile_picture') != "") {
-                                if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
-                                    unlink($destinationPath . $data->input('old_staff_profile_picture'));
-                                }
-                            }*/
-                        }
-                    }
-                }
-
-                $staff_data['full_name'] = $full_name;
-                $staff_data['mobile'] = $mobile;
-                $staff_data['home_phone'] = $home_phone;
-                $staff_data['work_phone'] = $work_phone;
-                $staff_data['expertise'] = $expertise;
-                $staff_data['description'] = $description;
-                $staff_data['category_id'] = $category_id;
-
-                $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
-                
-                $this->response_status='1';
-                $this->response_message = "Staff successfully updated.";
-
-            }
-
-            $this->json_output($response_data);
-
-        }
-        
-    }
-
-    public function change_status_staff(Request $request){
-        // Check User Login. If not logged in redirect to login page //
-		$authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-            return redirect('/login');
-        }
-        
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-        
-        $staff_id = $request->input('staff_id');
-        $type = $request->input('type');
-        $status_value = $request->input('status_value');
-
-        if($type == 'blocked' && $status_value == 1){
-            $staff_data['is_blocked'] = 0;
-            $msg = "Staff has been blocked successfully";
-        } else if($type == 'blocked' && $status_value == 0) {
-            $staff_data['is_blocked'] = 1;
-            $msg = "Staff has been active successfully";
-        } else if($type == 'internal_staff' && $status_value == 1) {
-            $staff_data['is_internal_staff'] = 0;
-            $msg = "Staff has been added as internal staff";
-        } else if($type == 'internal_staff' && $status_value == 0) {
-            $staff_data['is_internal_staff'] = 1;
-            $msg = "Staff has been removed internal staff";
-        } else if($type == 'login_allowed' && $status_value == 1) {
-            $staff_data['is_login_allowed'] = 0;
-            $msg = "Allow staff to login next time.";
-        } else if($type == 'login_allowed' && $status_value == 0) {
-            $staff_data['is_login_allowed'] = 1;
-            $msg = "Restrict staff to login next time.";
-        } 
-
-        $conditions = array(
-            array('staff_id','=',$staff_id),
-            array('user_id','=',$user_id),
-            array('is_deleted','=','0'),
-        );
-
-        $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-        //echo '<pre>'; print_r($result); exit;
-        if(empty($result))
-        {
-            $this->response_message = "Invalid staff details.";
-        }
-        else
-        {
-
-            
-            $staff_data['updated_on'] = date('Y-m-d H:i:s');
-            //echo '<pre>'; print_r($staff_data); exit;
-
-            $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
-            
-            $this->response_status='1';
-            $this->response_message = $msg;
-
-        }
-
-        $this->json_output($response_data);
-        
-    }
-    
-    public function add_new_location(Request $request)
-    {
-        // Check User Login. If not logged in redirect to login page //
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-
-        $staff_id = $request->input('staff_id');
-        if($staff_id)
-        {
-            $staff_data['addess'] = $request->input('location_name');
-            $staff_data['country'] = $request->input('country');
-            $staff_data['city'] = $request->input('city');
-
-            $updateCond=array(
-                array('staff_id','=',$staff_id),
-            );
-
-            $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$updateCond,$staff_data);
-
-            $this->response_status='1';
-            $this->response_message="Location successfully updated.";
-        }
-        else
-        {
-            $validate = Validator::make($request->all(),[
-                                     'location_name'=>'required',
-                                     'country'=>'required',
-                                     'city'=>'required',
-                                     'location_username'=>'required',
-                                     'location_password'=>'required',
-                                     'location_full_name'=>'required',
-                                     'location_email'=>'required|email'
-                                                 ]);
-
-            if ($validate->fails())
-            {
-                $this->response_message = $this->decode_validator_error($validate->errors());
-                $this->json_output($response_data);
-            }
-            else
-            {
-                $full_name = $request->input('location_full_name');
-                $email = $request->input('location_email');
-                $username = $request->input('location_username');
-                $location = $request->input('location_name');
-                $password = $request->input('location_password');
-                $country = $request->input('country'); 
-                $city = $request->input('city');
-                
-
-                $conditions = array(
-                    'or'=>array('email'=>$email,'username'=>$username)
-                );       
-
-                $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-                //echo '<pre>'; print_r($result); exit;
-                if(!empty($result))
-                {
-                    $this->response_message = "This username or email is already exist.";
-                }
-                else
-                {
-                    /*$token1 = md5($email);
-                    $token2 = md5($username);
-                    $token = $token1.$token2;
-                    $digits = 8;*/
-                    $password = $password;
-
-                    $staff_data['user_id'] = $user_id;
-                    $staff_data['username'] = $username;
-                    $staff_data['full_name'] = $full_name;
-                    $staff_data['email'] = $email;
-                    $staff_data['password'] = md5($password);
-                    $staff_data['addess'] = $location;
-                    $staff_data['country'] = $country;
-                    $staff_data['city'] = $city;
-                    
-                    
-                    //$staff_data['email_verification_code'] = $token;
-
-                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
-
-                    if($insertdata > 0)
-                    {
-
-                        $emailData['username'] = $username;
-                        $emailData['password'] = $password;
-                        $emailData['toName'] = $full_name;
-                        $this->sendmail(5,$email,$emailData);
-
-                        $this->response_status='1';
-                        $this->response_message = "Location successfully added.";
-                    }
-                    else
-                    {
-                        $this->response_message = "Something went wrong. Please try agian later.";
-                    }
-                }
-            }  
-        }
-        
-        $this->json_output($response_data);
-
-    }
-
-
-    public function staff_import(Request $request){
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-
-        $file = $request->file('staff_excel_file');
-        //print_r($file); die();
-        $type = $file->extension();
-        $productInputs = array();
-        //echo $type;exit;
-        if($type == 'xls' || $type == 'xlsx')
-        {
-			$existingCompanyPrd = array();
-			$fileName = $file->getClientOriginalName();
-			$destinationPath = public_path() . '/import_staff_excel/';
-			$file->move($destinationPath, $fileName);
-			$excelData = Excel::load('/public/import_staff_excel/'.$fileName, function($reader) {})->get();
-
-			//get data from client table
-			$condition = array(
-	                array('is_deleted', '=', 0),
-	            );
-            $selectField = array('email','username');
-            $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$condition,$selectField);
-
-            $exist_staff_email = array();
-            $exist_staff_username = array();
-        	foreach ($check_staff as $key => $value)
-            {
-            	$exist_staff_email[] = $value->email;
-            	$exist_staff_username[] = $value->username;
-            }
-
-            //echo "<pre>";print_r($exist_staff_email);exit;
-            $exist = 0;
-            $notExit = 0;
-			if(!empty($excelData) && count($excelData) > 0)
-			{
-                $excel_rows = $excelData->toArray();
-                //echo "<pre>";print_r($excel_rows);exit;
-                if(!empty($excel_rows)){
-                    if(isset($excel_rows[0]['email']) && $excel_rows[0]['email']!='' && isset($excel_rows[0]['username']) && $excel_rows[0]['username']!='' && isset($excel_rows[0]['staff_name']) && $excel_rows[0]['staff_name']!=''){
-                        foreach ($excel_rows as $row)
-                        {
-                            $updateMasterData = array();
-                            //echo "<pre>";print_r($row);exit;
-                            if(!empty($row)){
-                                
-                                if(in_array($row['email'],$exist_staff_email) && in_array($row['username'],$exist_staff_username))
-                                {
-                                    $exist++;
-                                }
-                                else
-                                {
-                                    $token1 = md5($row['email']);
-                                    $token2 = md5($row['username']);
-                                    $token = $token1.$token2;
-                                    $digits = 8;
-                                    $password = rand(pow(10, $digits-1), pow(10, $digits)-1);
-            
-                                    $staff_data['user_id'] = $user_id;
-                                    $staff_data['full_name'] = $row['staff_name']; 
-                                    $staff_data['username'] = $row['username'];
-                                    $staff_data['password'] = md5($password); 
-                                    $staff_data['email'] = $row['email'];
-                                    $staff_data['mobile'] = $row['mobile'];
-                                    $staff_data['description'] = $row['description'];
-                                    //$staff_data['home_phone'] = $row['home_phone']; 
-                                    //$staff_data['work_phone'] = $row['work_phone']; 
-                                    $staff_data['expertise'] = $row['expertise']; 
-                                    //$staff_data['address'] = $row['address'] ? $row['address'] : ''; 
-                                    $staff_data['email_verification_code'] = $token;
-                                    //print_r($staff_data); die();
-                                    
-                                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
-                                        if($insertdata)
-                                        {
-                                        $emailData['username'] = $row['username'];
-                                        $emailData['password'] = $password;
-                                        $emailData['toName'] = $row['staff_name'];
-                                        $this->sendmail(10,$row['email'],$emailData);
-                                        }
-                                    $notExit++;
-                                }
-                                
-                                
-                            } else {
-                                $this->response_message = "No records to import.";
-                            }
-                            
-                        }
-                    } else {
-                        $this->response_message = "Plase upload proper excel file.";
-                    }  
-                } else {
-                    $this->response_message = "No records to import.";
-                }
-				
-			}
-
-			$this->response_status='1';
-            //$this->response_message = $exist.' records exists, '.$notExit.' records successfully inserted.';
-            $this->response_message = $notExit.' records successfully inserted.';
-        }
-        else
-        {
-        	$this->response_message = "Only excel file can import.";
-        }
-
-        //echo 'e'.$exist.'/ne'.$notExit; die();
-        $this->json_output($response_data);
-
-    }
-
-
-    public function block_times(Request $request){
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_no = $this->logged_user_no;
-        $staff_id = $request->input('staff_id');
-
-        $findCond=array(
-            array('user_id','=',$user_no),
-            array('staff_id','=',$staff_id),
-            array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-        );
-        
-        $selectField = array('full_name','email','mobile');
-        $check_staff = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectField);
-        if($check_staff){
-            // Block Date //
-            $query = "select `squ_block_date_time`.`block_id`, MONTHNAME(`squ_block_date_time`.`block_date`) AS month, YEAR(`squ_block_date_time`.`block_date`) AS year, GROUP_CONCAT(squ_block_date_time.block_date) AS block_dates 
-            from `squ_block_date_time` 
-            where `squ_block_date_time`.`user_id` = ".$user_no." 
-                and `squ_block_date_time`.`staff_id` = ".$staff_id."
-                and `squ_block_date_time`.`start_time` = ''
-                and `squ_block_date_time`.`end_time` = ''
-                and `squ_block_date_time`.`is_deleted` = 0 
-                and `squ_block_date_time`.`is_blocked` = 0 
-                and `squ_block_date_time`.`is_deleted` = 0 
-                group by YEAR(block_date), MONTH(block_date)";
-            $block_dates = $this->common_model->customQuery($query,$query_type=1);
-
-            for($i=0;$i<count($block_dates);$i++){
-                $block_date_arr = explode(',',$block_dates[$i]->block_dates);
-                for($j=0;$j<count($block_date_arr);$j++){
-                    $block_date_arr[$j] = date('d',strtotime($block_date_arr[$j]));
-                }
-                $block_dates[$i]->block_dates = $block_date_arr;
-            }
-
-            $response_data['block_dates']=$block_dates;
-            
-
-            // Block TIme //
-            $findCond=array(
-                array('user_id','=',$user_no),
-                array('staff_id','=',$staff_id),
-                array('start_time','!=',''),
-                array('end_time','!=',''),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-            );
-            
-            $selectField = array('block_date');
-            $block_times = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="YEAR(block_date), MONTH(block_date), DATE(block_date)",$havings=array(),$limit=0,$offset=0,$is_count=0);
-            $formatted_block_times = array();
-            for($i=0;$i<count($block_times); $i++){
-                $findCond=array(
-                    array('user_id','=',$user_no),
-                    array('staff_id','=',$staff_id),
-                    array('block_date','=',$block_times[$i]->block_date),
-                    array('start_time','!=',''),
-                    array('end_time','!=',''),
-                    array('is_deleted','=','0'),
-                    array('is_blocked','=','0'),
-                );
-                
-                $selectField = array('block_id','start_time','end_time');
-                $block_date_times = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$findCond,$selectField,$joins=array(),$orderBy=array(),$groupBy="",$havings=array(),$limit=0,$offset=0,$is_count=0);
-                
-                $block_times[$i]->block_date = date('F d, Y',strtotime($block_times[$i]->block_date));
-                $block_times[$i]->block_date_time = $block_date_times;
-            }
-
-            $response_data['block_times'] = $block_times;
-            //echo '<pre>'; print_r($response_data); exit;
-            $this->response_status='1';
-            $this->response_message="Staff block date time details.";
-            
-        } else {
-            $this->response_status='0';
-            $this->response_message="Staff is not valid.";
-        }
-
-        $this->json_output($response_data);
-
-    }
-
-
-    public function delete_staff_block_time(Request $request){
-        // Check User Login. If not logged in redirect to login page //
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-
-        $block_time_id = $request->input('block_time_id');
-        $staff_id = $request->input('staff_id');
-
-        $conditions = array(
-            array('staff_id','=',$staff_id),
-            array('user_id','=',$user_id),
-            array('block_id','=',$block_time_id),
-            array('is_blocked','=','0'),
-        );
-
-        $result = $this->common_model->fetchData($this->tableObj->tableNameBlockDateTime,$conditions);
-        //echo '<pre>'; print_r($result); exit;
-        if(empty($result))
-        {
-            $this->response_message = "Invalid details.";
-        }
-        else
-        {
-            $update_data['is_deleted'] = 1;
-
-            $update = $this->common_model->update_data($this->tableObj->tableNameBlockDateTime,$conditions,$update_data);
-            
-            $this->response_status='1';
-            $this->response_message = "Blocked times deleted successfully.";
-        }
-        
-        $this->json_output($response_data);
-    }
-
-
-    public function staff_service_availability(Request $request){
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-        //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_no = $this->logged_user_no;
-        $staff_id = $request->input('staff_id');
-        $service_id = $request->input('service_id');
-        if(isset($service_id) && $service_id!=''){
-            $findCond[] = array('service_id','=',$service_id);
-        }
-
-        $findCond=array(
-            array('staff_id','=',$staff_id),
-            array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-        );
-        
-        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
-        $tableUserService = $this->tableObj->tableUserService;
-        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
-        $serviceField = array('service_name','duration');
-        $joins = array(
-                    array(
-                    'join_table'=>$tableUserService,
-                    'join_with'=>$tableNameStaffServiceAvailability,
-                    'join_type'=>'left',
-                    'join_on'=>array('service_id','=','service_id'),
-                    'join_on_more'=>array(),
-                    'join_conditions' => array(array('is_blocked','=','0')),
-                    'select_fields' => $serviceField,
-                ),
-            );
-
-        $staff_availability = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField, $joins);
-
-        $service_array = array();
-        if(!empty($staff_availability)){
-            foreach($staff_availability as $availability){
-                if(!isset($service_array[$availability->service_id])){
-                    $service_array[$availability->service_id] = array();
-                }
-                if(!isset($service_array[$availability->service_id][$availability->day])){
-                    $service_array[$availability->service_id][$availability->day] = array();
-                }
-                $service_array[$availability->service_id][0] = array('service_name'=>$availability->service_name,'duration'=>$availability->duration);
-                array_push($service_array[$availability->service_id][$availability->day],$availability);
-            }
-        }
-
-        $conditions = array(
-            array('user_id','=',$user_no),
-            array('is_blocked','=','0'),
-            array('is_deleted','=','0')
-        );
-
-        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$conditions);
-        //echo '<pre>'; print_r($service_list); exit;
-
-        if(!empty($service_list) && is_array($service_list)){
-            foreach($service_list as $sl){
-                if(!isset($service_array[$sl->service_id])){
-                    $service_array[$sl->service_id] =array(array('service_name'=>$sl->service_name,'duration'=>$sl->duration));
-                }
-            }
-        }
-        //echo '<pre>'; print_r($service_array); exit;
-        $html = "";
-        $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
-        if(!empty($service_array)){
-            foreach($service_array as $key=>$sa){
-                    $html .= '<tr>
-                        <td>
-                            <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">'.strtoupper($sa[0]['service_name']).'</a> ('.$sa[0]['duration'].'m) </div>
-                            <div class="edit-staff">
-                            <a data-toggle="tooltip" data-placement="top" class="delete_availability" data-service-id = "'.$key.'" data-staff-id="'.$staff_id.'"><i class="fa fa-trash delete_block_time" aria-hidden="true" style="color:red" title="Delete!"></i></a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </td>';
-
-                        for($i = 1; $i<8; $i++){
-                            if(isset($sa[$i]) && !empty($sa[$i])){
-                                $html .= '<td data-column="'.$dowMap[$i-1].'">
-                                        <ul>
-                                        <li>'.$sa[$i][0]->start_time.'</li>
-                                        <li>'.$sa[$i][0]->end_time.'</li>
-                                        </ul>
-                                        <div class="edit-staff">
-                                            <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$staff_id.'" data-service-id = "'.$key.'" data-day-no = "'.$i.'" data-start-date = "'.$sa[$i][0]->start_time.'" data-end-date = "'.$sa[$i][0]->end_time.'"></i>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </td>';
-                            }else{
-                                $html .='<td data-column="'.$dowMap[$i-1].'">
-                                            <div class="edit-staff">
-                                                <i class="fa fa-pencil update_user_shedule" aria-hidden="true" style="color:#67bde5" title="Edit!" data-staff-id="'.$staff_id.'" data-service-id = "'.$key.'" data-day-no = "'.$i.'"></i>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </td>';
-                            }
-                        }
-                    $html .='</tr>';
-            }
-            $response_data['html'] = $html;
-        }
-
-
-
-        $this->json_output($response_data);
-
-    }
-
-    public function services_lists(Request $request)
-    {
-        //date_default_timezone_set('Asia/Kolkata');
-        // Check User Login. If not logged in redirect to login page /
-        $response_data = array(); 
-        // validate the requested param for access this service api
-        $this->validate_parameter(1); // along with the user request key validation
-        $user_no = $this->logged_user_no;
-
-        $service_ids = $request->input('service_ids');
-        $service_id = explode(',', $service_ids);
-
-        $findCond = array(
-            array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-            'in'=>array('service_id' => $service_id)
-        );
-        
-        $selectFields=array();
-        $staff_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$findCond,$selectFields);
-
-        $service_name = array();
-        //$service_id = array();
-        foreach ($staff_list as $key => $value) 
-        {
-            $service_name[] = $value->service_name;
-            //$service_id[] = $value->service_id;
-        }
-
-        $service_name = implode(',', $service_name);
-        //$service_ids = implode(',', $service_id);
-        if($service_name==''){
-            $service_name = "SELECT SERVICE";
-        }
-
-        $this->response_status='1';
-        $response_data['service_name'] = $service_name;
-        $response_data['service_ids'] = $service_ids;
-        $this->json_output($response_data);
-
-    }
-
-    public function edit_service_list_staff(Request $request)
-    {
-
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-        $service_id = $request->input('service_id');
-        $staff_id = $request->input('staff_id');
-        
-        $staffFindCond = array(
-            array('service_id','=',$service_id),
-            array('staff_id','=',$staff_id),
-        );
-
-        $order_by = array('day' => 'ASC');
-        $StaffSelectedField = '';
-        $avability_list_staff_view = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability, $staffFindCond,$StaffSelectedField,$joins = '', $order_by);
-
-        $service_array = array();
-        for($i = 0; $i<7; $i++)
-        {
-            if(isset($avability_list_staff_view[$i]->day) && $avability_list_staff_view[$i]->day)
-            {
-                $start_time = $avability_list_staff_view[$i]->start_time;
-                $end_time = $avability_list_staff_view[$i]->end_time;
-                $day = $i+1;
-            }
-            else
-            {
-                $start_time = '';
-                $end_time = '';
-                $day = $i+1;
-            }
-    
-            $service_array[] = array('day' => $day, 'start_time' => $start_time, 'end_time' => $end_time);
-        }
-
-        //print_r($service_array); die();
-
-        $this->response_status='1';
-        $this->response_message = $service_array;
-
-        $this->json_output($response_data);
-    }
-
-
-    public function update_staff_availability_form(Request $request)
-    {
-
-        $authdata = $this->website_login_checked();
-        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-           return redirect('/login');
-        }
-
-        //echo '<pre>'; print_r($request->all()); exit;
-
-        $response_data=array();
-        $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
-        $service_id = $request->input('service_id');
-        $staff_id = $request->input('stuff_id');
-        $day = $request->input('day');
-        $start_time = $request->input('availability_update_start_time');
-        $end_time = $request->input('availability_update_end_time');
-        
-        $staffFindCond = array(
-            array('service_id','=',$service_id),
-            array('staff_id','=',$staff_id),
-        );
-
-        $delete = $this->common_model->delete_data($this->tableObj->tableNameStaffServiceAvailability, $staffFindCond);
-
-        for ($i=0; $i < count($day) ; $i++)
-        { 
-            if($start_time[$i] && $end_time[$i])
-            {
-                $param = array(
-                    'staff_id' => $staff_id,
-                    'service_id' => $service_id,
-                    'day' => $day[$i],
-                    'start_time' => $start_time[$i],
-                    'end_time' => $end_time[$i],
-                );
-
-                $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaffServiceAvailability,$param);
-            }
-        }
-
-        $this->response_status='1';
-        $this->response_message = "Successfully updated.";
-
-        $this->json_output($response_data);
-    }
-
-    // User's Staff Listing //
-    public function staff_service_availability_mobile(Request $request){
-        $response_data=array(); 
-        // validate the requested param for access this service api
-        $this->validate_parameter(1); // along with the user request key validation
-        $pageNo = $request->input('page_no');
-        $pageNo = ($pageNo>1)?$pageNo:1;
-        $limit=$this->limit;
-        $offset=($pageNo-1)*$limit;
-
-        if(!empty($other_user_no) && $other_user_no!=0){
-            $user_no = $other_user_no;
-        }
-        else{
-            $user_no = $this->logged_user_no;
-        }
-
-        //avability list
-        $findCond=array(
-            array('is_deleted','=','0'),
-            array('is_blocked','=','0'),
-        );
-        
-        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
-        $tableUserService = $this->tableObj->tableUserService;
-        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
-        
-
-        $availability_list = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField);
-
-
-        //staff list
-        $staff_condition = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-        );
-        $staff_field = array('staff_id','full_name');
-        $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$staff_condition,$staff_field);
-
-        //service list
-        $servCond = array(
-            array('user_id','=',$user_no),
-            array('is_deleted','=','0'),
-            //array('is_blocked','=','0'),
-        );
-
-        $serviceFields = array('service_id', 'service_name', 'duration');
-
-        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService, $servCond, $serviceFields);
-
-        $response_data['availability_list']=$availability_list;
-        $response_data['staff_list']=$staff_list;
-        $response_data['service_list']=$service_list;
-        $this->response_status='1';
-        // generate the service / api response
-        $this->json_output($response_data);
-    }
-
-
-    public function availability_mobile()
-    {
-        return "good";
-    }
-
-
-    public function edit_team_member_indiv(Request $request)
-    {
-        $validate = Validator::make($request->all(),[
-                                         'staff_fullname'=>'required',
-                                         'staff_description'=>'required']);
-        
-        if ($validate->fails())
-        {
-            $this->response_message = $this->decode_validator_error($validate->errors());
-            $this->json_output($response_data);
-        }
-        else
-        {
-            $staff_id = $request->input('staff_id');
-            $full_name = $request->input('staff_fullname');
-            //$email = $request->input('staff_email');
-            //$username = $request->input('staff_username');
-            $mobile = $request->input('staff_mobile');
-            $home_phone = $request->input('staff_home_phone');
-            $work_phone = $request->input('staff_work_phone');
-            $category_id = $request->input('staff_category');
-            $expertise = $request->input('staff_expertise');
-            $description = $request->input('staff_description');
-            $staff_profile_picture = '';
-
-            $conditions = array(
-                array('staff_id','=',$staff_id),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-            );
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-            //echo '<pre>'; print_r($result); exit;
-            if(empty($result))
-            {
-                $this->response_message = "Invalid staff details.";
-            }
-            else
-            {
-                $destinationPath = './uploads/profile_image/';
-                if (!empty($_FILES)) {
-                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
-                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
-                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
-                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
-                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
-
-                            /*if ($data->input('old_staff_profile_picture') != "") {
-                                if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
-                                    unlink($destinationPath . $data->input('old_staff_profile_picture'));
-                                }
-                            }*/
-                        }
-                    }
-                }
-
-                $staff_data['full_name'] = $full_name;
-                $staff_data['mobile'] = $mobile;
-                $staff_data['home_phone'] = $home_phone;
-                $staff_data['work_phone'] = $work_phone;
-                $staff_data['expertise'] = $expertise;
-                $staff_data['description'] = $description;
-                $staff_data['category_id'] = $category_id;
-
-                $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
-                
-                $response_data['response_status'] ='1';
-                $response_data['response_message'] = "Staff successfully updated.";
-
-            }
-
-            $this->json_output($response_data);
-
-        }
-        
-    }
-
     public function appoinment_list_staff(Request $request)
     {
         $staff_id = $request->input('staff_id');
@@ -1631,7 +436,157 @@ class StaffsloginController extends ApiController {
         $response_data['staff_list'] = $staff_list;
         $response_data['appoinment_list'] = $appoinment_list;
         $response_data['duration'] = $duration;
+        $response_data['staff_data'] = $stf_deta;
         $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+    //Details//
+    public function staff_details_login(Request $request)
+    {
+        $staff_id = $request->input('staff_id');
+        $findCond=array(
+            //array('user_id','=',$user_no),
+            array('staff_id','=',$staff_id),
+            array('is_deleted','=','0'),
+            array('is_blocked','=','0'),
+        );
+        
+        $selectFields=array('staff_id','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
+        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
+
+        if(!empty($staff_details)){
+            $response_data['staff_details']=$staff_details;
+            $this->response_status='1';
+            $this->response_message="Staff details.";
+        } else {
+            $this->response_status='0';
+            $this->response_message="Staff is not valid.";
+        }
+        
+        // generate the service / api response
+        $this->json_output($response_data);
+
+    }
+
+     public function edit_staff_login_data(Request $request)
+     {   
+        $response_data = array();
+        $validate = Validator::make($request->all(),[
+                                         'staff_fullname'=>'required',
+                                         'staff_description'=>'required']);
+        
+        if ($validate->fails())
+        {
+            $this->response_message = $this->decode_validator_error($validate->errors());
+            $this->json_output($response_data);
+        }
+        else
+        {
+            $staff_id = $request->input('staff_id');
+            $full_name = $request->input('staff_fullname');
+            //$email = $request->input('staff_email');
+            //$username = $request->input('staff_username');
+            $mobile = $request->input('staff_mobile');
+            $home_phone = $request->input('staff_home_phone');
+            $work_phone = $request->input('staff_work_phone');
+            $category_id = $request->input('staff_category');
+            $expertise = $request->input('staff_expertise');
+            $description = $request->input('staff_description');
+            $staff_profile_picture = '';
+
+            $conditions = array(
+                array('staff_id','=',$staff_id),
+                //array('user_id','=',$user_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+            );
+
+            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
+            //echo '<pre>'; print_r($result); exit;
+            if(empty($result))
+            {
+                $this->response_message = "Invalid staff details.";
+            }
+            else
+            {
+                $destinationPath = './uploads/profile_image/';
+                if (!empty($_FILES)) {
+                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
+                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
+                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
+                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
+                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
+
+                            /*if ($data->input('old_staff_profile_picture') != "") {
+                                if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
+                                    unlink($destinationPath . $data->input('old_staff_profile_picture'));
+                                }
+                            }*/
+                        }
+                    }
+                }
+
+                $staff_data['full_name'] = $full_name;
+                $staff_data['mobile'] = $mobile;
+                $staff_data['home_phone'] = $home_phone;
+                $staff_data['work_phone'] = $work_phone;
+                $staff_data['expertise'] = $expertise;
+                $staff_data['description'] = $description;
+                $staff_data['category_id'] = $category_id;
+
+                $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
+                
+                $this->response_status='1';
+                $this->response_message = "Staff successfully updated.";
+
+            }
+
+            $this->json_output($response_data);
+
+        }
+        
+    }
+
+
+    /**** Change Password *****/
+    public function changepssword(Request $request)
+    {
+        $staff_id = $request->input('staff_id'); 
+        //print_r($request->all()); die();
+        $old_password = $request->input('old_passsword');
+        $password = $request->input('new_password');
+        // find the user password 
+        $findCond=array(
+            array('password','=',md5($old_password)),
+            array('staff_id','=',$staff_id),
+        );
+        //$select_fields=array('user_no','email','first_name');
+        $staff = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond);
+        if(empty($staff))
+        {
+            $this->response_message="Old password not matched";
+        }
+        else
+        {
+            // now update the password with new one
+            $updateData=array(
+                'password'=>md5($password),
+                'updated_on'=>$this->date_format
+            );
+            $updateCond=array(
+                array('staff_id','=',$staff_id)
+            );
+            $this->common_model->update_data($this->tableObj->tableNameStaff,$updateCond,$updateData);
+            // send mail
+            //$email = $user->email;
+            //$this->sendmail(4,$email,array('toName'=>$user->first_name));
+            // update your password 
+            $this->response_message="Password change successfully";
+            $this->response_status='1';
+        }
+        
         // generate the service / api response
         $this->json_output($response_data);
     }

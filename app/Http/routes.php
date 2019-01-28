@@ -67,10 +67,12 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/service-availability', 'Api\UsersController@service_availability');
     Route::post('/add_staff','Api\StaffsController@add_staff');
     Route::post('/edit_staff','Api\StaffsController@edit_staff');
+    Route::post('/edit_staff_login_data','Api\StaffsloginController@edit_staff_login_data');
     Route::post('/change-status-staff','Api\StaffsController@change_status_staff');
     Route::post('/staff_list','Api\StaffsController@staff_list');
     Route::post('/staff_import','Api\StaffsController@staff_import');
     Route::post('/staff-details','Api\StaffsController@staff_details');
+    Route::post('/staff-details-login','Api\StaffsloginController@staff_details_login');
     Route::post('/delete-staff','Api\StaffsController@staff_delete');
     Route::post('/block-times','Api\StaffsController@block_times');
     Route::post('/staff_service_availability','Api\StaffsController@staff_service_availability');
@@ -191,6 +193,8 @@ Route::group(['prefix'=>'api'],function(){
     // Get appointments via API Key//
     Route::any('/fetch_appointments','Api\BookingsController@fetch_appointments');
     Route::any('/changepssword','Api\UsersController@changepssword');
+    Route::any('/staff_changepssword','Api\StaffsloginController@staff_changepssword');
+    
 });
 
 

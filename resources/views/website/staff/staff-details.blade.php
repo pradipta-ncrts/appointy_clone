@@ -1,4 +1,4 @@
-@extends('../layouts/staff/master_template_web')
+@extends('../layouts/website/master_template_web')
 @section('title')
 Squeedr
 @endsection
