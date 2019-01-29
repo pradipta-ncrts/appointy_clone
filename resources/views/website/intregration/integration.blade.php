@@ -12,7 +12,7 @@ Squeedr
            <div class="col-sm-5">
               <div id="custom-search-input">
                  <div class="input-group col-md-12">
-                    <!-- <input type="text" class="  search-query form-control" placeholder="Search" />
+                   <!--  <input type="text" class="  search-query form-control" placeholder="Search" />
                     <span class="input-group-btn">
                     <button class="btn btn-danger" type="button">
                     <span class=" glyphicon glyphicon-search"></span>
@@ -23,8 +23,8 @@ Squeedr
            </div>
            <div class="col-md-7">
               <div class="full-rgt">
-                 <div class="dropdown custm-uperdrop">
-                    <!-- <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Upcoming Dates <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button>
+                 <!-- <div class="dropdown custm-uperdrop">
+                    <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Upcoming Dates <img src="{{asset('public/assets/website/images/arrow.png')}}" alt=""/></button>
                     <ul class="dropdown-menu">
                        <li><a href="#">JAN</a></li>
                        <li><a href="#">FEB</a></li>
@@ -34,6 +34,23 @@ Squeedr
                  <div class="filter-option"><a href="">Show Filter <i class="fa fa-filter" aria-hidden="true"></i></a></div> -->
               </div>
            </div>
+
+           @if(Session::has('intregration_error'))
+
+               <div class="alert alert-danger alert-dismissible margin-t-10" style="margin-bottom:15px;">
+                   <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                   <p><i class="icon fa fa-warning"></i><strong>Sorry!</strong>{{Session::get('intregration_error')}}</p>
+               </div>
+            @endif
+
+            @if(Session::has('intregration_success'))
+
+               <div class="alert alert-success alert-dismissible margin-t-10" style="margin-bottom:15px;">
+                  <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                  <p><i class="icon fa fa-check"></i><strong>Success!</strong> {{Session::get('intregration_success')}}</p>
+              </div>
+            
+            @endif
         </div>
      </div>
      <div class="leftpan">
@@ -186,7 +203,7 @@ Squeedr
                  </div>
                  <div class="col-md-6 col-sm-6">
                     <div class="inte">
-                       <div><img src="{{asset('public/assets/website/images/icon-paypal.png')}}"></div>
+                       <div><a href="" id="paypal-intregrate" data-user-id = "<?=$user_id;?>"><img src="{{asset('public/assets/website/images/icon-paypal.png')}}"></a></div>
                        <div >
                           <h2>Paypal</h2>
                           <p>
@@ -257,4 +274,95 @@ Squeedr
      </div>
   </div>
 </div>
+<!--Paypal Modal-->
+<div class="modal fade" id="myModal" role="dialog">
+   <div class="modal-dialog add-pop">
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Paypal</h4>
+         </div>
+         <form name="paypal_intregration" id="paypal_intregration" method="post" action="{{url('paypal_intregration')}}" enctype="multipart/form-data">
+           <div class="modal-body clr-modalbdy">
+              <div class="row">
+                 <div class="col-md-12">
+                    <div class="form-group">
+                       <div class="input-group"> <span class="input-group-addon"></span>
+                          <input id="paypal_email_id" type="text" class="form-control" name="paypal_email_id" placeholder="Paypal Email">
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+           <div class="modal-footer">
+              <div class="col-md-12 text-center">
+                <input class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block" type="Submit" name="Submit" value="Submit">
+                <!--  <a class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">Submit</a> -->
+              </div>
+           </div>
+         </form>
+      </div>
+   </div>
+</div>
+@endsection
+
+@section('custom_js')
+<script type="text/javascript">
+$("#paypal-intregrate").on('click', (function(e) {
+  e.preventDefault();
+  var user_id = $(this).data('user-id');
+  var data = addCommonParams([]);
+  data.push({ name:'user_id', value:user_id });
+  //console.log(data);
+  $.ajax({
+        url: baseUrl+"/api/get_stripe_email", // Url to which the request is send
+        type: "POST", // Type of request to be send, called as method
+        data: data, // Data sent to server, a set of key/valuesalue pairs (i.e. form fields and values)
+        dataType: "json",
+        success: function(response) // A function to be called if request succeeds
+        {
+          if(response.response_status=='1')
+          {
+              $('#paypal_email_id').val(response.response_message);
+              $("#myModal").modal('show');
+          }
+          else
+          {
+              swal("Error", "Somthing wrong try again later." , "error");
+          }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            $('.animationload').hide();
+        }
+
+    });
+  
+}));
+
+$.validator.addMethod("properemail", function(value, element) {
+     return this.optional(element) || /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test( value );
+ });
+
+$('#paypal_intregration').validate({
+    rules: {
+        paypal_email_id: {
+            required: true,
+            properemail: true
+        }
+    },
+
+    messages: {
+        paypal_email_id: {
+            required: 'Please enter email.',
+            properemail: 'Must be a valid email address.'
+        }
+    }
+});
+</script>
 @endsection

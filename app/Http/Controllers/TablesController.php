@@ -91,13 +91,10 @@ class TablesController {
 
         $this->tableNameReviewRequest = config('constants.tables.request_for_review');
 
-        
+        $this->tableNameStripeIntregration = config('constants.tables.stripe_intregration');
 
-
-        
-        
-
-        
+        $this->tableNamePaypalIntregration = config('constants.tables.paypal_intregration');
+ 
 
     }
 
