@@ -397,8 +397,9 @@ class ProfileController extends ApiController {
 		$apply_day = $request->input('apply_day');
 		$from_submit = $request->input('from_submit');
 		
+		$day = array_search($apply_day, $days_array);
 		if($from_submit == 1){
-			$day = array_search($apply_day, $days_array);
+			
 			if($date_range_type == 1){
 				$start_date = date('Y-m-d', strtotime("+1 day"));
 				$end_date = date('Y-m-d', strtotime("+".$rolling_day_data." day"));
@@ -476,12 +477,13 @@ class ProfileController extends ApiController {
 					}
 				}
 			}
+
+			//print_r($insert_data); die();
+			if(!empty($insert_data)){
+				$insertdata = $this->common_model->insert_data($this->tableObj->tableNameServiceAvailability,$insert_data);
+			}
 		}
 		
-		//print_r($insert_data); die();
-		if(!empty($insert_data)){
-			$insertdata = $this->common_model->insert_data($this->tableObj->tableNameServiceAvailability,$insert_data);
-		}
 		
         $response_data['response_status'] ='1';
         $response_data['message'] = "Service availability updated successfully.";

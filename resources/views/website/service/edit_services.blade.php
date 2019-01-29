@@ -35,6 +35,8 @@ $increment = "00:15:00";
 $sel_increment = "15";
 //echo $show_from."<<>>".$show_till."<<>>".$increment; exit;
 $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=>'JUN','6'=>'JUL','7'=>'AUG','8'=>'SEP','9'=>'OCT','10'=>'NOV','11'=>'DEC');
+$currency_list = App\Http\Controllers\BaseApiController::currency_list();
+//echo '<pre>'; print_r($currency_list); exit;
 ?>
 <div class="body-part">
     <div class="container-custm">
@@ -97,9 +99,9 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                                     <label for="service_currency">Currency <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Select currency for your service." data-placement="right"></i> </label>
                                     <select name="service_currency" id="service_currency">
                                     <option value="">Select currency</option>
-                                    <option <?php if($service_details->currency_id == '1') { ?> selected="selected" <?php } ?> value="1">INR</option>
-                                    <option <?php if($service_details->currency_id == '2') { ?> selected="selected" <?php } ?> value="2">USD</option>
-                                    <option <?php if($service_details->currency_id == '3') { ?> selected="selected" <?php } ?> value="3">POUND</option>
+                                    <?php if(!empty($currency_list['currency_list'])) { foreach($currency_list['currency_list'] as $currency) { ?>
+                                    <option <?php if($service_details->currency_id == $currency->currency_id) { ?> selected="selected" <?php } ?> value="{{$currency->currency_id}}">{{$currency->currency}}</option>
+                                    <?php } } ?>
                                     </select>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
@@ -883,6 +885,10 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script>
+jQuery.validator.addMethod("alphanumeric", function(value, element) {
+    return this.optional(element) || /^[\w.]+$/i.test(value);
+}, "Letters, numbers, and underscores only please");
+
    $('#edit_service').validate({
        rules: {
            service_name: {
@@ -896,7 +902,8 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                number: true
            },
            service_link: {
-               required: true
+               required: true,
+               alphanumeric: true
            },
            service_category: {
                required: true
@@ -915,7 +922,8 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                number: 'Please enter proper price'
            },
            service_link: {
-               required: 'Please enter service link'
+               required: 'Please enter service link',
+               alphanumeric: 'Letters, numbers, and underscores only please'
            },
            service_category: {
                required: 'Please choose category'

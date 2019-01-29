@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="main-nav">
-                        <a href="{{ url('client/booking-list/all') }}"><i class="flaticon-calendar"></i><span> <span>Booking List</span></a>
+                        <a href="javascript:void(0);" id="clientBookingList"><i class="flaticon-calendar"></i><span> <span>Booking List</span></a>
                         </div>
                     </div>
                </div>
@@ -82,7 +82,15 @@
              $("#adv-sh").click(function () {
                  $("#adv-op").toggle();
              });
-         });       
+
+
+             var param = '<?php echo Request::segment(3);?>';
+             $("#clientBookingList").click(function(){
+                window.location = "<?php echo url('/client/booking-list/');?>"+"/"+param+"/all";
+             });
+         });   
+
+
       </script> 
 
       

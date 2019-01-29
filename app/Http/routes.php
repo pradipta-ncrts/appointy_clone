@@ -167,6 +167,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/service-template','Api\UsersController@service_template');
     Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
     Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
+    Route::post('/client_booking_list','Api\ClientsController@client_booking_list');
 
     Route::any('/staff_login','Api\UsersController@staff_login');
     Route::any('/staff_details_mobile','Api\StaffsController@staff_details_mobile');
@@ -366,6 +367,7 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/verification/{parameter?}','Website\ClientsController@client_verification');
     Route::get('/appointment-booking/{parameter?}','Website\ClientsController@client_appointment_booking');
     Route::get('/appointment-confirmation/{parameter?}','Website\ClientsController@client_appointment_confirmation');
+    Route::any('/booking-list/{parameter?}/{duration?}','Website\ClientsController@client_booking_list');
     
 
 });

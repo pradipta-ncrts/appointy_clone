@@ -117,7 +117,7 @@ Squeedr
 								</div>
 								<div class="form-group  color-b" >
 									<select name="service_id" id="service_id">
-										<option>Select service</option>
+										<option>Select Service</option>
 										
 									</select>
 									<div class="clearfix"></div>
@@ -403,94 +403,101 @@ Squeedr
 		if(order == undefined){
 			order = 1; //next
 		}
-		data.push({name:'user_no',value:user_no},
-		{name:'service_id',value:service_id},
-		{name:'staff_id',value:staff_id},
-		{name:'duration',value:duration},
-		{name:'client_id',value:client_id},
-		{name:'appointment_id',value:appointment_id},
-		{name:'cal_start',value:cal_start},
-		{name:'order',value:order}
-		);
-		//console.log(data);
-		$.ajax({
-			url: "<?php echo url('api/calendar_availability_list');?>",
-			type: "POST",
-			data: data,
-			dataType: "json",
-			success: function(response) {
-				console.log(response);
-				if(response.result==1)
-				{
-					//console.log(response);
-					//$('#verification_section').hide();
-					//$('#verification_success_section').show();
-					$('#current_month').text(response.current_month);
-					var date_array_header = Object.keys(response.date_array_header);
-					//console.log(date_array_header);
-					html = "<tr>";
-					for(i = 0;i<date_array_header.length;i++){
-						var day_active = "";
-						var tmp = date_array_header[i];
-						if(tmp == response.current_date){
-							day_active = "active";
-						}
-						//alert(response.date_array_header[tmp]);
-						html += "<td>";
-						html += "<a href='#' class='days "+day_active+"'>"+response.date_array_header[tmp][0];
-						html += "<br>";
-						html += "<span>"+response.date_array_header[tmp][1]+"</span>";
-						html += "</a>";
-						html += "</td>";
-					}
-					html += "</tr>";
-					//console.log(response.calendar_availability_list[tmp]);
-					cal_start = tmp;
-					var daily_element_array = Object.keys(response.calendar_availability_list[tmp]);
-					//console.log(daily_element_array);
-					var whole = daily_element_array.length;
-					//console.log(whole);
-					//return false;
-					var k = 0;
-					while(k<whole){
-						html += "<tr>";
+
+		if(client_id > 0 && service_id > 0 ){
+			data.push({name:'user_no',value:user_no},
+			{name:'service_id',value:service_id},
+			{name:'staff_id',value:staff_id},
+			{name:'duration',value:duration},
+			{name:'client_id',value:client_id},
+			{name:'appointment_id',value:appointment_id},
+			{name:'cal_start',value:cal_start},
+			{name:'order',value:order}
+			);
+			//console.log(data);
+			$.ajax({
+				url: "<?php echo url('api/calendar_availability_list');?>",
+				type: "POST",
+				data: data,
+				dataType: "json",
+				success: function(response) {
+					console.log(response);
+					if(response.result==1)
+					{
+						//console.log(response);
+						//$('#verification_section').hide();
+						//$('#verification_success_section').show();
+						$('#current_month').text(response.current_month);
+						var date_array_header = Object.keys(response.date_array_header);
+						//console.log(date_array_header);
+						html = "<tr>";
 						for(i = 0;i<date_array_header.length;i++){
-							var row = date_array_header[i];
-							var column = daily_element_array[k];
-									var btn_class= response.calendar_availability_list[row][column].slot_formatted;
-									var style = ""
-									if(response.calendar_availability_list[row][column].booked == 1){
-										btn_class = "-------";
-										style="pointer-events: none; cursor: default";
-									}else if(response.calendar_availability_list[row][column].blocked == 1){
-										btn_class = "-------";
-										style="pointer-events: none; cursor: default";
-									}
-									html += "<td>";
-									html += "<a href='javascript:void(0)' class='times' style='"+style+"' data-date-time-formatted='"+response.calendar_availability_list[row][column].date_time_formatted+"' data-slot='"+response.calendar_availability_list[row][column].slot+"' data-date='"+response.calendar_availability_list[row][column].date+"' >"+btn_class;
-									html += "</a>";
-									html += "</td>";
+							var day_active = "";
+							var tmp = date_array_header[i];
+							if(tmp == response.current_date){
+								day_active = "active";
+							}
+							//alert(response.date_array_header[tmp]);
+							html += "<td>";
+							html += "<a href='#' class='days "+day_active+"'>"+response.date_array_header[tmp][0];
+							html += "<br>";
+							html += "<span>"+response.date_array_header[tmp][1]+"</span>";
+							html += "</a>";
+							html += "</td>";
 						}
 						html += "</tr>";
-						k++;
-					}	
-					$('.day').html(html);
-					$("#book-cal").show();
-				}
-				else{
-					$("#book-cal").hide();
-					swal('Sorry!',response.message,'error');
-				}
-			},
+						//console.log(response.calendar_availability_list[tmp]);
+						cal_start = tmp;
+						var daily_element_array = Object.keys(response.calendar_availability_list[tmp]);
+						//console.log(daily_element_array);
+						var whole = daily_element_array.length;
+						//console.log(whole);
+						//return false;
+						var k = 0;
+						while(k<whole){
+							html += "<tr>";
+							for(i = 0;i<date_array_header.length;i++){
+								var row = date_array_header[i];
+								var column = daily_element_array[k];
+										var btn_class= response.calendar_availability_list[row][column].slot_formatted;
+										var style = ""
+										if(response.calendar_availability_list[row][column].booked == 1){
+											btn_class = "-------";
+											style="pointer-events: none; cursor: default";
+										}else if(response.calendar_availability_list[row][column].blocked == 1){
+											btn_class = "-------";
+											style="pointer-events: none; cursor: default";
+										}
+										html += "<td>";
+										html += "<a href='javascript:void(0)' class='times' style='"+style+"' data-date-time-formatted='"+response.calendar_availability_list[row][column].date_time_formatted+"' data-slot='"+response.calendar_availability_list[row][column].slot+"' data-date='"+response.calendar_availability_list[row][column].date+"' >"+btn_class;
+										html += "</a>";
+										html += "</td>";
+							}
+							html += "</tr>";
+							k++;
+						}	
+						$('.day').html(html);
+						$("#book-cal").show();
+					}
+					else{
+						$("#book-cal").hide();
+						swal('Sorry!',response.message,'error');
+					}
+				},
 
-			beforeSend: function(){
-				$('.animationload').show();
-			},
+				beforeSend: function(){
+					$('.animationload').show();
+				},
 
-			complete: function(){
-				$('.animationload').hide();
-			}
-		});
+				complete: function(){
+					$('.animationload').hide();
+				}
+			});
+		} else {
+			swal('Sorry!','Please select the service first','error');
+		}
+
+		
 	}
 	
 	$(document).on('click','a.times',function(){

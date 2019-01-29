@@ -40,6 +40,7 @@ class UsersController extends ApiController {
 			$email = $request->input('email');
 			$conditions = array(
 				array('password','=',md5($password)),
+				array('is_deleted','=',0),
 				'or'=>array('email'=>$email,'username'=>$email)
 			);
 			$selectFields=array('id','email','user_type','is_email_verified','created_on','is_deleted','is_blocked');
@@ -139,6 +140,7 @@ class UsersController extends ApiController {
 			$email = $request->input('email');
 			$conditions = array(
 				array('password','=',md5($password)),
+				array('is_deleted', '=', 0),
 				'or'=>array('email'=>$email,'username'=>$email)
 			);
 			$selectFields=array();
@@ -646,6 +648,8 @@ class UsersController extends ApiController {
 	    	$count = 0;
 		    foreach ($category as $key => $value)
 		    {
+				$service_link = str_replace("_"," ",$service[$key]).'_'.$count;
+
 		    	if($value=='new')
 		    	{
 		    		$param = array('category' => $new_category_name[$key], 'created_by' =>$checkEmail->id,'is_blocked' => 1);
@@ -673,6 +677,7 @@ class UsersController extends ApiController {
 						'currency_id' => $currency[$key],
 						'duration' => $duration_new,
 						'capacity' => $capacity[$key],
+						'service_link' => $service_link,
 				);
 
 		    	//inset into service table

@@ -107,13 +107,13 @@
               }
               ?>
               <ul class="profilelinks">
-                <li><a href="#">Services</a> </li>
-                <li><a href="#"> Expertise </a> </li>
-                <li><a href="#">Presentation </a> </li>
-                <li><a href="#">Contacts</a> </li>
+                <li><a id="service_link" href="javascript:void(0);">Services</a> </li>
+                <li><a id="expertise_link" href="javascript:void(0);">Expertise </a> </li>
+                <li><a id="presentation_link" href="javascript:void(0);">Presentation </a> </li>
+                <li><a id="contact_link" href="javascript:void(0);">Contacts</a> </li>
               </ul>
             </div>
-            <div class="staffs">
+            <div class="staffs" id="staff_section">
               <div class="staffsinside">
                 <div class="headbar"> <img src="{{asset('public/assets/website/images/popup-staffs.png')}}"/>
                   <h4>Staffs</h4>
@@ -124,7 +124,7 @@
               foreach ($staff_list as $key => $value)
               {
               ?>  
-                  <div class="item">
+                  <a href="{{url('/client/view-staffs/'.$value->username)}}"><div class="item">
                     <?php
                      if($value->staff_profile_picture != '')
                      { 
@@ -139,9 +139,8 @@
                     <?php
                      } 
                     ?>
-                    <span>
-                    <?=$value->full_name;?>
-                    </span> </div>
+                    <span><?=$value->full_name;?></span> 
+                  </div></a>
                   <?php
                     }
                     ?>
@@ -150,7 +149,7 @@
                 </div>
               </div>
             </div>
-            <div class="staffs">
+            <div class="staffs" id="presentation_section">
               <div class="staffsinside">
                 <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-presentation.png')}}">
                   <div class="prof-cont">
@@ -162,7 +161,7 @@
                 </div>
               </div>
             </div>
-            <div class="staffs">
+            <div class="staffs" id="expertise_section">
               <div class="staffsinside">
                 <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-expertise.png')}}">
                   <div class="prof-cont">
@@ -191,7 +190,7 @@
                 </div>
               </div>
             </div>
-            <div class="staffs">
+            <div class="staffs" id="service_section">
               <div class="staffsinside">
                 <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-service.png')}}">
                   <div class="prof-cont">
@@ -206,6 +205,7 @@
                         {
                         ?>
                       <div class="appointment mobSevices col-sm-4">
+                        <a href="{{url('/client/service-details/'.$details->service_link)}}">
                         <div class="pull-left">
                           <p>
                             <?=$details->service_name;?>
@@ -217,7 +217,8 @@
                             <?=$details->currency;?>
                             <?=$details->duration ? $details->cost : '';?>
                           </label>
-                          </span> </div>
+                          </span> 
+                        </div></a>
                         <div class="pull-right">
                           <?=$details->cat;?>
                         </div>
@@ -230,7 +231,7 @@
                 </div>
               </div>
             </div>
-            <div class="staffs">
+            <div class="staffs" id="contact_section">
               <div class="staffsinside">
                 <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-location.png')}}">
                   <div class="prof-cont">
@@ -693,13 +694,33 @@
 
    <script src="{{asset('public/assets/website/js/ncrtsdev.js')}}"></script> 
    <script>
-
       $('.carousel').carousel({
-
          interval: false
-
       });
 
+      $("#service_link").click(function() {
+          $('html,body').animate({
+              scrollTop: $("#service_section").offset().top},
+              'slow');
+      });
+
+      $("#presentation_link").click(function() {
+          $('html,body').animate({
+              scrollTop: $("#presentation_section").offset().top},
+              'slow');
+      });
+
+      $("#expertise_link").click(function() {
+          $('html,body').animate({
+              scrollTop: $("#expertise_section").offset().top},
+              'slow');
+      });
+
+      $("#contact_link").click(function() {
+          $('html,body').animate({
+              scrollTop: $("#contact_section").offset().top},
+              'slow');
+      });
    </script> 
    <script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
 </body>

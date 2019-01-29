@@ -2195,13 +2195,18 @@
 	<script src="{{asset('public/assets/website/js/ncrtsdev.js')}}"></script>
 	
 	<script>
+    jQuery.validator.addMethod("alphanumeric", function(value, element) {
+        return this.optional(element) || /^[\w.]+$/i.test(value);
+    }, "Letters, numbers, and underscores only please");
+
 		$('#add_team_member_form').validate({
             rules: {
                 staff_fullname: {
                     required: true
                 },
                 staff_username: {
-                    required: true
+                    required: true,
+                    alphanumeric: true
                 },
                 staff_email: {
                     required: true,
@@ -2222,7 +2227,8 @@
                     required: 'Please enter fullname'
                 },
                 staff_username: {
-                    required: 'Please enter username'
+                    required: 'Please enter username',
+                    alphanumeric: 'Please enter letters, numbers, and underscores only'
                 },
                 staff_email: {
                     required: 'Please enter email',
