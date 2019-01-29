@@ -68,7 +68,13 @@ return [
         
         'email_template_master' => 'email_template_master',
 
-        'request_for_review' => 'request_for_review'
+        'request_for_review' => 'request_for_review',
+
+        'stripe_intregration' => 'stripe_intregration',
+
+
+        'paypal_intregration' => 'paypal_intregration',
+
 
     ],
 

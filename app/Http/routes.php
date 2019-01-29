@@ -200,6 +200,9 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/fetch_appointments','Api\BookingsController@fetch_appointments');
     Route::any('/changepssword','Api\UsersController@changepssword');
     Route::any('/staff_changepssword','Api\StaffsloginController@staff_changepssword');
+    Route::any('/get_stripe_email','Api\IntregrationController@get_stripe_email');
+    
+
     
 });
 
@@ -237,7 +240,7 @@ Route::group(['prefix'=>''],function(){
     Route::get('/client-export','Website\UsersController@client_export');
     Route::get('/staff-details/{search_param?}','Website\UsersController@staff_details');
     Route::get('/staff-export','Website\UsersController@staff_export');
-    Route::get('/integration','Website\UsersController@integration');
+    Route::get('/integration','Website\IntregrationController@integration');
     Route::get('/settings-business-hours/{type}/{search_param?}','Website\UsersController@settings_business_hours');
     Route::get('/booking-options','Website\BookingsController@booking_options');
     Route::get('/booking-rules','Website\BookingsController@booking_rules');
@@ -286,6 +289,10 @@ Route::group(['prefix'=>''],function(){
     Route::any('/booking-list/{duration?}','Website\BookingsController@booking_list');
 
     Route::any('/staff-booking-list/{duration?}','Website\StaffController@staff_booking_list');
+
+    Route::any('/stripe-connect','Website\IntregrationController@stripe_connect');
+
+    Route::any('/paypal_intregration','Website\IntregrationController@paypal_intregration');
     
     
 });
