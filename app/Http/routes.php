@@ -140,15 +140,14 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/profile-personal-image','Api\ProfileController@profile_personal_image');
     Route::post('/change-password','Api\ProfileController@change_password');
 
-    Route::post('/client_login','Api\ClientsController@client_login');
     Route::post('/area_code','Api\StaffsController@area_code');
     Route::post('/get_post_code','Api\StaffsController@get_post_code');
     Route::post('/chnage_postal_code_status','Api\StaffsController@chnage_postal_code_status');
     Route::post('/postal_code_filter','Api\StaffsController@postal_code_filter');
     Route::post('/change_postal_code_customer_interface','Api\StaffsController@change_postal_code_customer_interface');
 
+    Route::post('/client_login','Api\ClientsController@client_login');
     Route::post('/client_forgot_password','Api\ClientsController@client_forgot_password');
-
     Route::post('/client_registration','Api\ClientsController@client_registration');
     Route::any('/client_emailverification/{id}','Api\ClientsController@client_emailverification');
     Route::post('/client_info','Api\ClientsController@client_info');
@@ -168,6 +167,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_appointment_list','Api\ClientsController@client_appointment_list');
     Route::post('/client_appointment_status','Api\ClientsController@client_appointment_status');
     Route::post('/client_booking_list','Api\ClientsController@client_booking_list');
+    Route::post('/client-update-profile-settings','Api\ClientsController@client_update_profile_settings');
 
     Route::any('/staff_login','Api\UsersController@staff_login');
     Route::any('/staff_details_mobile','Api\StaffsController@staff_details_mobile');
@@ -375,6 +375,7 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/appointment-booking/{parameter?}','Website\ClientsController@client_appointment_booking');
     Route::get('/appointment-confirmation/{parameter?}','Website\ClientsController@client_appointment_confirmation');
     Route::any('/booking-list/{parameter?}/{duration?}','Website\ClientsController@client_booking_list');
+    Route::get('/profile-settings/{parameter?}','Website\ClientsController@client_profile_settings');
     
 
 });

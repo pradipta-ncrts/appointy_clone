@@ -128,10 +128,22 @@ Squeedr
 								<div class="clearfix"></div>
 								</div>
 								<div class="col-sm-6">
-								<div class="next-available">
-									<a onclick="get_availibility_calender(2)">Check Availability</a>
-									<h3></h3>
-								</div>
+									<div class="next-available">
+										<a onclick="get_availibility_calender(2)">Check Availability</a>
+										<h3></h3>
+									</div>
+
+									<!--<div class="reshedule">
+										<select id="dropdown_change">
+											<option value="0">Does not repeat</option>
+											<option value="1">Daily</option>
+											<option value="2">Weekly on Friday</option>
+											<option value="3">Monthly on the second friday </option>
+											<option value="4">Every weekday(Monday to Friday) </option>
+											<option value="5">Custom...</option>
+										</select>
+									</div>-->
+									
 								</div>
 								<div class="clearfix"></div>
 							</div>
@@ -203,7 +215,87 @@ Squeedr
 			</div>
 	   </div>
 	</div>
-	</div>
+
+	<!-- Modal -->
+	<div id="reschedule-popup" class="modal" role="dialog">
+		<div>
+			<!-- Modal content-->
+			<div class="modal-content" style="box-shadow:none;border:0;width:100%;">
+				<!--<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Custom Recurrence</h4>
+					</div>-->
+				<div class="modal-body clearfix">
+					<div class="form-group clearfix">
+						<label class="control-label col-sm-4" for="email">Repeat every:</label>
+						<div class="col-sm-4">
+						<input type="number" name="quantity" min="1" max="10" class="form-control">
+						</div>
+						<div class="col-sm-4">
+						<select class="form-control">
+							<option>Week</option>
+							<option>day</option>
+							<option>Month</option>
+							<option>year</option>
+						</select>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label class="control-label col-sm-12">Repeat on:</label>
+						<div class="col-sm-12">
+						<div class="reschedule-bx">
+							<ul>
+								<li><a>S</a></li>
+								<li><a>M</a></li>
+								<li><a>T</a></li>
+								<li><a>W</a></li>
+								<li><a>F</a></li>
+								<li><a>S</a></li>
+							</ul>
+						</div>
+						</div>
+					</div>
+					<div class="apply-mulbx">
+						<input class="rb-email" name="contact-preference" id="rb-email" type="radio" checked="checked" />
+						<label class="label" for="rb-email">Never</label>
+						<br>
+						<input class="rb-phone" name="contact-preference" id="rb-phone" type="radio" />
+						<label class="label" for="rb-phone">On</label>
+						<br>
+						<input class="rb-after" name="contact-preference" id="rb-after" type="radio" />
+						<label class="label" for="rb-after">After</label>
+						<br>
+						<label class="label email" for="email">
+						<div class="aply-dv">No data</div>
+						</label>
+						<label class="label phone" for="phone">
+						<div class="aply-dv">
+							<div class="form-group">
+								<div class="col-md-3"><input type="text" class="form-control" placeholder="" /></div>
+							</div>
+						</div>
+						</label>
+						<label class="label after" for="after">
+						<div class="aply-dv">
+							<div class="form-group">
+								<div class="col-md-3"><input type="number" name="quantity" min="1" max="10" class="form-control" placeholder="13"></div>
+								<div class="col-md-9"><input type="text" class="form-control" placeholder="Occurrences" /></div>
+							</div>
+						</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="discount-btnbx mtop">
+						<button type="submit" class="btn btn-primary pull-left">Cancel</button>
+						<button class="btn pull-right" data-dismiss="modal">Done</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>										
+
+</div>
 @endsection
 
 
@@ -386,6 +478,18 @@ Squeedr
 			}
 		});
 
+		$('#reschedule-popup').dialog({
+			modal: true,
+			autoOpen: false,
+			title: "Custom Recurrence",
+			width: 500
+		});
+
+		$('#dropdown_change').change(function () {
+			if ($(this).val() == "5") {
+				$('#reschedule-popup').dialog('open');
+			}
+		});
 
 	});  
 

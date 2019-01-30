@@ -18,6 +18,7 @@
 	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
       @yield('custom_css') 
    </head>
+   
    <body class="dashboard-bg">
       <div id="web">
         <div class="animationload" style="display: none;">
@@ -42,8 +43,8 @@
                         <div class="dropdown prof-menu" href="#">
                             <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}"></a> 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
-                                <a class="dropdown-item" href="{{ url('client/profile-settings') }}"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> 
-                                <a class="dropdown-item" href="{{ url('client/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> 
+                                <a class="dropdown-item" href="javascript:void(0);" id="profileSettings"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> 
+                                <a class="dropdown-item" href="{{ url('client/login') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> 
                             </div>
                         </div>
                         <div class="main-nav">
@@ -78,17 +79,23 @@
          }
       </script> 
       <script>
-         $(document).ready(function () {
-             $("#adv-sh").click(function () {
-                 $("#adv-op").toggle();
-             });
+        $(document).ready(function () {
+            $("#adv-sh").click(function () {
+                $("#adv-op").toggle();
+            });
 
 
-             var param = '<?php echo Request::segment(3);?>';
-             $("#clientBookingList").click(function(){
+            var param = '<?php echo Request::segment(3);?>';
+            $("#clientBookingList").click(function(){
                 window.location = "<?php echo url('/client/booking-list/');?>"+"/"+param+"/all";
-             });
-         });   
+            });
+
+            $("#profileSettings").click(function(){
+                window.location = "<?php echo url('/client/profile-settings/');?>"+"/"+param;
+            });
+
+
+        });   
 
 
       </script> 
