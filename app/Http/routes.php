@@ -293,6 +293,16 @@ Route::group(['prefix'=>''],function(){
     Route::any('/stripe-connect','Website\IntregrationController@stripe_connect');
 
     Route::any('/paypal_intregration','Website\IntregrationController@paypal_intregration');
+
+    Route::any('/client_stripe_payment','Website\ClientsPaymentController@client_stripe_payment');
+
+    Route::any('/client_payment_status','Website\ClientsPaymentController@client_payment_status');
+
+    Route::any('/client_paypal_payment','Website\ClientsPaymentController@client_paypal_payment');
+
+
+
+    
     
     
 });
