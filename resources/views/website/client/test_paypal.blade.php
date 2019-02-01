@@ -37,7 +37,7 @@ Squeedr
          </div>
       </div>
 
-      <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+    <!--   <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
       <input type='hidden' name='business' value='Paypal_Business_TestAccount_Id'>
       <input type='hidden' name='item_name' value='Camera'>
       <input type='hidden' name='item_number' value='CAM#N1'>
@@ -47,11 +47,29 @@ Squeedr
       <input type='hidden' name='notify_url' value='http://SITE NAME/payment.php'>
       <input type='hidden' name='cancel_return' value='http://SITE NAME/cancel.php'>
       <input type='hidden' name='return' value='http://SITE NAME/success.php'>
-      <!-- COPY and PASTE Your Button Code -->
+  
       <input type="hidden" name="cmd" value="_s-xclick">
       <input type="hidden" name="hosted_button_id" value="### COPY FROM BUTTON CODE ###">
       <input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynow_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-    </form>
+    </form> -->
+
+    <form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post"> 
+        <input type="hidden" name="business" value="rajib.ncrts-facilitator@gmail.com"> 
+        <!-- Specify a Buy Now button. --> 
+        <input type="hidden" name="cmd" value="_xclick"> 
+        <!-- Specify details about the item that buyers will purchase. --> 
+        <input type="hidden" name="item_name" value="Test Item"> 
+        <input type="hidden" name="item_number" value="123456"> 
+        <input type="hidden" name="amount" value="10"> 
+        <input type="hidden" name="currency_code" value="USD"> 
+        <!-- Specify URLs --> 
+        <input type='hidden' name='cancel_return' value='http://localhost/paypal_integration_php/paypal_cancel.php'> 
+        <input type='hidden' name='return' value='http://localhost/paypal_integration_php/paypal_success.php'> 
+        <!-- Display the payment button. --> 
+        <input type="image" name="submit" border="0" 
+        src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="PayPal - The safer, easier way to pay online"> 
+        <img alt="" border="0" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" > 
+    </form> 
    </div>
 </div>
 @endsection
