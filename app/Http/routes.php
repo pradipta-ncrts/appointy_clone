@@ -201,7 +201,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/changepssword','Api\UsersController@changepssword');
     Route::any('/staff_changepssword','Api\StaffsloginController@staff_changepssword');
     Route::any('/get_stripe_email','Api\IntregrationController@get_stripe_email');
-    
+    Route::any('/invoice_booking_details','Api\InvoiceController@invoice_booking_details');
+
 
     
 });
@@ -253,10 +254,12 @@ Route::group(['prefix'=>''],function(){
     Route::get('/create_new_service','Website\UsersController@create_new_service');
     Route::get('/add_services/{type?}','Website\UsersController@add_services');
     Route::get('/edit_service/{service_id?}','Website\UsersController@edit_service');
-	Route::get('/payment-options','Website\UsersController@payment_options');
-    Route::get('/invoice','Website\UsersController@invoice');
-    Route::get('/create-invoice','Website\UsersController@create_invoice');
-    Route::get('/invoice-details','Website\UsersController@invoice_details');
+
+	Route::get('/payment-options','Website\InvoiceController@payment_options');
+    Route::get('/invoice','Website\InvoiceController@invoice');
+    Route::get('/create-invoice/{order_id}','Website\InvoiceController@create_invoice');
+    Route::get('/invoice-details','Website\InvoiceController@invoice_details');
+
     Route::get('/invite-contacts','Website\UsersController@invite_contacts');
     Route::get('/add-location','Website\UsersController@add_location');
     Route::get('/privacy-settings','Website\UsersController@privacy_settings');
@@ -305,6 +308,8 @@ Route::group(['prefix'=>''],function(){
     Route::any('/recuring_booking_list','Website\RecuringBookingController@recuring_booking_list');
 
     Route::any('/recuring_booking_details','Website\RecuringBookingController@recuring_booking_details');
+
+    Route::any('/send_invoice','Website\InvoiceController@send_invoice');
 
     
 

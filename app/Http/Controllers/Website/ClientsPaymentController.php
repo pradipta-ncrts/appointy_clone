@@ -301,7 +301,7 @@ class ClientsPaymentController extends ApiController {
     }
 
     
-    public function client_paypal_payment($parameter=NULL)
+    public function client_paypal_payment(Request $request, $parameter=NULL)
 	{
 		$appointment_id = "1";
         $user_id = '43';
@@ -333,7 +333,7 @@ class ClientsPaymentController extends ApiController {
         $service_provider_address = 'Chatterjee International <br> Park Street <br> Kolkata - 700071';
         $service_provider_email = "rajib.ncrts@gmail.com";
         $service_provider_phone = '9876543210';
-        $paypalID = "rajib.ncrts-facilitator@gmail.com";
+        $paypalID = "rajibjana2008-facilitator@gmail.com";
 
 
         //Client Data
@@ -363,34 +363,11 @@ class ClientsPaymentController extends ApiController {
 
   		
 
-        if ($_GET || $_POST)
+        if ($request->tx)
         {
-        	echo "<pre>";
-        	print_r($_GET);
-        	echo "<pre>";
-  			print_r($_POST); die();
-            // Charge Payment //
             try {
-                
-                $final_charge = $_POST;
-                //echo "<pre>";
-                //print_r($final_charge); die();
-                if($final_charge['status'] == 'succeeded')
+                if($request->st == 'Completed')
                 {
-       
-                	//Transfer Amount to Service Provider
-
-                	/*$transfer = \Stripe\Transfer::create(array(
-						"amount" => number_format($payble_amount, 2, '.', '') * 100,
-						"currency" => $payable_currency,
-						"source_transaction" => $final_charge['id'],
-						"destination" => $stripe_user_id,
-						"transfer_group" => $order_id,
-					));*/
-
-
-
-
                     // Update user appointment table
                     $updateCond = array(
 		                array('order_id','=',$order_id),
@@ -400,7 +377,7 @@ class ClientsPaymentController extends ApiController {
                     		'paid_amount' => $total_amount,
                   			'payment_status' => '1',
                   			'payment_method' => $payment_method,
-                  			'transuction_id' => $final_charge['id'],
+                  			'transuction_id' => $request->tx,
                   			'invoice_date' => $invoice_date,
                   			'payment_terms' => $payment_terms,
                   			'due_date' => $due_date,
@@ -410,7 +387,6 @@ class ClientsPaymentController extends ApiController {
                   	// Insert into stripe payment //
                     if($update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data_array)) 
                     {
-
                     	//Booking confirmation mail to client
                     	$email_template = $this->email_template($user_id,$type = 5);
 						$templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
@@ -495,34 +471,29 @@ class ClientsPaymentController extends ApiController {
                     }
                     else
                     {
-                    	return redirect(url('client_payment_status/'))->with('payment_error','This card does not support this currency.');
+                    	return redirect(url('client_payment_status/'))->with('payment_error','Payment not complete successfully.');
                     }
                 }
 
             } catch (\Exception $e) {
                 // Error Message //
 
-                /*$body = $e->getJsonBody();
-                //print_r($body); 
-				$err = $body['error'];
-				$msg = $err['message'];
-				return redirect(url('client_payment_status/'))->with('payment_error',$msg);*/
+                return redirect(url('client_payment_status/'))->with('payment_error','Payment not complete successfully.');
 
             }
         } else {
             echo '<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top" name="paypal_payment">
-			      <input type="hidden" name="business" value="'.$paypalID.'">
-			      <input type="hidden" name="item_name" value="'.$service_name.'">
-			      <input type="hidden" name="item_number" value="'.$order_id.'">
-			      <input type="hidden" name="amount" value="'.$payble_amount.'">
-			      <input type="hidden" name="txn_id" value="123456">
-			      <input type="hidden" name="cmd" value="_xclick">
-			      <input type="hidden" name="currency_code" value="'.strtoupper($payable_currency).'">
-			      <input type="hidden" name="notify_url" value="'.url('client_paypal_payment').'">
-			      <input type="hidden" name="cancel_return" value="'.url('client_payment_cancel').'">
-			     
-			      <input type="hidden" name="return" value="http://runmobileapps.com/squeedr/paypal/test.php">
-		   		</form>
+		      <input type="hidden" name="business" value="'.$paypalID.'">
+		      <input type="hidden" name="item_name" value="'.$service_name.'">
+		      <input type="hidden" name="item_number" value="'.$order_id.'">
+		      <input type="hidden" name="amount" value="'.$payble_amount.'">
+              <input type="hidden" name="cmd" value="_xclick">
+              <input type="hidden" name="at" value="myToken">
+		      <input type="hidden" name="currency_code" value="'.strtoupper($payable_currency).'">
+		      <input type="hidden" name="cancel_return" value="'.url('client_payment_cancel').'">
+		     
+		      <input type="hidden" name="return" value="'.url('client_paypal_payment').'">
+		    </form>
             <script>
                window.onload = function(){
 				  document.forms["paypal_payment"].submit();
@@ -574,12 +545,14 @@ class ClientsPaymentController extends ApiController {
         return $email_template;
     }
 
-    public function client_paypal_success(Request $request, $parameter=NULL)
+    /*public function client_paypal_success(Request $request, $parameter=NULL)
 	{
 		echo "<pre>";
 		print_r($request->all()); die();
 	}
+    */
 
+    
     
 	
 }

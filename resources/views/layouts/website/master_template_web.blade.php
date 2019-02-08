@@ -132,7 +132,7 @@
             <li class="c-menu__item"><a href="{{ url('services/all') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon1.png')}}" alt=""> Room, Services and Packs</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li>
             <!-- <li class="c-menu__item"><a href="#" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon2.png')}}" alt=""> Current Appointments</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li> -->
             <li class="c-menu__item"><a href="#" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon3.png')}}" alt=""> Book with google</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li>
-            <li class="c-menu__item"><a href="{{ url('payment-options') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon4.png')}}" alt=""> PrePayment Option</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li>
+            <li class="c-menu__item"><a href="{{ url('invoice') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon4.png')}}" alt=""> PrePayment Option</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li>
             <li class="c-menu__item"><a href="{{ url('invite-contacts') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon5.png')}}" alt=""> Import & Invite Contacts</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li>
             <li class="c-menu__item"><a href="{{ url('add-location') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/slide-rgt-icon6.png')}}" alt=""> Add Location</a> <span>There are many varitions of passages of Lorem Ipsum available</span> </li>
          </ul>
@@ -2395,17 +2395,18 @@
 
    <script>
      $( function() {
-         var $var = $("#appointmentdate,#reshedule_appointmentdate,#block_time_date"); 
+         var $var = $("#appointmentdate,#reshedule_appointmentdate,#block_time_date");
              $var.datepicker({
                minDate:0,
             });
 
-         /*var $dp2 = $("#reshedule_appointmentdate"); 
+         var $dp2 = $("#due_date"); 
              $dp2.datepicker({
                //changeYear: true,
                //changeMonth: true,
                minDate:1,
-            });*/
+               dateFormat: 'yy-mm-dd',
+            });
 
          var $dp3 = $("#block_date"); 
              $dp3.multiDatesPicker({
