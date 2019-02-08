@@ -12,35 +12,42 @@ Squeedr
             <div class="col-sm-5">
                <div id="custom-search-input">
                   <div class="input-group col-md-12">
-                     <input type="text" class="  search-query form-control" placeholder="Search" />
+                    <!--  <input type="text" class="  search-query form-control" placeholder="Search" />
                      <span class="input-group-btn">
                      <button class="btn btn-danger" type="button">
                      <span class=" glyphicon glyphicon-search"></span>
                      </button>
-                     </span>
+                     </span> -->
                   </div>
                </div>
             </div>
             <div class="col-md-7">
                <div class="full-rgt">
                   <div class="dropdown custm-uperdrop">
-                     <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Search by <img src="images/arrow.png" alt=""/></button>
+                     <!-- <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Search by <img src="images/arrow.png" alt=""/></button>
                      <ul class="dropdown-menu">
                         <li><a href="#">All</a></li>
                         <li><a href="#">Issued</a></li>
                         <li><a href="#">Pending</a></li>
-                     </ul>
+                     </ul> -->
                   </div>
                </div>
             </div>
          </div>
       </div>
+      @if(Session::has('success'))
+         <div class="alert alert-success alert-dismissible margin-t-10" style="margin-bottom:15px;">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <p><i class="icon fa fa-check"></i><strong>Success!</strong> {{Session::get('success')}}</p>
+        </div>
+      
+      @endif
       <div class="leftpan">
          <div class="left-menu">
             <ul>
-               <li><a href="{{ url('payment-options') }}"> Payment Options</a></li>
+              <!--  <li><a href="{{ url('payment-options') }}"> Payment Options</a></li> -->
                <li><a href="{{ url('invoice') }}" class="active"> Invoice </a> </li>
-               <li><a href="{{ url('create-invoice')}}"> Create invoice <br>(Issued/Pending  Template)</a></li>
+               <!-- <li><a href="{{ url('create-invoice')}}"> Create invoice <br>(Issued/Pending  Template)</a></li> -->
             </ul>
          </div>
       </div>

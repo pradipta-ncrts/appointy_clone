@@ -31,6 +31,6 @@
       <a target="_blank" href="https://www.instagram.com/squeedr/?hl=fr" style="margin:15px 15px 5px; display:inline-block"><img src="{{asset('public/assets/website/images/instagram.png')}}"  width="40px; "></a>
       <br><br>
       <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
-      <p>Copyright &copy; <?php date('Y');?></p>
+      <p>Copyright &copy; <?php echo date('Y');?></p>
    </div>
 </div>

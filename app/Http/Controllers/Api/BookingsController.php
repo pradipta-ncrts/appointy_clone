@@ -588,6 +588,8 @@ class BookingsController extends ApiController {
 
                                     'total_payable_amount' => $service_price,
 
+                                    'order_id' => 'SQU'.time().mt_rand().$user_id,
+
                                 );  
 
                                 //echo '<pre>'; print_r($param); exit;    
@@ -3437,7 +3439,7 @@ class BookingsController extends ApiController {
 
         // Appoinment section //
 
-        $appoinment_fields = array('appointment_id', 'start_time', 'end_time', 'date','note');
+        $appoinment_fields = array('appointment_id', 'order_id', 'start_time', 'end_time', 'date','note');
 
         $stuff_fields = array('full_name as staff_name');
 
