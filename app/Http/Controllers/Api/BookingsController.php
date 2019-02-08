@@ -5699,11 +5699,11 @@ class BookingsController extends ApiController {
 
 
 
-                $appoinment_fields = array('appointment_id', 'user_id', 'service_id', 'staff_id', 'client_id', 'date as appointment_date', 'start_time as appointment_start_time', 'end_time as appointment_end_time', 'note as appointment_note', 'payment_note', 'payment_amount', 'additional_amount', 'discount_amount', 'gift_certificate_amount', 'total_payable_amount', 'remaining_balance', 'paid_amount', 'payment_status', 'payment_method', 'cancelled_reason', 'updated_on', 'created_on');
+                $appoinment_fields = array('order_id', 'user_id', 'service_id', 'staff_id', 'client_id', 'appointment_type', 'recurring_booking_ends_on', 'date as appointment_date', 'start_time as appointment_start_time', 'end_time as appointment_end_time', 'note as appointment_note', 'payment_note', 'payment_amount', 'additional_amount', 'discount_amount', 'gift_certificate_amount', 'total_payable_amount', 'remaining_balance', 'paid_amount', 'payment_status', 'payment_method', 'cancelled_reason', 'updated_on', 'created_on');
 
                 $client_fields = array('client_name','client_email','client_mobile','client_address');
 
-                $service_fields = array('service_name','cost','duration');
+                $service_fields = array('service_name','cost','duration','timezone','description as service_description');
 
                 $stuff_fields = array('full_name as staff_name','email as staff_email', 'mobile as staff_mobile');
 
@@ -5795,7 +5795,7 @@ class BookingsController extends ApiController {
 
                 
 
-                $appoinment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appointment_condition,$appoinment_fields,$joins);
+                $appoinment_details = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appointment_condition,$appoinment_fields,$joins,$orderBy=array(),$groupBy='order_id');
 
                 if(!empty($appoinment_details))
 

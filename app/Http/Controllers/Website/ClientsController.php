@@ -408,7 +408,7 @@ class ClientsController extends ApiController {
 			if($return->response_status == 1)
 			{
 				// Call API //
-				$post_data['appointment_id'] = $param_data['appointment_id'];
+				$post_data['order_id'] = $param_data['order_id'];
 				$appo_url_func_name="client_appointment_details";
 				$appo_return = $this->curl_call($appo_url_func_name,$post_data);
 				//echo "<pre>";print_r($appo_return); die();
@@ -608,6 +608,67 @@ class ClientsController extends ApiController {
 	
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.client.client-profile-settings',$data);
+		} else {
+			return redirect('client/login');
+		}
+	}
+
+	function client_profile_picture_settings($parameter=NULL){
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+			
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+			
+			if($return->response_status == 1)
+			{
+				$data['client_details'] = $return->client_details;
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-profile-picture-settings',$data);
+		} else {
+			return redirect('client/login');
+		}
+	}
+
+	function client_login_settings($parameter=NULL){
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+			
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+			
+			if($return->response_status == 1)
+			{
+
+				$data['client_details'] = $return->client_details;
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-login-settings',$data);
 		} else {
 			return redirect('client/login');
 		}

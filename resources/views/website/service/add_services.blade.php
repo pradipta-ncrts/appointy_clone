@@ -6,6 +6,9 @@ Squeedr
 <link href="{{asset('public/assets/website/css/spectrum.css')}}" rel="stylesheet">
 @endsection
 @section('content')
+<?php
+$timezone = App\Http\Controllers\BaseApiController::time_zone(); 
+?>
 <div class="body-part">
    <div class="container-custm">
       <div class="upper-cmnsection">
@@ -52,6 +55,25 @@ Squeedr
                                  <span class="specialnote">e.g. Joe's Coffee, I'll Call you, etc</span> 
                               </div>
                            </div>
+                           <div class="row">
+                              <div class="col-lg-6 col-md-6 col-sm-6">
+                                 <label for="service_location">Timezone</label>
+                                 <select data-live-search="true" name="service_timezone" id="service_timezone" >
+                                    <option value="">Select Timezone </option>
+                                    <?php
+                                    foreach($timezone as $tzone)
+                                    {
+                                    ?>
+                                    <option value="<?=$tzone['zone'] ?>">
+                                      <?=$tzone['diff_from_GMT'] . ' - ' . $tzone['zone'] ?>
+                                    </option>
+                                    <?php
+                                    }
+                                    ?>
+                                  </select>
+                              </div>
+                           </div>
+                           <br>
                            <div class="clearfix"></div>
                            <div class="form-group">
                               <input type="radio" checked="checked" name="service_display_location" id="booking" value="1" />
@@ -150,6 +172,9 @@ Squeedr
             service_name: {
                 required: true
             },
+            service_timezone: {
+               required: true
+            },
             service_currency: {
                 required: true
             },
@@ -168,6 +193,9 @@ Squeedr
         messages: {
             service_name: {
                 required: 'Please enter service name'
+            },
+            service_timezone: {
+                required: 'Please enter service timezone'
             },
             service_currency: {
                 required: 'Please choose currency'

@@ -154,6 +154,10 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/service_provicer_category_list','Api\ClientsController@service_provicer_category_list');
     Route::post('/service_invitee_question','Api\ClientsController@service_invitee_question');
     Route::post('/client_appointment_booking_process','Api\ClientsController@client_appointment_booking_process');
+    Route::post('/get_booking_rule','Api\ClientsController@get_booking_rule');
+    Route::post('/client_profile_picture_upload','Api\ClientsController@client_profile_picture_upload');
+    Route::post('/client_change_password','Api\ClientsController@client_change_password');
+    
     
     
     Route::post('/event_viewer_list','Api\UsersController@event_viewer_list');
@@ -386,6 +390,9 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/appointment-confirmation/{parameter?}','Website\ClientsController@client_appointment_confirmation');
     Route::any('/booking-list/{parameter?}/{duration?}','Website\ClientsController@client_booking_list');
     Route::get('/profile-settings/{parameter?}','Website\ClientsController@client_profile_settings');
+    Route::get('/profile-picture-settings/{parameter?}','Website\ClientsController@client_profile_picture_settings');
+    Route::get('/login-settings/{parameter?}','Website\ClientsController@client_login_settings');
+
     
 
 });

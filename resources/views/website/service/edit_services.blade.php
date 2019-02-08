@@ -36,7 +36,7 @@ $sel_increment = "15";
 //echo $show_from."<<>>".$show_till."<<>>".$increment; exit;
 $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=>'JUN','6'=>'JUL','7'=>'AUG','8'=>'SEP','9'=>'OCT','10'=>'NOV','11'=>'DEC');
 $currency_list = App\Http\Controllers\BaseApiController::currency_list();
-//echo '<pre>'; print_r($currency_list); exit;
+$timezone = App\Http\Controllers\BaseApiController::time_zone(); 
 ?>
 <div class="body-part">
     <div class="container-custm">
@@ -85,6 +85,26 @@ $currency_list = App\Http\Controllers\BaseApiController::currency_list();
                                 </div>
                             </div>
                             <div class="clearfix"></div>
+                            <div class="row">
+                              <div class="col-lg-6 col-md-6 col-sm-6">
+                                 <label for="service_location">Timezone</label>
+                                 <select data-live-search="true" name="service_timezone" id="service_timezone" >
+                                    <option value="">Select Timezone </option>
+                                    <?php
+                                    foreach($timezone as $tzone)
+                                    {
+                                    ?>
+                                    <option <?php if(!empty($service_details->service_timezone) && $service_details->service_timezone == $tzone['zone']) { ?> selected="" <?php } ?> value="<?=$tzone['zone'] ?>">
+                                      <?=$tzone['diff_from_GMT'] . ' - ' . $tzone['zone'] ?>
+                                    </option>
+                                    <?php
+                                    }
+                                    ?>
+                                  </select>
+                              </div>
+                            </div>
+                            <br>
+                            <div class="clearfix"></div>
                             <div class="form-group">
                                 <input type="radio" <?php if($service_details->display_location == '1') { ?> checked="checked" <?php } ?> name="service_display_location" id="booking" value="1" />
                                 <label class="right35px">Display location while booking</label>
@@ -92,6 +112,7 @@ $currency_list = App\Http\Controllers\BaseApiController::currency_list();
                                 <input type="radio" <?php if($service_details->display_location == '2') { ?> checked="checked" <?php } ?> name="service_display_location" id="confirm" value="2" />
                                 <label class="right35px">Display location only after confirmation</label>
                             </div>
+                            <div class="clearfix"></div>
                         </div>
                         <div class="form-group">
                             <div class="row">
@@ -894,6 +915,9 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
            service_name: {
                required: true
            },
+           service_timezone: {
+               required: true
+           },
            service_currency: {
                required: true
            },
@@ -913,6 +937,9 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
        messages: {
            service_name: {
                required: 'Please enter service name'
+           },
+           service_timezone: {
+               required: 'Please enter service timezone'
            },
            service_currency: {
                required: 'Please choose currency'

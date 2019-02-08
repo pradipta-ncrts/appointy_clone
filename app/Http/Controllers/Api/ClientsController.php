@@ -975,11 +975,11 @@ class ClientsController extends ApiController {
         // Check User Login. If not logged in redirect to login page /
         $response_data = array(); 
 
-        $appointment_id = $request->input('appointment_id'); 
+        $order_id = $request->input('order_id'); 
         $client_id = $request->input('client_id'); 
         //appoinment data using id
         $appoinment_condition = array(
-            array('appointment_id', '=', $appointment_id),
+            array('order_id', '=', $order_id),
             array('client_id', '=', $client_id),
             array('is_deleted', '=', 0)
         );
@@ -1049,8 +1049,8 @@ class ClientsController extends ApiController {
                 ),
         );
         
-        $appoinment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
-
+        $appoinment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins,$orderBy=array(),$groupBy='order_id');
+        //echo '<pre>'; print_r($appoinment_details); exit;
         $appoinmnet = array();
         if(!empty($appoinment_details)){
             $parameter = [
@@ -1076,6 +1076,7 @@ class ClientsController extends ApiController {
     
             $appoinmnet = array(
                     "appointment_id" => $appoinment_details->appointment_id,
+                    "order_id" => $appoinment_details->order_id,
                     "user_id" => $appoinment_details->user_id,
                     "client_email" => $appoinment_details->client_email,
                     "client_name" => $appoinment_details->client_name,
@@ -1270,7 +1271,14 @@ class ClientsController extends ApiController {
             $formatted_date = date('Y-m-d',strtotime($date));
             $appointmenttime = $request->input('booking_time');
             $numeric_day = date('N', strtotime($date));
+            $order_id = 'SQU'.time().mt_rand().$user_id;
+            $recurring_booking_frequency = $request->input('recurring_booking_frequency');
+            $recurring_booking_end_type = $request->input('recurring_booking_end_type');
+            $recurring_booking_end_on = $request->input('recurring_booking_end_on');
+            $recurring_booking_text = $request->input('recurring_booking_text');
 
+            $strto_start_time = strtotime($formatted_date.' '.$appointmenttime); 
+            
             //Client data using id
             $client_condition = array(
                 array('client_id', '=', $client)
@@ -1285,321 +1293,298 @@ class ClientsController extends ApiController {
                 );
                 $stuff_fields = array('staff_id', 'email', 'full_name');
                 $stuff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$stuff_condition, $stuff_fields);    
+                $staff_email = $stuff_details->email;
+                $staff_name = $stuff_details->full_name;
             }
             
             //Survice details
             $service_condition = array(
                 array('service_id', '=', $appoinment_service)
             );
-            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color');    
+            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color', 'payment_method');    
             $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
             $colour_code = $service_details->color;
-
-            //calculate end time
+            $payment_method = $service_details->payment_method;
             $duration = $service_details->duration;
             $service_price = $service_details->cost;
             $service_currency_id = $service_details->currency_id;
+
+            //calculate end time
             $endTime = strtotime("+".$duration." minutes", strtotime($appointmenttime));
             $endTime = date('h:i A', $endTime); 
 
-            $strto_start_time = strtotime($date.' '.$appointmenttime); 
-            $strto_end_time = strtotime($date.' '.$endTime);
 
+            $formatted_date_array = array();
+            $return_array = array();
+            $insert_data = array();
+            $unavailable = 0;
+            $total_payable_amount = 0;
 
-            // Check Service Availability Date//
-            $ser_ava_condition = array(
-                array('user_id', '=', $user_id),
-                array('service_id', '=', $appoinment_service),
-                array('day', '=', $numeric_day),
-                array('is_deleted', '=', '0'),
-                'raw' => "((start_date <= '".$formatted_date."' AND end_date >= '".$formatted_date."') OR (start_date <= '".$formatted_date."' AND end_date = '0000:00:00'))",
-            );
-
-            $ser_ava_fields = array();                   
-            $checkServiceAvalibilityDate = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
-            //print_r($checkServiceAvalibilityDate); die();
-            if(!empty($checkServiceAvalibilityDate)){
-                // Check Service Availability Time//
-                $service_available = 'false';
-                foreach($checkServiceAvalibilityDate as $ser_ava_dt){
-                    $ava_starttime = strtotime($formatted_date.' '.$ser_ava_dt->start_time.':00');
-                    $ava_endtime = strtotime($formatted_date.' '.$ser_ava_dt->end_time.':00');
-                    if($strto_start_time >= $ava_starttime && $strto_end_time <= $ava_endtime){
-                        $service_available = 'true';
-                        break;
-                    }
+            if($recurring_booking_frequency == 1){
+                if($recurring_booking_end_type == 1){
+                    $formatted_end_date = date('Y-m-d',strtotime($recurring_booking_end_on));
+                } else {
+                    $formatted_end_date = date('Y-m-d',strtotime("+".$recurring_booking_end_on." day", strtotime($formatted_date)));
                 }
-                //echo $service_available; exit;
-                if($service_available == true){
-                    if($staff > 0){
-                        // Check Staff Availability //
-                        $condition = array(
-                            array('block_date', '=', date('Y-m-d', strtotime($date))),
-                            array('is_deleted', '=', '0'),
-                            array('user_id', '=', $user_id),
-                            array('staff_id', '=', $staff),
-                            'raw' => "(($strto_start_time BETWEEN strto_start_time AND strto_end_time) OR ($strto_end_time BETWEEN strto_start_time AND strto_end_time))",
-                        );
+                $query = "SELECT count(DISTINCT `day`) as total_day FROM `squ_service_availability` WHERE `user_id` = '".$user_id."' AND `service_id` = '".$appoinment_service."' AND `is_deleted` = 0 ";
+                $checkServiceAvalibility = $this->common_model->customQuery($query,$query_type=1);
 
-                        $fields = array();                   
-                        $checkBlock = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$condition, $fields);
-                        //print_r($checkBlock); die();
-                        if(empty($checkBlock)) {
-                            // Check Staff-Service Availability //
-                            $ser_staff_ava_condition = array(
-                                array('staff_id', '=', $staff),
-                                array('service_id', '=', $appoinment_service),
-                                array('day', '=', $numeric_day),
-                                array('is_blocked', '=', '0'),
-                                array('is_deleted', '=', '0'),
-                            );
-        
-                            $fields = array();                   
-                            $checkStaffServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$ser_staff_ava_condition, $fields);
-                            //echo '<pre>'; print_r($checkStaffServiceAvalibility); exit;
-                            if(!empty($checkStaffServiceAvalibility)){
-                                // Check Available Time //
-                                $staff_serviice_available = false;
-                                foreach($checkStaffServiceAvalibility as $staff_ser_ava){
-                                    $available_starttime = strtotime($formatted_date.' '.$staff_ser_ava->start_time);
-                                    $available_endtime = strtotime($formatted_date.' '.$staff_ser_ava->end_time);
-                                    if($strto_start_time >= $available_starttime && $strto_end_time <= $available_endtime){
-                                        $staff_serviice_available = true;
-                                        break;
-                                    }
-                                }
-                                //echo $staff_serviice_available; exit;
-                                if($staff_serviice_available == true){
-                                    $param = array(
-                                        'user_id' => $user_id,
-                                        'service_id' => $appoinment_service,
-                                        'staff_id' => $staff,
-                                        'client_id' => $client,
-                                        'date' => date('Y-m-d', strtotime($date)),
-                                        'start_time' => date('h:i A', strtotime($appointmenttime)),
-                                        'end_time' => date('h:i A', strtotime($endTime)),
-                                        'strto_start_time' => $strto_start_time,
-                                        'strto_end_time' => $strto_end_time,
-                                        'colour_code' => $colour_code,
-                                        'payment_amount' => $service_price,
-                                        'total_payable_amount' => $service_price,
-                                    );  
-                                    //echo '<pre>'; print_r($param); exit;    
-                                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
-                                    if($insertdata > 0)
-                                    {
+                //echo '<pre>'; print_r($checkServiceAvalibility); exit;
+                if(!empty($checkServiceAvalibility) && $checkServiceAvalibility[0]->total_day == 7){
+                    // Code Here //
+                    for( $i = strtotime($date); $i <= strtotime($formatted_end_date); $i = $i + 86400 ) {
+                        //$formatted_date_array[] = date( 'Y-m-d', $i );
+                        $formatted_date = date( 'Y-m-d', $i );
+                        $numeric_day = date( 'N', $i );
+                        $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                        if(empty($return_array)){
+                            $unavailable++;
+                            //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
+                            //break;
+                        } else {
+                            $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
+                            array_push($insert_data,$return_array);
+                        }
+                    }
                 
-                                            $parameter = [
-                                                'appointment_id' => $insertdata,
-                                                'client_id' => $client,
-                                            ];
-                                            $parameter= Crypt::encrypt($parameter);
-                                            $cancel_url = url('/client/cancel_appointent',$parameter);
-                                            $reschedule_url = url('/client/reschedule-appointment',$parameter);
-                                            //send mail to client
-                                            $client_email = $client_details->client_email;
-                                            $client_name = $client_details->client_name;
-                                            $staff_email = $stuff_details->email;
-                                            $staff_name = $stuff_details->full_name;
-                                            $service_name = $service_details->service_name;
-                                            $service_cost = $service_details->cost;
-                                            $service_duration = $service_details->duration;
-                                            $service_location = $service_details->location;
-                                            //$service_currency = $service_details->duration;
-                                            $service_start_time = date('l d, Y h:i A',$strto_start_time);
-
-                                            //check user subscription
-                                            $email_template = $this->email_template($user_id,$type = 5);
-
-                                            $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
-                                            <table width="100%">
-                                                <tr>
-                                                    <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
-                                                    <td style="color:#FFF; text-align: right; " >&nbsp;</td>
-                                                </tr>
-                                            </table>
-                                            </div>';
-                                            $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
-                                            <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
-                                            <p style="text-align:center">For even easier management of your appointments.</p>
-                                            <div style="text-align:center;">
-                                                <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
-                                                <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
-                                            </div>
-                                            </div>
-                                            <div style="text-align:center">
-                                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
-                                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
-                                            <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
-                                            <br><br>
-                                            <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
-                                            <p>Copyright &copy; '.date('Y').'</p>
-                                            </div>';
-
-                                            $mail_body = $email_template->message;
-                                            $mail_body = str_replace('{header}', $templateHeader, $mail_body);
-                                            $mail_body = str_replace('{client_name}', $client_email, $mail_body);
-                                            $mail_body = str_replace('{service_name}', $service_name, $mail_body);
-                                            $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
-                                            $mail_body = str_replace('{booking_time}', $service_start_time, $mail_body);
-                                            $mail_body = str_replace('{location}', $service_location, $mail_body);
-                                            $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
-                                            $mail_body = str_replace('{reshedule_url}', $reschedule_url, $mail_body);
-                                            $mail_body = str_replace('{cancel_url}', $cancel_url, $mail_body);
-                                            $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
-
-                                            $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Booking Confirm';
-                                            $emailData['content'] = $mail_body;
-
-                                            $this->sendmail(7,$client_email,$emailData);
-                
-                
-                                            //send mail to stuff
-
-                                            $stuff_email_data['client_name'] = $client_name;
-                                            $stuff_email_data['staff_email'] = $staff_email;
-                                            $stuff_email_data['staff_name'] = $staff_name;
-                                            $stuff_email_data['service_name'] = $service_name;
-                                            $stuff_email_data['service_cost'] = $service_cost;
-                                            $stuff_email_data['service_duration'] = $service_duration;
-                                            $stuff_email_data['service_location'] = $service_location;
-                                            $stuff_email_data['reschedule_url'] = $reschedule_url;
-                                            $stuff_email_data['cancel_url'] = $cancel_url;
-                                            $stuff_email_data['service_start_time'] = $service_start_time;
-                                            $stuff_email_data['email_subject'] = "Booking Confirm";
-
-                                            $this->sendmail(8,$staff_email,$stuff_email_data);
-                
-                
-                                        // Event Viewer //
-                                        //$this->add_user_event_viewer($user_id,$type=4,$staff);
-                                        $response_data['parameter'] = $parameter;
-                                        
-                                        $this->response_status='1';
-                                        $this->response_message = "Your appointment has been successfully booked.";
-                                    }
-                                    else
-                                    {
-                                        $this->response_message = "Something went wrong. Please try agian later.";
-                                    }
-                                } else {
-                                    $this->response_message = "Staff is not available for this service.";
-                                }
-
+                } else {
+                    $this->response_message = "Service is not availble for daily, please try again with other time slots.";
+                }
                                 
+            } else if($recurring_booking_frequency == 2){
+                //$formatted_end_date = date('Y-m-d',strtotime("+7 day", strtotime($formatted_date)));
+                if($recurring_booking_end_type == 1){
+                    $formatted_end_date = date('Y-m-d',strtotime($recurring_booking_end_on));
+                } else {
+                    $formatted_end_date = date('Y-m-d',strtotime("+".($recurring_booking_end_on*7)." day", strtotime($formatted_date)));
+                }
+                
+                $appoinment_condition = array(
+                                    array('user_id', '=', $user_id),
+                                    array('service_id', '=', $appoinment_service),
+                                    array('day','=',$numeric_day),
+                                    array('is_deleted','=','0'),
+                                    //'raw' => "((start_date <= '".$formatted_date."' AND end_date >= '".$formatted_end_date."'))",
+                                    );
+
+                $appointment_fields = array();                   
+                $checkServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$appoinment_condition, $appointment_fields);
+                if(!empty($checkServiceAvalibility)){
+                    // Code Here //
+                    for($i = strtotime('N', strtotime($date)); $i <= strtotime($formatted_end_date); $i = strtotime('+1 week', $i)){
+                        //$formatted_date_array[] = date('Y-m-d', $i );
+                        $formatted_date = date( 'Y-m-d', $i );
+                        $numeric_day = date( 'N', $i );
+                        $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                        if(empty($return_array)){
+                            $unavailable++;
+                            //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
+                            //break;
+                        } else {
+                            $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
+                            array_push($insert_data,$return_array);
+                        }
+                    }
+                    //echo '<pre>'; print_r($insert_data); exit;
+                    
+                } else {
+                    $this->response_message = "Service is not availble for weekly, please try again with other time slots.";
+                }
+            } else if($recurring_booking_frequency == 3){
+                //$formatted_end_date = date('Y-m-d',strtotime("+30 day", strtotime($formatted_date)));
+                if($recurring_booking_end_type == 1){
+                    $formatted_end_date = date('Y-m-d',strtotime($recurring_booking_end_on));
+                } else {
+                    $formatted_end_date = date('Y-m-d',strtotime("+".($recurring_booking_end_on*30)." day", strtotime($formatted_date)));
+                }
+                
+                $appoinment_condition = array(
+                                    array('user_id', '=', $user_id),
+                                    array('service_id', '=', $appoinment_service),
+                                    array('day','=',$numeric_day),
+                                    array('is_deleted','=','0'),
+                                    //'raw' => "((start_date <= '".$formatted_date."' AND end_date >= '".$formatted_end_date."'))",
+                                    );
+
+                $appointment_fields = array();                   
+                $checkServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$appoinment_condition, $appointment_fields);
+                if(!empty($checkServiceAvalibility)){
+                    // Code Here //
+                    for($i = strtotime($date); $i <= strtotime($formatted_end_date); $i = strtotime('+1 month', $i)){
+                        //$formatted_date_array[] = date('Y-m-d', strtotime($recurring_booking_text.''. date('Y-m',$i)));
+                        $formatted_date = date('Y-m-d', strtotime($recurring_booking_text.''. date('Y-m',$i)));
+                        $numeric_day = date( 'N', $i );
+                        $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                        if(empty($return_array)){
+                            $unavailable++;
+                            //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
+                            //break;
+                        } else {
+                            $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
+                            array_push($insert_data,$return_array);
+                        }
+                    }
+                } else {
+                    $this->response_message = "Service is not availble for monthly, please try again with other time slots.";
+                }
+            } else if($recurring_booking_frequency == 4){
+                //$formatted_end_date = date('Y-m-d',strtotime("+7 day", strtotime($formatted_date)));
+                if($recurring_booking_end_type == 1){
+                    $formatted_end_date = date('Y-m-d',strtotime($recurring_booking_end_on));
+                } else {
+                    $formatted_end_date = date('Y-m-d',strtotime("+".$recurring_booking_end_on." day", strtotime($formatted_date)));
+                }
+
+                $query = "SELECT DISTINCT `day` FROM `squ_service_availability` WHERE `user_id` = '".$user_id."' AND `service_id` = '".$appoinment_service."' AND `is_deleted` = 0 ORDER BY `day` ASC";
+                $checkServiceAvalibility = $this->common_model->customQuery($query,$query_type=1);
+                if(!empty($checkServiceAvalibility) && $checkServiceAvalibility[0]->day == 1 && $checkServiceAvalibility[1]->day == 2 && $checkServiceAvalibility[2]->day == 3 && $checkServiceAvalibility[3]->day == 4 && $checkServiceAvalibility[4]->day == 5){
+                    // Code Here //
+                    for ($i = strtotime($date); $i <= strtotime($formatted_end_date); $i = strtotime("+1 day", $i)) {
+                        $day = date("l", $i);
+                        if ($day != 'Sunday' && $day != 'Saturday') {
+                            //$formatted_date_array[] = date('Y-m-d', $i );
+                            $formatted_date = date('Y-m-d', $i );
+                            $numeric_day = date( 'N', $i );
+                            $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                            if(empty($return_array)){
+                                $unavailable++;
+                                //$this->response_message = "Service is not availble for weekday, please try again with other time slots.";
+                                //break;
                             } else {
-                                $this->response_message = "Staff is not available for this service.";
+                                $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
+                                array_push($insert_data,$return_array);
                             }
-                            
                         }
-                        else
-                        {
-                            $this->response_message = "Staff is not availble, please try again with other time slots.";
-                        }
+                    }
+                } else {
+                    $this->response_message = "Service is not availble for weekday, please try again with other time slots.";
+                }
+            } else if($recurring_booking_frequency == 5){
+                // Custom Settings //
+            } else {
+
+                $insert_data = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date='');
+                $total_payable_amount = $total_payable_amount+$insert_data['total_payable_amount'];
+            }
+
+            //echo $total_payable_amount;
+            //echo '<pre>'; print_r($insert_data); exit;
+            if(!empty($insert_data) && $unavailable == 0){
+                //$total_cost = $total_available_day * 
+                $insertdata = $this->common_model->insert_data($this->tableObj->tableNameAppointment,$insert_data);
+                
+                // Update Total Price //
+                $updateCond=array(
+                    array('client_id','=',$client),
+                    array('order_id', '=', $order_id),
+                    array('is_deleted', '=', 0)
+                );
+                $updatedata['total_payable_amount'] = $total_payable_amount;	
+                $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$updatedata);
+
+                if($payment_method == 1){
+                    
+                    $parameter = [
+                        'order_id' => $order_id,
+                        'client_id' => $client,
+                    ];
+                    $parameter= Crypt::encrypt($parameter);
+                    if($recurring_booking_frequency > 0){
+                        $cancel_url = url('/client/appointment_details',$parameter);
+                        $reschedule_url = url('/client/appointment_details',$parameter);
                     } else {
-                        $param = array(
-                            'user_id' => $user_id,
-                            'service_id' => $appoinment_service,
-                            //'staff_id' => $staff,
-                            'client_id' => $client,
-                            'date' => date('Y-m-d', strtotime($date)),
-                            'start_time' => date('h:i A', strtotime($appointmenttime)),
-                            'end_time' => date('h:i A', strtotime($endTime)),
-                            'strto_start_time' => $strto_start_time,
-                            'strto_end_time' => $strto_end_time,
-                            'colour_code' => $colour_code,
-                            'payment_amount' => $service_price,
-                            'total_payable_amount' => $service_price,
-                        );  
-                        //echo '<pre>'; print_r($param); exit;    
-                        $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameAppointment,$param);
-                        if($insertdata > 0)
-                        {
-    
-                                $parameter = [
-                                    'appointment_id' => $insertdata,
-                                    'client_id' => $client,
-                                ];
-                                $parameter= Crypt::encrypt($parameter);
-                                $cancel_url = url('/client/cancel_appointent',$parameter);
-                                $reschedule_url = url('/client/reschedule-appointment',$parameter);
-                                //send mail to client
-                                $client_email = $client_details->client_email;
-                                $client_name = $client_details->client_name;
-                                $staff_email = "N/A";
-                                $staff_name = "N/A";
-                                $service_name = $service_details->service_name;
-                                $service_cost = $service_details->cost;
-                                $service_duration = $service_details->duration;
-                                $service_location = $service_details->location;
-                                //$service_currency = $service_details->duration;
-                                $service_start_time = date('l d, Y h:i A',$strto_start_time);
-
-                                //check user subscription
-                                $email_template = $this->email_template($user_id,$type = 5);
-
-                                $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
-                                <table width="100%">
-                                    <tr>
-                                        <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
-                                        <td style="color:#FFF; text-align: right; " >&nbsp;</td>
-                                    </tr>
-                                </table>
-                                </div>';
-                                $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
-                                <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
-                                <p style="text-align:center">For even easier management of your appointments.</p>
-                                <div style="text-align:center;">
-                                    <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
-                                    <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
-                                </div>
-                                </div>
-                                <div style="text-align:center">
-                                <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
-                                <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
-                                <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
-                                <br><br>
-                                <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
-                                <p>Copyright &copy; '.date('Y').'</p>
-                                </div>';
-
-                                $mail_body = $email_template->message;
-                                $mail_body = str_replace('{header}', $templateHeader, $mail_body);
-                                $mail_body = str_replace('{client_name}', $client_email, $mail_body);
-                                $mail_body = str_replace('{service_name}', $service_name, $mail_body);
-                                $mail_body = str_replace('{staff_name}', $staff_name, $mail_body);
-                                $mail_body = str_replace('{booking_time}', $service_start_time, $mail_body);
-                                $mail_body = str_replace('{location}', $service_location, $mail_body);
-                                $mail_body = str_replace('{staff_email}', $staff_email, $mail_body);
-                                $mail_body = str_replace('{reshedule_url}', $reschedule_url, $mail_body);
-                                $mail_body = str_replace('{cancel_url}', $cancel_url, $mail_body);
-                                $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
-
-                                $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Booking Confirm';
-                                $emailData['content'] = $mail_body;
-
-                                $this->sendmail(7,$client_email,$emailData);
-    
-    
-                            // Event Viewer //
-                            //$this->add_user_event_viewer($user_id,$type=4,$staff);
-                            $response_data['parameter'] = $parameter;
-                            
-                            $this->response_status='1';
-                            $this->response_message = "Your appointment has been successfully booked.";
-                        }
-                        else
-                        {
-                            $this->response_message = "Something went wrong. Please try agian later.";
-                        }
+                        $cancel_url = url('/client/cancel_appointent',$parameter);
+                        $reschedule_url = url('/client/reschedule-appointment',$parameter);
                     }
                     
-                } else{
-                    $this->response_message = "Service is not availble, please try again with other time slots.";
-                }
+                    //send mail to client
+                    $client_email = $client_details->client_email;
+                    $client_name = $client_details->client_name;
+                    $service_name = $service_details->service_name;
+                    $service_cost = $service_details->cost;
+                    $service_duration = $service_details->duration;
+                    $service_location = $service_details->location;
+                    //$service_currency = $service_details->duration;
+                    $service_start_time = date('l d, Y h:i A',$strto_start_time);
 
-            } else{
-                $this->response_message = "Service is not availble, please try again with other time slots.";
+                    // Email template 
+                    $email_template = $this->email_template($user_id,$type = 5);
+        
+                    $templateHeader = '<div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+                    <table width="100%">
+                        <tr>
+                            <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+                            <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+                        </tr>
+                    </table>
+                    </div>';
+                    $templateFooter = '<div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+                    <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+                    <p style="text-align:center">For even easier management of your appointments.</p>
+                    <div style="text-align:center;">
+                        <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a> 
+                        <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+                    </div>
+                    </div>
+                    <div style="text-align:center">
+                    <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+                    <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+                    <a href="#" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+                    <br><br>
+                    <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+                    <p>Copyright &copy; '.date('Y').'</p>
+                    </div>';
+        
+        
+                    $mail_body = $email_template->message;
+                    $mail_body = str_replace('{header}', $templateHeader, $mail_body);
+                    $mail_body = str_replace('{client_name}', $client_email, $mail_body);
+                    $mail_body = str_replace('{service_name}', $service_name, $mail_body);
+                    $mail_body = str_replace('{staff_name}', isset($staff_name)?$staff_name:'N/A', $mail_body);
+                    $mail_body = str_replace('{booking_time}', $service_start_time, $mail_body);
+                    $mail_body = str_replace('{location}', $service_location, $mail_body);
+                    $mail_body = str_replace('{staff_email}', isset($staff_email)?$staff_email:'N/A', $mail_body);
+                    $mail_body = str_replace('{reshedule_url}', $reschedule_url, $mail_body);
+                    $mail_body = str_replace('{cancel_url}', $cancel_url, $mail_body);
+                    $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+        
+                    $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Booking Confirm';
+                    $emailData['content'] = $mail_body;
+        
+                    $this->sendmail(7,$client_email,$emailData);
+        
+        
+                    //send mail to stuff
+                    if($staff > 0){
+                        $stuff_email_data['client_name'] = $client_name;
+                        $stuff_email_data['staff_email'] = $staff_email;
+                        $stuff_email_data['staff_name'] = $staff_name;
+                        $stuff_email_data['service_name'] = $service_name;
+                        $stuff_email_data['service_cost'] = $service_cost;
+                        $stuff_email_data['service_duration'] = $service_duration;
+                        $stuff_email_data['service_location'] = $service_location;
+                        $stuff_email_data['reschedule_url'] = $reschedule_url;
+                        $stuff_email_data['cancel_url'] = $cancel_url;
+                        $stuff_email_data['service_start_time'] = $service_start_time;
+                        $stuff_email_data['email_subject'] = "Booking Confirm";
+            
+                        $this->sendmail(8,$staff_email,$stuff_email_data);
+            
+                    }
+                    
+                    // Event Viewer //
+                    //$this->add_user_event_viewer($user_id,$type=4,$staff);
+                    $response_data['parameter'] = $parameter;
+                    
+                    $this->response_status='1';
+                    $this->response_message = "Your appointment has been successfully booked.";
+        
+                } else {
+                    // Redirect to Payment Gateway //
+
+                }
+            } else {
+                $this->response_message = "Appointment can not be booked.";
             }
            
             $this->json_output($response_data);
@@ -1607,6 +1592,171 @@ class ClientsController extends ApiController {
     }
 
 
+    private function findRecurringAvailibility($order_id,$user_id,$staff=0,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date=''){
+        
+        
+        //Service details
+        $service_condition = array(
+            array('service_id', '=', $appoinment_service)
+        );
+        $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color', 'payment_method');    
+        $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
+        $colour_code = $service_details->color;
+        $payment_method = $service_details->payment_method;
+        $duration = $service_details->duration;
+        $service_price = $service_details->cost;
+        $service_currency_id = $service_details->currency_id;
+
+        
+        //////////////////////////////////////////////
+        $param = array();
+        //////// Create start time & end time ////////
+        $strto_start_time = strtotime($formatted_date.' '.$appointmenttime); 
+        $strto_end_time = strtotime($formatted_date.' '.$endTime);
+        // Check Service Availability Date//
+        $ser_ava_condition = array(
+            array('user_id', '=', $user_id),
+            array('service_id', '=', $appoinment_service),
+            array('day', '=', $numeric_day),
+            array('is_deleted', '=', '0'),
+            'raw' => "((start_date <= '".$formatted_date."' AND end_date >= '".$formatted_date."') OR (start_date <= '".$formatted_date."' AND end_date = '0000:00:00'))",
+        );
+        $ser_ava_fields = array();                   
+        $checkServiceAvalibilityDate = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
+        //print_r($checkServiceAvalibilityDate); die();
+        if(!empty($checkServiceAvalibilityDate)){
+            // Check Service Availability Time//
+            $service_available = 'false';
+            foreach($checkServiceAvalibilityDate as $ser_ava_dt){
+                $ava_starttime = strtotime($formatted_date.' '.$ser_ava_dt->start_time.':00');
+                $ava_endtime = strtotime($formatted_date.' '.$ser_ava_dt->end_time.':00');
+                if($strto_start_time >= $ava_starttime && $strto_end_time <= $ava_endtime){
+                    $service_available = 'true';
+                    break;
+                }
+            }
+            //echo $service_available; exit;
+            if($service_available == true){
+                if($staff > 0){
+                    // Check Staff Availability //
+                    $condition = array(
+                        array('block_date', '=', date('Y-m-d', strtotime($formatted_date))),
+                        array('is_deleted', '=', '0'),
+                        array('user_id', '=', $user_id),
+                        array('staff_id', '=', $staff),
+                        'raw' => "(($strto_start_time BETWEEN strto_start_time AND strto_end_time) OR ($strto_end_time BETWEEN strto_start_time AND strto_end_time))",
+                    );
+
+                    $fields = array();                   
+                    $checkBlock = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$condition, $fields);
+                    //print_r($checkBlock); die();
+                    if(empty($checkBlock)) {
+                        // Check Staff-Service Availability //
+                        $ser_staff_ava_condition = array(
+                            array('staff_id', '=', $staff),
+                            array('service_id', '=', $appoinment_service),
+                            array('day', '=', $numeric_day),
+                            array('is_blocked', '=', '0'),
+                            array('is_deleted', '=', '0'),
+                        );
+    
+                        $fields = array();                   
+                        $checkStaffServiceAvalibility = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$ser_staff_ava_condition, $fields);
+                        //echo '<pre>'; print_r($checkStaffServiceAvalibility); exit;
+                        if(!empty($checkStaffServiceAvalibility)){
+                            // Check Available Time //
+                            $staff_serviice_available = false;
+                            foreach($checkStaffServiceAvalibility as $staff_ser_ava){
+                                $available_starttime = strtotime($formatted_date.' '.$staff_ser_ava->start_time);
+                                $available_endtime = strtotime($formatted_date.' '.$staff_ser_ava->end_time);
+                                if($strto_start_time >= $available_starttime && $strto_end_time <= $available_endtime){
+                                    $staff_serviice_available = true;
+                                    break;
+                                }
+                            }
+                            //echo $staff_serviice_available; exit;
+                            if($staff_serviice_available == true){
+                                $param = array(
+                                    'order_id' => $order_id,
+                                    'user_id' => $user_id,
+                                    'service_id' => $appoinment_service,
+                                    'staff_id' => $staff,
+                                    'client_id' => $client,
+                                    'date' => date('Y-m-d', strtotime($formatted_date)),
+                                    'start_time' => date('h:i A', strtotime($appointmenttime)),
+                                    'end_time' => date('h:i A', strtotime($endTime)),
+                                    'strto_start_time' => $strto_start_time,
+                                    'strto_end_time' => $strto_end_time,
+                                    'colour_code' => $colour_code,
+                                    'payment_amount' => $service_price,
+                                    'total_payable_amount' => $service_price,
+                                    'appointment_type' => $recurring_booking_frequency,
+                                    'recurring_booking_ends_on' => $formatted_end_date,
+                                    'created_on' => date('Y-m-d H:i:s'),
+                                );  
+                                if($payment_method == 1){
+                                    $param['payment_method'] = 1;
+                                } else if($payment_method == 2){
+                                    $param['payment_method'] = 11;
+                                } else if($payment_method == 3){
+                                    $param['payment_method'] = 10;
+                                }
+                                
+                            } else {
+                                $this->response_message = "Staff is not available for this service.";
+                            }
+
+                            
+                        } else {
+                            $this->response_message = "Staff is not available for this service.";
+                        }
+                        
+                    }
+                    else
+                    {
+                        $this->response_message = "Staff is not availble, please try again with other time slots.";
+                    }
+                } else {
+                    $param = array(
+                        'order_id' => $order_id,
+                        'user_id' => $user_id,
+                        'service_id' => $appoinment_service,
+                        //'staff_id' => $staff,
+                        'client_id' => $client,
+                        'date' => date('Y-m-d', strtotime($formatted_date)),
+                        'start_time' => date('h:i A', strtotime($appointmenttime)),
+                        'end_time' => date('h:i A', strtotime($endTime)),
+                        'strto_start_time' => $strto_start_time,
+                        'strto_end_time' => $strto_end_time,
+                        'colour_code' => $colour_code,
+                        'payment_amount' => $service_price,
+                        'total_payable_amount' => $service_price,
+                        'appointment_type' => $recurring_booking_frequency,
+                        'recurring_booking_ends_on' => $formatted_end_date,
+                        'created_on' => date('Y-m-d H:i:s'),
+                    );  
+                    if($payment_method == 1){
+                        $param['payment_method'] = 1;
+                    } else if($payment_method == 2){
+                        $param['payment_method'] = 11;
+                    } else if($payment_method == 3){
+                        $param['payment_method'] = 10;
+                    }
+                }
+                
+            } else{
+                $param = array();
+                $this->response_message = "Service is not availble, please try again with other time slots.";
+            }
+
+        } else{
+            $param = array();
+            $this->response_message = "Service is not availble, please try again with other time slots.";
+        }
+
+        return $param;
+
+    }
 
 
     public function send_client_verification_code(Request $request){
@@ -2530,7 +2680,149 @@ class ClientsController extends ApiController {
     }
 
 
+    public function get_booking_rule(Request $request)
+    {
+        $numberweek = [1=>"First",2=>"Second",3=>"Third",4=>"Fourth",5=>"Fifth"];
+        $response_data = array(); 
+        $user_id = $request->input('user_id');
+        $date = $request->input('date');
+        $weekday = date('l',strtotime($date));
+        $weekandday = $numberweek[$this->weekOfMonth($date)];
 
+        $findCond=array(
+            array('user_id','=',$user_id),
+            array('is_deleted','=','0'),
+        );
+
+        $selectFields=array();
+        $booking_rule_data = $this->common_model->fetchData($this->tableObj->tableNameBookingRule,$findCond,$selectFields);
+
+        if($booking_rule_data->recurring_booking == 1){
+            $category_html = "";
+            $category_html = '<select id="dropdown_change" name="recurring_booking_frequency">';
+            $category_html .= '<option value="0">Does not repeat</option>';
+            $category_html .= '<option value="1" data-text="Daily">Daily</option>';
+            $category_html .= '<option value="2" data-text="Weekly on '.$weekday.'">Weekly on '.$weekday.'</option>';
+            $category_html .= '<option value="3" data-text="'.$weekandday.' '.$weekday.'">Monthly on the '.$weekandday.' '.$weekday.'</option>';
+            $category_html .= '<option value="4" data-text="Every weekday">Every weekday(Monday to Friday)</option>';
+            /*$category_html .= '<option value="5">Custom...</option>';*/
+            $category_html .= '</select>';
+            return $category_html;
+        }
+    }
+
+
+    public function client_profile_picture_upload(Request $request)
+	{
+        $response_data=array();
+        $client_id = $request->input('client_id');
+
+        if($request->file('profile_perosonal_image'))
+        {
+			$image = $request->file('profile_perosonal_image');
+			$name = time().'.'.$image->getClientOriginalExtension();
+			$destinationPath = public_path('/image/profile_perosonal_image');
+			$image->move($destinationPath, $name);
+			$profile_perosonal_image = $name;
+
+        }
+        else
+        {
+        	$profile_perosonal_image = $request->input('old_profile_perosonal_image');
+        }
+
+
+		$updateData = array(
+                'client_profile_picture' => $profile_perosonal_image,
+                'updated_on' => date('Y-m-d H:i:s')
+		);
+
+		$updateCond=array(
+                        array('client_id','=',$client_id),
+                        array('is_deleted','=',0),
+					);
+
+		$this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$updateData);
+
+
+		$this->response_status='1';
+		$this->response_message="Successfully update your profile picture.";
+
+		$this->json_output($response_data);
+	}
+
+    public function client_change_password(Request $request){
+        $response_data=array();
+        $client_id = $request->input('client_id');
+        $old_password = $request->input('old_password');
+        $new_password = $request->input('new_password');
+        $new_confirm_password = $request->input('new_confirm_password');
+
+        if($new_password==$new_confirm_password)
+		{
+			$condition = array(
+                    array('client_id','=',$client_id),
+                    array('password','=',md5($old_password)),
+                    array('is_deleted','=', 0),
+                );
+			$selectFields = array('password');
+	        $old_password = $this->common_model->fetchData($this->tableObj->tableNameClient,$condition,$selectFields);
+	        if(!empty($old_password))
+	        {
+	        	$updateData = array(
+                        'password' => md5($new_password),
+                        'updated_on' => date('Y-m-d H:i:s')
+				);
+
+				$updateCond=array(
+                                array('client_id','=',$client_id),
+                                array('is_deleted','=', 0),
+							);
+
+				$this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$updateData);
+
+				$this->response_status='1';
+				$this->response_message="Password has been updated successfully.";
+	        }
+	        else
+	        {
+	        	$this->response_message="Old password doesn't match.";
+	        }
+		}
+		else
+		{
+			$this->response_message="New password & confirm password doesn't match.";
+		}
+		
+		$this->json_output($response_data);
+    }
+
+
+    /*function weekOfMonth($date) {
+        //Get the first day of the month.
+        $firstOfMonth = strtotime(date("Y-m-01", strtotime($date)));
+        //Apply above formula.
+        return intval(date("W", $date)) - intval(date("W", $firstOfMonth)) + 1;
+    }*/
+
+    function weekOfMonth($date) {
+        // estract date parts
+        list($y, $m, $d) = explode('-', date('Y-m-d', strtotime($date)));
+    
+        // current week, min 1
+        $w = 1;
+    
+        // for each day since the start of the month
+        for ($i = 1; $i <= $d; ++$i) {
+            // if that day was a sunday and is not the first day of month
+            if ($i > 1 && date('w', strtotime("$y-$m-$i")) == 0) {
+                // increment current week
+                ++$w;
+            }
+        }
+    
+        // now return
+        return $w;
+    }
 
 }
-

@@ -28,7 +28,7 @@
             <div class="container-custm">
                <div class="leftpan">
                   <div class="logo">
-                     <a href="dashboard.html">
+                     <a href="#">
                      <img src="{{asset('public/assets/website/images/logo-light-text.png')}}" /> </a>
                   </div>
                  <!--  <div id="o-wrapper" class="o-wrapper setting-toggle">

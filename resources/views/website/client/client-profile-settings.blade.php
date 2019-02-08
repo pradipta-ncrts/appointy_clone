@@ -11,10 +11,9 @@ Squeedr
       <div class="leftpan">
          <div class="left-menu">
             <ul>
-                <li><a href="javascript:void(0);" class="active"> Profile</a></li>
-               <!--<li><a href="{{ url('profile-settings') }}" class="active"> Profile</a></li>
-               <li><a href="{{ url('profile-picture') }}"> Picture</a> </li>
-               <li><a href="{{ url('profile-login') }}" > Login</a> </li>-->
+               <li><a href="{{ url('client/profile-settings/'.$param) }}" class="active"> Profile</a></li>
+               <li><a href="{{ url('client/profile-picture-settings/'.$param) }}"> Picture</a> </li>
+               <li><a href="{{ url('client/login-settings/'.$param) }}" > Login</a> </li>
             </ul>
          </div>
       </div>

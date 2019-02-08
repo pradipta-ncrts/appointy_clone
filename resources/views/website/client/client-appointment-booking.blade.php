@@ -91,6 +91,9 @@ Squeedr
 				<input type="hidden" name="client_email" id="client_email" value="{{$client_details->client_email}}">
 				<input type="hidden" name="booking_date" id="booking_date" value="">
 				<input type="hidden" name="booking_time" id="booking_time" value="">
+				<input type="hidden" name="recurring_booking_text" id="recurring_booking_text" value="">
+				<input type="hidden" name="recurring_booking_end_type" id="recurring_booking_end_type" value="">
+				<input type="hidden" name="recurring_booking_end_on" id="recurring_booking_end_on" value="">
 
 				<div class="container-fluid body-sec" id="section3" >
 					<div class="row ">
@@ -110,14 +113,14 @@ Squeedr
 								</div>
 								<div class="form-group  color-b" >
 									<select name="category_id" id="category_id">
-										<option>Select Category </option>
+										<option value="">Select Category </option>
 										
 									</select>
 									<div class="clearfix"></div>
 								</div>
 								<div class="form-group  color-b" >
 									<select name="service_id" id="service_id">
-										<option>Select Service</option>
+										<option value="">Select Service</option>
 										
 									</select>
 									<div class="clearfix"></div>
@@ -132,17 +135,12 @@ Squeedr
 										<a onclick="get_availibility_calender(2)">Check Availability</a>
 										<h3></h3>
 									</div>
+									
+									<div class="reshedule" id="recurring_booking_section" style="display:none;">
+										
+									</div>
 
-									<!--<div class="reshedule">
-										<select id="dropdown_change">
-											<option value="0">Does not repeat</option>
-											<option value="1">Daily</option>
-											<option value="2">Weekly on Friday</option>
-											<option value="3">Monthly on the second friday </option>
-											<option value="4">Every weekday(Monday to Friday) </option>
-											<option value="5">Custom...</option>
-										</select>
-									</div>-->
+									<div id="ends_on_section" style="padding: 5px 0 0 13px;"></div>
 									
 								</div>
 								<div class="clearfix"></div>
@@ -226,7 +224,7 @@ Squeedr
 					<h4 class="modal-title">Custom Recurrence</h4>
 					</div>-->
 				<div class="modal-body clearfix">
-					<div class="form-group clearfix">
+					<!--<div class="form-group clearfix">
 						<label class="control-label col-sm-4" for="email">Repeat every:</label>
 						<div class="col-sm-4">
 						<input type="number" name="quantity" min="1" max="10" class="form-control">
@@ -254,40 +252,38 @@ Squeedr
 							</ul>
 						</div>
 						</div>
-					</div>
-					<div class="apply-mulbx">
-						<input class="rb-email" name="contact-preference" id="rb-email" type="radio" checked="checked" />
-						<label class="label" for="rb-email">Never</label>
+					</div>-->
+					<div class="form-group clearfix">
+						<label class="control-label col-sm-12">Ends:</label>
+						<div class="col-sm-12" style="padding-top: 10px">
+							<input class="rb-phone" name="repeat_type" id="rb-on" type="radio" value="1" checked="" />
+							<label for="rb-on">On</label>
+						</div>
 						<br>
-						<input class="rb-phone" name="contact-preference" id="rb-phone" type="radio" />
-						<label class="label" for="rb-phone">On</label>
+						<div class="col-sm-12" style="padding-top: 10px">
+							<input class="rb-after" name="repeat_type" id="rb-after" type="radio" value="2" />
+							<label for="rb-after">After</label>
+						</div>
 						<br>
-						<input class="rb-after" name="contact-preference" id="rb-after" type="radio" />
-						<label class="label" for="rb-after">After</label>
-						<br>
-						<label class="label email" for="email">
-						<div class="aply-dv">No data</div>
-						</label>
-						<label class="label phone" for="phone">
-						<div class="aply-dv">
-							<div class="form-group">
-								<div class="col-md-3"><input type="text" class="form-control" placeholder="" /></div>
+						<div class="col-sm-12" style="padding-top: 10px">
+							<div class="aply-dv" id="repeat_on_section" >
+								<div class="form-group">
+									<div class="col-md-6"><input type="date" min="<?php echo date('Y-m-d', strtotime("+1 day"));?>" name="repeat_on" id="repeat_on" class="form-control" placeholder="" /></div>
+								</div>
+							</div>
+							<div class="aply-dv" id="repeat_after_section" style="display:none;">
+								<div class="form-group">
+									<div class="col-md-6"><input type="number" name="repeat_after" id="repeat_after" min="1" class="form-control" value="1"></div>
+									<div class="col-md-6"><input type="text" class="form-control" value="Occurrences" disabled="" /></div>
+								</div>
 							</div>
 						</div>
-						</label>
-						<label class="label after" for="after">
-						<div class="aply-dv">
-							<div class="form-group">
-								<div class="col-md-3"><input type="number" name="quantity" min="1" max="10" class="form-control" placeholder="13"></div>
-								<div class="col-md-9"><input type="text" class="form-control" placeholder="Occurrences" /></div>
-							</div>
-						</label>
-						</div>
+						
 					</div>
 					<div class="form-group">
 						<div class="discount-btnbx mtop">
-						<button type="submit" class="btn btn-primary pull-left">Cancel</button>
-						<button class="btn pull-right" data-dismiss="modal">Done</button>
+						<button class="btn pull-left" id="ends_on_cancel">Cancel</button>
+						<button class="btn btn-primary pull-right" id="ends_on_submit">Done</button>
 						</div>
 					</div>
 				</div>
@@ -305,45 +301,58 @@ Squeedr
 	$(document).ready(function () {
 		$("#user_id").on("change", function(){
 			var user_id = $(this).val();
-			$.ajax({
-				url: '<?php echo url("api/business_provider_category_list")?>',
-				type: "POST",
-				data: {user_no:user_id,type:'html'},
-				dataType: "html",
-				success: function(response) {
-					$('#category_id').html( response );
-				},
+			if(user_id > 0){
+				$.ajax({
+					url: '<?php echo url("api/business_provider_category_list")?>',
+					type: "POST",
+					data: {user_no:user_id,type:'html'},
+					dataType: "html",
+					success: function(response) {
+						$('#category_id').html( response );
+					},
 
-				beforeSend: function(){
-					$('.animationload').show();
-				},
+					beforeSend: function(){
+						$('.animationload').show();
+					},
 
-				complete: function(){
-					$('.animationload').hide();
-				}
-			});
+					complete: function(){
+						$('.animationload').hide();
+					}
+				});
+			} else {
+				$("#category_id").html('<option value="">Select Category </option>');
+				$("#service_id").html('<option value="">Select Service </option>');
+				$("#staff_id").html('<option value="">Select Staff </option>');
+			}
+			
 		});
 
 		$("#category_id").on("change", function(){
 			var category_id = $(this).val();
 			var user_id = $("#user_id").val();
-			$.ajax({
-				url: '<?php echo url("api/business_provider_service_list")?>',
-				type: "POST",
-				data: {user_no:user_id,category_id:category_id,type:'html'},
-				dataType: "html",
-				success: function(response) {
-					$('#service_id').html( response );
-				},
+			if(user_id > 0 && category_id > 0){
+				$.ajax({
+					url: '<?php echo url("api/business_provider_service_list")?>',
+					type: "POST",
+					data: {user_no:user_id,category_id:category_id,type:'html'},
+					dataType: "html",
+					success: function(response) {
+						$('#service_id').html( response );
+					},
 
-				beforeSend: function(){
-					$('.animationload').show();
-				},
+					beforeSend: function(){
+						$('.animationload').show();
+					},
 
-				complete: function(){
-					$('.animationload').hide();
-				}
-			});
+					complete: function(){
+						$('.animationload').hide();
+					}
+				});
+			} else {
+				$("#service_id").html('<option value="">Select Service </option>');
+				$("#staff_id").html('<option value="">Select Staff </option>');
+			}
+			
 		});
 
 		$("#service_id").on("change", function(){
@@ -351,24 +360,28 @@ Squeedr
 			//var selected = $(this).find('option:selected');
        		//var duration = selected.data('duration');
 			var user_id = $("#user_id").val();
+			if(user_id > 0 && service_id > 0){
+				$.ajax({
+					url: '<?php echo url("api/business_provider_staff_list")?>',
+					type: "POST",
+					data: {user_no:user_id,service_id:service_id,type:'html'},
+					dataType: "html",
+					success: function(response) {
+						$('#staff_section').html( response );
+					},
 
-			$.ajax({
-				url: '<?php echo url("api/business_provider_staff_list")?>',
-				type: "POST",
-				data: {user_no:user_id,service_id:service_id,type:'html'},
-				dataType: "html",
-				success: function(response) {
-					$('#staff_section').html( response );
-				},
+					beforeSend: function(){
+						$('.animationload').show();
+					},
 
-				beforeSend: function(){
-					$('.animationload').show();
-				},
-
-				complete: function(){
-					$('.animationload').hide();
-				}
-			});
+					complete: function(){
+						$('.animationload').hide();
+					}
+				});
+			} else {
+				$("#staff_id").html('<option value="">Select Staff </option>');
+			}
+			
 		});
 		
 
@@ -481,13 +494,26 @@ Squeedr
 		$('#reschedule-popup').dialog({
 			modal: true,
 			autoOpen: false,
-			title: "Custom Recurrence",
+			title: "Ends on",
 			width: 500
 		});
 
-		$('#dropdown_change').change(function () {
-			if ($(this).val() == "5") {
-				$('#reschedule-popup').dialog('open');
+		$(document).on('change', '#dropdown_change', function() {
+			// Does some stuff and logs the event to the console
+			var recurring_booking_text = $(this).find(':selected').attr('data-text');
+			$('#reschedule-popup').dialog('open');
+			$('#recurring_booking_text').val(recurring_booking_text);
+			$('#ends_on_section').html('');
+		});
+
+		$(document).on('change', 'input[type=radio][name=repeat_type]', function() {
+			// Does some stuff and logs the event to the console
+			if ($(this).val() == "1") {
+				$('#repeat_on_section').show();
+				$('#repeat_after_section').hide();
+			} else if ($(this).val() == "2") {
+				$('#repeat_on_section').hide();
+				$('#repeat_after_section').show();
 			}
 		});
 
@@ -615,8 +641,60 @@ Squeedr
 		$('#booking_date').val(date);
 		$('#booking_time').val(slot);
 		$('#selected_date_time').text(selected_date_time);
+		// Recurring Booking //
+		var user_id = $("#user_id").val();
+		$.ajax({
+			url: '<?php echo url("api/get_booking_rule")?>',
+			type: "POST",
+			data: {user_id:user_id,date:date},
+			dataType: "html",
+			success: function(response) {
+				console.log(response);
+				$("#recurring_booking_section").html(response);
+				$("#recurring_booking_section").show();
+			},
+
+			beforeSend: function(){
+				$('.animationload').show();
+			},
+
+			complete: function(){
+				$('.animationload').hide();
+			}
+		});
+
 	});
 
 
+	$('#ends_on_cancel').click(function () {
+		$('#reschedule-popup').dialog('close');
+		$('#dropdown_change').val('');
+		return false;
+	});
+
+	$('#ends_on_submit').click(function(){
+		var repeat_type = $('input[name=repeat_type]:checked').val();
+		var repeat_on = $('#repeat_on').val();
+		var repeat_after = $('#repeat_after').val();
+		
+		$('#recurring_booking_end_type').val(repeat_type);
+		if(repeat_type == 1){
+			if(repeat_on!=''){
+				$('#recurring_booking_end_on').val(repeat_on);
+				$('#ends_on_section').html('Ends on '+repeat_on);
+			} else {
+				swal('Sorry!','Please enter ends on date','error');
+			}
+			
+		} else {
+			$('#recurring_booking_end_on').val(repeat_after);
+			$('#ends_on_section').html('Ends after '+repeat_after+' occurrence(s)');
+		}
+
+		$('#reschedule-popup').dialog('close');
+
+	});
+	
+	
 </script>
 @endsection

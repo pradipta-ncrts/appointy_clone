@@ -1483,6 +1483,7 @@ class UsersController extends ApiController {
 		$service_category = $request->input('service_category');
 		$service_name = $request->input('service_name');
 		$service_location = $request->input('service_location');
+		$service_timezone = $request->input('service_timezone');
 		$service_display_location = $request->input('service_display_location');
 		$service_currency = $request->input('service_currency');
 		$service_price = $request->input('service_price');  
@@ -1522,6 +1523,7 @@ class UsersController extends ApiController {
 				'service_name' => $service_name,
 				'cost' => $service_price,
 				'currency_id' => $service_currency,
+				'timezone' => $service_timezone,
 				'location' => $service_location,
 				'display_location' => $service_display_location,
 				'capacity' => $service_capacity,
@@ -1588,6 +1590,7 @@ class UsersController extends ApiController {
 		$service_id = $request->input('service_id');
 		$service_category = $request->input('service_category');
 		$service_name = $request->input('service_name');
+		$service_timezone = $request->input('service_timezone');
 		$service_location = $request->input('service_location');
 		$service_display_location = $request->input('service_display_location');
 		$service_currency = $request->input('service_currency');
@@ -1610,6 +1613,7 @@ class UsersController extends ApiController {
 				'service_name' => $service_name,
 				'cost' => $service_price,
 				'currency_id' => $service_currency,
+				'timezone' => $service_timezone,
 				'location' => $service_location,
 				'display_location' => $service_display_location,
 				'capacity' => $service_capacity,
