@@ -177,10 +177,10 @@ Squeedr
                                             <div class="row">
                                             <div class="col-sm-10">
                                                 <h4>Email Verification</h4>
-                                                <p id="staffEmail">lamie74@gmail.com <span class="label label-danger"><i>Not Verified</i></span></p>
+                                                <p id="staffEmail"><span class="label label-danger"><i>Not Verified</i></span></p>
                                             </div>
                                             <div class="col-sm-2">
-                                                <button type="button" class="btn btn-default pull-right"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> SEND EMAIL</button>
+                                                <button type="button" class="btn btn-default pull-right send-verification-email"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> SEND EMAIL</button>
                                             </div>
                                             </div>
                                         </li>
@@ -701,7 +701,6 @@ Squeedr
 @section('custom_js')
 <script>
 $('.stafflistitem').click(function(){
-    
     $('.stafflistitem').removeClass('active');
     $(this).addClass('active');
     var data = $(this).data('json');
@@ -736,8 +735,10 @@ $('.stafflistitem').click(function(){
         var temp = data.email+"&nbsp;";
         if(data.is_email_verified == 0){
             temp += '<span class="label label-danger"><i>Not Verified</i></span>';
+            $(".send-verification-email").show();
         }else{
             temp += '<span class="label label-success"><i>Verified</i></span>';
+            $(".send-verification-email").hide();
         }
         $('#staffEmail').html(temp);
     }
@@ -1921,6 +1922,33 @@ $('#update_staff_availability_form').validate({
        }
    });
 }
+});
+
+$(document).on('click','.send-verification-email',function(e){
+    e.preventDefault();
+    var staff_id = $('#editStaff').attr('data-staff-id');
+    var data = addCommonParams([]);
+    data.push({name:'staff_id', value:staff_id});
+     $.ajax({
+       url: baseUrl+'/api/send_staff_verification_email',
+       type: "post",
+       data: data,
+       dataType: "json",
+       success: function(response) {
+           console.log(response); //Success//
+           if (response.response_status == 1) {
+               swal('Success!', response.response_message, 'success');
+           } else {
+               swal('Sorry!', response.response_message, 'error');
+           }
+       },
+       beforeSend: function() {
+           $('.animationload').show();
+       },
+       complete: function() {
+           $('.animationload').hide();
+       }
+   });
 });
 
 </script>

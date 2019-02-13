@@ -457,7 +457,7 @@ Squeedr
          <tr>
          <td>
          <ul>
-         <li>Do you want users to accept any terms and conditions during signup? <a href="#">Add Terms and Conditions</a> </li>
+         <li>Do you want users to accept any terms and conditions during signup? <a href="{{ url('booking-policies') }}">Add Terms and Conditions</a> </li>
          <!--<li>Do you want to restrict users of a particular domain to sign up / book appointments? <a href="#">Set domain restriction</a> </li>
             <li>Do you want to clietns to view your schedule and contact your business to book an appointment? <a href="#">Disable direct booking from booking portal</a> </li>-->
          </ul>

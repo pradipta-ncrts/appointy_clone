@@ -100,8 +100,8 @@
                      
                      <button type="submit" id="sing-up">Sign Up</button>
                      <div class="clearfix"></div>
-                     <p>By signing up, you agree to our <a href="#">terms of use</a> and 
-                        <a href="#">privacy policy</a>
+                     <p>By signing up, you agree to our <a href="{{ url('terms-and-condition') }}">terms of use</a> and 
+                        <a href="{{ url('privacy-policy') }}">privacy policy</a>
                      </p>
                   </form>
                </div>

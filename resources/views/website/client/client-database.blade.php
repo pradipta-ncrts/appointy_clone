@@ -25,7 +25,20 @@ Squeedr
                     <form name="client_import_form" id="client_import_form" action="{{url('api/client_import')}}" method="post">
                     <input type="file" name="client_import_excel" id="client_import_excel" style="display:none;" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                     </form>
+                    <?php
+                    if(!empty($client_list))
+                    {
+                    ?>
                     <a href="{{url('client-export')}}" class="exp-st"  data-toggle="tooltip" title="Export Client"><i class="fa fa-external-link "></i> </a>
+                    <?php
+                    }
+                    else
+                    {
+                    ?>
+                    <a href="" class="exp-st noClient"  data-toggle="tooltip" title="Export Client"><i class="fa fa-external-link "></i> </a>
+                    <?php
+                    }
+                    ?>
                
 
                     <div class="input-group col-md-12">
@@ -883,6 +896,12 @@ $(document).on('click','.change-status',function(e){
     
 });
 
+
+$(document).on('click','.noClient',function(e)
+{
+    e.preventDefault();
+    swal("Error", "No client avaliable." , "error");
+});
 
 
 </script>

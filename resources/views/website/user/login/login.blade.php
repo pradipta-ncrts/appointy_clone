@@ -66,7 +66,7 @@
             <input type="checkbox">
             &nbsp;&nbsp; Keep me signed in <span class="checkmark"></span></label>
         </div>
-        <a href="#" class="forgot-pass">Forgot your password?</a>
+        <a href="{{ url('forgot-password') }}" class="forgot-pass">Forgot your password?</a>
         <div class="clearfix"></div>
       </form>
     </div>

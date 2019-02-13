@@ -24,9 +24,9 @@ Squeedr
                </div>
                <div class="col-md-7">
                   <div class="full-rgt" style="margin-bottom: 8px;">
-                     <a class="btn btn-primary ">Preview</a>
+                     <a class="btn btn-primary" href="{{ url('invoice-details') }}/<?=$invoive_no;?>">Preview</a>
                      <a href="" class="btn btn-default" id="send_invoice">Send</a>
-                     <a class="btn btn-default ">Save as daft</a>
+                     <a class="btn btn-default" id="save_as_draft">Save as daft</a>
                   </div>
                </div>
             </div>
@@ -219,6 +219,13 @@ $(document).on("click", '.remove-add-more', function(e) {
 
 $('#send_invoice').on('click', function(e){
    e.preventDefault();
+   $("#invoive-form").submit();
+});
+
+$('#save_as_draft').on('click', function(e){
+   e.preventDefault();
+   var action = "<?php echo url('save_as_draft'); ?>"
+   $('#invoive-form').attr('action', action);
    $("#invoive-form").submit();
 });
 

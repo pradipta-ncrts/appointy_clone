@@ -512,6 +512,18 @@ class BaseApiController extends BaseController
                     //$mail_body = $emailData['email_data'];
                     $mailTemplateName="emails/email-invoice";
                 break;
+                case 22:// email verification link 
+                    $mail_subject = "Reset Password";
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName = "emails/new_registration";
+                    //$emailData['mailBody']=$mail_body;
+                break;
+                case 23:// email verification link 
+                    $mail_subject = "Staff Verification Link";
+                    //$mail_body = $emailData['email_data'];
+                    $mailTemplateName = "emails/new_registration";
+                    //$emailData['mailBody']=$mail_body;
+                break;
 
                 
 

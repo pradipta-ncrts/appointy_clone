@@ -113,7 +113,12 @@ Squeedr
             
             <div class="clearfix"></div>
          </div>
-         <hr>
+         <?php
+         if(!empty($dashboard_reports))
+         {
+            echo "<hr>";
+         }
+         ?>
          <div class="clearfix"></div>
          <div class="headRow mobileappointed arrow-d clearfix row-2"  id="row2">
             <!--<a href="services.html" class="more-link"  data-toggle="tooltip" title="More Services"><img src="{{asset('public/assets/website/images/threeDots.png')}}"/></a>-->
@@ -143,7 +148,7 @@ Squeedr
             <?php } ?>
          </div>
          <hr>
-         <a class="btn btn-primary butt-next center-block" style=" margin: 20px auto;  width: 200px;" data-toggle="modal" data-target="#myModalQuickGuide"  >Quick Start Guide</a>
+         <a class="btn btn-primary butt-next center-block" style=" margin: 20px auto;  width: 200px;" data-toggle="modal" data-target="#myModalQuickGuide"  >Quick Guide</a>
       </div>
    </div>
 </div>

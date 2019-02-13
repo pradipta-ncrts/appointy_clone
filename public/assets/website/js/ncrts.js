@@ -2625,6 +2625,16 @@ $("#profile-personal-image").on('submit', (function(e) {
     //var files = $("#profile-image input[type='file']")[0].files;
     var profile_perosonal_image = document.getElementById('profile_perosonal-image');
 
+    var file = profile_perosonal_image.files[0];
+    //console.log(file);
+    var fileType = file.type;
+    //alert(fileType);
+    var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+    if ($.inArray(fileType, validImageTypes) < 0) {
+         swal("Error", "Invalid file format." , "error");
+         return false;
+    }
+
     var form_data = new FormData();
 
     if(profile_perosonal_image.files.length>0){

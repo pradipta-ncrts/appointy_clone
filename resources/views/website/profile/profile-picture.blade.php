@@ -37,7 +37,7 @@ Squeedr
                          <span>Upload Profile Picture</span>
                       </div>
                   </div>
-                  <input accept="image/*" type="file" id="profile_perosonal-image" name="profile_perosonal_image" style="display: none;">
+                  <input accept="image/x-png,image/gif,image/jpeg" type="file" id="profile_perosonal-image" name="profile_perosonal_image" style="display: none;">
                   <input type="hidden" name="old_profile_perosonal_image" value="<?=$user_details->profile_perosonal_image;?>">
                   <div class="clearfix"></div>
                      <button type="submit" id="profile-personal-image-update-button" class="btn btn-primary butt-next">Update</button>

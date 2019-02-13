@@ -39,15 +39,15 @@ Squeedr
                      <div id="change-password-inputs" style="display: none;">
                          <div class="form-group">
                             <label for="pwd"><strong>Old Password:</strong></label>
-                            <input type="text" class="form-control" id="old_password" placeholder="Old Password" name="old_password">
+                            <input type="password" class="form-control" id="old_password" placeholder="Old Password" name="old_password">
                          </div>
                          <div class="form-group">
                             <label for="pwd"><strong>New Password:</strong></label>
-                            <input type="text" class="form-control" id="new_passord" placeholder="New Password" name="new_passord" value="">
+                            <input type="password" class="form-control" id="new_passord" placeholder="New Password" name="new_passord" value="">
                          </div>
                          <div class="form-group">
                             <label for="pwd"><strong>New Confirm Password:</strong></label>
-                            <input type="text" class="form-control" id="new_confirm_passord" placeholder="New Password" name="new_confirm_passord" value="">
+                            <input type="password" class="form-control" id="new_confirm_passord" placeholder="New Password" name="new_confirm_passord" value="">
                          </div>
                          <div class="clearfix"></div>
                          <button type="submit" id="" class="btn btn-primary butt-next">Update</button>

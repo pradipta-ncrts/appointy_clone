@@ -40,10 +40,21 @@ class InvoiceController extends ApiController {
 
         $order_id = $request->input('order_id'); 
         //appoinment data using id
-        $appoinment_condition = array(
-            array('user_id', '=', $user_no),
-            array('order_id', '=', $order_id)
-        );
+        if(isset($order_id) && $order_id)
+        {
+            $appoinment_condition = array(
+                array('user_id', '=', $user_no),
+                array('order_id', '=', $order_id)
+            );
+        }
+        else
+        {
+            $appoinment_condition = array(
+                array('user_id', '=', $user_no),
+                //array('order_id', '=', $order_id)
+            );
+        }
+        
 
 
 

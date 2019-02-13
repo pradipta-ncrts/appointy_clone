@@ -1036,6 +1036,10 @@ class UsersController extends ApiController {
 		{
 			$servCond[] = array('capacity','=','0');
 		}
+		if($type == "template")
+		{
+			$servCond[] = array('is_template','=','1');
+		}
 
 		$serviceFields = array();
 		$currency_field = array('currency');

@@ -124,6 +124,29 @@ class StaffController extends ApiController {
 		}
 	}
 
-	
+
+	public function staff_verification_link(Request $request, $staff_id)
+	{
+		$staff_id = $staff_id; 
+		$staff_id = Crypt::decrypt($staff_id);
+
+		$param['is_email_verified'] = '1';
+
+		$findCond = array(
+			array('staff_id', '=', $staff_id),
+		);
+		
+		$update = $this->common_model->update_data($this->tableObj->tableNameStaff, $findCond, $param);
+		if($update)
+		{
+			\Session::flash('success_message', "Successfully verified.");
+		}
+		else
+		{
+			\Session::flash('success_message', "Already verified.");
+		}
+
+		return redirect('/login');
+	}	
 
 }

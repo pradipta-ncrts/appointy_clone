@@ -67,46 +67,21 @@ Squeedr
                         </tr>
                      </thead>
                      <tbody>
-                        <tr  onclick="location.href='invoice-details'">
-                           <td align="left">15 July 2018</td>
-                           <td align="center">00002</td>
-                           <td align="center">jhon@gmail.com</td>
-                           <td align="center">Pending</td>
-                           <td align="center"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
-                           <td align="right">1,300.00 EUR</td>
+                        <?php
+                        foreach ($appoinmen_list as $key => $value)
+                        {
+                        ?>
+                        <tr>
+                           <td align="left"><?=date('d M Y', strtotime($value->invoice_date));?></td>
+                           <td align="center"><?=$value->order_id;?></td>
+                           <td align="center"><?=$value->client_email;?></td>
+                           <td align="center"><?=$value->invoice_status;?></td>
+                           <td align="center"><a href="{{ url('invoice-details') }}/<?=$value->order_id;?>"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
+                           <td align="right"><?=$value->currency;?> <?=$value->cost;?></td>
                         </tr>
-                        <tr  onclick="location.href='invoice-details'">
-                           <td align="left">15 July 2018</td>
-                           <td align="center">00002</td>
-                           <td align="center">jhon@gmail.com</td>
-                           <td align="center">Pending</td>
-                           <td align="center"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
-                           <td align="right">1,300.00 EUR</td>
-                        </tr>
-                        <tr  onclick="location.href='invoice-details'">
-                           <td align="left">15 July 2018</td>
-                           <td align="center">00002</td>
-                           <td align="center">jhon@gmail.com</td>
-                           <td align="center">Pending</td>
-                           <td align="center"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
-                           <td align="right">1,300.00 EUR</td>
-                        </tr>
-                        <tr  onclick="location.href='invoice-details'">
-                           <td align="left">15 July 2018</td>
-                           <td align="center">00002</td>
-                           <td align="center">jhon@gmail.com</td>
-                           <td align="center">Pending</td>
-                           <td align="center"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
-                           <td align="right">1,300.00 EUR</td>
-                        </tr>
-                        <tr  onclick="location.href='invoice-details'">
-                           <td align="left">15 July 2018</td>
-                           <td align="center">00002</td>
-                           <td align="center">jhon@gmail.com</td>
-                           <td align="center">Pending</td>
-                           <td align="center"><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
-                           <td align="right">1,300.00 EUR</td>
-                        </tr>
+                        <?php
+                        }
+                        ?>
                      </tbody>
                   </table>
                </div>

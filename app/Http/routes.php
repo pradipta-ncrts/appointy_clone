@@ -206,6 +206,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/staff_changepssword','Api\StaffsloginController@staff_changepssword');
     Route::any('/get_stripe_email','Api\IntregrationController@get_stripe_email');
     Route::any('/invoice_booking_details','Api\InvoiceController@invoice_booking_details');
+    Route::any('/send_staff_verification_email','Api\StaffsController@send_staff_verification_email');
 
 
     
@@ -225,6 +226,8 @@ Route::group(['prefix'=>'api'],function(){
 
 Route::group(['prefix'=>''],function(){
     Route::get('/login','Website\UsersController@login');
+    Route::any('/forgot-password/{user_data?}','Website\UsersController@forgot_password');
+    Route::any('/send_reset_password_link','Website\UsersController@send_reset_password_link');
     Route::any('/','Website\UsersController@registration');
     Route::get('/registration-step1/{request_url}','Website\UsersController@registration_step1');
     Route::get('/registration-step2/{request_url}','Website\UsersController@registration_step2');
@@ -262,7 +265,7 @@ Route::group(['prefix'=>''],function(){
 	Route::get('/payment-options','Website\InvoiceController@payment_options');
     Route::get('/invoice','Website\InvoiceController@invoice');
     Route::get('/create-invoice/{order_id}','Website\InvoiceController@create_invoice');
-    Route::get('/invoice-details','Website\InvoiceController@invoice_details');
+    Route::get('/invoice-details/{order_id}','Website\InvoiceController@invoice_details');
 
     Route::get('/invite-contacts','Website\UsersController@invite_contacts');
     Route::get('/add-location','Website\UsersController@add_location');
@@ -315,15 +318,16 @@ Route::group(['prefix'=>''],function(){
 
     Route::any('/send_invoice','Website\InvoiceController@send_invoice');
 
-    
+    Route::any('/save_as_draft','Website\InvoiceController@save_as_draft');
 
     
+    Route::get('/terms-and-condition','Website\UsersController@terms_and_condition');
 
-
+    Route::get('/privacy-policy','Website\UsersController@privacy_policy');
+    Route::any('/staff-verification-link/{staff_id}','Website\StaffController@staff_verification_link');
 
     
-    
-    
+       
 });
 
 
