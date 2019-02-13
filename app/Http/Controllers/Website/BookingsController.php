@@ -685,5 +685,140 @@ class BookingsController extends ApiController {
 	}
 
 
+	public function recurring_booking_list(Request $data,$duration)
+
+	{
+
+		// Check User Login. If not logged in redirect to login page //
+
+		$authdata = $this->website_login_checked();
+
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+
+			return redirect('/login');
+
+		}
+
+
+
+		$post_data = $authdata;
+
+		$post_data['page_no']=1;
+
+		$post_data['filter_data'] = '';
+
+
+
+		//echo $duration; die();
+
+		//filter staff
+
+		/*$filter_data = $data->input('appoinmnet_filter_stuff_id');
+
+		if(!empty($filter_data))
+
+		{
+
+			$post_data['filter_data'] = implode(',', $filter_data);
+
+		}*/
+
+
+
+		$post_data['duration'] = $duration;
+
+		$data=array(
+
+			'appoinment_list'=>array(),
+
+			'authdata'=>$authdata
+
+		);
+
+		//print_r($post_data); die();
+
+		$url_func_name="recurring_appoinment_list_mobile";
+
+		$return = $this->curl_call($url_func_name,$post_data);
+
+		
+
+		// Check response status. If success return data //		
+
+		if(isset($return->response_status))
+
+		{
+
+			if($return->response_status == 1)
+
+			{
+
+				$data['appoinment_list'] = $return->appoinment_list;
+
+				$data['duration'] = $duration;
+
+				$data['staff_list'] = $return->staff_list;
+
+			}
+
+			//echo '<pre>'; print_r($data); exit;
+
+			return view('website.booking.recurring_booking_list')->with($data);
+
+		}
+
+		else
+
+		{
+
+			return $return;
+
+		}
+
+
+
+		
+
+	}
+
+
+	public function recurring_booking_details($order_id)
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+			return redirect('/login');
+		}
+		
+		$post_data = $authdata;
+
+		$post_data['order_id'] = $order_id;
+		$data=array(
+			'appointment_details'=>array(),
+			'recurring_booking_list'=>array(),
+			'authdata'=>$authdata
+		);
+		
+		//print_r($post_data); die();
+		$url_func_name="recurring_appoinment_details";
+		$return = $this->curl_call($url_func_name,$post_data);
+
+		// Check response status. If success return data //		
+		if(isset($return->response_status))
+		{
+			if($return->response_status == 1)
+			{
+				$data['appointment_details'] = $return->appointment_details;
+				$data['recurring_booking_list'] = $return->recurring_booking_list;
+				$data['order_id'] = $order_id;
+			}
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.booking.recurring_booking_details')->with($data);
+		}
+		else
+		{
+			return $return;
+		}
+
+	}
 
 }

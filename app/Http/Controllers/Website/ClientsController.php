@@ -436,7 +436,7 @@ class ClientsController extends ApiController {
 		$staff_postal_code_list = array();
 		$staff_list=array();
 		$staff_details=array();
-
+		$data = array();
 		if($username!=NULL){
 			$findCond=array(
 				array('username','=',$username),
@@ -576,6 +576,89 @@ class ClientsController extends ApiController {
 	
 			//echo '<pre>'; print_r($data); exit;
 			return view('website.client.booking_list',$data);
+		} else {
+			return redirect('client/login');
+		}
+	}
+
+	function client_recurring_booking_list($parameter=NULL,$duration){
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+			
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+			
+			if($return->response_status == 1)
+			{
+				// Call API //
+				$post_data['duration'] = $duration;
+				$post_data['appointment_type'] = '1';
+				$url_func_name="client_booking_list";
+				$client_booking_list = $this->curl_call($url_func_name,$post_data);
+				//echo "<pre>";print_r($client_booking_list->appoinment_list); die();
+
+
+				$data['client_details'] = $return->client_details;
+				$data['appoinment_list'] = $client_booking_list->appoinment_list;
+				$data['duration'] = $duration;
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['appoinment_list'] = array();
+				$data['duration'] = $duration;
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.recurring_booking_list',$data);
+		} else {
+			return redirect('client/login');
+		}
+	}
+
+	function client_booking_details($parameter=NULL,$order_id){
+		if($parameter!=NULL){
+			$param_data = Crypt::decrypt($parameter);
+
+			// Call API //
+			$post_data['client_id']=$param_data['client_id'];
+			
+			$url_func_name="client_info";
+			$return = $this->curl_call($url_func_name,$post_data);
+			//echo "<pre>";print_r($return); die();
+			
+			if($return->response_status == 1)
+			{
+				// Call API //
+				$post_data['order_id'] = $order_id;
+				$url_func_name="client_booking_details";
+				$client_booking_details = $this->curl_call($url_func_name,$post_data);
+				//echo "<pre>";print_r($client_booking_details); die();
+
+
+				$data['client_details'] = $return->client_details;
+				$data['appointment_details'] = $client_booking_details->appointment_details;
+				$data['recurring_booking_list'] = $client_booking_details->recurring_booking_list;
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+			else{
+				$data['client_details'] = array();
+				$data['appointment_details'] = array();
+				$data['recurring_booking_list'] = array();
+				$data['param'] = $parameter;
+				$data['message'] = $return->response_message;
+			}
+	
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.recurring_booking_details',$data);
 		} else {
 			return redirect('client/login');
 		}

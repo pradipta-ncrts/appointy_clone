@@ -94,7 +94,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                     foreach($timezone as $tzone)
                                     {
                                     ?>
-                                    <option <?php if(!empty($service_details->service_timezone) && $service_details->service_timezone == $tzone['zone']) { ?> selected="" <?php } ?> value="<?=$tzone['zone'] ?>">
+                                    <option <?php if(!empty($service_details->timezone) && $service_details->timezone == $tzone['zone']) { ?> selected="" <?php } ?> value="<?=$tzone['zone'] ?>">
                                       <?=$tzone['diff_from_GMT'] . ' - ' . $tzone['zone'] ?>
                                     </option>
                                     <?php

@@ -99,6 +99,9 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/appoinment_list_staff','Api\StaffsloginController@appoinment_list_staff');
     Route::post('/notification_appoinment_list','Api\BookingsController@notification_appoinment_list');
     Route::post('/appoinment_list_mobile','Api\BookingsController@appoinment_list_mobile');
+    Route::post('/recurring_appoinment_list_mobile','Api\BookingsController@recurring_appoinment_list_mobile');
+    Route::post('/recurring_appoinment_details','Api\BookingsController@recurring_appoinment_details');
+    Route::post('/staff_assignment','Api\BookingsController@staff_assignment');
     Route::post('/staff_appoinment_list_mobile','Api\StaffsloginController@staff_appoinment_list_mobile');
     Route::post('/client_appoinment_list_mobile','Api\BookingsController@client_appoinment_list_mobile');
     Route::post('/appointment_details','Api\BookingsController@appointment_details');
@@ -116,6 +119,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/update_notification_settings','Api\BookingsController@update_notification_settings');
     Route::post('/notification_settings_data','Api\BookingsController@notification_settings_data');
     Route::post('/client_appointment_details','Api\ClientsController@client_appointment_details');
+    Route::post('/client_appointment_details_by_appointment_id','Api\ClientsController@appointment_details');
     Route::post('/reschedule_appointment_process','Api\ClientsController@reschedule_appointment_process');
     Route::post('/cancel_appointment_process','Api\ClientsController@cancel_appointment_process');
     Route::post('/business_provider_list','Api\ClientsController@business_provider_list');
@@ -157,6 +161,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/get_booking_rule','Api\ClientsController@get_booking_rule');
     Route::post('/client_profile_picture_upload','Api\ClientsController@client_profile_picture_upload');
     Route::post('/client_change_password','Api\ClientsController@client_change_password');
+    Route::post('/client_booking_details','Api\ClientsController@client_booking_details');
     
     
     
@@ -295,6 +300,10 @@ Route::group(['prefix'=>''],function(){
 
     Route::any('/booking-list/{duration?}','Website\BookingsController@booking_list');
 
+    Route::any('/recurring-booking-list/{duration?}','Website\BookingsController@recurring_booking_list');
+
+    Route::any('/recurring-booking-details/{order_id?}','Website\BookingsController@recurring_booking_details');
+    
     Route::any('/staff-booking-list/{duration?}','Website\StaffController@staff_booking_list');
 
     Route::any('/stripe-connect','Website\IntregrationController@stripe_connect');
@@ -404,6 +413,8 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/appointment-booking/{parameter?}','Website\ClientsController@client_appointment_booking');
     Route::get('/appointment-confirmation/{parameter?}','Website\ClientsController@client_appointment_confirmation');
     Route::any('/booking-list/{parameter?}/{duration?}','Website\ClientsController@client_booking_list');
+    Route::any('/recurring-booking-list/{parameter?}/{duration?}','Website\ClientsController@client_recurring_booking_list');
+    Route::any('/booking-details/{parameter?}/{order_id?}','Website\ClientsController@client_booking_details');
     Route::get('/profile-settings/{parameter?}','Website\ClientsController@client_profile_settings');
     Route::get('/profile-picture-settings/{parameter?}','Website\ClientsController@client_profile_picture_settings');
     Route::get('/login-settings/{parameter?}','Website\ClientsController@client_login_settings');

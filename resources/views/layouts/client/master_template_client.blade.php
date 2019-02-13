@@ -16,6 +16,10 @@
       <link href="{{asset('public/assets/website/css/slide-menu.css')}}" rel="stylesheet">
 	  <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+      <link rel="stylesheet" href="{{asset('public/assets/website/css/bootstrap-timepicker.min.css')}}" />
+      <script type="text/javascript">
+		  var baseUrl ="<?php echo url('')?>"; 
+	  </script>
       @yield('custom_css') 
    </head>
    
@@ -68,6 +72,8 @@
       <script src="{{asset('public/assets/website/js/jquery.validate.min.js')}}"></script>
 	  <!-- Sweetalert -->
 	  <script src="{{asset('public/assets/website/plugins/sweetalert/sweetalert.min.js')}}"></script>
+
+      <script src="{{asset('public/assets/website/js/bootstrap-timepicker.min.js')}}"></script>
      
       <script type="text/javascript">
          function slideDiv(obj) {
@@ -97,7 +103,14 @@
 
         });   
 
+        $( function() {
+         var $var = $("#reshedule_appointmentdate");
+             $var.datepicker({
+               minDate:0,
+            });
+        });
 
+        $('#reshedule_appointmenttime').timepicker({defaultTime: ''});
       </script> 
 
       
