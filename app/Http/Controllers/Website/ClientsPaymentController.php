@@ -197,14 +197,14 @@ class ClientsPaymentController extends ApiController {
   		$obj = json_decode($json, true); 
 
         $current_currency_value = $obj['rates']['USD'];
-  		$payble_amount = $total_amount*$current_currency_value;
+  		$payble_amount = number_format($total_amount*$current_currency_value,2);
 
         \Stripe\Stripe::setApiKey(config('constants.stripe.SECRET_KEY'));
 
         /////// If Stripe token is already generated //////
         if (isset($_REQUEST['stripeToken']) && !empty($_REQUEST['stripeToken']))
         {
-            //echo $_REQUEST['stripeToken']; exit;
+            //echo '<pre>'; print_r($_REQUEST); exit;
             $check_balnace = \Stripe\Balance::retrieve();
             $balanceArr = $check_balnace->__toArray(true);
             $available_amount = $balanceArr['available']['0']['amount'];
@@ -232,7 +232,6 @@ class ClientsPaymentController extends ApiController {
             // Charge Payment //
             try {
                 $charge = \Stripe\Charge::create(array(
-
                             "amount" => $payble_amount * 100,
                             "currency" => 'usd',
                             "source" => $_REQUEST['stripeToken'],
@@ -367,7 +366,9 @@ class ClientsPaymentController extends ApiController {
 						$invoice_email_data['email_subject'] = "Invoice";
 						$send = $this->sendmail(21,$client_email,$invoice_email_data);
 
-                    	return redirect(url('client_payment_status/'))->with('payment_success','Payment successfully done.'); 
+                        //return redirect(url('client_payment_status/'))->with('payment_success','Payment successfully done.'); 
+                        $redirect_url = url('/client/appointment-confirmation',$parameter);
+                        return redirect($redirect_url);
 
                     }
                     else
@@ -379,11 +380,12 @@ class ClientsPaymentController extends ApiController {
             } catch (\Exception $e) {
                 // Error Message //
 
-                /*$body = $e->getJsonBody();
-                //print_r($body); 
+                $body = $e->getJsonBody();
+                //print_r($body); exit;
 				$err = $body['error'];
 				$msg = $err['message'];
-				return redirect(url('client_payment_status/'))->with('payment_error',$msg);*/
+                return redirect(url('client_payment_status/'))->with('payment_error',$msg);
+                
 
             }
         } else {
