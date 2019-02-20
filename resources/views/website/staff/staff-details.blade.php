@@ -1075,6 +1075,23 @@ Squeedr
                 <div class="modal-body clr-modalbdy">
 
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                               <div class="input-group">
+                                  <span class="input-group-addon"><i class="fa fa-file-text"></i></span>
+                                  <div class="form-group nomarging color-b" >
+                                      <select class="" name="staff_type" id="staff_type" >
+                                        <option value="1">Manager</option>
+                                        <option value="2">Staff</option>
+                                      </select>
+                                     <div class="clearfix"></div>
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+
+                    <div class="row">
 
                         <div class="col-md-12">
 
@@ -1338,7 +1355,7 @@ Squeedr
 
                   <div class="form-group">
 
-                     <div class="input-group"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
+                     <div class="input-group" id="area_error"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
 
                         <input id="area" type="text" class="form-control" name="area" placeholder="Area name">
 
@@ -1356,9 +1373,9 @@ Squeedr
 
                   <div class="form-group">
 
-                     <div class="input-group"> <span class="input-group-addon"><i class="fa fa-thumb-tack"></i></span>
+                     <div class="input-group" id="pin_no_error"> <span class="input-group-addon"><i class="fa fa-thumb-tack"></i></span>
 
-                        <input id="pin_no" type="text" class="form-control" name="pin_no" placeholder="Pin No">
+                        <input id="pin_no" type="text" class="form-control" name="pin_no" placeholder="Postal Code">
 
                      </div>
 
@@ -2014,7 +2031,7 @@ $(document).ready(function(){
 
             {
 
-                //console.log(response);
+                console.log(response);
 
                 $('.animationload').hide();
 
@@ -2031,6 +2048,9 @@ $(document).ready(function(){
                         profile_picture = "<?php echo asset('public/assets/website/images/business-hours/blue-user.png');?>";
 
                     }
+                    //alert(response.staff_details.staff_type);
+                    $('#staff_type').val(response.staff_details.staff_type); 
+                                       
 
                     $('#modalTitle').text('Update '+response.staff_details.full_name);
 
@@ -2854,7 +2874,7 @@ $(document).on('click','.delete_block_time',function(e){
 
         title: "Are you sure?",
 
-        text: "Once deleted, you will never access this blocked date/time!",
+        text: "Once deleted, you will never access the service availability.",
 
         type: "warning",
 
@@ -3126,10 +3146,18 @@ $('#area_code').validate({
 
         'pin_no': {
 
-            required: 'Please enter pin no'
+            required: 'Please enter postal code'
 
         },
 
+    },
+
+    errorPlacement: function(error, element) {
+        if (element.attr("name") == "area") {
+            error.insertAfter($('#area_error'));
+        } else if (element.attr("name") == "pin_no") {
+            error.insertAfter($('#pin_no_error'));
+        }
     },
 
 

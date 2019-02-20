@@ -2,6 +2,13 @@
 @section('title')
 Squeedr
 @endsection
+@section('custom_css')
+<style type="text/css">
+    #clientBookingList, #dropdownMenuButton {
+        display: none;
+    }
+</style>
+@endsection
 @section('content')
 <div class="body-part">
     <div class="container-custm">
@@ -28,7 +35,7 @@ Squeedr
             <div class="left-menu">
                 <ul>
                 <?php if(!empty($service_list)) { foreach($service_list as $service) { ?>
-                <li><a href="{{url('client/service-details/'.$service->service_link)}}" <?php if(Request::segment(3) == $service->service_link) { ?> class="active" <?php } ?>> {{$service->service_name}}</a></li>
+                <li><a href="{{url('client/service-details/'.$service->service_id)}}" <?php if(Request::segment(3) == $service->service_id) { ?> class="active" <?php } ?>> {{$service->service_name}}</a></li>
                 <?php } } ?>
                 </ul>
             </div>
@@ -68,7 +75,7 @@ Squeedr
                                                 <div class="row">
                                                 <div class="col-sm-10">
                                                     <h4>Link</h4>
-                                                    <p id="bookingUrl">{{url('client/service-details/'.$service_details->service_link)}}</p>
+                                                    <p id="bookingUrl">{{url('client/service-details/'.$service_details->service_id)}}</p>
                                                 </div>
                                                 <!--<div class="col-sm-2">
                                                     <button type="button" class="btn btn-default pull-right"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>

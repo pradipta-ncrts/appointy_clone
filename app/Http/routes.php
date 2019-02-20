@@ -212,6 +212,11 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/get_stripe_email','Api\IntregrationController@get_stripe_email');
     Route::any('/invoice_booking_details','Api\InvoiceController@invoice_booking_details');
     Route::any('/send_staff_verification_email','Api\StaffsController@send_staff_verification_email');
+    Route::any('/change_email','Api\ProfileController@change_email');
+    Route::any('/delete_client','Api\ClientsController@delete_client');
+
+    
+
 
 
     
@@ -244,7 +249,7 @@ Route::group(['prefix'=>''],function(){
     Route::any('/staff-dashboard','Website\StaffController@staff_dashboard');
     
     //Only for link purpose
-    Route::any('/calendar','Website\UsersController@calendar');
+    Route::any('/calendar/{service_id?}','Website\UsersController@calendar');
     Route::get('/gift-certificates','Website\UsersController@gift_certificates');
     Route::get('/marketing-discount-coupons','Website\UsersController@marketing_discount_coupons');
     Route::get('/offers','Website\UsersController@offers');

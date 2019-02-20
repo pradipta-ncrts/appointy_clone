@@ -22,8 +22,8 @@ Squeedr
          <div class="container-fluid">
             <div class="row">
                <h2 class="profile-title">Login</h2>
-               <div class="prof" style="padding:0;width:100%;display:inline-block;">
-                  <form style="width: 100%;float: left;border: 1px solid #F5F5F5;padding: 10px 10px 0;border-radius: 5px;margin: 0 0 10px;" action="{{ url('api/change_email') }}" method="post" id="change-email">
+               <div class="prof" style="padding:0;width:100%">
+                  <form style="width:50%" action="{{ url('api/change_email') }}" method="post" id="change-email">
                      <div class="form-group">You log in with an email address and password</div>
                      <div class="form-group">
                         <label for="email"><strong>Email address:</strong></label>
@@ -42,7 +42,7 @@ Squeedr
                          <button type="button" id="close-change-email" class="btn btn-primary butt-next">Close</button>
                      </div>
                   </form>
-                  <form style="width: 100%;float: left;border: 1px solid #F5F5F5;padding: 10px 10px 0;border-radius: 5px;margin: 0 0 10px;" action="{{ url('api/change-password') }}" method="post" id="change-password">
+                  <form style="width:50%" action="{{ url('api/change-password') }}" method="post" id="change-password">
                      <div class="form-group">
                         <label for="pwd"><strong>Password:</strong></label>
                         <div class="profile-email">*********** <span>

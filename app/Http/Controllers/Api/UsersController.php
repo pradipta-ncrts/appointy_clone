@@ -141,6 +141,7 @@ class UsersController extends ApiController {
 			$conditions = array(
 				array('password','=',md5($password)),
 				array('is_deleted', '=', 0),
+				array('is_login_allowed', '=', 1),
 				'or'=>array('email'=>$email,'username'=>$email)
 			);
 			$selectFields=array();
@@ -712,7 +713,7 @@ class UsersController extends ApiController {
 		$state = $request->input('state');
 		$mobile = $request->input('mobile');  
 		$office_phone = $request->input('office_phone');
-		$skype_id = $request->input('skype_id');
+		//$skype_id = $request->input('skype_id');
 		$zip_code = $request->input('zip_code');
 		$business_description = $request->input('business_description');
 		$transport = $request->input('transport');
@@ -769,7 +770,7 @@ class UsersController extends ApiController {
 				'transport' => $transport,
 				'parking' => $parking,
 				'office_phone' => $office_phone,
-				'skype_id' => $skype_id,
+				//'skype_id' => $skype_id,
 				'zip_code' => $zip_code,
 				'business_description' => $business_description,
 		);
@@ -1024,7 +1025,7 @@ class UsersController extends ApiController {
 		$servCond = array(
             array('user_id','=',$user_id),
 			array('is_deleted','=','0'),
-			//array('is_blocked','=','0'),
+			array('is_blocked','=','0'),
 		);
 
 		$type = $request->input('type'); 

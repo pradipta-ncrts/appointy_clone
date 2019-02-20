@@ -73,8 +73,8 @@ Squeedr
                                     <input class="form-control" type="text" name="office_phone" placeholder="Office Phone" value="<?=$userDetails->office_phone ? $userDetails->office_phone : "";?>" />
                                  </div>
                               </div>
-                              <label for="Phone">Skype ID</label>
-                              <input class="form-control" type="text" placeholder="Skype ID" name="skype_id" value="<?=$userDetails->skype_id ? $userDetails->skype_id : "";?>" />
+                              <!-- <label for="Phone">Skype ID</label>
+                              <input class="form-control" type="text" placeholder="Skype ID" name="skype_id" value="<?=$userDetails->skype_id ? $userDetails->skype_id : "";?>" /> -->
                               <label for="Phone">Transport</label>
                               <input class="form-control" type="text" placeholder="Transport" name="transport" value="<?=$userDetails->transport ? $userDetails->transport : "";?>" />
                               <label for="Phone">Parking</label>

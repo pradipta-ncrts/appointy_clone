@@ -33,7 +33,7 @@ Squeedr
                          <?php
                          $image = $user_details->profile_perosonal_image ? 'image/profile_perosonal_image/'.$user_details->profile_perosonal_image : "assets/website/images/picture.png";
                          ?>
-                         <img id="profile_perosonal_image_preview" src="{{asset('public/'.$image)}}" height="80" width="80"><br>
+                         <img id="profile_perosonal_image_preview" src="{{asset('public/'.$image)}}" height="60px" width="80px"><br>
                          <span>Upload Profile Picture</span>
                       </div>
                   </div>

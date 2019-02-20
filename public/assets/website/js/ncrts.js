@@ -2759,6 +2759,58 @@ $('#change-password').validate({
       }
   });
 
+$.validator.addMethod("properemail", function(value, element) {
+       return this.optional(element) || /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test( value );
+   });
+
+$('#change-email').validate({
+      rules: {
+          email: {
+              required: true,
+              properemail: true
+          },
+      },
+      
+      messages: {
+          email: {
+              required: 'Please enter email',
+              properemail: 'Must be a valid email address.'
+          },
+      },
+
+      submitHandler: function(form) {
+        var data = $(form).serializeArray();
+        data = addCommonParams(data);
+        //data = addCommonParams(data);
+        $.ajax({
+            url: form.action,
+            type: form.method,
+            data:data ,
+            dataType: "json",
+            success: function(response) {
+              console.log(response);
+              $('.animationload').hide();
+              if(response.result=='1')
+              {
+                $("#change-email-inputs").hide();
+                //$('#change-email').trigger("reset");
+                swal("Success!", response.message, "success")
+              }
+              else
+              {
+                swal("Error", response.message , "error");
+              }
+            },
+            beforeSend: function(){
+                $('.animationload').show();
+            },
+            complete: function(){
+                $('.animationload').hide();
+            }
+        });
+      }
+  });
+
 $("#hide-change-password").click(function(e){
     e.preventDefault();
     $("#hide-change-password").hide();
@@ -2770,6 +2822,19 @@ $("#show-change-password").click(function(e){
     $("#show-change-password").hide();
     $("#hide-change-password").show();
     $("#change-password-inputs").hide();
+});
+
+$("#hide-change-email").click(function(e){
+    e.preventDefault();
+    $("#hide-change-email").hide();
+    $("#show-change-email").show();
+    $("#change-email-inputs").show();
+});
+$("#show-change-email").click(function(e){
+    e.preventDefault();
+    $("#show-change-email").hide();
+    $("#hide-change-email").show();
+    $("#change-email-inputs").hide();
 });
 
 $("#close-change-password").click(function(e){
@@ -3352,6 +3417,50 @@ $(document).on("click", '.request-for-review', function(e) {
       }
   });
 });
+
+$('#edit_more_phone').click(function(){
+    var html = $(this).html();
+    if(html=='<i class="fa fa-plus"></i>')
+    {
+        $("#edit_other_phone").show();
+        $(this).html('<i class="fa fa-minus"></i>');
+    }
+    else
+    {
+        $("#edit_other_phone").hide();
+        $(this).html('<i class="fa fa-plus"></i>');
+    }
+});
+
+$('#more_phone').click(function(){
+    var html = $(this).html();
+    if(html=='<i class="fa fa-plus"></i>')
+    {
+        $("#other_phone").show();
+        $(this).html('<i class="fa fa-minus"></i>');
+    }
+    else
+    {
+        $("#other_phone").hide();
+        $(this).html('<i class="fa fa-plus"></i>');
+    }
+});
+
+$('#client_more_phone').click(function(){
+    var html = $(this).html();
+    if(html=='<i class="fa fa-plus"></i>')
+    {
+        $("#client_other_phone").show();
+        $(this).html('<i class="fa fa-minus"></i>');
+    }
+    else
+    {
+        $("#client_other_phone").hide();
+        $(this).html('<i class="fa fa-plus"></i>');
+    }
+});
+
+
 
 
 

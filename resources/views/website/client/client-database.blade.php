@@ -87,6 +87,7 @@ Squeedr
                         <div class="headRow  custm-linkedt custm-l" id="clientdatabase" style="width:230px!important">
                             <ul>
                                 <li><a id="editClient"><i class="fa fa-edit"></i> Edit </a> </li>
+                                <li><a id="delete" data-client-id=""><i class="fa fa-trash-o"></i> delete </a> </li>
                                 <li><a id="invite" data-client-id=""><i class="fa fa-paper-plane"></i> Invite </a> </li>
                                 <li id="verifySection"><a id="verify" data-client-id=""><i class="fa fa-lock"></i> Verify </a> </li>
                             </ul>
@@ -305,7 +306,7 @@ Squeedr
                         <div class="col-md-12">
                         <div class="form-group">
                             <div class="input-group" id="edit_client_email_error"> <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
-                                <input id="edit_client_email" type="text" class="form-control" name="client_email" placeholder="Email Address" disabled="">
+                                <input id="edit_client_email" type="text" class="form-control" name="client_email" placeholder="Email Address">
                             </div>
                         </div>
                         </div>
@@ -741,38 +742,38 @@ $('#editClient').click(function(e){
 
 $('#edit_client_form').validate({
         rules: {
-            edit_client_name: {
+            client_name: {
                 required: true
             },
-            edit_client_email: {
+            client_email: {
                 required: true,
                 email: true
             },
-            edit_client_mobile: {
+            client_mobile: {
                 required: true,
                 number: true,
                 minlength: 10,
                 maxlength: 10
             },
-            edit_client_address: {
+            client_address: {
                 required: true
             }
         },
         messages: {
-            edit_client_name: {
+            client_name: {
                 required: 'Please enter client name'
             },
-            edit_client_email: {
+            client_email: {
                 required: 'Please enter email',
                 email: 'Please enter proper email'
             },
-            edit_client_mobile: {
+            client_mobile: {
                 required: 'Please enter mobile no',
                 number: 'Please enter proper mobile no',
                 minlength: 'Please enter minimum 10 digit mobile no',
                 maxlength: 'Please enter maximum 10 digit mobile no'
             },
-            edit_client_address: {
+            client_address: {
                 required: 'Please enter address'
             }
         },
@@ -781,7 +782,7 @@ $('#edit_client_form').validate({
                 error.insertAfter($('#edit_client_name_error'));
             } else if (element.attr("name") == "client_email") {
                 error.insertAfter($('#edit_client_email_error'));
-            } else if (element.attr("name") == "staff_client_mobile") {
+            } else if (element.attr("name") == "client_mobile") {
                 error.insertAfter($('#edit_client_mobile_error'));
             } else if (element.attr("name") == "client_address") {
                 error.insertAfter($('#edit_client_address_error'));
@@ -902,6 +903,51 @@ $(document).on('click','.noClient',function(e)
     e.preventDefault();
     swal("Error", "No client avaliable." , "error");
 });
+
+$(document).on('click','#delete',function(e){
+    e.preventDefault();
+    var data = addCommonParams([]);
+    data.push({name:'client_id', value:client_id});
+    swal({
+        title: "Are you sure?",
+        text: "Once delete, you will loose all the details of this client!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, I am sure!',
+        cancelButtonText: "No, not now!",
+        closeOnConfirm: false,
+        closeOnCancel: true
+        },function(isConfirm){
+
+            if (isConfirm){
+                $.ajax({
+                    url: baseUrl+"/api/delete_client", // Url to which the request is send
+                    type: "POST", // Type of request to be send, called as method
+                    data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+                    dataType: "json",
+                    success: function(response) // A function to be called if request succeeds
+                    {
+                        //console.log(response);
+                        $('.animationload').hide();
+                        if(response.result=='1')
+                        {
+                            swal({title: "Success", text: response.message, type: "success"});
+                        }
+                        else
+                        {
+                            swal("Error", response.message , "error");
+                        }
+                    },
+                    beforeSend: function()
+                    {
+                        $('.animationload').show();
+                    }
+                });
+            }
+        });
+    });
+    
 
 
 </script>

@@ -323,16 +323,18 @@ class UsersController extends ApiController {
 
 
 
-	public function calendar(Request $data)
+	public function calendar(Request $data, $service_id = NULL)
 	{
 		$authdata = $this->website_login_checked();
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
            return redirect('/login');
 		}
 		// Call API //
+	
 		$post_data = $authdata;
 		$post_data['page_no']=1;
 		$post_data['filter_data'] = '';
+		$post_data['service_id'] = $service_id;
 
 		//filter staff
 		$filter_data = $data->input('appoinmnet_filter_stuff_id');

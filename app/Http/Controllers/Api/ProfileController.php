@@ -197,7 +197,9 @@ class ProfileController extends ApiController {
 		
 		$prev_url = url('business-provider').'/'.$user_details->username;
 
+		$main_url = $request->input('main_url');
 		$post_url = $request->input('profile_url');
+		$post_url = $main_url.$post_url;
 
 		if($prev_url==$post_url)
 		{
@@ -491,7 +493,47 @@ class ProfileController extends ApiController {
         $this->json_output($response_data);
 	}
 
-	
-	
+
+	public function change_email(Request $request)
+	{
+		$response_data=array();
+		// validate the requested param for access this service api
+		$this->validate_parameter(1); // along with the user request key validation
+
+		if(!empty($other_user_no) && $other_user_no!=0){
+			$user_no = $other_user_no;
+		}
+		else
+		{
+			$user_no = $this->logged_user_no;
+		}
+
+		$email = $request->input('email');
+
+		$query = "SELECT * FROM `squ_user` WHERE `email` = '".$email."' AND `id` NOT IN ('".$user_no."')";
+		$check_email = $this->common_model->customQuery($query,$query_type=1); 
+		
+		if(empty($check_email))
+		{
+			$param = array(
+					'email' => $email,
+			);
+
+			$updateCond=array(
+							array('id','=',$user_no)
+						);
+
+			$this->common_model->update_data($this->tableObj->tableNameUser,$updateCond,$param);
+
+			$this->response_status = '1';
+			$this->response_message = "Successfully updated.";
+		}
+		else
+		{
+			$this->response_message = "This email already register.";
+		}
+		
+		$this->json_output($response_data);
+	}
 
 }

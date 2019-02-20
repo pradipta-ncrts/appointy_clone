@@ -900,7 +900,7 @@ class BaseApiController extends BaseController
         $obj = new Request();
         $ci = new BaseApiController($obj);
         $table = $ci->tableObj->tableNameCurrency;
-    
+        $fields = array('currency_id', 'currency_icon as currency');
         $conditions = array(
             array('is_blocked', '=', 0),
             array('is_deleted', '=', 0),

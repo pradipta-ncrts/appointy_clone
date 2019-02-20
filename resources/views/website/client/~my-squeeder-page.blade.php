@@ -41,12 +41,6 @@
           <div class="profileInside">
             <div class="banner-top">
               <div class="img-banner-parent">
-              <div class="opacitybx">
-                <ul class="breadcrumb">
-                    <li><a href="{{ url('client/login') }}">Client Login</a></li>
-                    <li><a href="{{ url('client/registration') }}">Client Registration</a></li>
-                </ul>
-                </div>
                 <div class="img-banner">
                   <?php
                    if($user_details->timeline_image)
@@ -71,33 +65,12 @@
                         <?=$user_details->prof ? $user_details->prof : "No data found";?>
                         </span> </h6>
                     </div>
-                    <!--<a class="btn-select">Select a service <i class=" fa fa-caret-down"></i></a>--> </div>
-                    
-
+                    <a class="btn-select">Select a service <i class=" fa fa-caret-down"></i></a> </div>
                   
                   <!-- <a class="btn btn-custom">Book Now</a>--> 
                   
                 </div>
               </div>
-              <div class="dropdown pull-right mysl-drp">
-  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select a service
-      <span class="caret"></span></button>
-      <ul class="dropdown-menu">
-        <?php
-        if(empty($service_list))
-        {
-           echo "<h2>No service found!</h2>";
-        }
-        foreach ($service_list as $key => $details) 
-        {
-        ?>
-        <li><a href="{{url('/client/service-details/'.$details->service_id)}}"><?=$details->service_name;?></a></li>
-        <?php
-        }
-        ?>
-      </ul>
-    </div>
-              
               <?php
               if($user_details->user_type==1)
               {
@@ -232,7 +205,7 @@
                         {
                         ?>
                       <div class="appointment mobSevices col-sm-4">
-                        <a href="{{url('/client/service-details/'.$details->service_id)}}">
+                        <a href="{{url('/client/service-details/'.$details->service_link)}}">
                         <div class="pull-left">
                           <p>
                             <?=$details->service_name;?>
@@ -331,7 +304,7 @@
                       <li><a target="_blank" href="<?=$user_details->facebook_link ? $user_details->facebook_link : "";?>" class="fa fa-facebook"></a></li> 
                       <li><a target="_blank" href="<?=$user_details->twitter_link ? $user_details->twitter_link : '';?>" class="fa fa-twitter"></a></li>
                       <li><a target="_blank" href="<?=$user_details->linked_in_link ? $user_details->linked_in_link : '';?>" class="fa fa-instagram"></a></li>
-                      <!--<li><a target="_blank" href="" class="fa fa-skype"></a></li>-->
+                      <li><a target="_blank" href="" class="fa fa-skype"></a></li>
                       </ul>
                       </div>
                     </div>

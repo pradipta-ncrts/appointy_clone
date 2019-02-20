@@ -250,7 +250,7 @@ class StaffsController extends ApiController {
             array('is_blocked','=','0'),
         );
         
-        $selectFields=array('staff_id','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
+        $selectFields=array('staff_id','staff_type','addess','user_id','full_name','username','email','mobile','description','home_phone','work_phone','expertise','category_id','staff_profile_picture','is_internal_staff','booking_url','is_login_allowed','is_email_verified','is_blocked','created_on');
         $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
 
         if(!empty($staff_details)){
@@ -316,6 +316,7 @@ class StaffsController extends ApiController {
         }
         else
         {
+            $staff_type = $request->input('staff_type');
             $staff_id = $request->input('staff_id');
             $full_name = $request->input('staff_fullname');
             //$email = $request->input('staff_email');
@@ -367,6 +368,7 @@ class StaffsController extends ApiController {
                     }
                 }
 
+                $staff_data['staff_type'] = $staff_type;
                 $staff_data['full_name'] = $full_name;
                 $staff_data['mobile'] = $mobile;
                 $staff_data['home_phone'] = $home_phone;
@@ -374,6 +376,8 @@ class StaffsController extends ApiController {
                 $staff_data['expertise'] = $expertise;
                 $staff_data['description'] = $description;
                 $staff_data['category_id'] = $category_id;
+
+                //print_r($staff_data); die();
 
                 $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
                 
@@ -412,10 +416,10 @@ class StaffsController extends ApiController {
             $msg = "Staff has been active successfully";
         } else if($type == 'internal_staff' && $status_value == 1) {
             $staff_data['is_internal_staff'] = 0;
-            $msg = "Staff has been added as internal staff";
+            $msg = "Staff has been removed internal staff";
         } else if($type == 'internal_staff' && $status_value == 0) {
             $staff_data['is_internal_staff'] = 1;
-            $msg = "Staff has been removed internal staff";
+            $msg = "Staff has been added as internal staff";
         } else if($type == 'login_allowed' && $status_value == 1) {
             $staff_data['is_login_allowed'] = 0;
             $msg = "Allow staff to login next time.";
@@ -712,8 +716,6 @@ class StaffsController extends ApiController {
             from `squ_block_date_time` 
             where `squ_block_date_time`.`user_id` = ".$user_no." 
                 and `squ_block_date_time`.`staff_id` = ".$staff_id."
-                and `squ_block_date_time`.`start_time` = ''
-                and `squ_block_date_time`.`end_time` = ''
                 and `squ_block_date_time`.`is_deleted` = 0 
                 and `squ_block_date_time`.`is_blocked` = 0 
                 and `squ_block_date_time`.`is_deleted` = 0 

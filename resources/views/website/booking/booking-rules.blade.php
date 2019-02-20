@@ -556,7 +556,7 @@ Squeedr
 
                             <div class="notfy-msg"><i class="fa fa-warning"></i> &nbsp; Recurring appointments is a premium feature availbale in Growth and above membership. <span>Upgrade</span></div>
 
-                            <h3 class="sub-head">Show recurring options to</h3>
+                            <!-- <h3 class="sub-head">Show recurring options to</h3>
 
                             <div class="clearfix"></div>
 
@@ -576,7 +576,7 @@ Squeedr
                             <input type="checkbox" class="recurring_option" data-option-name="show_recurring_options_admin" <?php if(!empty($booking_rule_data) && $booking_rule_data->show_recurring_options_admin == 1) { ?> checked="" <?php } ?>> &nbsp;&nbsp; Admin
                             <span class="checkmark"></span>
 
-                            </label>                                                                            
+                            </label>                        -->                                                     
 
                             </div>
 

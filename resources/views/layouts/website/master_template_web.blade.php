@@ -64,7 +64,7 @@
       $inner_staff_list = $mysquder_page_inner['inner_staff_list'];
       $inner_service_list = $mysquder_page_inner['inner_service_list']; 
       /*echo "<pre>";
-      print_r($stuffs_list); die();*/
+      print_r($inner_user_details); die();*/
       ?> 
       <div class="animationload" style="display: none;">
          <div class="osahanloading"></div>
@@ -92,7 +92,22 @@
                   </div>
                   <a id="c-button--slide-right" class="c-button quick-add"><i class="flaticon-four-squares"></i></a> 
                   <div class="dropdown prof-menu" href="#">
-                     <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}"></a> 
+                     <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+                        <?php
+                        if($inner_user_details->profile_image)
+                        {
+                        ?>
+                        <img class="user-pic" src="{{asset('public/image/profile_image')}}/<?=$inner_user_details->profile_image;?>">
+                        <?php
+                        }
+                        else
+                        {
+                        ?>
+                        <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}">
+                        <?php
+                        }
+                        ?>
+                     </a> 
                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="#"   data-toggle="modal" data-target="#myModalsharelinks"> <i class="fa fa-share-alt" aria-hidden="true"></i> Share links</a> <a class="dropdown-item" href="{{ url('calendar') }}"> <i class="fa fa-calendar" aria-hidden="true"></i> Calendar Connections</a> <a class="dropdown-item" href="{{ url('profile-settings') }}"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> <a class="dropdown-item" href="#"> <i class="fa fa-id-card " aria-hidden="true"></i> Memebership</a><a class="dropdown-item" href="{{ url('invitees') }}"> <i class="fa fa-user" aria-hidden="true"></i> Invitees</a> <a class="dropdown-item" href="{{ url('staff-details') }}"> <i class="fa fa-user" aria-hidden="true"></i> Users</a> <a class="dropdown-item" href="{{ url('help') }}"> <i class="fa fa-question-circle " aria-hidden="true"></i> Help</a> <a class="dropdown-item" href="{{ url('/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> </div>
                   </div>
                   <div class="main-nav">

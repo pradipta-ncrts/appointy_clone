@@ -121,8 +121,9 @@ class ClientsController extends ApiController {
                         $mail_body = str_replace('{client_name}', $client_name, $mail_body);
                         $mail_body = str_replace('{user_id}', $client_email, $mail_body);
                         $mail_body = str_replace('{password}', ' ', $mail_body);
-                        
-                        $emailData['subject'] = $email_template->subject ? $email_template->subject : 'New User Registration';
+                        $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
+
+                        $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Client Registration';
                         $emailData['content'] = $mail_body;
 
                         $this->sendmail(6,$client_email,$emailData);
@@ -219,8 +220,8 @@ class ClientsController extends ApiController {
                             $mail_body = str_replace('{client_name}', $client_name, $mail_body);
                             $mail_body = str_replace('{user_id}', $client_email, $mail_body);
                             $mail_body = str_replace('{password}', $password, $mail_body);
-                            
-                            $emailData['subject'] = $email_template->subject ? $email_template->subject : 'New User Registration';
+                            $mail_body = str_replace('{footer}',$templateFooter, $mail_body);
+                            $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Client Registration';
                             $emailData['content'] = $mail_body;
 
 
@@ -386,68 +387,65 @@ class ClientsController extends ApiController {
         {
             $client_id = $request->input('client_id');
             $client_name = $request->input('client_name');
+            $client_email = $request->input('client_email');
             $client_mobile = $request->input('client_mobile');
             $client_home_phone = $request->input('client_home_phone');
             $client_work_phone = $request->input('client_work_phone');
-            //$client_category = $request->input('client_category');
             $client_timezone = $request->input('client_timezone');
             $client_address = $request->input('client_address');
             $client_note = $request->input('client_note');
-            //$staff_profile_picture = '';
 
-            $conditions = array(
-                array('client_id','=',$client_id),
-                array('user_id','=',$user_id),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-            );
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$conditions);
-            //echo '<pre>'; print_r($result); exit;
-            if(empty($result))
+            $query = "SELECT * FROM `squ_client` WHERE `client_email` = '".$client_email."' AND `client_id` NOT IN ('".$client_id."')";
+            $check_email = $this->common_model->customQuery($query,$query_type=1);
+            //echo "<pre>"; print_r($check_email); die();
+            if(empty($check_email))
             {
-                $this->response_message = "Invalid client details.";
-            }
-            else
-            {
-                /*$destinationPath = './uploads/profile_image/';
-                if (!empty($_FILES)) {
-                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
-                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
-                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
-                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
-                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
-                        }
-                    }
-                }*/
-
-                $client_data['client_name'] = $client_name;
-                $client_data['client_mobile'] = $client_mobile;
-                $client_data['client_home_phone'] = $client_home_phone;
-                $client_data['client_work_phone'] = $client_work_phone;
-                $client_data['client_category'] = $client_category;
-                $client_data['client_address'] = $client_address;
-                $client_data['client_timezone'] = $client_timezone;
-                $client_data['client_note'] = $client_note;
-
-                $updateConditions = array(
+                $conditions = array(
                     array('client_id','=',$client_id),
+                    array('user_id','=',$user_id),
                     array('is_deleted','=','0'),
                     array('is_blocked','=','0'),
                 );
 
-                $update = $this->common_model->update_data($this->tableObj->tableNameClient,$updateConditions,$client_data);
-                
-                //Notification Update start
-                $notification_data['update_message'] = "You have updated ".$client_name."'s profile.";
-                $notification_data['user_id'] = $user_id;
+                $result = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$conditions);
+                if(empty($result))
+                {
+                    $this->response_message = "Invalid client details.";
+                }
+                else
+                {
+                    $client_data['client_name'] = $client_name;
+                    $client_data['client_email'] = $client_email;
+                    $client_data['client_mobile'] = $client_mobile;
+                    $client_data['client_home_phone'] = $client_home_phone;
+                    $client_data['client_work_phone'] = $client_work_phone;
+                    //$client_data['client_category'] = $client_category;
+                    $client_data['client_address'] = $client_address;
+                    $client_data['client_timezone'] = $client_timezone;
+                    $client_data['client_note'] = $client_note;
 
-                $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
-                //Notification Update End
+                    $updateConditions = array(
+                        array('client_id','=',$client_id),
+                        array('is_deleted','=','0'),
+                        array('is_blocked','=','0'),
+                    );
 
-                $this->response_status='1';
-                $this->response_message = "Client successfully updated.";
+                    $update = $this->common_model->update_data($this->tableObj->tableNameClient,$updateConditions,$client_data);
+                    
+                    //Notification Update start
+                    $notification_data['update_message'] = "You have updated ".$client_name."'s profile.";
+                    $notification_data['user_id'] = $user_id;
 
+                    $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+                    //Notification Update End
+
+                    $this->response_status='1';
+                    $this->response_message = "Client successfully updated.";
+                }
+            }
+            else
+            {
+                $this->response_message = "This email already exist.";
             }
 
             $this->json_output($response_data);
@@ -1601,6 +1599,7 @@ class ClientsController extends ApiController {
 
             //echo $total_payable_amount;
             //echo '<pre>'; print_r($insert_data); exit;
+            //echo $unavailable; die();
             if(!empty($insert_data) && $unavailable == 0){
                 //$total_cost = $total_available_day * 
                 $insertdata = $this->common_model->insert_data($this->tableObj->tableNameAppointment,$insert_data);
@@ -1614,13 +1613,14 @@ class ClientsController extends ApiController {
                 $updatedata['total_payable_amount'] = $total_payable_amount;	
                 $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$updatedata);
 
+                $parameter = [
+                    'order_id' => $order_id,
+                    'client_id' => $client,
+                ];
+                $parameter= Crypt::encrypt($parameter);
+
                 if($payment_method == 1){
                     
-                    $parameter = [
-                        'order_id' => $order_id,
-                        'client_id' => $client,
-                    ];
-                    $parameter= Crypt::encrypt($parameter);
                     if($recurring_booking_frequency > 0){
                         $cancel_url = url('/client/appointment_details',$parameter);
                         $reschedule_url = url('/client/appointment_details',$parameter);
@@ -1713,11 +1713,21 @@ class ClientsController extends ApiController {
         
                 } else {
                     // Redirect to Payment Gateway //
+                    $response_data['parameter'] = $parameter;
                     $this->response_status='1';
                     $this->response_message = "Your appointment has been successfully booked.";
 
                 }
             } else {
+
+                //echo "<pre>"; print_r($insert_data); die();
+
+                /*$parameter = [
+                    'order_id' => $insert_data[0]->order_id,
+                    'client_id' => $insert_data[0]->client_id,
+                ];
+                $parameter= Crypt::encrypt($parameter);*/
+                $this->response_status='0';
                 $this->response_message = "Appointment can not be booked.";
             }
            
@@ -2782,7 +2792,8 @@ class ClientsController extends ApiController {
             array('is_deleted','=','0'),
             array('is_blocked','=','0'),
         );
-        $chkFields=array();
+        //echo "<pre>"; print_r($chkCond); die();
+        $chkFields = array();
         $check_service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$chkCond,$chkFields);
         //echo '<pre>'; print_r($check_service_details); exit;
         if(!empty($check_service_details)){ 
@@ -3060,6 +3071,45 @@ class ClientsController extends ApiController {
     
         // now return
         return $w;
+    }
+
+    public function delete_client(Request $request)
+    {
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $client_id = $request->input('client_id');
+        
+        $condition = array(
+            array('client_id', '=', $client_id),
+            //array('user_id', '=', $user_id),
+        );
+
+        $fields = array();
+        $checkBooking = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$condition,$fields);
+       
+        if(count($checkBooking)==0)
+        {
+
+            $param = array(
+                    'is_deleted' => 1,
+            );
+            $this->common_model->update_data($this->tableObj->tableNameClient,$condition,$param);
+
+            $this->response_status='1';
+            $this->response_message = "Client Successfully Deleted";
+        }
+        else
+        {
+            $this->response_message = "Sorry, You cunt delete this client";
+        }
+
+        $this->json_output($response_data);
     }
 
 }

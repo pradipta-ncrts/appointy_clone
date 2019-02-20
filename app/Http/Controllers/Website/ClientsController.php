@@ -166,6 +166,7 @@ class ClientsController extends ApiController {
 		//staff list
 		$staffCondition = array(
             array('user_id','=',$user_details->id),
+            array('is_internal_staff','=', '0'),
 			array('is_deleted','=','0'),
 			array('is_blocked','=','0'),
 		);
@@ -215,14 +216,14 @@ class ClientsController extends ApiController {
 		return view('website.client.my-squeeder-page',$data);
 	}
 	
-	function client_service_details($service_link=NULL)
+	function client_service_details($service_id=NULL)
 	{
 		$service_list = array();
 		$service_details=array();
 
-		if($service_link!=NULL){
+		if($service_id!=NULL){
 			$findCond=array(
-				array('service_link','=',$service_link),
+				array('service_id','=',$service_id),
 				array('is_deleted','=','0'),
 				array('is_blocked','=','0'),
 			);

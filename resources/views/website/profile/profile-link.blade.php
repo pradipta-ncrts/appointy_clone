@@ -30,8 +30,11 @@ Squeedr
               <div class="form-group">
               <!-- <label class="control-label col-sm-2" for="url">runmobileapps.com/</label> -->
               <form action="{{ url('api/profile-url') }}" method="post" id="update-profile-url">
-                  <div class="col-sm-7">
-                    <input type="text" class="form-control" id="" placeholder="Your Squdeer Link" name="profile_url" value="{{ url('business-provider') }}/<?=$user_details->username;?>">
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="" placeholder="Your Squdeer Link" name="main_url" value="{{ url('business-provider') }}/" readonly>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="" placeholder="Your Squdeer Link" name="profile_url" value="<?=$user_details->username;?>">
                     <button type="submit" class="btn btn-primary btn-md" style="margin-top:15px;">Save Changes</button>
                   </div>
                 </form>

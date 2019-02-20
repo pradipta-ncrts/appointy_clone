@@ -96,7 +96,7 @@ Squeedr
                   <ul>
                     <li><a href="{{url('/edit_service/'.$enc_service_id)}}" class=""><i class="fa fa-edit"></i> Edit </a> </li>
                     <?php /* <li><a href="JavaScript:Void(0);" class="edit-service" data-id="<?=$details->service_id;?>"><i class="fa fa-edit"></i> Edit </a> </li> */ ?>
-                    <li><a href="JavaScript:Void(0);" class="copy-service-link" data-service="{{ url('client/service-details') }}/<?=$details->service_link;?>"><i class="fa fa-copy"></i> Copy Link </a> </li>
+                    <li><a href="JavaScript:Void(0);" class="copy-service-link" data-service="{{ url('client/service-details') }}/<?=$details->service_id;?>"><i class="fa fa-copy"></i> Copy Link </a> </li>
                     <li><a href="JavaScript:Void(0);" class="clone-srvice" data-id="<?=$details->service_id;?>"><i class="fa fa-clone"></i> Clone </a> </li>
                     <?php
                     if($details->is_template!='1')
