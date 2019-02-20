@@ -8,6 +8,7 @@
 */
 
 namespace App\Http\Controllers\Api;
+//require_once('./vendor/stripe/init.php');
 use App\Http\Requests;
 use App\Http\Controllers\BaseApiController as ApiController;
 use Illuminate\Http\Request;
@@ -1389,12 +1390,45 @@ class ClientsController extends ApiController {
             $recurring_booking_text = $request->input('recurring_booking_text');
 
             $strto_start_time = strtotime($formatted_date.' '.$appointmenttime); 
+
+            // Service Provider Details //
+            $user_condition = array(
+                array('id', '=', $user_id)
+            );
+            $user_fields = array('name', 'email', 'mobile', 'profile_image','business_location');
+            $stripe_field = array('stripe_user_id');
+            $paypal_field = array('email as paypal_email');
+            $joins = array(
+                        array(
+                            'join_table'=>$this->tableObj->tableNameStripeIntregration,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableNameUser,
+                            'join_type'=>'left',
+                            'join_on'=>array('id','=','user_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('is_deleted','=','0')),
+                            'select_fields' => $stripe_field,
+                        ),
+                        array(
+                            'join_table'=>$this->tableObj->tableNamePaypalIntregration,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableNameUser,
+                            'join_type'=>'left',
+                            'join_on'=>array('id','=','user_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('is_deleted','=','0')),
+                            'select_fields' => $paypal_field,
+                        ),
+            );
+            $orderBy = array();
+            $user_details = $this->common_model->fetchData($this->tableObj->tableNameUser,$user_condition,$user_fields,$joins,$orderBy);
             
+
             //Client data using id
             $client_condition = array(
                 array('client_id', '=', $client)
             );
-            $client_fields = array('client_id', 'client_email', 'client_name');
+            $client_fields = array('client_id', 'client_email', 'client_name', 'client_mobile');
             $client_details = $this->common_model->fetchData($this->tableObj->tableNameClient,$client_condition, $client_fields);
 
             //Staff data using id
@@ -1402,23 +1436,43 @@ class ClientsController extends ApiController {
                 $stuff_condition = array(
                     array('staff_id', '=', $staff)
                 );
-                $stuff_fields = array('staff_id', 'email', 'full_name');
+                $stuff_fields = array('staff_id', 'email', 'full_name','mobile');
                 $stuff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$stuff_condition, $stuff_fields);    
                 $staff_email = $stuff_details->email;
                 $staff_name = $stuff_details->full_name;
             }
             
-            //Survice details
+            //Service details
             $service_condition = array(
                 array('service_id', '=', $appoinment_service)
             );
             $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color', 'payment_method');    
-            $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
+            $currency_field = array('currency');
+            $joins = array(
+                        array(
+                            'join_table'=>$this->tableObj->tableNameCurrency,
+                            //'join_table_alias'=>'invItemTb',
+                            'join_with'=>$this->tableObj->tableUserService,
+                            'join_type'=>'left',
+                            'join_on'=>array('currency_id','=','currency_id'),
+                            'join_on_more'=>array(),
+                            //'join_conditions' => array(array('is_deleted','=','0')),
+                            'select_fields' => $currency_field,
+                        ),
+            );
+            $orderBy = array();
+
+            $service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition,$sevice_fields,$joins,$orderBy);
+            //$service_details = $this->common_model->fetchData($this->tableObj->tableUserService,$service_condition, $sevice_fields);
+            
+            $service_name = $service_details->service_name;
             $colour_code = $service_details->color;
-            $payment_method = $service_details->payment_method;
+            $service_payment_method = $service_details->payment_method;
             $duration = $service_details->duration;
             $service_price = $service_details->cost;
             $service_currency_id = $service_details->currency_id;
+            $currency = $service_details->currency;
+            $service_location = $service_details->location;
 
             //calculate end time
             $endTime = strtotime("+".$duration." minutes", strtotime($appointmenttime));
@@ -1429,6 +1483,7 @@ class ClientsController extends ApiController {
             $return_array = array();
             $insert_data = array();
             $unavailable = 0;
+            $appointemnt_qty = 0;
             $total_payable_amount = 0;
 
             if($recurring_booking_frequency == 1){
@@ -1472,6 +1527,7 @@ class ClientsController extends ApiController {
                         //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
                         //break;
                     } else {
+                        $appointemnt_qty++;
                         $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
                         array_push($insert_data,$return_array);
                     }
@@ -1507,6 +1563,7 @@ class ClientsController extends ApiController {
                             //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
                             //break;
                         } else {
+                            $appointemnt_qty++;
                             $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
                             array_push($insert_data,$return_array);
                         }
@@ -1546,6 +1603,7 @@ class ClientsController extends ApiController {
                             //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
                             //break;
                         } else {
+                            $appointemnt_qty++;
                             $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
                             array_push($insert_data,$return_array);
                         }
@@ -1577,6 +1635,7 @@ class ClientsController extends ApiController {
                                 //$this->response_message = "Service is not availble for weekday, please try again with other time slots.";
                                 //break;
                             } else {
+                                $appointemnt_qty++;
                                 $total_payable_amount = $total_payable_amount+$return_array['total_payable_amount'];
                                 array_push($insert_data,$return_array);
                             }
@@ -1592,6 +1651,7 @@ class ClientsController extends ApiController {
                 $insert_data = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date='');
                 //echo '<pre>'; print_r($insert_data); exit;
                 if(!empty($insert_data)){
+                    $appointemnt_qty = 1;
                     $total_payable_amount = $total_payable_amount+$insert_data['total_payable_amount'];
                 }
                 
@@ -1616,18 +1676,20 @@ class ClientsController extends ApiController {
                 $parameter = [
                     'order_id' => $order_id,
                     'client_id' => $client,
+                    'user_id' => $user_id,
+                    'recurring_booking_frequency' => $recurring_booking_frequency
                 ];
                 $parameter= Crypt::encrypt($parameter);
 
-                if($payment_method == 1){
-                    
-                    if($recurring_booking_frequency > 0){
-                        $cancel_url = url('/client/appointment_details',$parameter);
-                        $reschedule_url = url('/client/appointment_details',$parameter);
-                    } else {
-                        $cancel_url = url('/client/cancel_appointent',$parameter);
-                        $reschedule_url = url('/client/reschedule-appointment',$parameter);
-                    }
+                if($recurring_booking_frequency > 0){
+                    $cancel_url = url('/client/appointment_details',$parameter);
+                    $reschedule_url = url('/client/appointment_details',$parameter);
+                } else {
+                    $cancel_url = url('/client/cancel_appointent',$parameter);
+                    $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                }
+
+                if($service_payment_method == 1){
                     
                     //send mail to client
                     $client_email = $client_details->client_email;
@@ -1707,16 +1769,33 @@ class ClientsController extends ApiController {
                     // Event Viewer //
                     //$this->add_user_event_viewer($user_id,$type=4,$staff);
                     $response_data['parameter'] = $parameter;
+                    $response_data['payment_method'] = $service_payment_method;
+                    $response_data['cancel_url'] = $cancel_url;
+                    $response_data['reschedule_url'] = $reschedule_url;
                     
                     $this->response_status='1';
                     $this->response_message = "Your appointment has been successfully booked.";
         
-                } else {
-                    // Redirect to Payment Gateway //
+                } else if($service_payment_method == 2){
+                    // Redirect to Paypal Payment Gateway //
                     $response_data['parameter'] = $parameter;
+                    $response_data['payment_method'] = $service_payment_method;
+                    $response_data['cancel_url'] = $cancel_url;
+                    $response_data['reschedule_url'] = $reschedule_url;
+
                     $this->response_status='1';
                     $this->response_message = "Your appointment has been successfully booked.";
 
+                } else if($service_payment_method == 3) {
+                    // Redirect to Stripe Payment Gateway //
+                    $response_data['parameter'] = $parameter;
+                    $response_data['payment_method'] = $service_payment_method;
+                    $response_data['cancel_url'] = $cancel_url;
+                    $response_data['reschedule_url'] = $reschedule_url;
+
+                    $this->response_status='1';
+                    $this->response_message = "Your appointment has been successfully booked.";
+                    
                 }
             } else {
 
@@ -2024,8 +2103,19 @@ class ClientsController extends ApiController {
             $date_array_header[$next_date] = array(date('D',strtotime($next_date)),date('d',strtotime($next_date)));
             $time_slots = array();
 
-            $time_slot_start = $next_date." 00:00:00";
-            $time_slot_end = $next_date." 23:59:59";
+            // Service Start Time & End Time //
+            $query = "SELECT min(`start_time`) as min_start_time, max(`end_time`) as max_start_time FROM `squ_service_availability` WHERE `service_id` = '".$service_id."' AND `user_id` = '".$user_id."' AND `is_deleted` = 0 ";
+            $start_end_time = $this->common_model->customQuery($query,$query_type=1);
+            if(!empty($start_end_time) && $start_end_time[0]->min_start_time!='' && $start_end_time[0]->max_start_time != ''){
+                $service_start_time = $start_end_time[0]->min_start_time.":00";
+                $service_end_time = $start_end_time[0]->max_start_time.":00";
+    
+                $time_slot_start = $next_date." ".$service_start_time;
+                $time_slot_end = $next_date." ".$service_end_time;
+            } else {
+                $time_slot_start = $next_date." 00:00:00";
+                $time_slot_end = $next_date." 23:59:59";
+            }
 
             $service_avalibility_date = array();
             $staff_service_avalibility = array();

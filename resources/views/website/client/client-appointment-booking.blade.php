@@ -471,9 +471,18 @@ Squeedr
 						console.log(response);
 						if(response.response_status==1)
 						{
-							//swal('Success!',response.message,'success');
-							var url = '<?php echo url('/client/appointment-confirmation');?>'+'/'+response.parameter;
-                            window.location.href = url;
+							if(response.payment_method == 1){
+								//swal('Success!',response.message,'success');
+								var url = '<?php echo url('/client/appointment-confirmation');?>'+'/'+response.parameter;
+								window.location.href = url;
+							} else if(response.payment_method == 2){
+								var url = '<?php echo url('/client_paypal_payment');?>'+'/'+response.parameter;
+								window.location.href = url;
+							} else if(response.payment_method == 3){
+								var url = '<?php echo url('/client_stripe_payment');?>'+'/'+response.parameter;
+								window.location.href = url;
+							}
+							
 						}
 						else{
 							swal('Sorry!',response.message,'error');

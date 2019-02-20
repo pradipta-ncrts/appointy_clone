@@ -1,269 +1,135 @@
 <?php
-
 /**
-
 * @Author : NCRTS
-
 * Track :: 1
-
 * Users Controller for Users Registration, login and basic section Related Apis
-
 * oparetion with database
-
 * 
-
 */
 
 
-
 namespace App\Http\Controllers\Api;
-
 use App\Http\Requests;
-
 use App\Http\Controllers\BaseApiController as ApiController;
-
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Crypt;
-
 use Validator;
-
 
 
 class BookingsController extends ApiController {
 
-
-
 	function __construct(Request $input){
-
-
-
 		parent::__construct($input);
-
-
-
 	}
 
 
-
 	//*client add*//
-
     public function email_customisation_update(Request $request)
-
     {
-
         // Check User Login. If not logged in redirect to login page //
-
 		$authdata = $this->website_login_checked();
-
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
-
            return redirect('/login');
-
 		}
-
         //echo '<pre>'; print_r($request->all()); exit;
-
         $response_data=array();
-
         $this->validate_parameter(1);
-
         $user_id = $authdata['user_no'];
-
         $type = $request->input('type');
-
         $subject = $request->input('subject') ? $request->input('subject') : '';
-
         $message = $request->input('message') ? $request->input('message') : '';
 
-
-
          $conditions = array(
-
                 array('type', '=', $type),
-
                 array('user_id', '=', $user_id),
-
-            );
-
-                        
+            );          
 
         $check = $this->common_model->fetchData($this->tableObj->tableNameUserEmailCustomisation,$conditions);
 
-
-
         if(empty($check))
-
         {
-
             $data['user_id'] = $user_id;
-
             $data['type'] = $type;
-
             $data['subject'] = $subject;
-
             $data['message'] = $message;
-
-
-
             //print_r($data); die();
-
-
 
             $insert = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserEmailCustomisation,$data);
-
             if($insert)
-
             {
-
                 $this->response_status='1';
-
                 $this->response_message="Email content successfully updated.";
-
             }
-
             else
-
             {
-
                 $this->response_message="Something went wrong. Please try again later.";
-
             }
-
-            
 
         }
-
         else
-
         {
-
             $updateCond=array(
-
                 array('user_id','=',$user_id),
-
                 array('type', '=', $type),
-
             );
 
-
-
             $data['type'] = $type;
-
             $data['subject'] = $subject;
-
             $data['message'] = $message;
-
-
-
             //print_r($data); die();
-
-
 
             $update = $this->common_model->update_data($this->tableObj->tableNameUserEmailCustomisation,$updateCond,$data);
 
-
-
             $this->response_status='1';
-
             $this->response_message="Email content successfully updated.";
-
         } 
 
-
-
         //return redirect('/email-customisation');
-
         $this->json_output($response_data);
-
     }
 
 
 
     public function email_customisation_data(Request $request)
-
     {
-
         $response_data = array(); 
-
         // validate the requested param for access this service api
-
         $this->validate_parameter(1); // along with the user request key validation
-
         $other_user_no = $request->input('other_user_no');
-
         $pageNo = $request->input('page_no');
-
         $pageNo = ($pageNo>1)?$pageNo:1;
-
         $limit=$this->limit;
-
         $offset=($pageNo-1)*$limit;
 
-
-
         if(!empty($other_user_no) && $other_user_no!=0)
-
         {
-
             $user_no = $other_user_no;
-
         }
-
         else
-
         {
-
             $user_no = $this->logged_user_no;
-
         }
-
-        
 
         $findCond=array(
-
             array('user_id','=',$user_no),
-
             array('is_deleted','=','0'),
-
             array('is_blocked','=','0'),
-
         );
-
-        
 
         $selectFields=array();
-
         $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserEmailCustomisation,$findCond,$selectFields);
-
-
-
         //fetch master email template data
-
         $masterTempCondition = array(
-
             array('is_blocked','=','0'),
-
         );
-
         $masterTempField = array();
-
         $masterTempData = $this->common_model->fetchDatas($this->tableObj->tableNameEmailTemplateMaster,$masterTempCondition,$masterTempField);
 
-
-
-
-
         $response_data['email_customisation_data'] = $staff_list;
-
         $response_data['master_template_data'] = $masterTempData;
-
         $this->response_status='1';
-
         // generate the service / api response
-
         $this->json_output($response_data);
-
     }
 
 

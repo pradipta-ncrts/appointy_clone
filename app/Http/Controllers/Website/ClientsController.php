@@ -370,9 +370,6 @@ class ClientsController extends ApiController {
 				$bp_return = $this->curl_call($bp_url_func_name,$post_data);
 				//echo "<pre>";print_r($bp_return); die();
 
-
-
-
 				$data['client_details'] = $return->client_details;
 				$data['business_provider_list'] = $bp_return->business_provider_list;
 				$data['message'] = $return->response_message;
