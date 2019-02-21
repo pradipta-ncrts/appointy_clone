@@ -129,7 +129,7 @@ class InvoiceController extends ApiController {
                 ),
         );
 
-        $appoinment_details = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+        $appoinment_details = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins,$orderBy=array(),$groupBy='order_id');
 
 
         $response_data['appoinment_details'] = $appoinment_details;

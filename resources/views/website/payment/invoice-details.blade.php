@@ -36,7 +36,7 @@ Squeedr
                      <div class="col-md-12 inv-det">
                         <div class="col-sm-5 bill-to">
                            <img src="<?=$profile_image;?>">
-                           <h2>Jhon Doe</h2>
+                           <h2><?=$provider_name;?></h2>
                            <p>
                               <?php
                               if($service_provider_address)
@@ -90,7 +90,7 @@ Squeedr
                            <hr>
                            <table width="100%">
                               <tr>
-                                 <td width="55%"><strong>Note to Receipient(s)</strong><br> Thansk for you business</td>
+                                 <td width="55%"><strong>Note to Receipient(s)</strong><br> <?=$note_to_recepent ? $note_to_recepent : "N/A";;?></td>
                                  <td width="15%" style="text-align: right"><strong>Subtotal</strong> <br> Tax (0%)</td>
                                  <td width="15%" style="text-align: right"></td>
                                  <td width="15%" style="text-align: right"><?=$sub_total;?> <br> $0</td>

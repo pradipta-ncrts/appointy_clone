@@ -187,7 +187,18 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
             },
             service_category: {
                 required: true
+            },
+            <?php 
+            if($type == 'group') 
+            { 
+            ?>
+            service_capacity: {
+                required: true
             }
+            <?php
+            }
+            ?>
+
         },
 
         messages: {
@@ -209,7 +220,17 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
             },
             service_category: {
                 required: 'Please choose category'
+            },
+            <?php 
+            if($type == 'group') 
+            { 
+            ?>
+            service_capacity: {
+                required: 'Please enter capacity'
             }
+            <?php
+            }
+            ?>
         },
 
         submitHandler: function(form) {

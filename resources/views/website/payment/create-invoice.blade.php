@@ -79,8 +79,8 @@ Squeedr
                         <td align="right">Reference Type</td>
                            <td>
                               <div class="form-group nomarging  color-b" >
-                                 <select name="payment_terms" class="payment_terms">
-                                    <option value="Due on recive"> Due on recive </option>
+                                 <select name="payment_terms" class="payment_terms" id="payment_terms">
+                                    <option value="Due on recive"> Due on receipt </option>
                                     <option value="Due on date"> Due on date </option>
                                  </select>
                                  <div class="clearfix"></div>
@@ -90,7 +90,8 @@ Squeedr
                      </tr>
                      <tr>
                         <td align="right">Due Date</td>
-                        <td><input type="text" id="due_date" name="due_date" value="<?=$due_date;?>"></td>
+                        <td id="due_on_receipt"><input type="text" readonly="" name="due_date" value="<?=$due_date;?>"></td>
+                        <td id="due_on_date" style="display: none;"><input type="text" id="due_date" name="due_date" value="<?=$due_date;?>"></td>
                         <td class="nopadding"></td>
                      </tr>
                   </table>
@@ -186,8 +187,8 @@ Squeedr
                   <div class="col-md-6">
                      <div class="note-rec">
                         <h3>Note to Receipent</h3>
-                        <textarea rows="3"  style=" width:100%;" placeholder="Such as Thank you for your business" name="note_to_receipent"></textarea>
-                        <span>4000</span>
+                        <textarea rows="3"  style=" width:100%;" placeholder="Such as Thank you for your business" id="note_to_receipent" name="note_to_receipent"><?=$note_to_receipent;?></textarea>
+                        <span id="note_to_receipent_count"><?php echo 4000-strlen($note_to_receipent);?></span>
                      </div>
                   </div>
                   <div class="col-md-6">
@@ -230,5 +231,40 @@ $('#save_as_draft').on('click', function(e){
 });
 
 
+$('#note_to_receipent').keyup(function ()
+{
+   //alert();
+    var charactersLeft = 4000;
+    var lengthCount = this.value.length;              
+    if (lengthCount < charactersLeft)
+    {
+        this.value = this.value.substring(0, charactersLeft);
+        var charactersLeft = charactersLeft - lengthCount + 1;                   
+    }
+    else
+    {                   
+        var charactersLeft = charactersLeft;                   
+    }
+
+    $("#note_to_receipent_count").text(charactersLeft);
+
+ });
+
+$('#payment_terms').change(function ()
+{
+   //alert();
+    var value = $(this).val();              
+    if (value=="Due on date")
+    {
+        $("#due_on_date").show();
+        $("#due_on_receipt").hide();
+    }
+    else
+    {                   
+        $("#due_on_receipt").show();
+        $("#due_on_date").hide();                   
+    }
+
+ });
 </script>
 @endsection
