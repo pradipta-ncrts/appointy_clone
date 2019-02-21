@@ -1512,15 +1512,15 @@ class UsersController extends ApiController {
 		}
 
 		$condition = array(
-			array('user_id', '=', $user_no),
+			//array('user_id', '=', $user_no),
 			array('service_link', '=', $service_link),
-			array('is_blocked', '=', 0),
-			array('is_deleted', '=', 0),
+			//array('is_blocked', '=', 0),
+			//array('is_deleted', '=', 0),
 		);
 		$selectField = array('service_link');
 		$check_service_link = $this->common_model->fetchDatas($this->tableObj->tableUserService,$condition,$selectField);
 		if(!empty($check_service_link)){
-			$this->response_message="Has already been taken.";
+			$this->response_message="Service Link has already been taken.";
 		} else {
 			$serviceData = array(
     			'user_id' => $user_no,
@@ -1613,7 +1613,18 @@ class UsersController extends ApiController {
 			$category_id = $service_category;
 		}
 
-		$updateData = array(
+		$condition = array(
+			array('service_id', '!=', $service_id),
+			array('service_link', '=', $service_link),
+			//array('is_blocked', '=', 0),
+			//array('is_deleted', '=', 0),
+		);
+		$selectField = array('service_link');
+		$check_service_link = $this->common_model->fetchDatas($this->tableObj->tableUserService,$condition,$selectField);
+		if(!empty($check_service_link)){
+			$this->response_message="Service Link has already been taken.";
+		} else {
+			$updateData = array(
 				'category_id' => $category_id,
 				'service_name' => $service_name,
 				'cost' => $service_price,
@@ -1625,19 +1636,19 @@ class UsersController extends ApiController {
 				'description' => $service_description,
 				'service_link' => $service_link,
 				'color' => $service_color,
-		);
+			);
+
+			$updateCond=array(
+							array('service_id','=',$service_id),
+							array('is_deleted','=',0)
+						);
+
+			$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
 
 
-		$updateCond=array(
-						array('service_id','=',$service_id),
-						array('is_deleted','=',0)
-					);
-
-		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
-
-
-		$this->response_status='1';
-		$this->response_message="Service updated successfully.";
+			$this->response_status='1';
+			$this->response_message="Service updated successfully.";
+		}
 
 		$this->json_output($response_data);
 	}

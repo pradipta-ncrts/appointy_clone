@@ -32,7 +32,7 @@ class ClientsController extends ApiController {
 			'appointment_details'=>array()
 		);
 		// Call API //
-		$post_data['appointment_id']=$param_data['appointment_id'];
+		$post_data['order_id']=$param_data['order_id'];
 		$post_data['client_id']=$param_data['client_id'];
 
 		$url_func_name="client_appointment_details";
@@ -64,7 +64,7 @@ class ClientsController extends ApiController {
 			'appointment_details'=>array()
 		);
 		// Call API //
-		$post_data['appointment_id']=$param_data['appointment_id'];
+		$post_data['order_id']=$param_data['order_id'];
 		$post_data['client_id']=$param_data['client_id'];
 
 		$url_func_name="client_appointment_details";
@@ -624,7 +624,7 @@ class ClientsController extends ApiController {
 	function client_booking_details($parameter=NULL,$order_id){
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
-
+			
 			// Call API //
 			$post_data['client_id']=$param_data['client_id'];
 			

@@ -7,6 +7,7 @@ Squeedr
 @endsection
 @section('content')
 <?php
+$currency_list = App\Http\Controllers\BaseApiController::currency_list();
 $timezone = App\Http\Controllers\BaseApiController::time_zone(); 
 ?>
 <div class="body-part">
@@ -89,9 +90,9 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                   <label for="service_currency">Currency <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Select currency for your service." data-placement="right"></i> </label>
                                   <select name="service_currency" id="service_currency">
                                     <option value="">Select currency</option>
-                                    <option value="1">INR</option>
-                                    <option value="2">USD</option>
-                                    <option value="3">POUND</option>
+                                    <?php if(!empty($currency_list['currency_list'])) { foreach($currency_list['currency_list'] as $currency) { ?>
+                                    <option value="{{$currency->currency_id}}">{{$currency->currency}}</option>
+                                    <?php } } ?>
                                   </select>
                               </div>
                               <div class="col-lg-6 col-md-6 col-sm-6">
@@ -115,8 +116,12 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <textarea class="form-control" rows="4" name="service_description" id="service_description"></textarea>
                         <div class="break20px"></div>
                         <div class="row">
-                           <div class="col-lg-6 col-md-6 col-sm-6">
-                              <label for="service_link">Service Link <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Service URL is the link you can share with your invitees if you want them to bypass the 'Pick Service' step on your Squdeer page and go directly to the 'Pick Date & Time' step. "></i> </label>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <label for="service_link">Service Link <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Service URL is the link you can share with your invitees if you want them to bypass the 'Pick Service' step on your Squdeer page and go directly to the 'Pick Date & Time' step. "></i> </label>
+                                <?php echo url('client/service-details/');?>
+                            </div>
+                           <div class="col-lg-3 col-md-3 col-sm-3">
+                              <label for="service_link">&nbsp;</label>
                               <input class="form-control" type="text" name="service_link" id="service_link" />
                            </div>
                            <div class="clearfix"></div>
@@ -167,6 +172,12 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 @section('custom_js')
 <script src="{{asset('public/assets/website/js/spectrum.js')}}"></script>
 <script>
+$(document).ready(function () {
+
+    jQuery.validator.addMethod("alphanumeric", function(value, element) {
+        return this.optional(element) || /^[\w.]+$/i.test(value);
+    }, "Letters, numbers, and underscores only please");
+
     $('#add_service').validate({
         rules: {
             service_name: {
@@ -183,7 +194,8 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                 number: true
             },
             service_link: {
-                required: true
+                required: true,
+                alphanumeric: true
             },
             service_category: {
                 required: true
@@ -205,7 +217,8 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                 number: 'Please enter proper price'
             },
             service_link: {
-                required: 'Please enter service link'
+                required: 'Please enter service link',
+                alphanumeric: 'Letters, numbers, and underscores only please',
             },
             service_category: {
                 required: 'Please choose category'
@@ -247,6 +260,9 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
             });
         }
     });
+
+});
+    
 
     $("#togglePaletteOnly").spectrum({
         showPaletteOnly: true,

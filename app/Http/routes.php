@@ -322,7 +322,7 @@ Route::group(['prefix'=>''],function(){
 
     Route::any('/client_payment_status/{parameter?}','Website\ClientsPaymentController@client_payment_status');
 
-    Route::any('/client_paypal_payment','Website\ClientsPaymentController@client_paypal_payment');
+    Route::any('/client_paypal_payment/{parameter?}','Website\ClientsPaymentController@client_paypal_payment');
 
     Route::any('/client_paypal_success','Website\ClientsPaymentController@client_paypal_success');
 

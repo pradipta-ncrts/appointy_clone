@@ -7,7 +7,7 @@ Squeedr
 <div class="body-part">
 <div class="container-custm">
    <div class="upper-cmnsection">
-      <div class="heading-uprlft">Recuring Booking Detail</div>
+      <div class="heading-uprlft">Booking Detail</div>
    </div>
    <div class="leftpan">
       <div class="left-menu">

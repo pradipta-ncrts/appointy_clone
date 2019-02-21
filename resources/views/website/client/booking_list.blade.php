@@ -113,7 +113,7 @@ Squeedr
                   {
                   ?>
                   
-                  <div class="bluebg break20px namedate">
+                  <?php /* <div class="bluebg break20px namedate">
                         <span><?=date('l', strtotime($value->date));?>, <?=date('M d, Y', strtotime($value->date));?></span>
                         <span><?=$value->client_name;?></span>
                         <?php if($value->status != 2) { ?>
@@ -138,7 +138,44 @@ Squeedr
                         <h6><?=$value->service_name;?></h6>
                         <p class="addReadMore showlesscontent"><span>Notes :</span> <?=$value->note;?> </p>
                      </div>
-                  </div>
+                  </div> */ ?>
+
+                    
+                        <div class="bluebg break20px namedate">
+                            <span><?=date('l', strtotime($value->date));?>, <?=date('M d, Y', strtotime($value->date));?></span>
+                            <span>Client: <?=$value->client_name;?></span>
+                            <?php if($value->status != 2) { ?>
+                                <div class="dropdown btn-res">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-share" aria-hidden="true"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a href="javascript:void(0);" class="reschedule-appoinment" data-appointment-id="<?php echo $value->appointment_id;?>">Reschedule</a></li>
+                                        <li><a href="javascript:void(0);" class="cancel-appoinment" data-appointment-id="<?php echo $value->appointment_id;?>">Cancel </a></li>
+                                    </ul>
+                                </div>
+                                <?php } else { ?>
+                                <button class="btn btn-danger btn-xs">Cancelled</button>
+                            <?php } ?>
+                        </div>
+                        <a href="{{ url('client/booking-details/'.$param.'/'.$value->order_id) }}">
+                        <div class="whitebox border-box">
+                            <div class="staffDetail">
+                            <span>Booking Id: <?=$value->order_id;?></span>
+                            <p>
+                                <?php if($value->staff_name!='') { ?> <label>With</label> <?=$value->staff_name;?>
+                                <?php } else { ?>
+                                <label>With</label>: Not Assigned
+                                <?php } ?>
+                            </p>
+                            <span class="bluetxt"><?=$value->currency;?> <?=$value->cost;?></span>
+                            </div>
+                            <div class="staffInside">
+                            <h6><?=$value->service_name;?></h6>
+                            <h4 style="padding-bottom: 10px;">Service Time: <?=$value->start_time;?> - <?=$value->end_time;?></h4>
+                            <p class="addReadMore showlesscontent"><span>Notes :</span> <?=$value->note;?> </p>
+                            </div>
+                        </div>
+                    </a>          
+
                   <?php
                   }
                 }

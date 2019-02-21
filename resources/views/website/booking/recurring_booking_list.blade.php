@@ -66,6 +66,7 @@ Squeedr
                       <div class="staffInside">
                         <h6>Service Time: <?=$value->start_time;?> - <?=$value->end_time;?></h6>
                         <p class="addReadMore showlesscontent"><span>Notes :</span> <?=$value->note;?> </p>
+                        <a href="{{ url('create-invoice') }}/<?=$value->order_id;?>" class="btn btn-warning btn-xs pull-right"><i class="fa fa-paper-plane" aria-hidden="true"></i> Invoice</a>
                       </div>
                     </div>
                   </a>

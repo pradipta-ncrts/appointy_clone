@@ -1681,12 +1681,17 @@ class ClientsController extends ApiController {
                 ];
                 $parameter= Crypt::encrypt($parameter);
 
-                if($recurring_booking_frequency > 0){
-                    $cancel_url = url('/client/appointment_details',$parameter);
-                    $reschedule_url = url('/client/appointment_details',$parameter);
-                } else {
-                    $cancel_url = url('/client/cancel_appointent',$parameter);
-                    $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                if($recurring_booking_frequency > 0)
+                {
+                    $cancel_url = url('/client/booking-details',$parameter);
+                    $reschedule_url = url('/client/booking-details',$parameter);
+                } 
+                else 
+                {
+                    //$cancel_url = url('/client/cancel_appointent',$parameter);
+                    //$reschedule_url = url('/client/reschedule-appointment',$parameter);
+                    $cancel_url = url('/client/booking-details',$parameter);
+                    $reschedule_url = url('/client/booking-details',$parameter);
                 }
 
                 if($service_payment_method == 1){
@@ -2704,7 +2709,7 @@ class ClientsController extends ApiController {
 
 
         // Appoinment section //
-        $appoinment_fields = array('appointment_id', 'order_id', 'start_time', 'end_time', 'date','note', 'status');
+        $appoinment_fields = array('appointment_id', 'order_id', 'client_id', 'start_time', 'end_time', 'date','note', 'status');
         $stuff_fields = array('full_name as staff_name');
         $service_field = array('service_name', 'cost');
         $currency_field = array('currency');
@@ -2851,7 +2856,7 @@ class ClientsController extends ApiController {
             $appointment_details = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins,$orderBy,$groupBy='order_id');
             $recurring_booking_list = array();
             //echo '<pre>'; print_r($appointment_details); exit;
-            if(!empty($appointment_details) && $appointment_details->appointment_type > 0){
+            if(!empty($appointment_details)){
                 $selectFields = array('appointment_id','user_id','client_id','date','status');
                 $recurring_booking_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$selectFields);
             }

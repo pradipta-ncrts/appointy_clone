@@ -38,13 +38,15 @@ class ClientsPaymentController extends ApiController {
 
         if($recurring_booking_frequency > 0)
         {
-            $cancel_url = url('/client/appointment_details',$parameter);
-            $reschedule_url = url('/client/appointment_details',$parameter);
+            $cancel_url = url('/client/booking-details',$parameter);
+            $reschedule_url = url('/client/booking-details',$parameter);
         } 
         else 
         {
-            $cancel_url = url('/client/cancel_appointent',$parameter);
-            $reschedule_url = url('/client/reschedule-appointment',$parameter);
+            //$cancel_url = url('/client/cancel_appointent',$parameter);
+            //$reschedule_url = url('/client/reschedule-appointment',$parameter);
+            $cancel_url = url('/client/booking-details',$parameter);
+            $reschedule_url = url('/client/booking-details',$parameter);
         }
 
         $appoinment_condition = array(
@@ -386,7 +388,6 @@ class ClientsPaymentController extends ApiController {
 				$msg = $err['message'];
                 return redirect(url('client_payment_status/'))->with('payment_error',$msg);
                 
-
             }
         } else {
             echo '<form action="" method="POST" style="display:none;">
@@ -420,49 +421,166 @@ class ClientsPaymentController extends ApiController {
     
     public function client_paypal_payment(Request $request, $parameter=NULL)
 	{
-		$appointment_id = "1";
-        $user_id = '43';
-        $order_id = '123456';
-        $service_name = 'Test Appoiintemnt';
-        $unit_price = "10";
-        $appointemnt_qty = "1";
+		$data = Crypt::decrypt($parameter);
+        
+        //print_r($data); die();
+        $user_no = $data['user_id'];
+        $order_id = $data['order_id'];
+        $client_id = $data['client_id'];
+        $recurring_booking_frequency = $data['recurring_booking_frequency'];
+
+        if($recurring_booking_frequency > 0)
+        {
+            $cancel_url = url('/client/booking-details',$parameter);
+            $reschedule_url = url('/client/booking-details',$parameter);
+        } 
+        else 
+        {
+            //$cancel_url = url('/client/cancel_appointent',$parameter);
+            //$reschedule_url = url('/client/reschedule-appointment',$parameter);
+            $cancel_url = url('/client/booking-details',$parameter);
+            $reschedule_url = url('/client/booking-details',$parameter);
+        }
+
+        $appoinment_condition = array(
+            array('user_id', '=', $user_no),
+            array('order_id', '=', $order_id)
+        );
+        
+        $appoinment_fields = array();
+        $client_fields = array('client_name','client_email','client_mobile');
+        $service_fields = array('service_name','cost','duration','location');
+        $stuff_fields = array('full_name as staff_name','email as staff_email','mobile as staff_mobile');
+        $currency_field = array('currency_icon as currency');
+        $user_data = array('name', 'business_location', 'email', 'mobile', 'profile_image');
+        $booking_policy_field = array('content as terms_condition');
+        $paypal_field = array('email as paypal_user_id');
+
+
+        $joins = array(
+                array(
+                    'join_table'=>$this->tableObj->tableNameClient,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('client_id','=','client_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $client_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameStaff,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('staff_id','=','staff_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $stuff_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableUserService,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('service_id','=','service_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $service_fields,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameCurrency,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableUserService,
+                    'join_type'=>'left',
+                    'join_on'=>array('currency_id','=','currency_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $currency_field,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameUser,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('user_id','=','id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $user_data,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameBookingPolicy,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('user_id','=','user_id'),
+                    //'join_on_more'=>array('type' '=', 3),
+                    'join_conditions' => array(array('type', '=', 3)),
+                    'select_fields' => $booking_policy_field,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNamePaypalIntregration,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameUser,
+                    'join_type'=>'left',
+                    'join_on'=>array('id','=','user_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('is_deleted','=','0')),
+                    'select_fields' => $paypal_field,
+                ),
+        );
+
+        $appoinment_details = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+
+        
+        //Appointment Data
+        $details = $appoinment_details[0];
+        $user_id = $details->user_id;
+        $order_id = $details->order_id;
+        $service_name = $details->service_name;
+        $unit_price = $details->payment_amount;
+        $appointemnt_qty = count($appoinment_details);
         $total_price = ($unit_price*$appointemnt_qty);
         $tax = "0";
         $subtotal_tax = (($total_price*$tax)/100);
-        $currency = 'INR';
+        $currency = $details->currency;
         $total_amount = ($total_price+$subtotal_tax);
         $payment_method = '10'; 
         $invoice_date = date('Y-m-d');
         $payment_terms = "Due on recive";
         $due_date = date('Y-m-d');
-        $strto_start_time = time();
+        $strto_start_time = $details->strto_start_time;
         $service_start_time = date('l d, Y h:i A',$strto_start_time);
-        $service_location = 'Kolkata';
-        $service_duration = '20 mint';
+        $service_location = $details->location;
+        $service_duration = $details->duration;
         //$service_cost = $total_amount;
-        $reschedule_url = 'google.com';
-        $cancel_url = 'google.com';
-
-
+        
         //Service Provider Data
-        $service_provider_name = "NCR Technosolution";
-        $service_logo_url = '';
-        $service_provider_address = 'Chatterjee International <br> Park Street <br> Kolkata - 700071';
-        $service_provider_email = "rajib.ncrts@gmail.com";
-        $service_provider_phone = '9876543210';
-        $paypalID = "rajibjana2008-facilitator@gmail.com";
+        if($details->profile_image)
+        {
+            $service_logo_url = asset('public/image/profile_image').'/'.$details->profile_image;
+        }
+        else
+        {
+            $service_logo_url = asset('public/assets/website/images/logo-invoice.png');
+        }
+        $service_provider_name = $details->name;
+        $service_provider_address = $details->business_location;
+        $service_provider_email = $details->email;
+        $service_provider_phone = $details->mobile;
+        $paypalID = $details->paypal_user_id;
 
 
         //Client Data
-        $client_name = 'Any Clinet';
-        $client_email = "rajib.ncrts@gmail.com";
-        $client_phone = '9876543210';
+        $client_name = $details->client_name;
+        $client_email = $details->client_email;
+        $client_phone = $details->client_mobile;
         
 
         //Staff Data
-        $staff_name = 'Rajib Jana';
-        $staff_email = "rajib.ncrts@gmail.com";
-        $staff_phone = '9876543210';
+        $staff_name = $details->staff_name;
+        $staff_email = $details->staff_email;
+        $staff_phone = $details->staff_mobile;
 
         $note_to_recepent = "Thank you for booking with us";
 
@@ -470,15 +588,18 @@ class ClientsPaymentController extends ApiController {
         //Currency convert
         $payable_currency = 'usd';
         $currency_string = strtoupper($currency).'_'.strtoupper($payable_currency);
-		$json = file_get_contents("http://free.currencyconverterapi.com/api/v6/convert?q=".$currency_string."&compact=y");
+		$json = file_get_contents("https://v3.exchangerate-api.com/bulk/7c3987d948ca34f31f384ca9/".$currency);
   		$obj = json_decode($json, true); 
-  		$current_currency_value = $obj[$currency_string]['val'];
 
-  		$payble_amount = number_format($total_amount*$current_currency_value, 2);
-		
-        /////// If Stripe token is already generated //////
+        $current_currency_value = $obj['rates']['USD'];
+  		$payble_amount = number_format($total_amount*$current_currency_value,2);
+        
+          
 
-  		
+        $redirect_url = url('/client/appointment-confirmation',$parameter);
+        $cancel_url = url('/client_payment_cancel',$parameter);
+
+        /////// If paypal token is already generated //////
 
         if ($request->tx)
         {
@@ -547,19 +668,23 @@ class ClientsPaymentController extends ApiController {
 						$emailData['content'] = $mail_body;
 						$this->sendmail(7,$client_email,$emailData);
 
-						//booking confirmation mail to stuff
-						$stuff_email_data['client_name'] = $client_name;
-						$stuff_email_data['staff_email'] = $staff_email;
-						$stuff_email_data['staff_name'] = $staff_name;
-						$stuff_email_data['service_name'] = $service_name;
-						$stuff_email_data['service_cost'] = $total_amount;
-						$stuff_email_data['service_duration'] = $service_duration;
-						$stuff_email_data['service_location'] = $service_location;
-						$stuff_email_data['reschedule_url'] = $reschedule_url;
-						$stuff_email_data['cancel_url'] = $cancel_url;
-						$stuff_email_data['service_start_time'] = $service_start_time;
-						$stuff_email_data['email_subject'] = "Booking Confirm";
-						$this->sendmail(8,$staff_email,$stuff_email_data);
+                        if($details->staff_id>0)
+                        {
+                            //booking confirmation mail to stuff
+                            $stuff_email_data['client_name'] = $client_name;
+                            $stuff_email_data['staff_email'] = $staff_email;
+                            $stuff_email_data['staff_name'] = $staff_name;
+                            $stuff_email_data['service_name'] = $service_name;
+                            $stuff_email_data['service_cost'] = $total_amount;
+                            $stuff_email_data['service_duration'] = $service_duration;
+                            $stuff_email_data['service_location'] = $service_location;
+                            $stuff_email_data['reschedule_url'] = $reschedule_url;
+                            $stuff_email_data['cancel_url'] = $cancel_url;
+                            $stuff_email_data['service_start_time'] = $service_start_time;
+                            $stuff_email_data['email_subject'] = "Booking Confirm";
+                            $this->sendmail(8,$staff_email,$stuff_email_data);
+                        }
+                        
 
 						//Invoice to client
 						$invoice_email_data['service_logo_url'] = $service_logo_url;
@@ -608,9 +733,9 @@ class ClientsPaymentController extends ApiController {
               <input type="hidden" name="cmd" value="_xclick">
               <input type="hidden" name="at" value="myToken">
 		      <input type="hidden" name="currency_code" value="'.strtoupper($payable_currency).'">
-		      <input type="hidden" name="cancel_return" value="'.url('client_payment_cancel').'">
+		      <input type="hidden" name="cancel_return" value="'.$cancel_url.'">
 		     
-		      <input type="hidden" name="return" value="'.url('client_paypal_payment').'">
+		      <input type="hidden" name="return" value="'.$redirect_url.'">
 		    </form>
             <script>
                window.onload = function(){

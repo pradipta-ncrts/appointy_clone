@@ -146,10 +146,18 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <textarea class="form-control" rows="4" name="service_description" id="service_description">{{$service_details->description}}</textarea>
                         <div class="break20px"></div>
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
+                            <!--<div class="col-lg-6 col-md-6 col-sm-6">
                                 <label for="service_link">Service Link <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Service URL is the link you can share with your invitees if you want them to bypass the 'Pick Service' step on your Squdeer page and go directly to the 'Pick Date & Time' step. "></i> </label>
                                 <input class="form-control" type="text" name="service_link" id="service_link" value="{{$service_details->service_link}}" readonly=""/>
+                            </div>-->
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <label for="service_link">Service Link <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Service URL is the link you can share with your invitees if you want them to bypass the 'Pick Service' step on your Squdeer page and go directly to the 'Pick Date & Time' step. "></i> </label>
+                                <?php echo url('client/service-details/');?>
                             </div>
+                           <div class="col-lg-3 col-md-3 col-sm-3">
+                              <label for="service_link">&nbsp;</label>
+                              <input class="form-control" type="text" name="service_link" id="service_link" value="{{$service_details->service_link}}" />
+                           </div>
                             <div class="clearfix"></div>
                             <div class="break10px"></div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -177,7 +185,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                             </div>
                         </div>
                         <div class="text-right break20px">
-                            <input type="button" class="btn btn-grey" value="Cancel" />
+                            <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                             <input type="submit" class="btn btn-primary" value="Next" />
                         </div>
                         </div>
@@ -346,7 +354,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         </div>
                         <div class="break20px"></div>
                         <div class="text-right">
-                        <input type="button" class="btn btn-grey" value="Cancel" />
+                        <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                         <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                         </div>
                     </div>
@@ -414,7 +422,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <span class="footnote center-block text-left"> <a data-toggle="modal" data-target="#newquestionModal">Add New Question <i class="fa fa-plus"></i> </a></span>
                         <div class="clearfix"></div>
                         <div class="text-right">
-                            <input type="submit" class="btn btn-grey" value="Cancel" />
+                            <input type="submit" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                             <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                         </div>
                         </div>
@@ -466,7 +474,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         </div>
                     </div>
                     <div class="text-right break20px">
-                        <input type="submit" class="btn btn-grey" value="Cancel" />
+                        <input type="submit" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                         <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                     </div>
                 </div>
@@ -534,7 +542,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         </div>
                         </div>
                         <div class="text-right break20px">
-                        <input type="button" class="btn btn-grey" value="Cancel" />
+                        <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                         <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                         </div>
                     </form>
@@ -569,7 +577,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         </div>
                         <div class="break20px"></div>
                         <div class="text-right break20px">
-                            <input type="button" class="btn btn-grey" value="Cancel" />
+                            <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                             <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                         </div>
                     <form>
@@ -1003,7 +1011,7 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
    
        messages: {
            service_duration: {
-               required: 'Please select service duration',
+               required: 'Please enter service questions',
                min: 'Please enter value',
            }
        },
@@ -1141,7 +1149,7 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
    
        messages: {
            question: {
-               required: 'Please select service duration'
+               required: 'Please enter service questions'
            }
        },
    
@@ -1190,7 +1198,7 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
         messages: {
             question: {
-                required: 'Please select service duration'
+                required: 'Please enter service questions'
             }
         },
 

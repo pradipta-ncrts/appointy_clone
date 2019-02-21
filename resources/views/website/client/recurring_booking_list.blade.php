@@ -47,11 +47,12 @@ Squeedr
                     foreach ($appoinment_list as $key => $value)
                     {
                 ?>
+                  <a href="{{ url('client/booking-details/'.$param.'/'.$value->order_id) }}">
                   <div class="bluebg break20px namedate">
                     <span><?=date('l', strtotime($value->date));?>, <?=date('M d, Y', strtotime($value->date));?></span>
                     <span>Client: <?=$value->client_name;?></span>
                   </div>
-                  <a href="{{ url('client/booking-details/'.$param.'/'.$value->order_id) }}">
+                  
                     <div class="whitebox border-box">
                       <div class="staffDetail">
                         <span>Booking Id: <?=$value->order_id;?></span>
@@ -64,7 +65,8 @@ Squeedr
                         <span class="bluetxt"><?=$value->currency;?> <?=$value->cost;?></span>
                       </div>
                       <div class="staffInside">
-                        <h6>Service Time: <?=$value->start_time;?> - <?=$value->end_time;?></h6>
+                        <h6><?=$value->service_name;?></h6>
+                        <h4 style="padding-bottom: 10px;">Service Time: <?=$value->start_time;?> - <?=$value->end_time;?></h4>
                         <p class="addReadMore showlesscontent"><span>Notes :</span> <?=$value->note;?> </p>
                       </div>
                     </div>
