@@ -77,7 +77,7 @@ Squeedr
                            <td align="center"><?=$value->client_email;?></td>
                            <td align="center"><?=$value->invoice_status;?></td>
                            <td align="center"><a href="{{ url('invoice-details') }}/<?=$value->order_id;?>"><i class="fa fa-download" aria-hidden="true"></i> Download</a></td>
-                           <td align="right"><?=$value->currency;?> <?=$value->cost;?></td>
+                           <td align="right"><?=$value->currency;?> <?=$value->total_payable_amount;?></td>
                         </tr>
                         <?php
                         }

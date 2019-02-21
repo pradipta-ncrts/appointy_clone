@@ -92,6 +92,7 @@ class InvoiceController extends ApiController {
 			{
 				$appoinmens = $return->appoinment_details;
 				$appoinment_details = $appoinmens[0];
+				//echo "<pre>"; print_r($appoinment_details); die();
 				$data['service_name'] = $appoinment_details->service_name;
 				if($appoinment_details->profile_image)
 				{
@@ -124,6 +125,7 @@ class InvoiceController extends ApiController {
 				$data['email_invoice_total_price'] = $unit_price*count($appoinmens);
 				$data['total_amount'] = $unit_price*count($appoinmens);
 				$data['subtotal_tax'] = 0.00;
+				$data['note_to_receipent'] = $appoinment_details->note_to_receipent;
 
 			}
 			//echo '<pre>'; print_r($data); exit;
@@ -152,7 +154,7 @@ class InvoiceController extends ApiController {
         $invoice_date = $request->input('invoice_date');
         $payment_terms = $request->input('payment_terms');
         $due_date = $request->input('due_date');
-        $client_email = $request->input('client_name')[0];
+        $client_email = $request->input('client_email')[0];
         $service_name = $request->input('service_name');
         $appointemnt_qty = $request->input('quentity');
         $currency = $request->input('currency');
@@ -171,6 +173,7 @@ class InvoiceController extends ApiController {
       			'invoice_date' => $invoice_date,
       			'payment_terms' => $payment_terms,
       			'due_date' => $due_date,
+      			'note_to_receipent' => $note_to_recepent,
       			'invoice_status' => "Send",
       	);
 
@@ -198,7 +201,15 @@ class InvoiceController extends ApiController {
 		$invoice_email_data['subtotal_tax'] = $subtotal_tax;
 		$invoice_email_data['total_amount'] = $total_amount;
 		$invoice_email_data['email_subject'] = "Invoice";
+		
 		$send = $this->sendmail(21,$client_email,$invoice_email_data);
+		$sender_email_array = $request->input('client_email');
+		//print_r($sender_email_array); die();
+		for($i=1; $i < count($sender_email_array); $i++)
+		{
+			$this->sendmail(21,$sender_email_array[$i],$invoice_email_data);
+		}
+
 
 		return redirect(url('invoice/'))->with('success','Invoice successfully send.');
 
@@ -240,6 +251,7 @@ class InvoiceController extends ApiController {
       			'invoice_date' => $invoice_date,
       			'payment_terms' => $payment_terms,
       			'due_date' => $due_date,
+      			'note_to_receipent' => $note_to_recepent,
       			'invoice_status' => "Draft",
       	);
 
@@ -327,6 +339,8 @@ class InvoiceController extends ApiController {
 			{
 				$appoinmens = $return->appoinment_details;
 				$appoinment_details = $appoinmens[0];
+				//echo "<pre>"; print_r($appoinment_details); die();
+				$data['provider_name'] = $appoinment_details->name;
 				$data['service_name'] = $appoinment_details->service_name;
 				if($appoinment_details->profile_image)
 				{
@@ -360,6 +374,7 @@ class InvoiceController extends ApiController {
 				$data['email_invoice_total_price'] = $unit_price*count($appoinmens);
 				$data['total_amount'] = $unit_price*count($appoinmens);
 				$data['subtotal_tax'] = 0.00;
+				$data['note_to_recepent'] = $appoinment_details->note_to_receipent;
 
 			}
 			//echo '<pre>'; print_r($data); exit;

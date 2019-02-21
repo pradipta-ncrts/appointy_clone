@@ -180,6 +180,7 @@ class ClientsController extends ApiController {
             array('user_id','=',$user_details->id),
 			array('is_deleted','=','0'),
 			array('is_blocked','=','0'),
+			array('is_secret','=','0'),
 		);
 		$serviceFields = array();
 		$currency_field = array('currency');
@@ -255,6 +256,7 @@ class ClientsController extends ApiController {
 				array('user_id','=',$user_id),
 				array('is_deleted','=','0'),
 				array('is_blocked','=','0'),
+				array('is_secret','=','0'),
 			);
 			
 			$selectserviceFields=array('service_id','service_name','description','service_link');
