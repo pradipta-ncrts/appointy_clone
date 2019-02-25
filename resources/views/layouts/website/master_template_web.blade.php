@@ -103,11 +103,11 @@
                         <?php
                         //echo '<pre>'; print_r($inner_user_details); exit;
                         if($inner_user_details->user_type == 1){
-                            $image =  'profile_perosonal_image/'.$inner_user_details->profile_perosonal_image;
+                            $image =  $inner_user_details->profile_perosonal_image ? 'profile_perosonal_image/'.$inner_user_details->profile_perosonal_image : asset('public/assets/website/images/user-img.png');
                         } else {
-                            $image = 'profile_image/'.$inner_user_details->profile_image;
+                            $image = $inner_user_details->profile_image ? 'profile_image/'.$inner_user_details->profile_image : asset('public/assets/website/images/user-img.png');
                         }
-                        if($image != '')
+                        if($inner_user_details->profile_perosonal_image || $inner_user_details->profile_image)
                         {
                         ?>
                         <img class="user-pic" src="{{asset('public/image/')}}/<?=$image;?>">
@@ -116,7 +116,7 @@
                         else
                         {
                         ?>
-                        <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}">
+                        <img class="user-pic" src="<?=$image;?>">
                         <?php
                         }
                         ?>
@@ -402,7 +402,7 @@
                    </div>
                    <div class="staffs" id="service_link">
                      <div class="staffsinside">
-                       <div class="prof"> <img src="{{asset('public/assets/website/images/profile-icon-service.png')}}">
+                       <div class="prof"> <img src="{{asset('public/assets/website/images/srvice-icn.png')}}">
                          <div class="prof-cont">
                            <h3>Services <small>(Select any service to book)</small> </h3>
                            <div class="headRow mobileappointed clearfix" id="row2">
@@ -1259,7 +1259,13 @@
                      <div class="row">
                         <div class="col-md-12">
                            <div class="form-group">
-                              <div class="input-group" id="date_block_reasons_error"> <span class="input-group-addon"><i class="fa fa-question-circle-o"></i></span> <input id="date_block_reasons" type="text" class="form-control" name="date_block_reasons" placeholder="Reasons"> </div>
+                              <div class="form-group" id="date_block_reasons_error">
+                                <span class="custom-select-icon"><i class="fa fa-question-circle-o"></i></span> <label class="margleft25">Reasons</label> 
+                                <div class="niceditor"> <textarea style="width: 100%" id="date_block_reasons" name="date_block_reasons" placeholder="Reasons"></textarea> </div>
+                             </div>
+
+
+                              <!-- <div class="input-group" id="date_block_reasons_error"> <span class="input-group-addon"><i class="fa fa-question-circle-o"></i></span> <input id="date_block_reasons" type="text" class="form-control" name="date_block_reasons" placeholder="Reasons"> </div> -->
                            </div>
                         </div>
                      </div>
@@ -1321,9 +1327,14 @@
                      </div>
                      <div class="row">
                         <div class="col-md-12">
-                           <div class="form-group">
+                          <div class="form-group" id="block_time_reason_error">
+                              <span class="custom-select-icon"><i class="fa fa-question-circle-o"></i></span> <label class="margleft25">Reasons</label> 
+                              <div class="niceditor"> <textarea style="width: 100%" id="block_time_reason" name="block_time_reason" placeholder="Reasons"></textarea> </div>
+                          </div>
+
+                           <!-- <div class="form-group">
                               <div class="input-group" id="block_time_reason_error"> <span class="input-group-addon"><i class="fa fa-question-circle-o"></i></span> <input id="block_time_reason" type="text" class="form-control" name="block_time_reason" placeholder="Reasons"> </div>
-                           </div>
+                           </div> -->
                         </div>
                      </div>
                      <div class="row">
@@ -2039,21 +2050,22 @@
                <h4 class="modal-title">Quick Guide</h4>
             </div>
             <div class="modal-body clr-modalbdy">
-               <div>
+               <div style="margin-bottom: 10px;">
                   <input type="checkbox" name="show_user_guide" id="show_user_guide" <?=$inner_user_details->login_counter==3 ? "checked" : ""; ?>> Always show user guide.
                </div>
-               <h3>1. sync Calendars</h3>
+
+               <a href="{{ url('calendar') }}"><h3>1. sync Calendars</h3></a>
                <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling conflicts when creating 
                   new events.
                </p>
-               <h5> 1.1 Personalize your email</h5>
+               <a href="{{ url('email-customisation') }}"><h5> 1.1 Personalize your email</h5></a>
                <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
                <hr >
-               <h3>2. Manage your business hours</h3>
+               <a href="{{ url('settings-business-hours/services') }}"><h3>2. Manage your business hours</h3></a>
                <p>Events types lets you create an event according to your availability, meeting duration, location, etc..., for meetings 
                   or for individual invitees.
                </p>
-               <h5> 2.2 Setup your services, staff and location</h5>
+               <a href="{{ url('services/all') }}"><h5> 2.2 Setup your services, staff and location</h5></a>
                <ul>
                   <li>Create events to define your services </li>
                   <li>Setup scheduling pages for individual team members </li>
@@ -2078,7 +2090,7 @@
                <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
                   Customize the page to align it with your brand and coporate indentity.
                </p>
-               <h5> 4.4 Business Details</h5>
+               <a href="{{ url('business-contact-info') }}"><h5> 4.4 Business Details</h5></a>
                <p></p>
             </div>
          </div>
