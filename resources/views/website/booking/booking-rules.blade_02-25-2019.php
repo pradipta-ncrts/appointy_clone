@@ -173,7 +173,6 @@ Squeedr
                      </div>
 
                      <div id="collapse2" class="panel-collapse collapse">
-                     <div class="row">
 
                         <div class="col-md-8 padtop20 ">                                    
 
@@ -354,7 +353,7 @@ Squeedr
                         <button class="btn btn-primary search-btn" type="submit">Save</button> 
 
                         <div class="clearfix"></div>
-						</div>
+
                      </div>
 
                   </form>
@@ -410,7 +409,7 @@ Squeedr
                         </table> -->
 
                         <div class="clearfix"></div>
-					    <div class="row">
+
                         <table class="col-md-12">
 
                            <tr>
@@ -434,13 +433,12 @@ Squeedr
                                 </button>
 
                               </td>
+
                            </tr>
 
                         </table>
-						</div>
-                        
+
                         <div class="clearfix"></div>
-                        <div class="row">
 
                         <div class="col-md-4">
 
@@ -487,8 +485,6 @@ Squeedr
                            </div>
 
                         </div>
-                        
-                        </div>
 
                         <div class="clearfix"></div>
 
@@ -525,7 +521,7 @@ Squeedr
                         </table>
 
                         <div class="clearfix"></div>-->
-						<div class="row">
+
                         <table class="col-md-12">
 
                            <tr>
@@ -553,7 +549,6 @@ Squeedr
                            </tr>
 
                         </table>
-                        </div>
 
                         <div id="recurring_option_section" >
 
