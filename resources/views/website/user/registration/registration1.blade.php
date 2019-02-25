@@ -55,7 +55,7 @@
                      </div>
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-pass.png')}}">
-                        <a class="fa fa-eye" onclick="myFunction()"></a>
+                        <a><i class="fa fa-eye log-i toggle-password" aria-hidden="true"></i></a>
                         <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
@@ -145,14 +145,12 @@
          });
          //================Tab select end ==================
          //================Show password ==================
-         function myFunction() {
-          var x = document.getElementById("password");
-          if (x.type === "password") {
-              x.type = "text";
-          } else {
-              x.type = "password";
-          }
-      }
+         $(document).on('click', '.toggle-password', function() {
+              $(this).toggleClass("fa-eye fa-eye-slash");
+              
+              var input = $("#password");
+              input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+          });
       //================Show password end ==================
 
       </script>

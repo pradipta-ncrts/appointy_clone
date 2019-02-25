@@ -181,7 +181,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <label for="service_color">Select Color <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Enter a name of your service." data-placement="right"></i> </label>
                                 <input type="text" name="togglePaletteOnly" id="togglePaletteOnly" style="display:none;">
-                                <input type="hidden" name="service_color" id="service_color" value="{{$service_details->color}}">
+                                <input type="hidden" name="service_color" id="service_color" value="<?=$service_details->color ? $service_details->color : "#fff";?>">
                             </div>
                         </div>
                         <div class="text-right break20px">
@@ -1308,7 +1308,7 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
            hideAfterPaletteSelect:true,
            togglePaletteMoreText: 'more',
            togglePaletteLessText: 'less',
-           color: '{{$service_details->color}}',
+           color: '<?=$service_details->color ? $service_details->color : "#fff";?>',
            palette: [
                ["#000","#444","#666","#999","#ccc","#eee","#f3f3f3","#fff"],
                ["#f00","#f90","#ff0","#0f0","#0ff","#00f","#90f","#f0f"],
