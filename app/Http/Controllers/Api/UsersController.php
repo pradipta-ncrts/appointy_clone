@@ -1695,24 +1695,83 @@ class UsersController extends ApiController {
 		$response_data=array();
 		$this->validate_parameter(1);
 
+		$user_no = $this->logged_user_no;
+
 		$service_id = $request->input('service_id');
 		$payment_method = $request->input('payment_method');
 
-		$updateData = array(
-				'payment_method' => $payment_method
+		$userCond = array(
+			array('id', '=', $user_no),
+			array('is_deleted', '=', 0),
 		);
 
-		$updateCond=array(
-						array('service_id','=',$service_id),
-						array('is_deleted','=',0)
-					);
+		$userFields = array('name','email','mobile');
+		$paypalField = array('email as paypal_email');
+		$stripeField = array('stripe_user_id');
 
-		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
+		$joins = array(
+					array(
+						'join_table'=>$this->tableObj->tableNamePaypalIntregration,
+						//'join_with_alias'=>'userTb',
+						'join_with'=>$this->tableObj->tableNameUser,
+						//'join_with_alias'=>'servTb',
+						'join_type'=>'left',
+						'join_on'=>array('id','=','user_id'),
+						//'join_conditions' => array(array('user_no','=','teacher_user_no')),
+						'select_fields' => $paypalField,
+					),
+					array(
+						'join_table'=>$this->tableObj->tableNameStripeIntregration,
+						//'join_with_alias'=>'userTb',
+						'join_with'=>$this->tableObj->tableNameUser,
+						//'join_with_alias'=>'servTb',
+						'join_type'=>'left',
+						'join_on'=>array('id','=','user_id'),
+						//'join_conditions' => array(array('user_no','=','teacher_user_no')),
+						'select_fields' => $stripeField,
+					),
+		);
+
+		$user_details = $this->common_model->fetchData($this->tableObj->tableNameUser, $userCond, $userFields, $joins, $orderBy=array());
+		//echo '<pre>'; print_r($user_details); exit;
+
+		$perform_update = false;
+		if($payment_method == 1){
+			$perform_update = true;
+		} else  if($payment_method == 2){
+			// Check Paypal is integrated or not //
+			if(isset($user_details->paypal_email) && $user_details->paypal_email != ''){
+				$perform_update = true;
+			} else {
+				$this->response_message="You can't choose this payment collection method. Please integrate paypal for your account.";
+			}
+
+		} else if($payment_method == 3){
+			// Check Stripe is integrated or not //
+			if(isset($user_details->stripe_user_id) && $user_details->stripe_user_id != ''){
+				$perform_update = true;
+			} else {
+				$this->response_message="You can't choose this payment collection method. Please integrate stripe for your account.";
+			}
+		}
+
+		if($perform_update == true){
+			$updateData = array(
+				'payment_method' => $payment_method
+			);
+
+			$updateCond=array(
+							array('service_id','=',$service_id),
+							array('is_deleted','=',0)
+						);
+
+			$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
 
 
-		$this->response_status='1';
-		$this->response_message="Service updated successfully.";
-
+			$this->response_status='1';
+			$this->response_message="Service updated successfully.";
+		}
+		
 		$this->json_output($response_data);
 	}
 
@@ -1733,6 +1792,31 @@ class UsersController extends ApiController {
 				'display_button_name' => $display_button_name,
 				'custom_button_name' => $custom_button_name,
 				'custom_url' => $custom_url,
+		);
+
+		$updateCond=array(
+						array('service_id','=',$service_id),
+						array('is_deleted','=',0)
+					);
+
+		$this->common_model->update_data($this->tableObj->tableUserService,$updateCond,$updateData);
+
+		$this->response_status='1';
+		$this->response_message="Service updated successfully.";
+
+		$this->json_output($response_data);
+	}
+
+
+	public function update_service_invitee_notifications(Request $request){
+		$response_data=array();
+		$this->validate_parameter(1);
+
+		$service_id = $request->input('service_id');
+		$email_notification = $request->input('email_notification');
+
+		$updateData = array(
+				'email_notification' => $email_notification
 		);
 
 		$updateCond=array(
@@ -1907,7 +1991,8 @@ class UsersController extends ApiController {
 		$service_id = $request->input('service_id');
 
 		$findCond = array(
-	        array('service_id','=',$service_id),
+			array('service_id','=',$service_id),
+			array('is_deleted','=',0),
 		);
 		
 		$selectFields = array();

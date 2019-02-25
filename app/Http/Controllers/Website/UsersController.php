@@ -767,6 +767,11 @@ class UsersController extends ApiController {
 
 			$url_func_name_iq="service-invitee-question";
 			$return_iq = $this->curl_call($url_func_name_iq,$post_data);
+			if($return_iq->response_status == 1){
+				$service_invitee_question = $return_iq->service_invitee_question;
+			} else {
+				$service_invitee_question = array();
+			}
 
 			$url_func_name_service_availability="service-availability";
 			$return_service_availability = $this->curl_call($url_func_name_service_availability,$post_data);
@@ -807,8 +812,9 @@ class UsersController extends ApiController {
 				}
 			}
 			//echo '<pre>'; print_r($service_availability); exit;
-			// Check response status. If success return data //	
 
+
+			// Check response status. If success return data //	
 			if(isset($return->response_status))
 			{
 				if($return->response_status == 1)
@@ -816,6 +822,7 @@ class UsersController extends ApiController {
 					$data['category_list'] = $return_cat->category_list;
 					$data['service_details'] = $return->service_details;
 					$data['service_availability_list'] = $service_availability;
+					$data['service_invitee_question'] = $service_invitee_question;
 					$data['request_data'] = $request_data;
 				}
 				//echo '<pre>'; print_r($data); exit;

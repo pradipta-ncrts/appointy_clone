@@ -15,6 +15,7 @@
       <link href="{{asset('public/assets/website/css/custom.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/slide-menu.css')}}" rel="stylesheet">
 	  <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
       <link rel="stylesheet" href="{{asset('public/assets/website/css/bootstrap-timepicker.min.css')}}" />
       <script type="text/javascript">
@@ -24,7 +25,7 @@
    </head>
    
    <body class="dashboard-bg">
-      <div id="web">
+      <div>
         <div class="animationload" style="display: none;">
             <div class="osahanloading"></div>
         </div>

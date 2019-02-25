@@ -56,7 +56,7 @@ Squeedr
                     <div class="col-md-12">
                         <div class="custm-linkedt">
                         <ul>
-                            <li><a href="#" data-toggle="tooltip" title="Book Now"><button type="button" class="btn btn-primary">Book Now</button></a></li>
+                            <li><a href="{{url('client/login')}}" data-toggle="tooltip" title="Book Now"><button type="button" class="btn btn-primary">Book Now</button></a></li>
                         </ul>
                         </div>
                         <div class="staff-detailuser">

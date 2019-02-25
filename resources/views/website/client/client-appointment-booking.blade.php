@@ -473,8 +473,17 @@ Squeedr
 						{
 							if(response.payment_method == 1){
 								//swal('Success!',response.message,'success');
-								var url = '<?php echo url('/client/appointment-confirmation');?>'+'/'+response.parameter;
-								window.location.href = url;
+								if(response.service_redirect_type == 1){
+									var url = '<?php echo url('/client/appointment-confirmation');?>'+'/'+response.parameter;
+								} else {
+									var url = response.service_redirect_url;
+								}
+								swal({title: "Success", text: response.message, type: "success"},
+								function(){ 
+									window.location.href = url;
+								});
+								
+								
 							} else if(response.payment_method == 2){
 								var url = '<?php echo url('/client_paypal_payment');?>'+'/'+response.parameter;
 								window.location.href = url;

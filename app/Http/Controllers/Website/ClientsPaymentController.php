@@ -38,15 +38,15 @@ class ClientsPaymentController extends ApiController {
 
         if($recurring_booking_frequency > 0)
         {
-            $cancel_url = url('/client/booking-details',$parameter);
-            $reschedule_url = url('/client/booking-details',$parameter);
+            $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+            $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
         } 
         else 
         {
             //$cancel_url = url('/client/cancel_appointent',$parameter);
             //$reschedule_url = url('/client/reschedule-appointment',$parameter);
-            $cancel_url = url('/client/booking-details',$parameter);
-            $reschedule_url = url('/client/booking-details',$parameter);
+            $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+            $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
         }
 
         $appoinment_condition = array(
@@ -56,7 +56,7 @@ class ClientsPaymentController extends ApiController {
 
         $appoinment_fields = array();
         $client_fields = array('client_name','client_email','client_mobile');
-        $service_fields = array('service_name','cost','duration','location');
+        $service_fields = array('service_name','cost','duration','location','redirect_url','redirect_type');
         $stuff_fields = array('full_name as staff_name','email as staff_email','mobile as staff_mobile');
         $currency_field = array('currency_icon as currency');
         $user_data = array('name', 'business_location', 'email', 'mobile', 'profile_image');
@@ -160,6 +160,8 @@ class ClientsPaymentController extends ApiController {
         $service_start_time = date('l d, Y h:i A',$strto_start_time);
         $service_location = $details->location;
         $service_duration = $details->duration;
+        $service_redirect_type = $details->redirect_type;
+        $service_redirect_url = $details->redirect_url;
         //$service_cost = $total_amount;
        
         //Service Provider Data
@@ -369,7 +371,11 @@ class ClientsPaymentController extends ApiController {
 						$send = $this->sendmail(21,$client_email,$invoice_email_data);
 
                         //return redirect(url('client_payment_status/'))->with('payment_success','Payment successfully done.'); 
-                        $redirect_url = url('/client/appointment-confirmation',$parameter);
+                        if($service_redirect_type == 1){
+                            $redirect_url = url('/client/appointment-confirmation',$parameter);
+                        } else {
+                            $redirect_url = $service_redirect_url;
+                        }
                         return redirect($redirect_url);
 
                     }
@@ -431,15 +437,15 @@ class ClientsPaymentController extends ApiController {
 
         if($recurring_booking_frequency > 0)
         {
-            $cancel_url = url('/client/booking-details',$parameter);
-            $reschedule_url = url('/client/booking-details',$parameter);
+            $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+            $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
         } 
         else 
         {
             //$cancel_url = url('/client/cancel_appointent',$parameter);
             //$reschedule_url = url('/client/reschedule-appointment',$parameter);
-            $cancel_url = url('/client/booking-details',$parameter);
-            $reschedule_url = url('/client/booking-details',$parameter);
+            $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+            $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
         }
 
         $appoinment_condition = array(
@@ -449,7 +455,7 @@ class ClientsPaymentController extends ApiController {
         
         $appoinment_fields = array();
         $client_fields = array('client_name','client_email','client_mobile');
-        $service_fields = array('service_name','cost','duration','location');
+        $service_fields = array('service_name','cost','duration','location','redirect_url','redirect_type');
         $stuff_fields = array('full_name as staff_name','email as staff_email','mobile as staff_mobile');
         $currency_field = array('currency_icon as currency');
         $user_data = array('name', 'business_location', 'email', 'mobile', 'profile_image');
@@ -553,6 +559,8 @@ class ClientsPaymentController extends ApiController {
         $service_start_time = date('l d, Y h:i A',$strto_start_time);
         $service_location = $details->location;
         $service_duration = $details->duration;
+        $service_redirect_type = $details->redirect_type;
+        $service_redirect_url = $details->redirect_url;
         //$service_cost = $total_amount;
         
         //Service Provider Data
@@ -709,8 +717,12 @@ class ClientsPaymentController extends ApiController {
 						$invoice_email_data['email_subject'] = "Invoice";
 						$send = $this->sendmail(21,$client_email,$invoice_email_data);
 
-                        $redirect_url = url('/client/appointment-confirmation/',$parameter);
-                    	return redirect($redirect_url); 
+                        if($service_redirect_type == 1){
+                            $redirect_url = url('/client/appointment-confirmation',$parameter);
+                        } else {
+                            $redirect_url = $service_redirect_url;
+                        }
+                        return redirect($redirect_url);
                     }
                     else
                     {

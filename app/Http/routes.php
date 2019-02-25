@@ -56,6 +56,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/update-service-duration', 'Api\UsersController@update_service_duration');
     Route::post('/update-service-payment', 'Api\UsersController@update_service_payment');
     Route::post('/update-service-confirmation', 'Api\UsersController@update_service_confirmation');
+    Route::post('/update-service-invitee-notifications', 'Api\UsersController@update_service_invitee_notifications');
     Route::post('/add-invitee-question', 'Api\UsersController@add_invitee_question');
     Route::post('/payment_terms', 'Api\UsersController@payment_terms');
     Route::post('/service-details', 'Api\UsersController@service_details');
@@ -414,7 +415,7 @@ Route::group(['prefix'=>'client'],function(){
     Route::get('/client-dashboard/{parameter?}','Website\ClientsController@client_dashboard');
     Route::get('/client-info','Website\ClientsController@client_info');
     Route::get('/booking-verify','Website\ClientsController@booking_verify');
-    Route::get('/booking-details','Website\ClientsController@booking_details');
+    //Route::get('/booking-details','Website\ClientsController@booking_details');
     Route::get('/view-staffs/{username?}','Website\ClientsController@view_staff_list');
     Route::get('/forgot-password/{parameter?}','Website\ClientsController@forgot_password');
     Route::get('/service-details/{service?}','Website\ClientsController@client_service_details');

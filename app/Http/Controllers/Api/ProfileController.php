@@ -417,6 +417,8 @@ class ProfileController extends ApiController {
 			$start_date = date('Y-m-d', strtotime($apply_day));
 			$end_date = date('Y-m-d', strtotime($apply_day));
 		} 
+
+		//echo $start_date; exit;
 		
 		$insert_data = array();
 		if($is_unavailable == 0){

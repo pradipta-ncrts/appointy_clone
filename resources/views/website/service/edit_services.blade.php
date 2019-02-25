@@ -422,8 +422,8 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <span class="footnote center-block text-left"> <a data-toggle="modal" data-target="#newquestionModal">Add New Question <i class="fa fa-plus"></i> </a></span>
                         <div class="clearfix"></div>
                         <div class="text-right">
-                            <input type="submit" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
-                            <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
+                            <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
+                            <input type="button" class="btn btn-primary" onclick="slideDiv(this);" value="Save &amp; Close" />
                         </div>
                         </div>
                     </div>
@@ -445,16 +445,18 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                     </div>
                 </div>
                 <div class="headRow whitebox dsinside   clearfix ">
+                <form name="service_invitee_notifications_form" id="service_invitee_notifications_form" method="post" action="{{url('api/update-service-invitee-notifications')}}">
+                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
                     <div class="form-details break20px">
                         <div>
-                        <label>Email Confirmationss <i class="fa fa-question"></i> </label>
-                        <p>Your invitee will receive an email confirmation with links to create their own calender Service <a> Personalize</a> / <a> Switch to calender invitations</a> </p>
+                        <label>Email Confirmations <i class="fa fa-question"></i> </label>
+                        <p>Your invitee will receive an email confirmation with links to create their own calender Service <a href="{{url('email-customisation')}}"> Personalize</a> </p>
                         </div>
                     </div>
                     <div class="form-details break20px">
                         <div>
                         <label>Email Cancellations </label>
-                        <p>Email notifications will be sent to your invitee if you cancel the service.<a> Personalize</a> </p>
+                        <p>Email notifications will be sent to your invitee if you cancel the service.<a href="{{url('email-customisation')}}"> Personalize</a> </p>
                         </div>
                     </div>
                     <!--<div class="form-details break20px">
@@ -467,16 +469,21 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         </div>-->
                     <div class="form-details break20px">
                         <div>
-                        <label>Email reminders <i class="fa fa-question"></i> </label>
-                        <div class="clearfix"></div>
-                        <p class="inlineBlock">Your invitees will have the option to receive a reminder email. <a> Inactive</a> </p>
-                        <a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a> 
+                            <label>Email reminders <i class="fa fa-question"></i> </label>
+                            <div class="clearfix"></div>
+                            <p class="inlineBlock">Your invitees will have the option to receive a reminder email. </p>
+                            <!--<a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a>-->
+                            <button type="button" id="invitee_notification" class="isBlocked btn btn-sm btn-toggle pull-right <?php if($service_details->email_notification == 1) echo 'active'; ?>" data-toggle="button" <?php if($service_details->email_notification == 1) { ?> aria-pressed="true" <?php } else { ?> aria-pressed="false" <?php } ?> autocomplete="off">
+                                <div class="handle"></div>
+                            </button>
+                            <input type="hidden" name="email_notification" id="email_notification" value="{{$service_details->email_notification}}">
                         </div>
                     </div>
                     <div class="text-right break20px">
-                        <input type="submit" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
+                        <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
                         <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
                     </div>
+                    </form>
                 </div>
             </div>
             <div class="break20px hidden-xs"></div>
@@ -505,7 +512,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                             </div>
                         </div>
                         <div class="clearfix"></div>
-                        <div id="redirect_squdeer_section" <?php if($service_details->redirect_type == 2) { ?> style="display:none;"<?php } ?> >
+                        <?php /* <div id="redirect_squdeer_section" <?php if($service_details->redirect_type == 2) { ?> style="display:none;"<?php } ?> >
                             <label for="Name">Display button to schedule another service? <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Direct your invitee back to your website or make it easy for them to schedule recurring services by adding a link to your service confirmation page."></i> </label>
                             <div class="form-inline break10px">
                                 <input class="form-control" type="text" name="display_button_name" id="display_button_name" <?php if($service_details->display_button_name != '') { ?> value = "{{$service_details->display_button_name}}" <?php } else { ?> value="" disabled="disabled" <?php } ?> />
@@ -528,10 +535,10 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                     <br>
                                     <input class="form-control nomarginbottom"  type="text" name="custom_url" id="custom_url" placeholder="https://www.example.com" <?php if($service_details->custom_url != '') { ?> value = "{{$service_details->custom_url}}" <?php } ?> />
                                 </div>
-                                <a class="btn btn-info break20px" id="submit_custom_link">Add</a>
+                                <!--<a class="btn btn-info break20px" id="submit_custom_link">Add</a>-->
                                 <a class="btn btn-default break20px" id="cancel_custom_link">Cancel</a>
-                            </div>
-                        </div>
+                            </div> 
+                        </div>*/ ?>
                         <div id="redirect_external_section" <?php if($service_details->redirect_type == 1) { ?> style="display:none;" <?php } ?>>
                             <p class="footnote">Redirect is a Pro Feature. Upgrade your account to redirect after confirmation.</p>
                             <div class="clearfix"></div>
@@ -567,13 +574,13 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <div class="break20px"></div>
                         <div class="form-group">
                             <input type="radio" name="payment_method" <?php if($service_details->payment_method == 1) { ?> checked="checked" <?php } ?> value="1" />
-                            <label class="right35px">Do not collect payments for this service</label>
+                            <label class="right35px">Accept payment with cash</label>
                             <div class="clearfix break10px"></div>
                             <input type="radio" name="payment_method" <?php if($service_details->payment_method == 3) { ?> checked="checked" <?php } ?> value="3" />
                             <label class="right35px">Accept payment with stripe</label>
                             <div class="clearfix break10px"></div>
                             <input type="radio" name="payment_method" <?php if($service_details->payment_method == 2) { ?> checked="checked" <?php } ?> value="2" />
-                            <label class="right35px">Accept payments with PayPal</label>
+                            <label class="right35px">Accept payments with payPal</label>
                         </div>
                         <div class="break20px"></div>
                         <div class="text-right break20px">
@@ -675,10 +682,10 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                   <div class="form-group">
                      <label class="setting-lbl">Answers</label>
                      <p id="answer_text"></p>
-                     <input name="answers[]" id="answer1" class="form-control" type="text" value="" placeholder="Answer 1" >
+                     <input name="answers[]" id="answer1" class="form-control" type="text" value="" required placeholder="Answer 1" >
                   </div>
                   <div class="form-group">
-                     <input name="answers[]" id="answer2" class="form-control" type="text" value="" placeholder="Answer 2" >
+                     <input name="answers[]" id="answer2" class="form-control" type="text" value="" required placeholder="Answer 2" >
                   </div>
                   <div id="TextBoxesGroup"></div>
                   <div class="form-group">
@@ -979,8 +986,12 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                    if(response.response_status==1)
                    {
                        if(response.service_id != ''){
-                           var url = "{{url('/edit_service/'.$request_data)}}";
-                           window.location.href = url;
+                            var url = "{{url('/edit_service/'.$request_data)}}";
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                window.location.href = url;
+                            }
+                        );
                        } else {
                            swal('Sorry!',response.message,'error');
                        }
@@ -1030,8 +1041,11 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                    if(response.response_status==1)
                    {
                        if(response.service_id != ''){
-                       var url = "{{url('/edit_service/'.$request_data)}}";
-                       window.location.href = url; 
+                            var url = "{{url('/edit_service/'.$request_data)}}";
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                window.location.href = url;
+                            });
                        } else {
                            swal('Sorry!',response.message,'error');
                        }
@@ -1057,13 +1071,15 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
            redirect_url: {
                required : function () {
                                return $("#redirect_type").val() == '2';
-                           }
+                           },
+               url: true
            }
        },
    
        messages: {
            redirect_url: {
                required: 'Please enter redirect URL',
+               url: 'Please enter valid URL'
            }
        },
    
@@ -1081,8 +1097,11 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                    if(response.response_status==1)
                    {
                        if(response.service_id != ''){
-                       var url = "{{url('/edit_service/'.$request_data)}}";
-                       window.location.href = url; 
+                            var url = "{{url('/edit_service/'.$request_data)}}";
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                window.location.href = url;
+                            });
                        } else {
                            swal('Sorry!',response.message,'error');
                        }
@@ -1118,14 +1137,20 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                    if(response.response_status==1)
                    {
                        if(response.service_id != ''){
-                       var url = "{{url('/edit_service/'.$request_data)}}";
-                       window.location.href = url; 
+                            var url = "{{url('/edit_service/'.$request_data)}}";
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                window.location.href = url;
+                            });
                        } else {
                            swal('Sorry!',response.message,'error');
                        }
                    }
                    else{
-                       swal('Sorry!',response.message,'error');
+                        swal({title: "Sorry!", text: response.message, type: "error"},
+                            function(){ 
+                                $('#service_payment_form').trigger("reset");
+                            });
                    }
                },
    
@@ -1142,9 +1167,9 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
    
    $('#add_invitee_question_form').validate({
        rules: {
-           question: {
-               required: true
-           }
+            question: {
+                required: true
+            }
        },
    
        messages: {
@@ -1167,8 +1192,11 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                    if(response.response_status==1)
                    {
                        if(response.service_id != ''){
-                       var url = "{{url('/edit_service/'.$request_data)}}";
-                       window.location.href = url; 
+                            var url = "{{url('/edit_service/'.$request_data)}}";
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                window.location.href = url;
+                            });
                        } else {
                            swal('Sorry!',response.message,'error');
                        }
@@ -1236,7 +1264,43 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                 }
             });
         }
-   })
+   });
+
+   $('#service_invitee_notifications_form').validate({
+        submitHandler: function(form) {
+            var data = $(form).serializeArray();
+            //data.push({name: 'device_type', value: 1});
+            data = addCommonParams(data);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    //console.log(response);
+                    if(response.response_status==1)
+                    {
+                        swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                location.reload();
+                            }
+                        );
+                    }
+                    else{
+                        swal('Sorry!',response.message,'error');
+                    }
+                },
+
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+        }
+   });
    
    $("#togglePaletteOnly").spectrum({
            showPaletteOnly: true,
@@ -1402,7 +1466,7 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                     $('#modalTitle').text(date.format());
                     $('#today').text(date.format('dddd'));
                     $('#apply_all').attr('data-day',date.format('dddd'));
-                    $('#apply_only').attr('data-day',date.format());
+                    $('#apply_only').attr('data-day',date.format('dddd'));
                     $('#calendarModal').modal('show');
                 }
 
@@ -1459,6 +1523,15 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
            $('#update_is_question_active').val('1');
        } else {
            $('#update_is_question_active').val('0');
+       }
+   });
+
+   $('#invitee_notification').click(function(){
+       var ariapressed = $(this).attr('aria-pressed');
+       if(ariapressed === 'false'){
+           $('#email_notification').val('1');
+       } else {
+           $('#email_notification').val('0');
        }
    });
    
@@ -1772,7 +1845,7 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                 $('#modalTitle').text(date.format());
                 $('#today').text(date.format('dddd'));
                 $('#apply_all').attr('data-day',date.format('dddd'));
-                $('#apply_only').attr('data-day',date.format());
+                $('#apply_only').attr('data-day',date.format('dddd'));
                 $('#calendarModal').modal('show');
             }
 

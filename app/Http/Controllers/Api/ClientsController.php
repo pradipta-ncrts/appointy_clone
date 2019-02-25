@@ -1446,7 +1446,7 @@ class ClientsController extends ApiController {
             $service_condition = array(
                 array('service_id', '=', $appoinment_service)
             );
-            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color', 'payment_method');    
+            $sevice_fields = array('service_id', 'service_name', 'cost', 'currency_id', 'duration', 'location', 'color', 'payment_method', 'redirect_type', 'redirect_url');    
             $currency_field = array('currency');
             $joins = array(
                         array(
@@ -1473,6 +1473,8 @@ class ClientsController extends ApiController {
             $service_currency_id = $service_details->currency_id;
             $currency = $service_details->currency;
             $service_location = $service_details->location;
+            $service_redirect_type = $service_details->redirect_type;
+            $service_redirect_url = $service_details->redirect_url;
 
             //calculate end time
             $endTime = strtotime("+".$duration." minutes", strtotime($appointmenttime));
@@ -1683,15 +1685,15 @@ class ClientsController extends ApiController {
 
                 if($recurring_booking_frequency > 0)
                 {
-                    $cancel_url = url('/client/booking-details',$parameter);
-                    $reschedule_url = url('/client/booking-details',$parameter);
+                    $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+                    $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
                 } 
                 else 
                 {
                     //$cancel_url = url('/client/cancel_appointent',$parameter);
                     //$reschedule_url = url('/client/reschedule-appointment',$parameter);
-                    $cancel_url = url('/client/booking-details',$parameter);
-                    $reschedule_url = url('/client/booking-details',$parameter);
+                    $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+                    $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
                 }
 
                 if($service_payment_method == 1){
@@ -1777,6 +1779,8 @@ class ClientsController extends ApiController {
                     $response_data['payment_method'] = $service_payment_method;
                     $response_data['cancel_url'] = $cancel_url;
                     $response_data['reschedule_url'] = $reschedule_url;
+                    $response_data['service_redirect_type'] = $service_redirect_type;
+                    $response_data['service_redirect_url'] = $service_redirect_url;
                     
                     $this->response_status='1';
                     $this->response_message = "Your appointment has been successfully booked.";
@@ -1787,6 +1791,8 @@ class ClientsController extends ApiController {
                     $response_data['payment_method'] = $service_payment_method;
                     $response_data['cancel_url'] = $cancel_url;
                     $response_data['reschedule_url'] = $reschedule_url;
+                    $response_data['service_redirect_type'] = $service_redirect_type;
+                    $response_data['service_redirect_url'] = $service_redirect_url;
 
                     $this->response_status='1';
                     $this->response_message = "Your appointment has been successfully booked.";
@@ -1797,6 +1803,8 @@ class ClientsController extends ApiController {
                     $response_data['payment_method'] = $service_payment_method;
                     $response_data['cancel_url'] = $cancel_url;
                     $response_data['reschedule_url'] = $reschedule_url;
+                    $response_data['service_redirect_type'] = $service_redirect_type;
+                    $response_data['service_redirect_url'] = $service_redirect_url;
 
                     $this->response_status='1';
                     $this->response_message = "Your appointment has been successfully booked.";

@@ -27,7 +27,7 @@ Squeedr
                     </div>-->
                 </div>
                 </div>
-                <button class="btn btn-primary pull-right" type="button"> Book Now</button>
+                <a href="{{url('client/login')}}"><button class="btn btn-primary pull-right" type="button"> Book Now</button></a>
             </div>
         </div>
 
@@ -89,7 +89,7 @@ Squeedr
                                                     <p>
                                                     <div class="paypal-iconbx">
                                                     <?php if($service_details->payment_method == '1') { ?>
-                                                        Free
+                                                        Cash
                                                     <?php } else if($service_details->payment_method == '2') { ?>
                                                         <img src="{{asset('public/assets/website/images/paypal.png')}}"/>
                                                     <?php } else if($service_details->payment_method == '3') { ?>
