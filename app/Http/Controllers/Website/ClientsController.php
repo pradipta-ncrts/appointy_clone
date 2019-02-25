@@ -487,11 +487,68 @@ class ClientsController extends ApiController {
 					
 			}
 			
-	
-			$data=array(
-				'staff_list'=>$staff_list,
-				'staff_details'=>$staff_details,
-				'username'=>$username
+			// service avability
+			$findCond=array(
+	            array('staff_id','=',$staff_details->staff_id),
+	            array('is_deleted','=','0'),
+	            array('is_blocked','=','0'),
+	        );
+	        
+	        $tableNameStaffServiceAvailability = $this->tableObj->tableNameStaffServiceAvailability;
+	        $tableUserService = $this->tableObj->tableUserService;
+	        $selectField = array('staff_service_availability_id','staff_id','service_id','day','start_time','end_time');
+	        $serviceField = array('service_name','duration');
+	        $joins = array(
+	                    array(
+	                    'join_table'=>$tableUserService,
+	                    'join_with'=>$tableNameStaffServiceAvailability,
+	                    'join_type'=>'left',
+	                    'join_on'=>array('service_id','=','service_id'),
+	                    'join_on_more'=>array(),
+	                    'join_conditions' => array(array('is_blocked','=','0')),
+	                    'select_fields' => $serviceField,
+	                ),
+	            );
+
+	        $staff_availability = $this->common_model->fetchDatas($tableNameStaffServiceAvailability,$findCond,$selectField, $joins);
+
+	        $service_array = array();
+	        if(!empty($staff_availability)){
+	            foreach($staff_availability as $availability){
+	                if(!isset($service_array[$availability->service_id])){
+	                    $service_array[$availability->service_id] = array();
+	                }
+	                if(!isset($service_array[$availability->service_id][$availability->day])){
+	                    $service_array[$availability->service_id][$availability->day] = array();
+	                }
+	                $service_array[$availability->service_id][0] = array('service_name'=>$availability->service_name,'duration'=>$availability->duration);
+	                array_push($service_array[$availability->service_id][$availability->day],$availability);
+	            }
+	        }
+
+	        $conditions = array(
+	            array('user_id','=',$staff_details->user_id),
+	            array('is_blocked','=','0'),
+	            array('is_deleted','=','0')
+	        );
+
+	        $service_list = $this->common_model->fetchDatas($this->tableObj->tableUserService,$conditions);
+	        //echo '<pre>'; print_r($service_list); exit;
+
+	        if(!empty($service_list) && is_array($service_list)){
+	            foreach($service_list as $sl){
+	                if(!isset($service_array[$sl->service_id])){
+	                    $service_array[$sl->service_id] =array(array('service_name'=>$sl->service_name,'duration'=>$sl->duration));
+	                }
+	            }
+	        }
+	        //echo '<pre>'; print_r($service_array); exit;
+			$data = array(
+				'staff_list' => $staff_list,
+				'staff_details' => $staff_details,
+				'username' => $username,
+				'service_list' => $service_list,
+				'service_array' => $service_array,
 			);
 	
 			//echo '<pre>'; print_r($data); exit;

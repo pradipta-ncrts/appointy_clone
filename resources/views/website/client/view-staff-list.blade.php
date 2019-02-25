@@ -180,92 +180,58 @@ Squeedr
                                                 <th>Sunday</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="staff-availability-section">
+                                            <tbody id="">
+                                                <?php
+                                                $dowMap = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+                                                if(!empty($service_array))
+                                                {
+                                                    foreach($service_array as $key=>$sa)
+                                                    {
+                                                ?>
                                                 <tr>
-                                                <td>
-                                                    <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">PSYCHIATRIC</a> (60m) </div>
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Monday">
-                                                    <ul>
-                                                        <li>9:00 PM</li>
-                                                        <li>12:00 PM</li>
-                                                    </ul>
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Tuesday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Wednesday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Thursday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Friday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Saturday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Sunday">
-                                                    <div class="clearfix"></div>
-                                                </td>
+                                                    <td>
+                                                        <div class="custm-tblebx"> <img src="{{ asset('public/assets/website/images/noimage.png') }}" class="img-circle" alt="" width="35" height="35"> <a href="#"><?=strtoupper($sa[0]['service_name']);?></a> (<?=$sa[0]['duration'];?>m) </div>
+                                                        <div class="clearfix"></div>
+                                                    </td>
+                                                    <?php
+                                                    for($i = 1; $i<8; $i++)
+                                                    {
+                                                        if(isset($sa[$i]) && !empty($sa[$i]))
+                                                        {
+                                                    ?>
+                                                    <td data-column="<?=$dowMap[$i-1];?>">
+                                                        <ul>
+                                                            <li><?=$sa[$i][0]->start_time;?></li>
+                                                            <li><?=$sa[$i][0]->end_time;?></li>
+                                                        </ul>
+                                                        <div class="clearfix"></div>
+                                                    </td>
+                                                    <?php
+                                                        }
+                                                        else
+                                                        {
+                                                        ?>
+                                                        <td data-column="<?=$dowMap[$i-1];?>">
+                                                            <ul><li>&nbsp;</li></ul>
+                                                            <div class="clearfix"></div>
+                                                        </td>
+                                                        <?php
+                                                        }
+                                                    }
+                                                    ?>
                                                 </tr>
-                                                <tr>
-                                                <td>
-                                                    <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">PRODUCT RELEASE</a> (60m) </div>
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Monday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Tuesday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Wednesday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Thursday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Friday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Saturday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Sunday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                </tr>
-                                                <tr>
-                                                <td>
-                                                    <div class="custm-tblebx"> <img src="http://runmobileapps.com/squeedr/public/assets/website/images/noimage.png" class="img-circle" alt="" width="35" height="35"> <a href="#">SURGEON</a> (120m) </div>
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Monday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Tuesday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Wednesday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Thursday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Friday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Saturday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                <td data-column="Sunday">
-                                                    <div class="clearfix"></div>
-                                                </td>
-                                                </tr>
+                                                <?php
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                ?>
+                                                   <tr>
+                                                       <td>No data found.</td>
+                                                   </tr>
+                                                <?php
+                                                }
+                                                ?>
                                             </tbody>
                                         </table>
                                     </div>

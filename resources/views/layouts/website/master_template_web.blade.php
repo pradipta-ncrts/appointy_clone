@@ -35,6 +35,13 @@
 		  var device_token_key="<?php echo Session::getId()?>"; 
 		  var baseUrl ="<?php echo url('')?>"; 
 	  </script> 
+     <style type="text/css">
+      .offscreen {
+       position: absolute;
+       left: -999em;
+       }
+       .filter-option{margin-top:14px 0 0 0;}
+     </style>
 	  @yield('custom_css') 
    </head>
    <body>
@@ -1477,72 +1484,59 @@
       </div>
       <!-- Reshedule Appoitment End-->
 
-   <!--====================================Modal area End ========================================--> 
+   <!--============================Modal area End ========================================--> 
 
-    <!--====================================Modal area start ====================================--> 
-    <div class="modal fade" id="myModalsharelinks" role="dialog">
-        <div class="modal-dialog add-pop">
-        <!-- Modal content-->
-        <div class="modal-content new-modalcustm new-modalcustm1">
-        <form name="add_client_form" id="add_client_form" method="post" action="{{url('api/add_client')}}" enctype="multipart/form-data">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Share Links</h4>
-            </div>
-
-            <div class="modal-body clr-modalbdy">
-
-                <div class="row">
-                    <div class="col-md-12">
-                    <div class="form-group">
-                        <span>Copy Your Link</span>
-                        <div class="input-group" id="clientname_error">                           
-                            <input id="client_name" type="text" class="form-control" name="client_name" value="squeedr.com/chebalger">
-                            <button type="button" class=shl-btns><i class="fa fa-link"></i></button>
+    <!--=============================Modal area start ====================================-->
+      <div class="modal fade" id="myModalsharelinks" role="dialog">
+         <div class="modal-dialog add-pop">
+            <!-- Modal content-->
+            <div class="modal-content new-modalcustm new-modalcustm1">
+               <form name="add_client_form" id="add_client_form" method="post" action="{{url('api/add_client')}}" enctype="multipart/form-data">
+                  <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal">&times;</button>
+                     <h4 class="modal-title">Share Links</h4>
+                  </div>
+                  <div class="modal-body clr-modalbdy">
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              <span>Copy Your Link</span>
+                              <div class="input-group" id="">
+                                 <input id="copy_link_url" type="text" class="form-control" name="copy_link_url" value="{{ url('business-provider') }}/<?php echo $inner_user_details->username;?>">
+                                 <button type="button" class="shl-btns" data-url="{{ url('business-provider') }}/<?=$inner_user_details->username;?>" id="copy-link"><i class="fa fa-link"></i></button>
+                              </div>
+                           </div>
                         </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                    <div class="form-group">
-                        <span>Email Your Link</span>
-                        <div class="input-group" id="clientname_error">                           
-                            <input id="client_name" type="text" class="form-control" name="client_name" value="squeedr.com/chebalger">
-                            <button type="button" class=shl-btns><i class="fa fa-envelope-o"></i></button>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              <span>Email Your Link</span>
+                              <div class="input-group" id="clientname_error">
+                                 <input id="client_name" type="text" class="form-control" name="client_name" value="{{ url('business-provider') }}/<?php echo $inner_user_details->username;?>">
+                                 <button type="button" class="shl-btns" id="email_your_link"><i class="fa fa-envelope-o"></i></button>
+                                 <a style="display: none;" href="mailto:?subject=Link&body={{ url('business-provider') }}/<?=$inner_user_details->username;?>" target="_top" id="email_your_link_click">Click Here</a>
+                              </div>
+                           </div>
                         </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                    <div class="form-group">
-                        <span>Embed on Your Website</span>
-                        <div class="input-group" id="clientname_error">                           
-                            <input id="client_name" type="text" class="form-control" name="client_name" value="squeedr.com/chebalger">
-                            <button type="button" class=shl-btns><i class="fa fa-code"></i></button>
+                     </div>
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              <span>Embed on Your Website</span>
+                              <div class="input-group" id="clientname_error">
+                                 <input id="client_name" type="text" class="form-control" name="client_name" value="{{ url('business-provider') }}/<?=$inner_user_details->username;?>">
+                                 <button type="button" class="shl-btns" data-url="{{ url('business-provider') }}/<?=$inner_user_details->username;?>" id="embed-link"><i class="fa fa-code"></i></button>
+                              </div>
+                           </div>
                         </div>
-                    </div>
-                    </div>
-                </div>
-            
-            
+                     </div>
+                  </div>
+               </form>
             </div>
-            <!-- 
-            <div class="modal-footer">
-                <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">Submit</button>
-                </div>
-            </div>
-                            -->
-            </form>
-        </div>
-        </div>
-    </div>
-
-    <!--====================================Modal area End ========================================-->
+         </div>
+      </div>
+    <!--===========================Modal area End ========================================-->
 
     <div class="modal fade" id="serviceListModal" role="dialog">
       <div class="modal-dialog add-pop">
@@ -1970,7 +1964,93 @@
       </div>
    </div>
    <!--======================booking payment=====================================-->
+
+   <div class="modal fade" id="modalEmbed" role="dialog">
+    <div class="modal-dialog add-pop"> 
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Embed Link</h4>
+        </div>
+        <div class="modal-body clr-modalbdy">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="niceditor">
+                  <textarea style="width: 100%" id="embed_code" placeholder=""></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-12 text-center">
+            <input id="copy-embed-link" type="submit" value="copy" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     <!--===============================Stuff List Modal End======================--> 
+    <!--Quick Guide-->
+   <!--==================================Modal area start ===============================--> 
+   <div class="modal fade" id="myModalQuickGuide" role="dialog">
+      <div class="modal-dialog quick-pop">
+         <!-- Modal content-->
+         <div class="modal-content new-modalcustm">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <h4 class="modal-title">Quick Guide</h4>
+            </div>
+            <div class="modal-body clr-modalbdy">
+               <div>
+                  <input type="checkbox" name="show_user_guide" id="show_user_guide" <?=$inner_user_details->login_counter==3 ? "checked" : ""; ?>> Always show user guide.
+               </div>
+               <h3>1. Sunc Calendars</h3>
+               <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling cpnflicts when creating 
+                  new events.
+               </p>
+               <h5> 1.1 Personalize your email</h5>
+               <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
+               <hr >
+               <h3>2. Manege your business hours</h3>
+               <p>Events types lets you create an event according to your availability, meeting duration, lovation, etc..., for meetings 
+                  or for individual invitees.
+               </p>
+               <h5> 2.2 Setup your services, staff and location</h5>
+               <ul>
+                  <li>Create events to define your services </li>
+                  <li>Setup scgeduling pages for individual team members </li>
+                  <li>Create location-based events.</li>
+               </ul>
+               <hr >
+               <h3>3. Share yourlink</h3>
+               <p>Share yoru link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
+                  <br><br>
+                  <span class="cl-blue">
+                  Subject: Lets connect,<br>
+                  Hi matt,<br>
+                  It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
+                  <br>
+                  Let's Chat soon!<br><br>
+                  - Sam
+                  </span>
+               </p>
+               <hr >
+               <h3>4. Customize your Squeedr page</h3>
+               <hr style="margin-top:10px; margin-top:5px;">
+               <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
+                  Customize the page to align it with your brand and coporate indentity.
+               </p>
+               <h5> 4.4 Business Details</h5>
+               <p></p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!--====================================Modal area end ===============================-->
+    <input type="text" id="offscreen" class="offscreen" value="">
 	<!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
    <script src="{{asset('public/assets/website/js/jquery.min.js')}}"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -2470,6 +2550,12 @@
             }
         });
     </script>
+    <script type="text/javascript">
+
+        $('#email_your_link').on('click', function(){
+            $('#email_your_link_click').trigger("click");
+        });
+    </script>
 
 	<script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
 
@@ -2485,8 +2571,52 @@
       });
       });
       </script>
+      <?php
+      if($inner_user_details->login_counter==1 || $inner_user_details->login_counter==3)
+      {
+      ?>
+      <script type="text/javascript">
+         $(document).ready(function() { 
+            $("#myModalQuickGuide").modal("show");
+         });
+      </script>
+      <?php
+      }
+      ?>
+      <script type="text/javascript">
+      $('#show_user_guide').click(function(){
+            var user_guide_value = $(this).val();
+            var data = addCommonParams([]);
+            data.push({name:'user_guide_value',value:user_guide_value});
+            $.ajax({
+                url: "<?php echo url('api/update_guide_value');?>",
+                type: "POST",
+                data:data ,
+                dataType: "json",
+                success: function(response) {
+                    //console.log(response);
+                    if(response.result=='1')
+                    {
+                        swal("Success", response.message, "success");
+                    }
+                    else
+                    {
+                        swal("Error", response.message , "error");
+                    }
+                },
+                beforeSend: function(){
+                    $('.animationload').show();
+                },
+                complete: function(){
+                    $('.animationload').hide();
+                }
+            });
+      });
+      </script>
 
       <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
       <!-- <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&callback=initMap">
     </script> -->

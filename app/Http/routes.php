@@ -215,6 +215,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/send_staff_verification_email','Api\StaffsController@send_staff_verification_email');
     Route::any('/change_email','Api\ProfileController@change_email');
     Route::any('/delete_client','Api\ClientsController@delete_client');
+    Route::post('/update_guide_value','Api\UsersController@update_guide_value');
 
     
 

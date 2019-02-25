@@ -129,33 +129,7 @@ Squeedr
     </div>
   </div>
   @endsection
-  <div class="modal fade" id="modalEmbed" role="dialog">
-    <div class="modal-dialog add-pop"> 
-      <!-- Modal content-->
-      <div class="modal-content new-modalcustm">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Embed Link</h4>
-        </div>
-        <div class="modal-body clr-modalbdy">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <div class="niceditor">
-                  <textarea style="width: 100%" id="embed_code" placeholder=""></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <div class="col-md-12 text-center">
-            <input id="copy-embed-link" type="submit" value="copy" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  
    <!--show filter 12-11-2018 -->
   <div class="modal fade" id="staffFilterModal" role="dialog">
     <div class="modal-dialog add-pop"> 

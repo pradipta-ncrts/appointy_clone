@@ -1110,25 +1110,48 @@ class StaffsController extends ApiController {
         if(isset($availability_start_time) && !empty($availability_start_time) && isset($availability_end_time) && !empty($availability_end_time)){
             if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
                 $total_records = count($day);
+                $insert_data = array();
+                $failed_data = array();
                 foreach($service_array as $service){
                     for($i=0;$i<$total_records;$i++){
-                        $insert_data[] = array('staff_id'=>$staff_id,
+                        if($availability_start_time[$i] >= $availability_end_time[$i])
+                        {
+                            $failed_data[] = array('staff_id'=>$staff_id,
                                                 'service_id'=>$service,
                                                 'day'=>$day[$i],
                                                 'start_time'=>$availability_start_time[$i],
                                                 'end_time'=>$availability_end_time[$i],
                                                 'created_on'=>date('Y-m-d H:i:s')
                                                 );
+                        }
+                        else
+                        {
+                            $insert_data[] = array('staff_id'=>$staff_id,
+                                                'service_id'=>$service,
+                                                'day'=>$day[$i],
+                                                'start_time'=>$availability_start_time[$i],
+                                                'end_time'=>$availability_end_time[$i],
+                                                'created_on'=>date('Y-m-d H:i:s')
+                                                );
+                        }
                     }
                 }
                 
                 //echo '<pre>'; print_r($insert_data); exit;
-                $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
+                if(empty($failed_data))
+                {
+                     $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
                 
-                $this->response_status='1';
-                $this->response_message = 'Schedule has been added successfully.';
+                    $this->response_status='1';
+                    $this->response_message = 'Schedule has been added successfully.';
+                }
+                else
+                {
+                    $this->response_message="End time must be greater than start time.";
+                }
+               
             } else {
-                $this->response_message="Required filed is missing.";
+                $this->response_message="Required field is missing.";
             }
         } else {
             $this->response_message="Nothing to update. Please enter required fileds";
@@ -1639,22 +1662,31 @@ class StaffsController extends ApiController {
         $avability_list_staff_view = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability, $staffFindCond,$StaffSelectedField,$joins = '', $order_by);
 
         $service_array = array();
-        for($i = 0; $i<7; $i++)
+        for($i = 1; $i<8; $i++)
         {
-            if(isset($avability_list_staff_view[$i]->day) && $avability_list_staff_view[$i]->day)
+            foreach ($avability_list_staff_view as $key => $value)
             {
-                $start_time = $avability_list_staff_view[$i]->start_time;
-                $end_time = $avability_list_staff_view[$i]->end_time;
-                $day = $i+1;
+                if($value->day==$i)
+                {
+                    $start_time = $value->start_time;
+                    $end_time = $value->end_time;
+                    $day = $i;
+                    break;
+                }
+                else
+                {
+                    $start_time = '';
+                    $end_time = '';
+                    $day = $i;
+                }
             }
-            else
-            {
-                $start_time = '';
-                $end_time = '';
-                $day = $i+1;
-            }
-    
+
             $service_array[] = array('day' => $day, 'start_time' => $start_time, 'end_time' => $end_time);
+            
+
+           /* $start_time = $avability_list_staff_view[$i]->start_time;
+            $end_time = $avability_list_staff_view[$i]->end_time;
+            $day = $i+1;*/
         }
 
         //print_r($service_array); die();

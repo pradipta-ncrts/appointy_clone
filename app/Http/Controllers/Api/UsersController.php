@@ -43,7 +43,7 @@ class UsersController extends ApiController {
 				array('is_deleted','=',0),
 				'or'=>array('email'=>$email,'username'=>$email)
 			);
-			$selectFields=array('id','email','user_type','is_email_verified','created_on','is_deleted','is_blocked');
+			$selectFields=array('id','email','user_type','is_email_verified','created_on','is_deleted','is_blocked','login_counter');
 			$user = $this->common_model->fetchData($table_name,$conditions,$selectFields);
 			if(empty($user))
 			{
@@ -74,6 +74,22 @@ class UsersController extends ApiController {
 						//checked is the email is verified or not 
 						if($user->is_email_verified == 0 || $user->is_email_verified == 1)
 						{
+							$param = array();
+							if($user->login_counter==0)
+							{
+								$param['login_counter'] = 1;
+							}
+							else
+							{
+								$param['login_counter'] = 2;
+							}
+							
+
+							$updateCond = array(
+								array('id','=',$user->id)
+							);
+							$this->common_model->update_data($this->tableObj->tableNameUser, $updateCond, $param);
+							
 							//If user is registered within 3days
 							/*if(($created_on + (72*3600)) >= time() )
 							{*/
@@ -2652,6 +2668,42 @@ class UsersController extends ApiController {
 		}
 	
 		return $token;
+	}
+
+	public function update_guide_value(Request $request)
+	{
+		$response_data=array();
+		$this->validate_parameter(1);
+		$user_no = $this->logged_user_no;
+
+		$response_data=array();
+		$user_guide_value = $request->input('user_guide_value');
+
+		$conditions = array(
+			array('id','=',$user_no),
+		);
+		$selectFields=array('id', 'login_counter');
+		$user = $this->common_model->fetchData($this->tableObj->tableNameUser,$conditions,$selectFields);
+		
+		if($user->login_counter==3)
+		{
+			$param['login_counter'] = 2;
+		}
+		else
+		{
+			$param['login_counter'] = 3;
+		}
+		
+
+		$updateCond = array(
+			array('id','=',$user->id)
+		);
+		$this->common_model->update_data($this->tableObj->tableNameUser, $updateCond, $param);
+		
+		$this->response_status='1';
+		$this->response_message="Successfully Updated.";
+		$this->json_output($response_data);
+
 	}
 	
 	
