@@ -137,8 +137,8 @@ Squeedr
                      <a> <img src="{{asset('public/assets/website/images/arro-down.png')}}"/> </a>
                      <ul>
                         <li><a href="{{url('edit_service/'.$enc_service_id)}}"><i class="fa fa-edit"></i> Edit </a> </li>
-                        <li><a><i class="fa fa-copy"></i> Copy URL </a> </li>
-                        <li><a><i class="fa fa-envelope-o"></i> Email URL </a> </li>
+                        <li><a href="JavaScript:Void(0);" class="copy-service-link" data-service="{{ url('client/service-details') }}/<?=$service->service_id;?>"><i class="fa fa-copy"></i> Copy URL </a> </li>
+                        <li><a href="JavaScript:Void(0);" class="embed-srvice" data-service="{{ url('client-service-details') }}/<?=$service->service_id;?>"><i class="fa fa-code"></i> Embed  </li>
                      </ul>
                   </li>
                </ul>
@@ -153,83 +153,7 @@ Squeedr
    </div>
 </div>
 
-<!--Quick Guide-->
- <!--====================================Modal area start ====================================--> 
- <div class="modal fade" id="myModalQuickGuide" role="dialog">
-         <div class="modal-dialog quick-pop">
-            <!-- Modal content-->
-            <div class="modal-content new-modalcustm">
-            
-               <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Quick Guide</h4>
-               </div>
-               <div class="modal-body clr-modalbdy">
 
-                  <h3>1. Sunc Calendars</h3>
-                  
-
-                  <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling cpnflicts when creating 
-                  new events.</p>
-
-                    <h5> 1.1 Personalize your email</h5>
-                    <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
-                    <hr >
-
-                    <h3>2. Manege your business hours</h3>
-                 
-
-                  <p>Events types lets you create an event according to your availability, meeting duration, lovation, etc..., for meetings 
-                      or for individual invitees.
-                  </p>
-
-                    <h5> 2.2 Setup your services, staff and location</h5>
-                    <ul>
-                        <li>Create events to define your services </li>
-                        <li>Setup scgeduling pages for individual team members </li>
-                        <li>Create location-based events.</li>
-                    </ul>
-
-                <hr >
-
-
-                    <h3>3. Share yourlink</h3>
-                 
-
-                  <p>Share yoru link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
-                      <br><br>
-                        <span class="cl-blue">
-                            Subject: Lets connect,<br>
-                            Hi matt,<br>
-                            It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
-                            <br>
-                            Let's Chat soon!<br><br>
-                            - Sam
-                        </span>
-                  </p>
-
- <hr >
-                <h3>4. Customize your Squeedr page</h3>
-                  <hr style="margin-top:10px; margin-top:5px;">
-
-                  <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
-                      Customize the page to align it with your brand and coporate indentity.
-                  </p>
-
-                    <h5> 4.4 Business Details</h5>
-                    <p></p>
-
-
-
-
-
-
-               </div>
-              
-              
-            </div>
-         </div>
-      </div>
 @endsection
 
 @section('custom_js')
