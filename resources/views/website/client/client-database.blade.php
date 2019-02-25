@@ -380,7 +380,8 @@ Squeedr
                                     <option>Category Name</option>
                                     </select>-->
                                 <div class="form-group nomarging color-b" id="edit_client_timezone">
-                                    <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="client_timezone" id="edit_client_timezone" >
+                                    <!--<select class="selectpicker" data-show-subtext="true" data-live-search="true" name="client_timezone" id="edit_client_timezone" >-->
+                                    <select name="client_timezone" id="edit_client_timezone" >
                                     <option value="">Select Timezone </option>
                                     <?php
                                     foreach($timezone as $tzone)
@@ -720,7 +721,8 @@ $('#editClient').click(function(e){
                 $('#edit_client_home_phone').val(response.client_details.client_home_phone);
                 $('#edit_client_work_phone').val(response.client_details.client_work_phone);
                 //$("#edit_client_category").val(response.client_details.client_category).trigger('change');
-                $("#edit_client_timezone").val(response.client_details.client_timezone).trigger('change');
+                //$("#edit_client_timezone").val(response.client_details.client_timezone).trigger('change');
+                $("#edit_client_timezone select").val(response.client_details.client_timezone);
                 $('#edit_client_address').val(response.client_details.client_address);
                 $('#edit_client_note').val(response.client_details.client_note);
                 //$('#edit_staff_image').attr('src',profile_picture);
@@ -932,7 +934,11 @@ $(document).on('click','#delete',function(e){
                         $('.animationload').hide();
                         if(response.result=='1')
                         {
-                            swal({title: "Success", text: response.message, type: "success"});
+                            //swal({title: "Success", text: response.message, type: "success"});
+                            swal({title: "Success", text: response.message, type: "success"},
+                            function(){ 
+                                location.reload();
+                            });
                         }
                         else
                         {

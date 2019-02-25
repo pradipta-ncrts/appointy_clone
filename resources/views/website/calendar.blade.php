@@ -79,7 +79,8 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
       <div class="rightpan full" style="width: 100% !important">
         <div class="calender-remark">
             <ul>
-                <?php if(!empty($service_list)) { foreach($service_list as $service){ ?>
+                <?php 
+                if(!empty($service_list)) { foreach($service_list as $service){ ?>
                 <li>
                   <a href="{{ url('calendar') }}/<?=$service->service_id;?>">
                     <div class="clbx" style="background-color:<?php if($service->color!='') echo $service->color; else echo '#FFFFFF';?>; border: 1px solid #ccc;"><?php echo substr($service->service_name,0,2);?></div>

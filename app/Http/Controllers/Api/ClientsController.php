@@ -524,8 +524,8 @@ class ClientsController extends ApiController {
                                         array('is_deleted', '=', 0),
                                     );
                                     $checkselectField = array('user_client_id');
-                                    $check_client = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$checkCondition,$checkselectField);
-                                    if(!empty($check_client)){
+                                    $check_user_client = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$checkCondition,$checkselectField);
+                                    if(!empty($check_user_client)){
                                         $exist++;
                                     } else {
                                         
@@ -577,7 +577,7 @@ class ClientsController extends ApiController {
                                             $this->sendmail(11,$row['email'],$emailData);
                     
                                             //Notification Update start
-                                            $notification_data['update_message'] = "You have added ".$client_name." as a client.";
+                                            $notification_data['update_message'] = "You have added ".$row['client_name']." as a client.";
                                             $notification_data['user_id'] = $user_id;
                     
                                             $notification_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
@@ -728,14 +728,16 @@ class ClientsController extends ApiController {
 
     // Regenerate Password //
     public function client_forgot_password(Request $request){
-        $authdata = $this->website_login_checked();
+        /*$authdata = $this->website_login_checked();
         if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
            return redirect('/login');
         }
         //echo '<pre>'; print_r($request->all()); exit;
-        $response_data=array();
+        
         $this->validate_parameter(1);
-        $user_id = $this->logged_user_no;
+        $user_id = $this->logged_user_no;*/
+
+        $response_data=array();
 
         $client_id = $request->input('client_id');
         $new_password = $request->input('new_password');
@@ -3188,29 +3190,47 @@ class ClientsController extends ApiController {
         $user_id = $this->logged_user_no;
         $client_id = $request->input('client_id');
         
-        $condition = array(
-            array('client_id', '=', $client_id),
-            //array('user_id', '=', $user_id),
+
+        $findCond=array(
+            array('user_id','=',$user_id),
+            array('client_id','=',$client_id),
+            array('is_deleted','=','0'),
         );
-
-        $fields = array();
-        $checkBooking = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$condition,$fields);
-       
-        if(count($checkBooking)==0)
-        {
-
-            $param = array(
-                    'is_deleted' => 1,
+        $findFields=array();
+        $client_check = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$findCond,$findFields);
+        //echo '<pre>'; print_r($client_check); exit;
+        if(!empty($client_check)){
+            $condition = array(
+                array('client_id', '=', $client_id),
+                array('user_id', '=', $user_id),
+                array('is_deleted', '=', 0),
             );
-            $this->common_model->update_data($this->tableObj->tableNameClient,$condition,$param);
-
-            $this->response_status='1';
-            $this->response_message = "Client Successfully Deleted";
-        }
+    
+            $fields = array();
+            $checkBooking = $this->common_model->fetchData($this->tableObj->tableNameAppointment,$condition,$fields);
+           
+            if(count($checkBooking)==0)
+            {
+    
+                $param = array(
+                    'is_deleted' => 1,
+                );
+                $this->common_model->update_data($this->tableObj->tableNameUserClient,$condition,$param);
+    
+                $this->response_status='1';
+                $this->response_message = "Client Successfully Deleted";
+            }
+            else
+            {
+                $this->response_message = "Sorry, This client has an active appointment. You can not delete this client right now.";
+            }
+        } 
         else
         {
-            $this->response_message = "Sorry, You cunt delete this client";
+            $this->response_message = "Invalid client details.";
         }
+
+        
 
         $this->json_output($response_data);
     }

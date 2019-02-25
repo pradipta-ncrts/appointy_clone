@@ -11,7 +11,7 @@
 <link href="{{asset('public/assets/website/css/mobile.css')}}" rel="stylesheet">
 <link href="{{asset('public/assets/website/css/custom.css')}}" rel="stylesheet">
 <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+<link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
 </head>
 <body class="login-bg">
 <div class="animationload" style="display: none;">
@@ -65,9 +65,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
 <script src="{{asset('public/assets/website/js/parallax.min.js')}}"></script> 
 <script src="{{asset('public/assets/website/js/script.js')}}"></script>
-<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-<!--==================Sweetalert=========================-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script src="{{asset('public/assets/website/js/jquery.validate.min.js')}}"></script>
+<!-- Sweetalert -->
+<script src="{{asset('public/assets/website/plugins/sweetalert/sweetalert.min.js')}}"></script>
 <!--=================select box=========================-->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -110,15 +110,17 @@ $('#clientforgotpasswordform').validate({
             console.log(response);
             if(response.result==1)
             {
-                var url = response.message;
-                console.log(url);
+                //var url = response.message;
+                //console.log(url);
                 //alert(url);
-                window.location=url;
+                //window.location=url;
+                swal({title: "Success", text: response.message, type: "success"},
+                function(){ 
+                    location.reload();
+                });
             }
             else{
-                
                 swal('Sorry!',response.message,'error');
-                
             }
         },
 
