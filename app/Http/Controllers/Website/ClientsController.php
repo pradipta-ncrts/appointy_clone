@@ -223,11 +223,28 @@ class ClientsController extends ApiController {
 		$service_details=array();
 
 		if($service_id!=NULL){
-			$findCond=array(
+			if(is_numeric($service_id))
+			{
+				$findCond=array(
+					array('service_id','=',$service_id),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+			}
+			else
+			{
+				$findCond=array(
+					array('service_link','=',$service_id),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+			}
+
+			/*$findCond=array(
 				array('service_id','=',$service_id),
 				array('is_deleted','=','0'),
 				array('is_blocked','=','0'),
-			);
+			);*/
 			//echo '<pre>'; print_r($findCond); exit;
 			$selectFields=array();
 			$category_select_field = array('category');

@@ -1664,21 +1664,30 @@ class StaffsController extends ApiController {
         $service_array = array();
         for($i = 1; $i<8; $i++)
         {
-            foreach ($avability_list_staff_view as $key => $value)
+            if(!empty($avability_list_staff_view))
             {
-                if($value->day==$i)
+                foreach ($avability_list_staff_view as $key => $value)
                 {
-                    $start_time = $value->start_time;
-                    $end_time = $value->end_time;
-                    $day = $i;
-                    break;
+                    if($value->day==$i)
+                    {
+                        $start_time = $value->start_time;
+                        $end_time = $value->end_time;
+                        $day = $i;
+                        break;
+                    }
+                    else
+                    {
+                        $start_time = '';
+                        $end_time = '';
+                        $day = $i;
+                    }
                 }
-                else
-                {
-                    $start_time = '';
-                    $end_time = '';
-                    $day = $i;
-                }
+            }
+            else
+            {
+                $start_time = '';
+                $end_time = '';
+                $day = $i;
             }
 
             $service_array[] = array('day' => $day, 'start_time' => $start_time, 'end_time' => $end_time);

@@ -2110,19 +2110,19 @@ $(document).ready(function(){
 
             rules: {
 
-                edit_staff_fullname: {
+                staff_fullname: {
 
                     required: true
 
                 },
 
-                edit_staff_username: {
+                staff_username: {
 
                     required: true
 
                 },
 
-                edit_staff_email: {
+                staff_email: {
 
                     required: true,
 
@@ -2130,7 +2130,7 @@ $(document).ready(function(){
 
                 },
 
-                edit_staff_mobile: {
+                staff_mobile: {
 
                     required: true,
 
@@ -2142,7 +2142,7 @@ $(document).ready(function(){
 
                 },
 
-                edit_staff_description: {
+                staff_description: {
 
                     required: true
 
@@ -2152,19 +2152,19 @@ $(document).ready(function(){
 
             messages: {
 
-                edit_staff_fullname: {
+                staff_fullname: {
 
                     required: 'Please enter fullname'
 
                 },
 
-                edit_staff_username: {
+                staff_username: {
 
                     required: 'Please enter username'
 
                 },
 
-                edit_staff_email: {
+                staff_email: {
 
                     required: 'Please enter email',
 
@@ -2172,7 +2172,7 @@ $(document).ready(function(){
 
                 },
 
-                edit_staff_mobile: {
+                staff_mobile: {
 
                     required: 'Please enter mobile no',
 
@@ -2184,7 +2184,7 @@ $(document).ready(function(){
 
                 },
 
-                edit_staff_description: {
+                staff_description: {
 
                     required: 'Please enter description'
 
