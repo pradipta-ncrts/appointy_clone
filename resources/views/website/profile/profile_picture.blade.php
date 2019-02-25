@@ -28,7 +28,8 @@ Squeedr
           <!--<div class="profile-picbx"  data-toggle="modal" data-target="#myModapic-upload"><i class="fa fa-picture-o" aria-hidden="true"></i><span class="ng-tns-c3-3">Upload Picture</span></div>-->
           <p class="profile-p">Uploaded pictures will display at the top of your profile page (maximum file size of 5MB)</p>
           <div class="add-logo" data-toggle="modal" data-target="#myModapic-upload" style="float:left;margin-top:0;">
-          <img src="{{asset('public/assets/website/images/picture.png')}}" alt="" style="height:60px !important;width:auto !important"><br>
+          <!--<img src="{{asset('public/assets/website/images/picture.png')}}" alt="" style="height:60px !important;width:auto !important"><br>-->
+          <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" alt="" style="height:60px !important;width:auto !important"><br>
           <span>Upload Picture</span>
           </div>
           

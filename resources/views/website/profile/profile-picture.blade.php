@@ -31,7 +31,7 @@ Squeedr
                   <a href="" id="profile_perosonal-image-remove" <?=$user_details->profile_perosonal_image ? '' : 'style="display: none;"'; ?>><i class="fa fa-close"></i></a>
                       <div class="upload-logo" id="profile_perosonal-image-upload">
                          <?php
-                         $image = $user_details->profile_perosonal_image ? 'image/profile_perosonal_image/'.$user_details->profile_perosonal_image : "assets/website/images/picture.png";
+                         $image = $user_details->profile_perosonal_image ? 'image/profile_perosonal_image/'.$user_details->profile_perosonal_image : "assets/website/images/business-hours/blue-user.png";
                          ?>
                          <img id="profile_perosonal_image_preview" src="{{asset('public/'.$image)}}" height="80" width="80"><br>
                          <span>Upload Profile Picture</span>

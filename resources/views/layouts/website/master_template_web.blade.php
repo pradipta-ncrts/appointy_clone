@@ -101,10 +101,16 @@
                   <div class="dropdown prof-menu" href="#">
                      <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
                         <?php
-                        if($inner_user_details->profile_image)
+                        //echo '<pre>'; print_r($inner_user_details); exit;
+                        if($inner_user_details->user_type == 1){
+                            $image =  'profile_perosonal_image/'.$inner_user_details->profile_perosonal_image;
+                        } else {
+                            $image = 'profile_image/'.$inner_user_details->profile_image;
+                        }
+                        if($image != '')
                         {
                         ?>
-                        <img class="user-pic" src="{{asset('public/image/profile_image')}}/<?=$inner_user_details->profile_image;?>">
+                        <img class="user-pic" src="{{asset('public/image/')}}/<?=$image;?>">
                         <?php
                         }
                         else
