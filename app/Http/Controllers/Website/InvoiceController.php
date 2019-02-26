@@ -68,7 +68,7 @@ class InvoiceController extends ApiController {
 		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
 			return redirect('/login');
 		}
-
+		
 		// Call API //
 		$post_data = $authdata;
 		$post_data['order_id'] = $order_id;

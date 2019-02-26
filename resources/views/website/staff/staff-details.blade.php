@@ -1135,7 +1135,7 @@ Squeedr
 
                             <div class="input-group" id="edit_email_error"> <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
 
-                                <input id="edit_staff_email" type="text" class="form-control" name="staff_email" placeholder="Email Address" disabled="">
+                                <input id="edit_staff_email" type="text" class="form-control" name="staff_email" placeholder="Email">
 
                             </div>
 

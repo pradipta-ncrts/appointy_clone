@@ -36,57 +36,103 @@ class StaffsloginController extends ApiController {
         if($stf_deta->staff_type==1)
         {
             $user_no = $stf_deta->user_id;
+
+            //appoinment data using id
+            if(!empty($filter_data))
+            {
+                $filter_data = explode(',', $filter_data);
+                $appoinment_condition = array(
+                    array('user_id', '=', $user_no),
+                    array('status', '!=', 2),
+                    array('is_deleted','=','0'),
+                    'in'=>array('staff_id' => $filter_data)
+                );
+
+                $findCond = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                    'in'=>array('staff_id' => $filter_data)
+                );
+
+            }
+            else
+            {
+                $appoinment_condition = array(
+                    array('user_id', '=', $user_no),
+                    array('status', '!=', 2),
+                    array('is_deleted','=','0'),
+                );
+
+                $findCond = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                    //'in' => array('')
+                );
+            }
+
+            //print_r($appoinment_condition); exit;
+
+            $filter_list_condition = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+            );
         }
         else
         {
             $user_no = $stf_deta->user_id;
-            $findCond['staff_id'] = $stf_deta->staff_id;
+            $staff_id = $stf_deta->staff_id;
+
+            //appoinment data using id
+            if(!empty($filter_data))
+            {
+                $filter_data = explode(',', $filter_data);
+                $appoinment_condition = array(
+                    array('user_id', '=', $user_no),
+                    array('status', '!=', 2),
+                    array('is_deleted','=','0'),
+                    array('staff_id','=', $staff_id)
+                    //'in'=>array('staff_id' => $filter_data)
+                );
+
+                $findCond = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                    array('staff_id','=', $staff_id)
+                );
+
+            }
+            else
+            {
+                $appoinment_condition = array(
+                    array('user_id', '=', $user_no),
+                    array('status', '!=', 2),
+                    array('is_deleted','=','0'),
+                    array('staff_id','=', $staff_id)
+                );
+
+                $findCond = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                    array('staff_id','=', $staff_id)
+                    //'in' => array('')
+                );
+            }
+
+            //print_r($appoinment_condition); exit;
+
+            $filter_list_condition = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                    array('staff_id','=', $staff_id)
+            );
+
         }
-
-        //print_r($stf_deta); die();
-
-        //appoinment data using id
-        if(!empty($filter_data))
-        {
-            $filter_data = explode(',', $filter_data);
-            $appoinment_condition = array(
-                array('user_id', '=', $user_no),
-                array('status', '!=', 2),
-                array('is_deleted','=','0'),
-                'in'=>array('staff_id' => $filter_data)
-            );
-
-            $findCond = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-                'in'=>array('staff_id' => $filter_data)
-            );
-
-        }
-        else
-        {
-            $appoinment_condition = array(
-                array('user_id', '=', $user_no),
-                array('status', '!=', 2),
-                array('is_deleted','=','0'),
-            );
-
-            $findCond = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-                //'in' => array('')
-            );
-        }
-
-        //print_r($appoinment_condition); exit;
-
-        $filter_list_condition = array(
-                array('user_id','=',$user_no),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-        );
         
         // Appoinment section //
         $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');

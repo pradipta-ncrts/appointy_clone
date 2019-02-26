@@ -319,7 +319,7 @@ class StaffsController extends ApiController {
             $staff_type = $request->input('staff_type');
             $staff_id = $request->input('staff_id');
             $full_name = $request->input('staff_fullname');
-            //$email = $request->input('staff_email');
+            $email = $request->input('staff_email');
             //$username = $request->input('staff_username');
             $mobile = $request->input('staff_mobile');
             $home_phone = $request->input('staff_home_phone');
@@ -329,61 +329,71 @@ class StaffsController extends ApiController {
             $description = $request->input('staff_description');
             $staff_profile_picture = '';
 
-            //Notification Update start
-            $notification_data['update_message'] = "You have updated ".$full_name."'s profile.";
-            $notification_data['user_id'] = $user_id;
-
-            $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
-            //Notification Update End
-
-            $conditions = array(
-                array('staff_id','=',$staff_id),
-                array('user_id','=',$user_id),
-                array('is_deleted','=','0'),
-                array('is_blocked','=','0'),
-            );
-
-            $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
-            //echo '<pre>'; print_r($result); exit;
-            if(empty($result))
+            $query = "SELECT * FROM `squ_staff` WHERE `email` = '".$email."' AND `staff_id` NOT IN ('".$staff_id."')";
+            $check_email = $this->common_model->customQuery($query,$query_type=1);
+            if(empty($check_email))
             {
-                $this->response_message = "Invalid staff details.";
+                //Notification Update start
+                $notification_data['update_message'] = "You have updated ".$full_name."'s profile.";
+                $notification_data['user_id'] = $user_id;
+
+                $profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
+                //Notification Update End
+
+                $conditions = array(
+                    array('staff_id','=',$staff_id),
+                    array('user_id','=',$user_id),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+                );
+
+                $result = $this->common_model->fetchData($this->tableObj->tableNameStaff,$conditions);
+                //echo '<pre>'; print_r($result); exit;
+                if(empty($result))
+                {
+                    $this->response_message = "Invalid staff details.";
+                }
+                else
+                {
+                    $destinationPath = './uploads/profile_image/';
+                    if (!empty($_FILES)) {
+                        if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
+                            $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
+                            if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
+                                //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
+                                $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
+
+                                /*if ($data->input('old_staff_profile_picture') != "") {
+                                    if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
+                                        unlink($destinationPath . $data->input('old_staff_profile_picture'));
+                                    }
+                                }*/
+                            }
+                        }
+                    }
+
+                    $staff_data['staff_type'] = $staff_type;
+                    $staff_data['full_name'] = $full_name;
+                    $staff_data['email'] = $email;
+                    $staff_data['mobile'] = $mobile;
+                    $staff_data['home_phone'] = $home_phone;
+                    $staff_data['work_phone'] = $work_phone;
+                    $staff_data['expertise'] = $expertise;
+                    $staff_data['description'] = $description;
+                    $staff_data['category_id'] = $category_id;
+
+                    //print_r($staff_data); die();
+
+                    $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
+                    
+                    $this->response_status='1';
+                    $this->response_message = "Staff successfully updated.";
+
+                }
             }
             else
             {
-                $destinationPath = './uploads/profile_image/';
-                if (!empty($_FILES)) {
-                    if ($_FILES['staff_profile_picture'] && $_FILES['staff_profile_picture']['name'] != "") {
-                        $staff_profile_picture_name = str_replace(" ", "_", time() . $_FILES['staff_profile_picture']['name']);
-                        if (move_uploaded_file($_FILES['staff_profile_picture']['tmp_name'], $destinationPath . $staff_profile_picture_name)) {
-                            //$user_data['staff_profile_picture'] = $staff_profile_picture_name;
-                            $staff_data['staff_profile_picture'] = url('uploads/profile_image/'.$staff_profile_picture_name);
-
-                            /*if ($data->input('old_staff_profile_picture') != "") {
-                                if (file_exists($destinationPath . $data->input('old_staff_profile_picture'))) {
-                                    unlink($destinationPath . $data->input('old_staff_profile_picture'));
-                                }
-                            }*/
-                        }
-                    }
-                }
-
-                $staff_data['staff_type'] = $staff_type;
-                $staff_data['full_name'] = $full_name;
-                $staff_data['mobile'] = $mobile;
-                $staff_data['home_phone'] = $home_phone;
-                $staff_data['work_phone'] = $work_phone;
-                $staff_data['expertise'] = $expertise;
-                $staff_data['description'] = $description;
-                $staff_data['category_id'] = $category_id;
-
-                //print_r($staff_data); die();
-
-                $update = $this->common_model->update_data($this->tableObj->tableNameStaff,$conditions,$staff_data);
-                
-                $this->response_status='1';
-                $this->response_message = "Staff successfully updated.";
-
+                $this->response_message = "This email already exist.";
             }
 
             $this->json_output($response_data);
