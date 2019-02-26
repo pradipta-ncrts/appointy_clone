@@ -116,9 +116,9 @@ Squeedr
 
                               <input class="form-control" type="text" placeholder="Twitter Link" name="twitter_link" value="<?=$userDetails->twitter_link ? $userDetails->twitter_link : "";?>" />
 
-                              <label for="Phone">Linked IN Link</label>
+                              <label for="Phone">Instagram Link</label>
 
-                              <input class="form-control" type="text" placeholder="Linked IN Link" name="linked_in_link" value="<?=$userDetails->linked_in_link ? $userDetails->linked_in_link : "";?>" />
+                              <input class="form-control" type="text" placeholder="Instagram Link" name="linked_in_link" value="<?=$userDetails->linked_in_link ? $userDetails->linked_in_link : "";?>" />
 
                               <label for="Phone">User Website Link</label>
 
