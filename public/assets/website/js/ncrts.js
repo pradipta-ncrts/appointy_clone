@@ -838,8 +838,6 @@ $('#block_date_add').validate({
                 error.insertAfter($('#block_date_error'));
             } else if (element.attr("name") == "date_block_for") {
                 error.insertAfter($('#date_block_for_error'));
-            }else if (element.attr("name") == "date_block_reasons") {
-                error.insertAfter($('#date_block_reasons_error'));
             }
         },
 
@@ -2219,8 +2217,11 @@ $(".add-location-exist-user").click(function (event) {
     $("#location_password").parent().parent().parent().hide();
    
     $("#autocomplete").val($(this).data('location'));
-    $("#country").val($(this).data('country'));
+
     $("#city").val($(this).data('city'));
+
+    $("#country").val($(this).data('country'));
+    //$("#country").prop("readonly", true);
     
     $("#location_username").val($(this).data('username'));
     $("#location_username").prop("readonly", true);

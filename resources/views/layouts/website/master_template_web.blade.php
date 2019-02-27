@@ -296,7 +296,7 @@
                       else
                       {
                       ?>
-                     <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" />
+                     <img src="{{asset('public/assets/website/images/noimage1.png')}}" class="profilepic" />
                      <?php
                      }
                      ?>
@@ -313,7 +313,7 @@
                          else
                          {
                       ?>
-                     <img src="{{asset('public/assets/website/images/profile-pic.jpg')}}" class="profilepic" />
+                     <img src="{{asset('public/assets/website/images/noimage1.png')}}" class="profilepic" />
                      <?php
                          }
                      }
@@ -2240,7 +2240,7 @@
 				$('body').css('overflow-y', 'auto');
 			});
 			$('.owl-carousel').owlCarousel({
-				loop: true,
+				//loop: true,
 				margin: 10,
 				responsiveClass: true,
 				responsive: {
@@ -2257,7 +2257,7 @@
 					1000: {
 						items: 10,
 						nav: false,
-						loop: true,
+						//loop: true,
 						margin: 25
 					}
 				}
@@ -2284,7 +2284,7 @@
 				$('body').css('overflow-y', 'auto');
 			});
 			$('.owl-carousel').owlCarousel({
-				loop: true,
+				//loop: true,
 				margin: 10,
 				responsiveClass: true,
 				responsive: {
@@ -2299,7 +2299,7 @@
 					1000: {
 						items: 10,
 						nav: false,
-						loop: true,
+						//loop: true,
 						margin: 30
 					}
 				}

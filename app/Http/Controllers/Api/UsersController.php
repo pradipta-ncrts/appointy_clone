@@ -524,7 +524,12 @@ class UsersController extends ApiController {
 					$staff_data['is_email_verified'] = 1;
 					$staff_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
 					if($staff_id > 0){
-
+						//insert into terms & conndition
+						$terms_data['content'] = '';
+						$terms_data['type'] = '3';
+						$terms_data['user_id'] = $user_id;
+						$this->common_model->insert_data_get_id($this->tableObj->tableNameBookingPolicy,$terms_data);
+						
 						//if profession new update created by
 						$condition = array(
 							array('profession_id', '=', $profession),
