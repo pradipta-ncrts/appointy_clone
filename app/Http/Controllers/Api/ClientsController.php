@@ -2719,7 +2719,7 @@ class ClientsController extends ApiController {
 
 
         // Appoinment section //
-        $appoinment_fields = array('appointment_id', 'order_id', 'client_id', 'start_time', 'end_time', 'date','note', 'status');
+        $appoinment_fields = array('appointment_id', 'order_id', 'client_id', 'start_time', 'end_time', 'date','note', 'total_payable_amount', 'status');
         $stuff_fields = array('full_name as staff_name');
         $service_field = array('service_name', 'cost');
         $currency_field = array('currency');
@@ -2813,7 +2813,7 @@ class ClientsController extends ApiController {
         
         if(!empty($check_appointment)){
             // Appointment details //
-            $appoinment_fields = array('appointment_id', 'order_id', 'start_time', 'end_time', 'date','note', 'appointment_type');
+            $appoinment_fields = array('appointment_id', 'order_id', 'start_time', 'end_time', 'date','note', 'appointment_type', 'total_payable_amount');
             $stuff_fields = array('full_name as staff_name');
             $service_field = array('service_name', 'cost');
             $currency_field = array('currency');

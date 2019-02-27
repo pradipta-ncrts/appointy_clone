@@ -482,8 +482,9 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     start: '<?=$value->start_date;?>',
                     end: '<?=$value->end_time;?>',
                     //allDay: false,
-                    backgroundColor: "<?=$value->colour_code;?>",
-                    borderColor: "<?=$value->colour_code;?>",
+                    backgroundColor: "<?=$value->colour_code?$value->colour_code:'#fff';?>",
+                    borderColor: "<?=$value->colour_code?$value->colour_code:'#000';?>",
+                    textColor: "<?=$value->colour_code?'#fff':'#000';?>",
                     appointment_id: '<?=$value->appointment_id;?>',
                 },
                <?php

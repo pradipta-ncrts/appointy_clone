@@ -59,10 +59,10 @@ Squeedr
                         <p>
                           <?php if($value->staff_name!='') { ?> <label>With</label> <?=$value->staff_name;?>
                           <?php } else { ?>
-                            <a class="badge assign_staff" data-order-id="<?=$value->order_id;?>" >Assign Staff <i class="fa fa-plus" aria-hidden="true"></i></a>
+                            <label>With</label>: Not Assigned
                           <?php } ?>
                         </p>
-                        <span class="bluetxt"><?=$value->currency;?> <?=$value->cost;?></span>
+                        <span class="bluetxt"><?=$value->currency;?> <?=$value->total_payable_amount;?></span>
                       </div>
                       <div class="staffInside">
                         <h6><?=$value->service_name;?></h6>

@@ -166,7 +166,7 @@ Squeedr
                                 <label>With</label>: Not Assigned
                                 <?php } ?>
                             </p>
-                            <span class="bluetxt"><?=$value->currency;?> <?=$value->cost;?></span>
+                            <span class="bluetxt"><?=$value->currency;?> <?=$value->total_payable_amount;?></span>
                             </div>
                             <div class="staffInside">
                             <h6><?=$value->service_name;?></h6>
