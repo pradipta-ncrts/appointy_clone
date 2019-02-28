@@ -38,7 +38,7 @@ Squeedr
                               <label for="Business Name">Business Name</label>
                               <input class="form-control" type="text" name="business_name" placeholder="Business name" value="<?=$userDetails->business_name ? $userDetails->business_name : "";?>" />
                               <label for="Business Location">Business Location</label>
-                                <input id="business_location" placeholder="Enter your address" type="text" class="form-control" name="business_location" value="<?=$userDetails->business_location ? $userDetails->business_location : "";?>" onClick="codeAddress();"></input>
+                                <input id="business_location" placeholder="Enter your address" type="text" class="form-control" name="business_location" value="<?=$userDetails->business_location ? $userDetails->business_location : "";?>"></input>
                               <div class="row">
                                  <div class="col-lg-6 col-md-6 col-sm-6" style="display: none;">
                                     <label for="Country">Street</label>
@@ -62,7 +62,7 @@ Squeedr
                                  </div>
                                  <div class="col-lg-6 col-md-6 col-sm-6">
                                     <label for="Region">Country</label>
-                                    <input id="country" placeholder="Country" name="country" class="form-control" value="<?=$country_name;?>" readonly=""></input>
+                                    <input id="country" placeholder="Country" name="country" class="form-control" value="<?=$country_name;?>"></input>
                                  </div>
                                  <div class="col-lg-6 col-md-6 col-sm-6">
                                     <label for="City">Mobile Phone</label>

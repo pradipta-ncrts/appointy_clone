@@ -2720,9 +2720,11 @@ $(document).ready(function(){
 
                         $('#myModalregular').modal('hide');
 
+                        $('#availabilityTab').trigger("click");
+
                         swal('Success!', response.response_message, 'success');
 
-                        location.reload();
+                        //location.reload();
 
                     } else {
 
@@ -3836,11 +3838,13 @@ $('#update_staff_availability_form').validate({
 
                $(form)[0].reset();
 
-               $('#myModalregular').modal('hide');
+               $('#availabilityTab').trigger("click");
+
+               $('#myModalregularShedule').modal('hide');
 
                swal('Success!', response.response_message, 'success');
 
-               location.reload();
+               //location.reload();
 
            } else {
 

@@ -736,11 +736,11 @@ class BookingsController extends ApiController {
             $appointment_service_field = array('staff_id');
             $service_condition = array(
                 array('service_id', '=', $service_id),
-                array('status', '!=', 2),
                 array('is_deleted','=','0'),
             );
 
-            $staff_ids = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$service_condition,$appointment_service_field,$joins = array(), $orderBy = array(), $groupBy = 'staff_id');
+            $staff_ids = $this->common_model->fetchDatas($this->tableObj->tableNameStaffServiceAvailability,$service_condition,$appointment_service_field,$joins = array(), $orderBy = array(), $groupBy = 'staff_id');
+            
             if(count($staff_ids) > 0)
             {
                 $staff_ids_array = array();
@@ -749,6 +749,9 @@ class BookingsController extends ApiController {
                     $staff_ids_array[] = $value->staff_id;
                 }
             }
+
+            /*echo "<pre>";
+            print_r($staff_ids_array); die();*/
         }
 
         //'in'=>array('grade_no'=>$garde_arr)

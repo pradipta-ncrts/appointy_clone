@@ -121,7 +121,7 @@
                         }
                         ?>
                      </a> 
-                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="#"   data-toggle="modal" data-target="#myModalsharelinks"> <i class="fa fa-share-alt" aria-hidden="true"></i> Share links</a> <a class="dropdown-item" href="{{ url('calendar') }}"> <i class="fa fa-calendar" aria-hidden="true"></i> Calendar Connections</a> <a class="dropdown-item" href="{{ url('profile-settings') }}"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> <a class="dropdown-item" href="#"> <i class="fa fa-id-card " aria-hidden="true"></i> Memebership</a><a class="dropdown-item" href="{{ url('invitees') }}"> <i class="fa fa-user" aria-hidden="true"></i> Invitees</a> <a class="dropdown-item" href="{{ url('staff-details') }}"> <i class="fa fa-user" aria-hidden="true"></i> Users</a> <a class="dropdown-item" href="{{ url('help') }}"> <i class="fa fa-question-circle " aria-hidden="true"></i> Help</a> <a class="dropdown-item" href="{{ url('/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> </div>
+                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <a class="dropdown-item" href="#"   data-toggle="modal" data-target="#myModalsharelinks"> <i class="fa fa-share-alt" aria-hidden="true"></i> Share links</a> <a class="dropdown-item" href="{{ url('calendar') }}"> <i class="fa fa-calendar" aria-hidden="true"></i> Calendar Connections</a> <a class="dropdown-item" href="{{ url('profile-settings') }}"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> <a class="dropdown-item" href="#"> <i class="fa fa-id-card " aria-hidden="true"></i> Memebership</a><a class="dropdown-item" href="{{ url('invitees') }}"> <i class="fa fa-user" aria-hidden="true"></i> Invitees</a> <a class="dropdown-item" href="{{ url('staff-details') }}"> <i class="fa fa-user" aria-hidden="true"></i> Users</a> <a class="dropdown-item" href="{{ url('help') }}"> <i class="fa fa-question-circle " aria-hidden="true"></i> Help</a> <!-- <a class="dropdown-item" href="{{ url('/logout') }}"> --><a class="dropdown-item" href="" id="logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> </div>
                   </div>
                   <div class="main-nav">
                      <!--<a href="#" class="settings">Settings</a> --> <a href="{{ url('client-database') }}" class="sm"><i class="flaticon-multiple-users-silhouette"></i> <span>Clients</span></a> <a href="{{ url('reports') }}" class="sm"><i class="flaticon-progress-report"></i> <span>Reports</span></a> <a href="{{ url('gift-certificates') }}"><i class="flaticon-megaphone"></i> <span>Marketing</span></a> <a href="{{ url('booking-list/all') }}"><i class="flaticon-calendar"></i><span> <span>Booking List</span></a><a href="{{ url('calendar') }}"><i class="flaticon-calendar"></i><span> <span>Calendar</span></a><a href="{{ url('dashboard') }}"><i class="flaticon-dashboard"></i> <span>Dashboard</span></a> 
@@ -2051,7 +2051,7 @@
             </div>
             <div class="modal-body clr-modalbdy">
                <div style="margin-bottom: 10px;">
-                  <input type="checkbox" name="show_user_guide" id="show_user_guide" <?=$inner_user_details->login_counter==3 ? "checked" : ""; ?>> Always show user guide.
+                  <input type="checkbox" name="show_user_guide" id="show_user_guide" <?=$inner_user_details->login_counter==2 || $inner_user_details->login_counter==1 ? "checked" : ""; ?>> Always show user guide.
                </div>
 
                <a href="{{ url('calendar') }}"><h3>1. sync Calendars</h3></a>
@@ -2607,19 +2607,11 @@
 	<script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
 
    
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&libraries=places&callback=initMap"
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initMap"
         async defer></script>
-      <script>
-      $(window).load(function(){
-      var autocomplete = new google.maps.places.Autocomplete($("#business_location")[0], {});
-      google.maps.event.addListener(autocomplete, 'place_changed', function() {
-      var place = autocomplete.getPlace();
-      console.log(place);
-      });
-      });
-      </script>
+      
       <?php
-      if($inner_user_details->login_counter==1 || $inner_user_details->login_counter==3)
+      if($inner_user_details->login_counter==1 || $inner_user_details->login_counter==2)
       {
       ?>
       <script type="text/javascript">
@@ -2643,6 +2635,14 @@
       <?php
       }
       ?>
+      <script type="text/javascript">
+        $('#logout').click(function(e){
+            e.preventDefault();
+            localStorage.removeItem("showPopup");
+            window.location.replace(baseUrl+"/logout");
+        });
+        
+      </script>
       <script type="text/javascript">
       $('#show_user_guide').click(function(){
             var user_guide_value = $(this).val();
@@ -2677,6 +2677,20 @@
 
       <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
+      <!--Google Address Loaction Trac-->
+
+      <script>
+      $(window).load(function()
+      {
+        var autocomplete = new google.maps.places.Autocomplete($("#business_location")[0], {});
+        google.maps.event.addListener(autocomplete, 'place_changed', function()
+        {
+          var place = autocomplete.getPlace();
+          //$("#city").val(place.address_components[0].long_name);
+          console.log(place)
+        });
+      });
+      </script>
 
       <!-- <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&callback=initMap">
