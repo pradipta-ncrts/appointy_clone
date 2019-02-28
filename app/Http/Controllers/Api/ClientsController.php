@@ -296,13 +296,18 @@ class ClientsController extends ApiController {
         $groupBy = array('client_id' => 'DESC');
 
 		$client_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserClient,$findCond,$selectFields=array('user_client_id','created_on'),$joins,$groupBy);
-        /*if(!empty($client_list)){
+        if(!empty($client_list)){
             for($i=0;$i<count($client_list);$i++){
                 $count_query = "SELECT created_on FROM `squ_appointment` WHERE `squ_appointment`.`user_id` = '".$user_no."' AND `squ_appointment`.`client_id` = '".$client_list[$i]->client_id."' AND `squ_appointment`.`is_deleted` = '0' ORDER BY created_on DESC LIMIT 0,1";
                 $last_appointment = $this->common_model->customQuery($count_query,$query_type=1);
-                $client_list[$i]->last_appointment_on = $last_appointment[0]->created_on;
+                if(!empty($last_appointment)){
+                    $client_list[$i]->last_appointment_on = $last_appointment[0]->created_on;
+                } else {
+                    $client_list[$i]->last_appointment_on = "";
+                }
+                
             }
-        }*/
+        }
         $response_data['client_list']=$client_list;
 
 		$this->response_status='1';

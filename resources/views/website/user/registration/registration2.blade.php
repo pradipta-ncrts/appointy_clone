@@ -26,6 +26,8 @@
 
       <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
 
+      <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+
       <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
 
       <script type="text/javascript"> var js_base_url = '<?=url('');?>/';</script>
@@ -258,6 +260,8 @@
 
                      <button type="submit" id="submit">Submit</button>
 
+                     <button type="button" id="skip">Skip</button>
+
                      <div class="clearfix"></div>
 
                   </form>
@@ -382,7 +386,7 @@
 
       <!--==================Sweetalert=========================-->
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+      <script src="{{asset('public/assets/website/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
        <!--=================select box=========================-->
 
@@ -674,7 +678,14 @@
 
                        {
 
-                           window.location = js_base_url+'login';
+                           var login_url = js_base_url+'login';
+                           swal({
+                                title: "Success!",
+                                text: "Thank you for registering with us. Please login to continue.",
+                                type: "success"
+                            }).then(function() {
+                                window.location = login_url;
+                            });
 
                        }
 
@@ -720,6 +731,14 @@
 
       //================Submit AJAX request ==================
 
+        $("#skip").click(function(){
+            var login_url = js_base_url+'login';
+            swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
+            function(){ 
+                window.location = login_url;
+            })
+            
+        });
       </script>
 
    </body>

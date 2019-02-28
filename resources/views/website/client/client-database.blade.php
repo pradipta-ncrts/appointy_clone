@@ -56,7 +56,7 @@ Squeedr
                 ?>
                     <a href="javascript:void(0);" class="stafflistitem" data-json='<?php echo str_replace("'",'',json_encode($client));?>'>
                         <?php if($client->client_profile_picture != ''){ ?>
-                            <img class="user-pic" src="<?php echo $client->client_profile_picture;?>" width="35px" height="35px" /> 
+                            <img class="user-pic" src="{{asset('public/image/profile_perosonal_image/'.$client->client_profile_picture)}}" width="35px" height="35px" /> 
                         <?php } else { ?>
                             <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" /> 
                         <?php } ?>
@@ -123,9 +123,41 @@ Squeedr
                                     <div class="infoBar">
                                         <div>
                                             <h2>Mobile</h2>
-                                            <label id="clientMobile">0788852211</label>
+                                            <label id="clientMobile">788888888</label>
                                         </div>
                                     </div>
+
+                                    <div class="infoBar">
+                                        <div>
+                                            <h2>Home Phone</h2>
+                                            <label id="clientHomePhone">788888888</label>
+                                        </div>
+                                    </div>
+                                    <div class="infoBar">
+                                        <div>
+                                            <h2>Work Phone</h2>
+                                            <label id="clientWorkPhone">788888888</label>
+                                        </div>
+                                    </div>
+                                    <div class="infoBar">
+                                        <div>
+                                            <h2>Date of Birth</h2>
+                                            <label id="clientDOB">22 Oct, 1989</label>
+                                        </div>
+                                    </div>
+                                    <div class="infoBar">
+                                        <div>
+                                            <h2>Address</h2>
+                                            <label id="clientAddress">Chaterjee International Centre, J.N. Road, Kolkata, India</label>
+                                        </div>
+                                    </div>
+                                    <div class="infoBar">
+                                        <div>
+                                            <h2>Timezone</h2>
+                                            <label id="clientTimezone">Asia/Kolkata</label>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="infoBar">
                                         <div>
                                             <h2>Registration</h2>
@@ -498,6 +530,29 @@ $('.stafflistitem').click(function(){
     if(data.client_mobile !== undefined){
         $('#clientMobile').html(data.client_mobile);
     }
+
+    $('#clientHomePhone').html("");
+    if(data.client_home_phone !== undefined){
+        $('#clientHomePhone').html(data.client_home_phone);
+    }
+    $('#clientWorkPhone').html("");
+    if(data.client_work_phone !== undefined){
+        $('#clientWorkPhone').html(data.client_work_phone);
+    }
+    $('#clientDOB').html("");
+    if(data.client_dob !== undefined){
+        $('#clientDOB').html(data.client_dob);
+    }
+    $('#clientAddress').html("");
+    if(data.client_address !== undefined){
+        $('#clientAddress').html(data.client_address);
+    }
+    $('#clientTimezone').html("");
+    if(data.client_timezone !== undefined){
+        $('#clientTimezone').html(data.client_timezone);
+    }
+
+
     $('#clientRegDate').html("");
     if(data.created_on !== undefined){
         $('#clientRegDate').html(data.created_on);
@@ -520,7 +575,7 @@ $('.stafflistitem').click(function(){
         if(data.client_profile_picture == ""){
             $('#clientImg').attr('src',"{{asset('public/assets/website/images/business-hours/blue-user.png')}}");
         }else{
-            $('#clientImg').attr('src',data.client_profile_picture);
+            $('#clientImg').attr('src',"{{asset('public/image/profile_perosonal_image/')}}"+"/"+data.client_profile_picture);
         }
     }
 
