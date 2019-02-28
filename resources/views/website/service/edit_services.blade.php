@@ -347,7 +347,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                             <label>Secret Service <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="To make an service type available to only select invitees, you'll want to make the service type secret. This will make that service type only visible to people with whom you choose to share the service type link and will not show up on your main Squdeer page."></i> </label>
                             <div class="clearfix"></div>
                             <p class="inlineBlock">Hide this Service from your main Squdeer page.</p>
-                            <button type="button" id="change-secret" class="btn btn-sm btn-toggle <?php if($service_details->is_secret == 1) echo 'Active'; ?>" data-toggle="button" aria-pressed="false" autocomplete="off" >
+                                    <button type="button" id="change-secret" class="btn btn-sm btn-toggle <?php if($service_details->is_secret == 1) echo 'active'; ?>" data-toggle="button" <?php if($service_details->is_secret == 1) { ?> aria-pressed="true" <?php } else { ?> aria-pressed="false" <?php } ?> autocomplete="off" >
                                 <div class="handle"></div>
                             </button>
                         </div>

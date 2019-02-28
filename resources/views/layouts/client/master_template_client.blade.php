@@ -54,6 +54,7 @@
                         </div>
                         <div class="main-nav">
                         <a href="javascript:void(0);" id="clientBookingList"><i class="flaticon-calendar"></i><span> <span>Booking List</span></a>
+                        <a href="javascript:void(0);" id="clientBookingService"><i class="flaticon-calendar"></i><span> <span>Calendar</span></span></a> 
                         </div>
                     </div>
                </div>
@@ -95,6 +96,10 @@
             var param = '<?php echo Request::segment(3);?>';
             $("#clientBookingList").click(function(){
                 window.location = "<?php echo url('/client/booking-list/');?>"+"/"+param+"/all";
+            });
+
+            $("#clientBookingService").click(function(){
+                window.location = "<?php echo url('/client/appointment-booking/');?>"+"/"+param;
             });
 
             $("#profileSettings").click(function(){

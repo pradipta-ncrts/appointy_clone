@@ -14,6 +14,7 @@
       <link href="{{asset('public/assets/website/css/custom-selectbox.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/custom.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/slide-menu.css')}}" rel="stylesheet">
+      <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
       <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
       <script type="text/javascript">

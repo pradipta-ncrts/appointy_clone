@@ -426,6 +426,8 @@ class BookingsController extends ApiController {
 
                             if($staff_serviice_available == true){
 
+                                $order_id = 'SQU'.time().mt_rand().$user_id;
+
                                 $param = array(
 
                                     'user_id' => $user_id,
@@ -454,7 +456,7 @@ class BookingsController extends ApiController {
 
                                     'total_payable_amount' => $service_price,
 
-                                    'order_id' => 'SQU'.time().mt_rand().$user_id,
+                                    'order_id' => $order_id,
 
                                 );  
 
@@ -472,19 +474,30 @@ class BookingsController extends ApiController {
 
             
 
-                                        $parameter = [
+                                        /*$parameter = [
 
                                             'appointment_id' => $insertdata,
 
                                             'client_id' => $client,
 
+                                        ];*/
+                                        $parameter = [
+                                            'order_id' => $order_id,
+                                            'client_id' => $client,
+                                            'user_id' => $user_id,
+                                            'recurring_booking_frequency' => 0
                                         ];
 
                                         $parameter= Crypt::encrypt($parameter);
 
-                                        $cancel_url = url('/client/cancel_appointent',$parameter);
+                                        //$cancel_url = url('/client/cancel_appointent/'.$parameter.'/'.$order_id);
 
-                                        $reschedule_url = url('/client/reschedule-appointment',$parameter);
+                                        //$reschedule_url = url('/client/reschedule-appointment/'.$parameter.'/'.$order_id);
+
+                                        $cancel_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+
+                                        $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
+
 
                                         //send mail to client
 
@@ -601,36 +614,39 @@ class BookingsController extends ApiController {
             
 
             
-
-                                        //send mail to stuff
-
-
-
-                                        $stuff_email_data['client_name'] = $client_name;
-
-                                        $stuff_email_data['staff_email'] = $staff_email;
-
-                                        $stuff_email_data['staff_name'] = $staff_name;
-
-                                        $stuff_email_data['service_name'] = $service_name;
-
-                                        $stuff_email_data['service_cost'] = $service_cost;
-
-                                        $stuff_email_data['service_duration'] = $service_duration;
-
-                                        $stuff_email_data['service_location'] = $service_location;
-
-                                        $stuff_email_data['reschedule_url'] = $reschedule_url;
-
-                                        $stuff_email_data['cancel_url'] = $cancel_url;
-
-                                        $stuff_email_data['service_start_time'] = $service_start_time;
-
-                                       $stuff_email_data['email_subject'] = "Booking Confirm";
+                                        if($staff > 0){
+                                            //send mail to stuff
 
 
 
-                                       $this->sendmail(8,$staff_email,$stuff_email_data);
+                                            $stuff_email_data['client_name'] = $client_name;
+                                            
+                                            $stuff_email_data['staff_email'] = $staff_email;
+
+                                            $stuff_email_data['staff_name'] = $staff_name;
+
+                                            $stuff_email_data['service_name'] = $service_name;
+
+                                            $stuff_email_data['service_cost'] = $service_cost;
+
+                                            $stuff_email_data['service_duration'] = $service_duration;
+
+                                            $stuff_email_data['service_location'] = $service_location;
+
+                                            $stuff_email_data['reschedule_url'] = $reschedule_url;
+
+                                            $stuff_email_data['cancel_url'] = $cancel_url;
+
+                                            $stuff_email_data['service_start_time'] = $service_start_time;
+
+                                            $stuff_email_data['email_subject'] = "Booking Confirm";
+
+
+
+                                            $this->sendmail(8,$staff_email,$stuff_email_data);
+
+                                        }
+                                        
 
             
 
