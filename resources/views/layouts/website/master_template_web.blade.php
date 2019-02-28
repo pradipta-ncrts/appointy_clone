@@ -2679,15 +2679,30 @@
 
       <!--Google Address Loaction Trac-->
 
-      <script>
+      <script type="text/javascript">
       $(window).load(function()
       {
+        var componentForm = {
+          street_number: 'long_name',
+          locality: 'long_name',
+          administrative_area_level_1: 'long_name',
+          //country: 'long_name',
+          postal_code: 'long_name'
+        };
+
         var autocomplete = new google.maps.places.Autocomplete($("#business_location")[0], {});
         google.maps.event.addListener(autocomplete, 'place_changed', function()
         {
           var place = autocomplete.getPlace();
-          //$("#city").val(place.address_components[0].long_name);
-          console.log(place)
+          //console.log(place);
+          for (var i = 0; i < place.address_components.length; i++) {
+          var addressType = place.address_components[i].types[0];
+          if (componentForm[addressType]) {
+            var val = place.address_components[i][componentForm[addressType]];
+            //alert(val);
+            document.getElementById(addressType).value = val;
+          }
+        }
         });
       });
       </script>
