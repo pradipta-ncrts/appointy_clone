@@ -33,7 +33,7 @@ Squeedr
                      </div>
                      <div>
                         <img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/>
-                        <label><?=$value->client_dob=='0000-00-00' ? 'NIL' : date('M d, Y', strtotime($value->client_dob));?></label>
+                        <label><?=$value->client_dob=='0000-00-00' ? 'N/A' : date('M d, Y', strtotime($value->client_dob));?></label>
                      </div>
                      <div>
                         <img src="{{asset('public/assets/mobile/images/customer-details/address.png')}}"/>

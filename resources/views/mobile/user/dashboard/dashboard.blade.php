@@ -211,66 +211,47 @@ Squeedr
                </div>
                <div class="modal-body clr-modalbdy">
 
-                  <h3>1. Sunc Calendars</h3>
                   
-
-                  <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling cpnflicts when creating 
-                  new events.</p>
-
-                    <h5> 1.1 Personalize your email</h5>
+                    <a href="{{ url('mobile/calendar') }}"><h3>1. Sync Calendars</h3></a>
+                    <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling conflicts when creating 
+                        new events.
+                    </p>
+                    <a href=""><h5> 1.1 Personalize your email</h5></a>
                     <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
                     <hr >
-
-                    <h3>2. Manege your business hours</h3>
-                 
-
-                  <p>Events types lets you create an event according to your availability, meeting duration, lovation, etc..., for meetings 
-                      or for individual invitees.
-                  </p>
-
-                    <h5> 2.2 Setup your services, staff and location</h5>
+                    <a href=""><h3>2. Manage your business hours</h3></a>
+                    <p>Events types lets you create an event according to your availability, meeting duration, location, etc..., for meetings 
+                        or for individual invitees.
+                    </p>
+                    <a href="{{ url('mobile/service-list/all') }}"><h5> 2.2 Setup your services, staff and location</h5></a>
                     <ul>
                         <li>Create events to define your services </li>
-                        <li>Setup scgeduling pages for individual team members </li>
+                        <li>Setup scheduling pages for individual team members </li>
                         <li>Create location-based events.</li>
                     </ul>
-
-                <hr >
-
-
-                    <h3>3. Share yourlink</h3>
-                 
-
-                  <p>Share yoru link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
-                      <br><br>
+                    <hr >
+                    <h3>3. Share your link</h3>
+                    <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
+                        <br><br>
                         <span class="cl-blue">
-                            Subject: Lets connect,<br>
-                            Hi matt,<br>
-                            It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
-                            <br>
-                            Let's Chat soon!<br><br>
-                            - Sam
+                        Subject: Lets connect,<br>
+                        Hi matt,<br>
+                        It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
+                        <br>
+                        Let's Chat soon!<br><br>
+                        - Sam
                         </span>
-                  </p>
-
- <hr >
-  <h3>4. Customize your Squeedr page</h3>
-    <hr style="margin-top:10px; margin-top:5px;">
-
-    <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
-        Customize the page to align it with your brand and coporate indentity.
-    </p>
-
-      <h5> 4.4 Business Details</h5>
-      <p></p>
-
-
-
-
-
+                    </p>
+                    <hr >
+                    <h3>4. Customize your Squeedr page</h3>
+                    <hr style="margin-top:10px; margin-top:5px;">
+                    <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
+                        Customize the page to align it with your brand and coporate indentity.
+                    </p>
+                    <a href=""><h5> 4.4 Business Details</h5></a>
+                    <p></p>
 
                </div>
-              
               
             </div>
          </div>

@@ -40,7 +40,10 @@ Squeedr
                         <input id="client_work_phone" type="text" class="form-control" name="client_work_phone" placeholder="Home Phone" value="<?=$client_details->client_work_phone;?>">
                      </div>
                   </div>
-                  <div class="customcontrol">
+                  <div class="input-group"> <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/> </span>
+                    <input id="client_dob" type="text" class="form-control" name="client_dob" placeholder="Date of Birth" style="width: 92%;" <?php if($client_details->client_dob != '0000-00-00') { ?> value="<?=date('m/d/Y',strtotime($client_details->client_dob));?>" <?php } else { ?> value="" <?php } ?> >
+                 </div>
+                  <!--<div class="customcontrol">
                      <select class="form-control" name="client_category" id="client_category" >
                         <option value="">Select Category </option>
                         <?php
@@ -53,7 +56,7 @@ Squeedr
                            }
                            ?>
                      </select>
-                  </div>
+                  </div>-->
                   <div class="input-group"> <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-address.png')}}"/></span>
                      <input placeholder="Address" type="text" class="form-control" name="client_address" value="<?=$client_details->client_address;?>"></input>
                   </div>
@@ -73,11 +76,11 @@ Squeedr
                      </select>
                   </div>
                   <textarea class="form-control notes" name="client_note" id="client_note" placeholder="Client Note"><?=$client_details->client_note;?></textarea>
-                  <div class="input-group">
+                  <!--<div class="input-group">
                      <div class="checkbox-cutm">
                         <input name="client_send_email" id="client_send_email" type="checkbox" value=""> Send Email confirmation
                      </div>
-                  </div>
+                  </div>-->
                   <input class="btn btn-mobile btn-block btn-size break20px" type="submit" name="Proceed" value="Proceed" id="">
                   <!--  <a id="myBtn" class="btn btn-mobile btn-block btn-size break20px">Proceed</a> --> 
                </div>

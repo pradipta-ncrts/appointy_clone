@@ -36,17 +36,17 @@ Squeedr
              <label><?=$client_details->client_mobile;?></label>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/>
-             <label><?=$client_details->client_dob=='0000-00-00' ? 'NIL' : date('M d, Y', strtotime($client_details->client_details));?></label>
+             <label><?=$client_details->client_dob=='0000-00-00' ? 'N/A' : date('M d, Y', strtotime($client_details->client_dob));?></label>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/address.png')}}"/>
-             <label><?=$client_details->client_address ? $client_details->client_address : 'NIL';?></label>
+             <label><?=$client_details->client_address ? $client_details->client_address : 'N/A';?></label>
           </div>
           <div class="whitebox cdDetails"> <img src="{{asset('public/assets/mobile/images/customer-details/mail.png')}}"/>
              <label><?=$client_details->client_email;?></label>
           </div>
           <div class="whitebox cdDetails clearfix">
              <img src="{{asset('public/assets/mobile/images/customer-details/notes.png')}}"/>
-             <p><?=$client_details->client_note ? $client_details->client_note : 'NIL';?> <!-- <a>more</a> -->
+             <p><?=$client_details->client_note ? $client_details->client_note : 'N/A';?> <!-- <a>more</a> -->
              </p>
              <?php
              $created_on = $client_details->created_on;

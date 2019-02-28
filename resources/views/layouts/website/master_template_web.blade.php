@@ -580,6 +580,16 @@
                      </div>
                   </div>
 
+                  <div class="row">
+                     <div class="col-md-12">
+                        <div class="form-group">
+                           <div class="input-group" id="clientdob_error"> <span class="input-group-addon"><i class="fa fa-birthday-cake"></i></span>
+                              <input id="client_dob" type="text" class="form-control" name="client_dob" placeholder="Date of Birth" style="position: relative; z-index: 100000;">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
                   <?php /* <div class="row">
                      <div class="col-md-12">
                         <div class="form-group">
@@ -1537,7 +1547,7 @@
          <div class="modal-dialog add-pop">
             <!-- Modal content-->
             <div class="modal-content new-modalcustm new-modalcustm1">
-               <form name="add_client_form" id="add_client_form" method="post" action="{{url('api/add_client')}}" enctype="multipart/form-data">
+               <form name="share_link_form" id="share_link_form" method="post" action="">
                   <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal">&times;</button>
                      <h4 class="modal-title">Share Links</h4>
@@ -2555,7 +2565,12 @@
                minDate:0,
             }); 
 
-             
+        var $dp4 = $("#client_dob,#edit_client_dob"); 
+             $dp4.datepicker({
+                changeMonth: true,
+                changeYear: true,
+                maxDate:0,
+            });     
      });
    </script>
 
