@@ -1117,55 +1117,60 @@ class StaffsController extends ApiController {
         }
         $service_array = explode(',',$service_id_str);
         
-        if(isset($availability_start_time) && !empty($availability_start_time) && isset($availability_end_time) && !empty($availability_end_time)){
-            if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
-                $total_records = count($day);
-                $insert_data = array();
-                $failed_data = array();
-                foreach($service_array as $service){
-                    for($i=0;$i<$total_records;$i++){
-                        if($availability_start_time[$i] >= $availability_end_time[$i])
-                        {
-                            $failed_data[] = array('staff_id'=>$staff_id,
-                                                'service_id'=>$service,
-                                                'day'=>$day[$i],
-                                                'start_time'=>$availability_start_time[$i],
-                                                'end_time'=>$availability_end_time[$i],
-                                                'created_on'=>date('Y-m-d H:i:s')
-                                                );
-                        }
-                        else
-                        {
-                            $insert_data[] = array('staff_id'=>$staff_id,
-                                                'service_id'=>$service,
-                                                'day'=>$day[$i],
-                                                'start_time'=>$availability_start_time[$i],
-                                                'end_time'=>$availability_end_time[$i],
-                                                'created_on'=>date('Y-m-d H:i:s')
-                                                );
+        if(!empty($service_array)){
+            if(isset($availability_start_time) && !empty($availability_start_time) && isset($availability_end_time) && !empty($availability_end_time)){
+                if((count(array_filter($availability_start_time)) == count($availability_start_time)) && (count(array_filter($availability_end_time)) == count($availability_end_time))) {
+                    $total_records = count($day);
+                    $insert_data = array();
+                    $failed_data = array();
+                    foreach($service_array as $service){
+                        for($i=0;$i<$total_records;$i++){
+                            if($availability_start_time[$i] >= $availability_end_time[$i])
+                            {
+                                $failed_data[] = array('staff_id'=>$staff_id,
+                                                    'service_id'=>$service,
+                                                    'day'=>$day[$i],
+                                                    'start_time'=>$availability_start_time[$i],
+                                                    'end_time'=>$availability_end_time[$i],
+                                                    'created_on'=>date('Y-m-d H:i:s')
+                                                    );
+                            }
+                            else
+                            {
+                                $insert_data[] = array('staff_id'=>$staff_id,
+                                                    'service_id'=>$service,
+                                                    'day'=>$day[$i],
+                                                    'start_time'=>$availability_start_time[$i],
+                                                    'end_time'=>$availability_end_time[$i],
+                                                    'created_on'=>date('Y-m-d H:i:s')
+                                                    );
+                            }
                         }
                     }
+                    
+                    //echo '<pre>'; print_r($insert_data); exit;
+                    if(empty($failed_data))
+                    {
+                         $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
+                    
+                        $this->response_status='1';
+                        $this->response_message = 'Schedule has been added successfully.';
+                    }
+                    else
+                    {
+                        $this->response_message="End time must be greater than start time.";
+                    }
+                   
+                } else {
+                    $this->response_message="Required field is missing.";
                 }
-                
-                //echo '<pre>'; print_r($insert_data); exit;
-                if(empty($failed_data))
-                {
-                     $insertdata = $this->common_model->insert_data($this->tableObj->tableNameStaffServiceAvailability,$insert_data);
-                
-                    $this->response_status='1';
-                    $this->response_message = 'Schedule has been added successfully.';
-                }
-                else
-                {
-                    $this->response_message="End time must be greater than start time.";
-                }
-               
             } else {
-                $this->response_message="Required field is missing.";
+                $this->response_message="Nothing to update. Please enter required fileds";
             }
         } else {
-            $this->response_message="Nothing to update. Please enter required fileds";
+            $this->response_message="No service found. Please add a service first.";
         }
+        
         
         
         
