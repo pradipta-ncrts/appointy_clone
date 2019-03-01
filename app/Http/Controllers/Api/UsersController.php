@@ -83,9 +83,13 @@ class UsersController extends ApiController {
 						{
 							$param['login_counter'] = 1;
 						}
-						else
+						else if($user->login_counter==1)
 						{
 							$param['login_counter'] = 2;
+						}
+						else
+						{
+							$param['login_counter'] = $user->login_counter;
 						}
 						
 
@@ -735,7 +739,8 @@ class UsersController extends ApiController {
 		$route = $request->input('route');
 		$city = $request->input('city');
 		$state = $request->input('state');
-		//$mobile = $request->input('mobile');  
+		$latitute = $request->input('latitute');
+		$logngitude = $request->input('logngitude');  
 		$office_phone = $request->input('office_phone');
 		//$skype_id = $request->input('skype_id');
 		$zip_code = $request->input('zip_code');
@@ -793,6 +798,8 @@ class UsersController extends ApiController {
 				'city' => $city,
 				'state' => $state,
 				'mobile' => $mobile,
+				'latitute' => $latitute,
+				'logngitude' => $logngitude,
 				'transport' => $transport,
 				'parking' => $parking,
 				'office_phone' => $office_phone,
