@@ -8,9 +8,8 @@ Squeedr
     <a class="showSidenav"><img src="{{asset('public/assets/mobile/images/menu-icon.png')}}" /> </a>
     <h1>Dashboard</h1>
     <ul>
-        <li>&nbsp;</li>
-        <!-- <li><a> <img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
-        <li><a> <img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li> -->
+        <li><a href="{{url('mobile/calendar')}}"> <img src="{{asset('public/assets/mobile/images/calendar.png')}}" /></a> </li> 
+        <li><a> <img src="{{asset('public/assets/mobile/images/notification.png')}}" /></a> </li>
     </ul>
 </header>
 
