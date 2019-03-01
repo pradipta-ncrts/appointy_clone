@@ -286,10 +286,18 @@ class UsersController extends ApiController {
             );
             $prof_data = $this->common_model->fetchData($this->tableObj->tableNameProfession, $prof_conditions);
 
-			$country_key = array_search($userDetails->country, array_column($country, 'country_no'));
+            foreach ($country as $key => $value)
+            {
+            	if($userDetails->country==$value->country_no)
+            	{
+            		$country_key = $key;
+
+            		break;
+            	}
+            }
 
 			$business_location = $userDetails->business_location;
-			$data['country_name'] = $country[$country_key]->country_name;
+			$data['country_code'] = $country[$country_key]->phonecode;
 			$data['profession_name'] = $prof_data->profession;
 			$data['country'] = $country;
 			$data['professions'] = $professions;

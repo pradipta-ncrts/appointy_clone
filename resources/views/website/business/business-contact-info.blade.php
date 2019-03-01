@@ -23,6 +23,7 @@ Squeedr
       <div class="rightpan">
          <div class="col-lg-12">
             <form action="{{ url('api/update-contact-info') }}" method="post" id="update-contact-info">
+              <input type="hidden" name="location_country" id="country" value="">
                <div class="headRow nopadding" id="businessdetails">
                   <ul class="footnote">
                      <li>Here you can manage the profession, contact, and physical address for each location of your business, as well as the information that will appear on the "About Us" section on you booking portal.</li>
@@ -62,13 +63,30 @@ Squeedr
                                  </div>
                                  <div class="col-lg-6 col-md-6 col-sm-6">
                                     <label for="Region">Country</label>
-                                    <input id="country" placeholder="Country" name="country" class="form-control" value="<?=$country_name;?>"></input>
+                                    <select class="form-control country" id="" name="country">
+                                      <?php
+                                      foreach ($country as $key => $value)
+                                      {
+                                      ?>
+                                        <option value="<?=$value->country_no;?>" <?=$value->country_no== $userDetails->country ? "Selected" : "";?>><?=$value->country_name;?></option>
+                                      <?php
+                                      }
+                                      ?> 
+                                    </select>
                                  </div>
-                                 <div class="col-lg-6 col-md-6 col-sm-6">
+                                 <div class="col-lg-4 col-md-4 col-sm-4">
+                                    <label for="City">Country Code</label>
+                                    <input class="form-control" type="text" name="country_code" id="country_code" placeholder="Country Code" value="+<?=$country_code;?>" readonly=""/>
+                                 </div>
+                                 <?php
+                                 $mobile_no = str_replace('+'.$country_code,"", $userDetails->mobile);
+                                 //$mobile_no = str_replace(' ', '', $mobile_no);
+                                 ?>
+                                 <div class="col-lg-8 col-md-8 col-sm-8">
                                     <label for="City">Mobile Phone</label>
-                                    <input class="form-control" type="text" name="mobile" placeholder="Mobile Phone" value="<?=$userDetails->mobile ? $userDetails->mobile : "";?>" readonly=""/>
+                                    <input class="form-control" type="text" name="mobile" placeholder="Mobile Phone" value="<?=$mobile_no;?>"/>
                                  </div>
-                                 <div class="col-lg-6 col-md-6 col-sm-6">
+                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <label for="Region">Office Phone</label>
                                     <input class="form-control" type="text" name="office_phone" placeholder="Office Phone" value="<?=$userDetails->office_phone ? $userDetails->office_phone : "";?>" />
                                  </div>
@@ -85,7 +103,7 @@ Squeedr
                            </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
-                           <!-- <iframe class="img-thumbnail" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14743.31409025346!2d88.39881!3d22.510616!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd9bfd73a5d056f32!2sNCR+Technosolutions+%7C+Mobile+App+Development+Company!5e0!3m2!1sen!2sin!4v1531414309030" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> -->
+                           <iframe class="img-thumbnail" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14743.31409025346!2d88.39881!3d22.510616!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd9bfd73a5d056f32!2sNCR+Technosolutions+%7C+Mobile+App+Development+Company!5e0!3m2!1sen!2sin!4v1531414309030" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> 
                            <div id="map"></div>
                         </div>
                         <div class="clearfix"></div>
@@ -102,24 +120,37 @@ Squeedr
 </div>
 
 @endsection
- 
+@section('custom_js')
 <script type="text/javascript">
-function initMap() {
-   var myLatLng = {lat: -25.363, lng: 131.044};
-
-   var map = new google.maps.Map(document.getElementById('map'), {
-     zoom: 4,
-     center: myLatLng
-   });
-
-   var marker = new google.maps.Marker({
-     position: myLatLng,
-     map: map,
-     title: 'Hello World!'
-   });
- }
+ //fetch country code
+$(".country").change(function (e) {
+    e.preventDefault();
+    let data = $(this).val();
+    //alert(data);
+    $.ajax({
+        url: baseUrl+"/api/country-phone-code", 
+        type: "POST", 
+        data: { data : data }, 
+        dataType: "json",
+        success: function(response) 
+        {
+            $('#country_code').val('+'+response.response_message.phonecode);
+            $('.animationload').hide();
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        },
+        complete: function()
+        {
+            //$('.animationload').hide();
+        }
+    });
+    
+});
 </script>
-
+@endsection
+@section('custom_css')
 <style>
   /* Always set the map height explicitly to define the size of the div
    * element that contains the map. */
@@ -127,4 +158,5 @@ function initMap() {
     height: 600px;
   }
 </style>
+@endsection
 

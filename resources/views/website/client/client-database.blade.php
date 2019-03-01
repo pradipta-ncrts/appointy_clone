@@ -397,7 +397,7 @@ Squeedr
                         <div class="col-md-12">
                         <div class="form-group">
                             <div class="input-group" id="edit_client_address_error"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
-                                <input id="edit_client_address" type="text" class="form-control" name="client_address" placeholder="Address">
+                                <input id="edit_client_address" type="text" class="form-control" name="client_address" placeholder="Address" onFocus="geolocate()">
                             </div>
                         </div>
                         </div>

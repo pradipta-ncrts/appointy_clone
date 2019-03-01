@@ -1,7 +1,7 @@
    //================Custom validation for 10 digit phone====================
    $.validator.addMethod("phoneUS", function (phone_number, element) {
      phone_number = phone_number.replace(/\s+/g, "");
-     return this.optional(element) || phone_number.length > 11 && phone_number.length < 14;
+     return this.optional(element) || phone_number.length > 9 && phone_number.length < 11;
    }, "Please specify a valid phone number with country prefix.");
    //================Custom validation for 10 digit phone====================
 

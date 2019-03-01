@@ -121,7 +121,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                     <select name="service_currency" id="service_currency">
                                     <option value="">Select currency</option>
                                     <?php if(!empty($currency_list['currency_list'])) { foreach($currency_list['currency_list'] as $currency) { ?>
-                                    <option <?php if($service_details->currency_id == $currency->currency_id) { ?> selected="selected" <?php } ?> value="{{$currency->currency_id}}">{{$currency->currency}}</option>
+                                    <option <?php if($service_details->currency_id == $currency->currency_id) { ?> selected="selected" <?php } ?> value="{{$currency->currency_id}}">{{$currency->currency_icon}}</option>
                                     <?php } } ?>
                                     </select>
                                 </div>
