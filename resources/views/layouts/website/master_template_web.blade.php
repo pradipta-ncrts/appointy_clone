@@ -41,6 +41,10 @@
        left: -999em;
        }
        .filter-option{margin-top:14px 0 0 0;}
+
+       .pac-container {
+            z-index: 10000 !important;
+        }
      </style>
 	  @yield('custom_css') 
    </head>
@@ -636,7 +640,7 @@
                         <div class="form-group">
                            <div class="input-group"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
                               <div id="locationField">
-                                <input id="autocomplete" placeholder="Address" onFocus="geolocate()" type="text" class="form-control" name="client_address"></input>
+                                <input placeholder="Address" type="text" class="form-control" name="client_address" id="client_address" onFocus="geolocate()"></input>
                               </div>
                            </div>
                         </div>
@@ -2064,7 +2068,7 @@
                   <input type="checkbox" name="show_user_guide" id="show_user_guide" <?=$inner_user_details->login_counter==2 || $inner_user_details->login_counter==1 ? "checked" : ""; ?>> Always show user guide.
                </div>
 
-               <a href="{{ url('calendar') }}"><h3>1. sync Calendars</h3></a>
+               <a href="{{ url('calendar') }}"><h3>1. Sync Calendars</h3></a>
                <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling conflicts when creating 
                   new events.
                </p>
@@ -2620,10 +2624,6 @@
     </script>
 
 	<script src="{{asset('public/assets/website/js/ncrts.js')}}"></script>
-
-   
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initMap"
-        async defer></script>
       
       <?php
       if($inner_user_details->login_counter==1 || $inner_user_details->login_counter==2)
@@ -2694,7 +2694,7 @@
 
       <!--Google Address Loaction Trac-->
 
-      <script type="text/javascript">
+      <!-- <script type="text/javascript">
       $(window).load(function()
       {
         var componentForm = {
@@ -2720,11 +2720,115 @@
         }
         });
       });
-      </script>
+      </script> -->
 
-      <!-- <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgeuUB8s5lliHSAP_GKnXd70XwlAZa4WE&callback=initMap">
-    </script> -->
+      <script type="text/javascript">
+        // This sample uses the Autocomplete widget to help the user select a
+        // place, then it retrieves the address components associated with that
+        // place, and then it populates the form fields with those details.
+        // This sample requires the Places library. Include the libraries=places
+        // parameter when you first load the API. For example:
+        // <script
+        // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+        var placeSearch, autocomplete, autocomplete1, autocomplete2, autocomplete3;
+
+        var componentForm = {
+          street_number: 'long_name',
+          locality: 'long_name',
+          administrative_area_level_1: 'long_name',
+          country: 'long_name',
+          postal_code: 'long_name'
+        };
+
+        function initAutocomplete() {
+          // Create the autocomplete object, restricting the search predictions to
+          // geographical location types.
+          autocomplete = new google.maps.places.Autocomplete(
+              document.getElementById('business_location'), {types: ['geocode']});
+          // Avoid paying for data that you don't need by restricting the set of
+          // place fields that are returned to just the address components.
+          //autocomplete.setFields('address_components');
+          // When the user selects an address from the drop-down, populate the
+          // address fields in the form.
+          autocomplete.addListener('place_changed', fillInAddress);
+
+
+          // geographical location types.
+          autocomplete1 = new google.maps.places.Autocomplete(
+              document.getElementById('client_address'), {types: ['geocode']});
+          // Avoid paying for data that you don't need by restricting the set of
+          // place fields that are returned to just the address components.
+          //autocomplete1.setFields('address_components');
+          // When the user selects an address from the drop-down, populate the
+          // address fields in the form.
+          autocomplete1.addListener('place_changed', fillInAddress);
+
+          // geographical location types.
+          autocomplete2 = new google.maps.places.Autocomplete(
+              document.getElementById('edit_client_address'), {types: ['geocode']});
+          // Avoid paying for data that you don't need by restricting the set of
+          // place fields that are returned to just the address components.
+          //autocomplete2.setFields('address_components');
+          // When the user selects an address from the drop-down, populate the
+          // address fields in the form.
+          autocomplete2.addListener('place_changed', fillInAddress);
+
+
+          // geographical location types.
+          autocomplete3 = new google.maps.places.Autocomplete(
+              document.getElementById('service_location'), {types: ['geocode']});
+          // Avoid paying for data that you don't need by restricting the set of
+          // place fields that are returned to just the address components.
+          //autocomplete3.setFields('address_components');
+          // When the user selects an address from the drop-down, populate the
+          // address fields in the form.
+          autocomplete3.addListener('place_changed', fillInAddress);
+        }
+
+        
+
+        function fillInAddress() {
+          // Get the place details from the autocomplete object.
+          var place = autocomplete.getPlace();
+
+          for (var component in componentForm) {
+            document.getElementById(component).value = '';
+            document.getElementById(component).disabled = false;
+          }
+
+          // Get each component of the address from the place details,
+          // and then fill-in the corresponding field on the form.
+          for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (componentForm[addressType]) {
+              var val = place.address_components[i][componentForm[addressType]];
+              document.getElementById(addressType).value = val;
+            }
+          }
+        }
+
+        // Bias the autocomplete object to the user's geographical location,
+        // as supplied by the browser's 'navigator.geolocation' object.
+        function geolocate() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              var geolocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
+              var circle = new google.maps.Circle(
+                  {center: geolocation, radius: position.coords.accuracy});
+              autocomplete.setBounds(circle.getBounds());
+            });
+          }
+        }
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initAutocomplete"
+        async defer></script>
+
+     <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initMap"
+        async defer></script> -->
    <!--=========================Google Map end============================-->
 	  @yield('custom_js') 
    </body>

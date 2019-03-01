@@ -735,13 +735,15 @@ class UsersController extends ApiController {
 		$route = $request->input('route');
 		$city = $request->input('city');
 		$state = $request->input('state');
-		$mobile = $request->input('mobile');  
+		//$mobile = $request->input('mobile');  
 		$office_phone = $request->input('office_phone');
 		//$skype_id = $request->input('skype_id');
 		$zip_code = $request->input('zip_code');
 		$business_description = $request->input('business_description');
 		$transport = $request->input('transport');
 		$parking = $request->input('parking');
+		$country = $request->input('country');
+		$mobile = $request->input('country_code').$request->input('mobile');
 		
 
 		//find latitute & longitude
@@ -794,7 +796,7 @@ class UsersController extends ApiController {
 				'transport' => $transport,
 				'parking' => $parking,
 				'office_phone' => $office_phone,
-				//'skype_id' => $skype_id,
+				'country' => $country,
 				'zip_code' => $zip_code,
 				'business_description' => $business_description,
 		);

@@ -116,13 +116,16 @@ Squeedr
          </div>
          <form class="form-horizontal" action="{{ url('api/add-new-location') }}" method="post" autocomplete="off" id="add-new-location">
           <input type="hidden" name="staff_id" id="location_staff_id">
+          <input type="hidden" name="administrative_area_level_1" id="administrative_area_level_1" value="">
+          <input type="hidden" name="postal_code" id="postal_code" value="">
+          <input type="hidden" name="street_number" id="street_number" value="">
            <div class="modal-body clr-modalbdy">
               <div class="row">
                  <div class="col-md-12">
                     <div class="form-group">
                        <div class="input-group"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
                          <div id="locationField">
-                            <input id="location_name" placeholder="Enter your address" type="text" class="form-control autocomplete" name="location_name"></input>
+                            <input id="business_location" placeholder="Enter your address" type="text" class="form-control autocomplete" name="location_name" onFocus="geolocate()"></input>
                           </div> 
                        </div>
                     </div>
@@ -141,7 +144,7 @@ Squeedr
                  <div class="col-md-12">
                     <div class="form-group">
                        <div class="input-group"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                          <input id="city" type="text" class="form-control" name="city" placeholder="City">
+                          <input id="locality" type="text" class="form-control" name="city" placeholder="City">
                        </div>
                     </div>
                  </div>
@@ -159,7 +162,7 @@ Squeedr
                  <div class="col-md-12">
                     <div class="form-group">
                        <div class="input-group"> <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                          <input type="text" id="location_password" class="form-control" name="location_password" placeholder="Password">
+                          <input type="password" id="location_password" class="form-control" name="location_password" placeholder="Password">
                        </div>
                     </div>
                  </div>
