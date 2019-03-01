@@ -83,9 +83,13 @@ class UsersController extends ApiController {
 						{
 							$param['login_counter'] = 1;
 						}
-						else
+						else if($user->login_counter=="1")
 						{
 							$param['login_counter'] = 2;
+						}
+						else
+						{
+							$param['login_counter'] = $user->login_counter;
 						}
 						
 

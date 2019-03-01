@@ -2823,7 +2823,29 @@
             });
           }
         }
+
+
+       
       </script>
+
+      <script type="text/javascript">
+        $(document).ready(function() {
+        function initMap() {
+           var myLatLng = {lat: -25.363, lng: 131.044};
+           alert(myLatLng);
+           var map = new google.maps.Map(document.getElementById('map'), {
+             zoom: 4,
+             center: myLatLng
+           });
+
+           var marker = new google.maps.Marker({
+             position: myLatLng,
+             map: map,
+             title: 'Hello World!'
+           });
+         }
+        });
+        </script>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initAutocomplete"
         async defer></script>
 
