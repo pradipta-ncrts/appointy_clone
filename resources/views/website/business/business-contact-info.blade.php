@@ -24,6 +24,8 @@ Squeedr
          <div class="col-lg-12">
             <form action="{{ url('api/update-contact-info') }}" method="post" id="update-contact-info">
               <input type="hidden" name="location_country" id="country" value="">
+              <input type="hidden" name="latitute" id="latitute" value="">
+              <input type="hidden" name="logngitude" id="logngitude" value="">
                <div class="headRow nopadding" id="businessdetails">
                   <ul class="footnote">
                      <li>Here you can manage the profession, contact, and physical address for each location of your business, as well as the information that will appear on the "About Us" section on you booking portal.</li>
@@ -104,7 +106,12 @@ Squeedr
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-6">
                            <!-- <iframe class="img-thumbnail" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14743.31409025346!2d88.39881!3d22.510616!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd9bfd73a5d056f32!2sNCR+Technosolutions+%7C+Mobile+App+Development+Company!5e0!3m2!1sen!2sin!4v1531414309030" width="100%" height="300" frameborder="0" style="border:0" allowfullscreen></iframe> --> 
-                           <div id="map">scsccxcxc</div>
+                           <div id="map"></div>
+                          <div id="infowindow-content">
+                            <img src="" width="16" height="16" id="place-icon">
+                            <span id="place-name"  class="title"></span><br>
+                            <span id="place-address"></span>
+                          </div>
                         </div>
                         <div class="clearfix"></div>
                         <!-- <input type="submit" value="Update" name="Update" class="btn btn-primary butt-next" style="margin: 30px auto 0; width: 150px; display: block" id="update"> -->
