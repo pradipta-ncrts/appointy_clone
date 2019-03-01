@@ -55,7 +55,8 @@ Squeedr
                     </select>
                  </div>-->
                  <div class="input-group"> <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-address.png')}}"/></span>
-                    <input placeholder="Address" type="text" class="form-control" name="client_address"></input>
+                    <input placeholder="Address" type="text" class="form-control" name="client_address" id="client_address" onFocus="geolocate()"
+></input>
                  </div>
                  <div class="customcontrol">
                     <select class="form-control" name="client_timezone" id="client_timezone" >
@@ -106,6 +107,9 @@ Squeedr
       
 
   });
+
+
+
   
 </script>
 @endsection

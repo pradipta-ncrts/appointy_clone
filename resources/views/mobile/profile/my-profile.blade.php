@@ -270,7 +270,8 @@ left: -999em;
                   <div class="col-md-12">
                      <div class="form-group">
                         <div class="input-group"><span class="input-group-addon"></span>
-                           <input id="business_location" placeholder="Enter your address" type="text" class="form-control" name="business_location" value="<?=$user_details->business_location ? $user_details->business_location : "";?>"></input>
+                           <input id="business_location" placeholder="Enter your address" type="text" class="form-control" name="business_location" value="<?=$user_details->business_location ? $user_details->business_location : "";?>" onFocus="geolocate()"
+></input>
                         </div>
                      </div>
                   </div>

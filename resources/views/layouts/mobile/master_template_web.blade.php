@@ -41,6 +41,11 @@
          display: block;
          }
          .nice-select{width: 100% !important;border: 1px solid #ccc;border-radius: 0;}
+        
+        /* Google Auto suggesion for Modal */
+        .pac-container {
+           z-index: 10000 !important;
+        }
       </style>
       <script type="text/javascript">
          var authDatas={user_no:0}; 
@@ -686,6 +691,10 @@
       <!-- sideToggle-->
       <script src="{{asset('public/assets/mobile/js/bootstrap-datepicker.js')}}"></script>
       <script src="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.js"></script>
+      <!-- Google Map-->
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initAutocomplete"
+       async defer></script>
+       
       <script src="{{asset('public/assets/mobile/js/ncrts.js')}}"></script>
       <script src="{{asset('public/assets/mobile/js/ncrtsdev.js')}}"></script>
       <script>
@@ -826,6 +835,59 @@
          /*Add More Section End*/
          
       </script>
+
+    <script type="text/javascript">
+        var placeSearch, autocomplete, autocomplete1;
+
+        var componentForm = {
+            street_number: 'long_name',
+            locality: 'long_name',
+            administrative_area_level_1: 'long_name',
+            country: 'long_name',
+            postal_code: 'long_name'
+        };
+
+        function initAutocomplete() {
+            autocomplete = new google.maps.places.Autocomplete(document.getElementById('client_address'), {types: ['geocode']});
+            autocomplete.addListener('place_changed', fillInAddress);
+            
+            autocomplete1 = new google.maps.places.Autocomplete(document.getElementById('business_location'), {types: ['geocode']});
+            autocomplete1.addListener('place_changed', fillInAddress);
+        }
+        function fillInAddress() {
+            // Get the place details from the autocomplete object.
+            var place = autocomplete.getPlace();
+
+            /*for (var component in componentForm) {
+                document.getElementById(component).value = '';
+                document.getElementById(component).disabled = false;
+            }*/
+            // Get each component of the address from the place details,
+            // and then fill-in the corresponding field on the form.
+            /*for (var i = 0; i < place.address_components.length; i++) {
+                var addressType = place.address_components[i].types[0];
+                if (componentForm[addressType]) {
+                    var val = place.address_components[i][componentForm[addressType]];
+                    document.getElementById(addressType).value = val;
+                }
+            }*/
+        }
+        // Bias the autocomplete object to the user's geographical location,
+        // as supplied by the browser's 'navigator.geolocation' object.
+        function geolocate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                var geolocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                var circle = new google.maps.Circle(
+                    {center: geolocation, radius: position.coords.accuracy});
+                autocomplete.setBounds(circle.getBounds());
+                });
+            }
+        }
+    </script>
       @yield('custom_js')
    </body>
 </html>
