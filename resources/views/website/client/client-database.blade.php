@@ -370,6 +370,16 @@ Squeedr
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <div class="input-group" id="clientdob_error"> <span class="input-group-addon"><i class="fa fa-birthday-cake"></i></span>
+                                <input id="edit_client_dob" type="text" class="form-control" name="client_dob" placeholder="Date of Birth" style="position: relative; z-index: 100000;">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <?php /* <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
@@ -764,6 +774,10 @@ $('#editClient').click(function(e){
             $('.animationload').hide();
             if(response.result=='1')
             {
+                var client_dob = "";
+                if(response.client_details.client_dob != '0000-00-00'){
+                    client_dob = response.client_details.client_dob;
+                }
                 /*if(response.client_details.client_profile_picture!=''){
                     var profile_picture = response.client_details.client_profile_picture;
                 } else {
@@ -778,6 +792,7 @@ $('#editClient').click(function(e){
                 //$("#edit_client_category").val(response.client_details.client_category).trigger('change');
                 //$("#edit_client_timezone").val(response.client_details.client_timezone).trigger('change');
                 $("#edit_client_timezone select").val(response.client_details.client_timezone);
+                $('#edit_client_dob').val(client_dob);
                 $('#edit_client_address').val(response.client_details.client_address);
                 $('#edit_client_note').val(response.client_details.client_note);
                 //$('#edit_staff_image').attr('src',profile_picture);

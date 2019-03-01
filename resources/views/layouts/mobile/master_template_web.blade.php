@@ -699,7 +699,13 @@
          
             });
          
+            var $var2 = $("#client_dob,#edit_client_dob"); 
          
+                $var2.datepicker({
+         
+                    maxDate:0,
+         
+            });
          
             /*var $dp2 = $("#reshedule_appointmentdate"); 
          

@@ -54,8 +54,8 @@ class ClientsController extends ApiController {
             $client_home_phone = $request->input('client_home_phone');
             $client_work_phone = $request->input('client_work_phone');
             //$client_category = $request->input('client_category');
+            $client_dob = $request->input('client_dob');
             $client_address = $request->input('client_address') ? $request->input('client_address'):"";
-
             $client_timezone = $request->input('client_timezone');
             $client_note = $request->input('client_note');
 
@@ -163,6 +163,7 @@ class ClientsController extends ApiController {
                 $client_data['client_home_phone'] = $client_home_phone;
                 $client_data['client_work_phone'] = $client_work_phone;
                 //$client_data['client_category'] = $client_category;
+                $client_data['client_dob'] = date('Y-m-d',strtotime($client_dob));
                 $client_data['client_address'] = $client_address;
                 $client_data['client_timezone'] = $client_timezone;
                 $client_data['client_note'] = $client_note;
@@ -397,6 +398,7 @@ class ClientsController extends ApiController {
             $client_mobile = $request->input('client_mobile');
             $client_home_phone = $request->input('client_home_phone');
             $client_work_phone = $request->input('client_work_phone');
+            $client_dob = $request->input('client_dob');
             $client_timezone = $request->input('client_timezone');
             $client_address = $request->input('client_address');
             $client_note = $request->input('client_note');
@@ -426,6 +428,7 @@ class ClientsController extends ApiController {
                     $client_data['client_home_phone'] = $client_home_phone;
                     $client_data['client_work_phone'] = $client_work_phone;
                     //$client_data['client_category'] = $client_category;
+                    $client_data['client_dob'] = date('Y-m-d',strtotime($client_dob));
                     $client_data['client_address'] = $client_address;
                     $client_data['client_timezone'] = $client_timezone;
                     $client_data['client_note'] = $client_note;

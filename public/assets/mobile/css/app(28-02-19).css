@@ -23,8 +23,8 @@ table {
 	border-spacing: 0
 }
 body {
-	font-family: 'promptregular';
-	background: #f6f8fa;
+	font-family: 'Roboto', sans-serif;
+	background: #fff;
 	/*padding-top: 150px;*/
 	overflow-x: hidden;
 }
@@ -510,10 +510,10 @@ ul.addons li a {
 	padding: 20px 40px;
 	color: #fff;
 	text-align: center;
-	background: #2f3e54;position: relative;
+	background: #2f3e54;
 }
 .profileMenuImg img {
-	width: 100px;height: 100px;
+	width: 100px;
 	border-radius: 50%;
 	margin-bottom: 10px;
 }
@@ -545,9 +545,6 @@ ul.addons li a {
 }
 .sideNavbar ul li a:focus {
 	text-decoration: none;
-}
-.sideNavbar ul li a span{
-	line-height: 20px;
 }
 .sideToggle {
 	left: -300px;
@@ -2081,14 +2078,13 @@ ul.minutes li a label {
 .img-thumbnail { height: 500px;}
 
 /********New css added by Sharmistha(20-07-2018)*******/
-.trantxt{font-size: 16px;}
 .filter-addi{float:right;color:#000;}
 .filter-addi i{color:#000;background:#E2E2E2;padding:5px;font-size:16px;}
 .btn-size{padding:8px 12px;font-size:17px;}
-.checkbox-cutm{width:100%;float:left;padding:10px 0 0;font-size:15px;color: #606265;font-weight: 400;}
+.checkbox-cutm{width:100%;float:left;padding:10px 0 0;font-size:12px;color: #92979e;}
 .checkbox-cutm input:before{width:21px;height:21px;}
 /*.bluebg .dropdown-menu{display:none;}*/
-.profile-mobaccordion{width:100%;margin: 0 0 10px;}
+.profile-mobaccordion{width:100%;padding:10px;}
 .profile-mobaccordion .panel-default>.panel-heading{background:#fff;}
 .profile-mobaccordion .panel-group{margin-bottom:0;}
 .profile-mobaccordion .panel-heading a:focus, .profile-mobaccordion .panel-heading a:hover{text-decoration:none;}
@@ -2106,7 +2102,7 @@ position: absolute;right: 16px;top: 36px;}
 .cusbtn-style{float: right;border: 0;background: none; margin-left:20px; }
 .custm-share{width:100%;position:relative;}
 .custm-share .dropdown{background:none;position:absolute;top:0;right:5px;}
-.custm-share .dropdown .btn{border:#2e6da4;}
+.custm-share .dropdown .btn{background:none;border:0;}
 .custm-share .dropdown .dropdown-menu-right li{border-bottom:1px solid #ccc;}
 .custm-share .dropdown .dropdown-menu-right li:last-child{border:0;}
 
@@ -2132,27 +2128,6 @@ position: absolute;right: 16px;top: 36px;}
 .sweet-icon span i{line-height: 92px;}
 #client_more_phone{float: right;margin: -32px 7px 0 0;position: relative;z-index: 5;}
 .error{color: #F32929;font-weight: normal;}
-.calender-remark{width:100%;float: left;margin: 0 0 15px;}
-.calender-remark ul{margin: 0;padding: 0;list-style:none;}
-.calender-remark ul li{float: left;margin: 0 20px 0 0;}
-.calender-remark ul li .clbx{    float: left;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    text-align: center;
-    color: #000;
-    line-height: 44px;
-    font-size: 14px;}
-.calender-remark ul li .clbxtxt{float: left;color: #000;font-size: 13px;line-height: 45px;margin: 0 0 0 8px;font-weight: 500;}
-.popupCloseButton{margin-top: -2px;background: #ece5e5;color: #a6a6a6 !important;opacity: 1;border-radius: 50px;width: 28px;height: 28px;font-size: 13px;float:right;line-height: 26px;}
-
-/* Change the white to any color ;) */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
-    -webkit-box-shadow: 0 0 0 30px white inset !important;-webkit-text-fill-color: yellow !important;
-}
             
 @media(max-width:1400px) {
 main {
@@ -2291,53 +2266,8 @@ label.right35px,  label.right45px,  label.right47px,  label.right72px,  label.ri
 }
 }
  @media(max-width:767px) {
-	 
-	.staffInside p .SecSec{    color: #000;
-    font-size: 12px;
-    line-height: 16px;}
-	input:-internal-autofill-previewed, input:-internal-autofill-selected, textarea:-internal-autofill-previewed, textarea:-internal-autofill-selected, select:-internal-autofill-previewed, select:-internal-autofill-selected {
-		background:none !important;
-		color: #fff !important;
-	}
-	input:-webkit-autofill {
-
-		-webkit-box-shadow: inset 0 0 0px 9999px white;
-	}
-	
-	::-webkit-input-placeholder { /* Chrome */
-		color: #fff;
-		transition: opacity 250ms ease-in-out;
-	  }
-	  :focus::-webkit-input-placeholder {
-		opacity: 0.5;
-	  }
-	  :-ms-input-placeholder { /* IE 10+ */
-		color: #fff;
-		transition: opacity 250ms ease-in-out;
-	  }
-	  :focus:-ms-input-placeholder {
-		opacity: 0.5;
-	  }
-	  ::-moz-placeholder { /* Firefox 19+ */
-		color: #fff;
-		opacity: 1;
-		transition: opacity 250ms ease-in-out;
-	  }
-	  :focus::-moz-placeholder {
-		opacity: 0.5;
-	  }
-	  :-moz-placeholder { /* Firefox 4 - 18 */
-		color: #fff;
-		opacity: 1;
-		transition: opacity 250ms ease-in-out;
-	  }
-	  :focus:-moz-placeholder {
-		opacity: 0.5;
-	  }
-.custm-share .btn-res {
-	position: absolute;
-	top: -1px;
-	right: 0px;
+body {
+	padding-top: 45px;
 }
 .showDekstop {
 	display: none;
@@ -2370,8 +2300,9 @@ main {
 .mobileHeader {
 	background: #35455d;
 	padding: 10px 15px;
-	position: static;
+	position: fixed;
 	height: auto;
+	top: 0px;
 }
 .dummy {
 	color: #35455d;
@@ -2382,7 +2313,7 @@ main {
 }
 .mobileHeader ul li {
 	margin-right: 10px;
-	width: auto;
+	width: 40px;
 	text-align:right;
 }
 .mobileHeader ul li img {
@@ -2422,8 +2353,9 @@ main {
 .whitebox {
 	background: #fff;
 	position: relative;
-	padding: 10px;
-	position: relative;    margin-bottom: 10px;
+	padding: 0 0px;
+	margin:15px 10px;
+	position: relative;
 }
 
 
@@ -2432,7 +2364,7 @@ main {
 
 .headRow {
 
-	background: #f6f8fa;
+	background: #fff;
 
 	padding: 10px 0;
 
@@ -3081,12 +3013,12 @@ a#showTn1 {
 }
 .lon h2 strong {
 	display: inline-block;
-	padding-left: 20px;font-weight: normal;
+	padding-left: 20px;
 }
 .lon label {
 	padding-bottom: 5px;
 	font-size: 14px;
-	color: #61a9d5;font-weight: normal;
+	color: #61a9d5;
 }
 .lon span i {
 	padding-right: 10px;
@@ -3161,9 +3093,9 @@ a#showTn1 {
 	color: #92979e;
 }
 .mobile-control .nice-select:after {
-	-webkit-transform: rotate(405deg);
-	-ms-transform: rotate(405deg);
-	transform: rotate(405deg);
+	-webkit-transform: rotate(315deg);
+	-ms-transform: rotate(315deg);
+	transform: rotate(315deg);
 }
 .mobile-control .nice-select.open:after {
 	-webkit-transform: rotate(-135deg);
@@ -3171,7 +3103,7 @@ a#showTn1 {
 	transform: rotate(-135deg);
 }
 .mobile-control .input-group-addon {
-	padding: 5px 2px;
+	padding: 6px 2px;
 	background: #fff;
 	border-radius: 0;
 	border: 0;
@@ -3443,7 +3375,7 @@ ul.clientSchedule li a.active {
 	border-color: #5da7d4;
 }
 .namedate {
-	padding: 7px 15px;
+	padding: 10px 15px;
 	border-radius: 5px;
 	color: #fff;
 	font-size: 13px;
@@ -3458,8 +3390,8 @@ ul.clientSchedule li a.active {
 	margin-bottom: 10px;
 }
 .staffDetail {
-	padding: 0 10px 10px;
-    margin-bottom: 12px;
+	padding: 15px 10px;
+	margin-bottom: 10px;
 	border-bottom: 1px solid #666;
 	display: flex;
 	justify-content: space-between;
@@ -3467,7 +3399,7 @@ ul.clientSchedule li a.active {
 }
 .staffDetail span label {
 	font-size: 13px;
-	color: #a9a8a8;    font-weight: normal;
+	color: #a9a8a8;
 }
 .staffDetail p {
 	color: #0645a3;
@@ -3480,7 +3412,7 @@ ul.clientSchedule li a.active {
 	padding: 0 10px;
 }
 .staffInside h6 {
-	padding-bottom: 10px;font-size: 16px;
+	padding-bottom: 10px;
 }
 .staffInside p {
 	color: #000;
@@ -3516,7 +3448,7 @@ ul.clientSchedule li a.active {
 .cdDetails label,  .cdDetails p {
 	padding-left: 35px;
 	color: #8d95a2;
-	font-size: 13px;font-weight: normal;
+	font-size: 13px;
 }
 .cdDetails p {
 	padding-bottom: 10px;
@@ -3546,14 +3478,14 @@ ul.clientSchedule li a.active {
 .cdList ul li label {
 	display: block;
 	padding-bottom: 10px;
-	color: #000;    font-weight: normal;
+	color: #000;
 }
 .customers {
 	display: flex;
 	justify-content: space-between;
 }
 .customers h3 {
-	font-size: 18px;padding-bottom: 10px;
+	font-size: 18px;
 }
 .cdetails div {
 	margin-bottom: 5px;
@@ -3566,7 +3498,7 @@ ul.clientSchedule li a.active {
 }
 .customersRight {
 	text-align: right;
-	padding-top: 22px;
+	padding-top: 40px;
 }
 .customersRight a {
 	font-size: 30px;
@@ -3635,9 +3567,8 @@ a.share {
 	justify-content: space-between;
 }
 .profileImg img {
-	width: 55px;
-	margin-right: 20px;border-radius: 50%;
-    height: 55px;
+	width: 65px;
+	margin-right: 20px;
 }
 
 
@@ -3672,6 +3603,7 @@ a.share {
 .profileMobileHeading {
 	display: flex;
 	justify-content: inherit;
+	    margin: 0 0 10px 15px;
 }
 .profileMobileHeading h1 {
 	margin-top: 5px;
@@ -3769,7 +3701,7 @@ img.map {
 	text-align: center;
 }
 .mapright img.gmap {
-	width: 100px;
+	width: 50px;
 	display: block;
 	margin-bottom: 10px;
 }
@@ -3798,6 +3730,13 @@ ul.menuList li a {
 .whitebox {
 	padding: 10px;
 }
+
+.mobileStaff .whitebox { m }
+
+
+.profileImg img {
+	width: 55px;
+}
 .profileDetails ul li {
 	font-size: 11px;
 }
@@ -3811,10 +3750,10 @@ ul.menuList li a {
 	width: 40px;
 }
 ul.clientSchedule li a {
-	padding: 9px 15px;
+	padding: 10px 15px;
 }
 .cdetails img {
-	width: 16px;
+	width: 10px;
 	margin-right: 5px;
 }
 .table-responsive>.table>tbody>tr>td,  .table-responsive>.table>thead>tr>th {
@@ -3822,6 +3761,9 @@ ul.clientSchedule li a {
 }
 .dashSchedule ul li {
 	margin-right: 5px;
+}
+.sideNavbar ul li img {
+	width: 12px;
 }
 .mobileappointed .appointment label {
 	margin-left: 25px;
@@ -3833,18 +3775,3 @@ ul.clientSchedule li a {
 	padding-left: 20px;
 }
 }
-.scan{height: 500px;}
-.mb-10{margin: 63% 0 15px;}
-.scan img{margin: 3px 5px 0 0;float: left;}
-.help-txt{width:100%;display: inline-block;}
-.help-txt p{width:100%;color: #000;margin: 0 0 10px;float: left;font-size: 14px;line-height: 19px;}
-#servicelstModal .modal-header{color: #211616;font-size: 18px;padding: 10px 12px;background:none;}
-#servicelstModal .close{margin-top: -2px;background: #ece5e5;color: #a6a6a6 !important;opacity: 1;border-radius: 50px;width: 28px;height: 28px;font-size: 20px;}
-form.example input[type=text] {padding: 10px;font-size: 17px;border: 1px solid #ccc;float: left;width: 80%;background: #f1f1f1;color: #000;}
-form.example input::placeholder{color: #a5a1a1;}
-/* Style the submit button */
-form.example button {float: left;width: 20%;padding: 10px;background: #b9babb;color: #fff;font-size: 17px;border: 1px solid #ccc;border-left: none; /* Prevent double borders */cursor: pointer;}
-form.example button:hover {background: #b9babb;}
-/* Clear floats */
-form.example::after {content: "";clear: both;display: table;}
-#servicelstModal .modal-body {padding: 35px 15px;}

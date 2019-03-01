@@ -97,6 +97,7 @@ class ClientsController extends ApiController {
 		$url_func_name="client_details";
 		$return = $this->curl_call($url_func_name,$post_data);
 
+		//echo "<pre>"; print_r($return->client_details); exit;
 		// Check response status. If success return data //	
 		if($return->response_status == 1)
 		{

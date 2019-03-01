@@ -36,10 +36,13 @@ Squeedr
                     <input id="client_home_phone" type="text" class="form-control" name="client_home_phone" placeholder="Home Phone">
                  </div>
                  <div class="input-group"> <span class="input-group-addon"></span>
-                    <input id="client_work_phone" type="text" class="form-control" name="client_work_phone" placeholder="Home Phone">
+                    <input id="client_work_phone" type="text" class="form-control" name="client_work_phone" placeholder="Work Phone">
                  </div>
-               </div>
-                 <div class="customcontrol">
+                </div>
+                <div class="input-group"> <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/customer-details/birthday.png')}}"/> </span>
+                    <input id="client_dob" type="text" class="form-control" name="client_dob" placeholder="Date of Birth" style="width: 92%;">
+                 </div>
+                 <!--<div class="customcontrol">
                     <select class="form-control" name="client_category" id="client_category" >
                       <option value="">Select Category </option>
                       <?php
@@ -50,7 +53,7 @@ Squeedr
                       }
                       ?>
                     </select>
-                 </div>
+                 </div>-->
                  <div class="input-group"> <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-address.png')}}"/></span>
                     <input placeholder="Address" type="text" class="form-control" name="client_address"></input>
                  </div>
