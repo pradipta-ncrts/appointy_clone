@@ -4,6 +4,11 @@ Squeedr
 @endsection
 
 @section('content')
+<?php
+$mysquder_page_inner = App\Http\Controllers\BaseApiController::mysquder_page_inner();
+$logged_in_user_details = $mysquder_page_inner['inner_user_details'];
+//echo '<pre>'; print_r($logged_in_user_details); exit;
+?>
  <div class="body-part">
    <div class="container-custm">
       <div class="upper-cmnsection">
@@ -15,14 +20,15 @@ Squeedr
       <div class="leftpan">
          <div class="left-menu">
             <ul>
-               <li><a href="{{ url('business-contact-info') }}"  class="active"> Business Contact Info.</a></li>
-               <li><a href="{{ url('business-logo-social-network') }}"> Business Logo & Social Info.</a> </li>
+               <li><a href="{{ url('business-contact-info') }}"  class="active"><?php if($logged_in_user_details->user_type == 2) {?>Business<?php } ?> Contact Info.</a></li>
+               <li><a href="{{ url('business-logo-social-network') }}"> <?php if($logged_in_user_details->user_type == 2) {?>Business<?php } ?> Logo & Social Info.</a> </li>
             </ul>
          </div>
       </div>
       <div class="rightpan">
          <div class="col-lg-12">
             <form action="{{ url('api/update-contact-info') }}" method="post" id="update-contact-info">
+              <input type="hidden" name="user_type" id="user_type" value="{{$logged_in_user_details->user_type}}">
               <input type="hidden" name="location_country" id="country" value="">
               <input type="hidden" name="latitute" id="latitute" value="">
               <input type="hidden" name="logngitude" id="logngitude" value="">
@@ -38,9 +44,9 @@ Squeedr
                            <div class="form-details">
                              <!--  <label for="Profession">Profession</label>
                               <input type="text" class="form-control" name="profession" id="profession" placeholder="Profession" value="<?=$profession_name;?>"> -->
-                              <label for="Business Name">Business Name</label>
-                              <input class="form-control" type="text" name="business_name" placeholder="Business name" value="<?=$userDetails->business_name ? $userDetails->business_name : "";?>" />
-                              <label for="Business Location">Business Location</label>
+                              <label for="Business Name"><?php if($logged_in_user_details->user_type == 2) {?>Business<?php } ?> Name</label>
+                              <input class="form-control" type="text" name="business_name" placeholder="Business name" value="<?=($userDetails->user_type == 1) ? $userDetails->name : $userDetails->business_name;?>" />
+                              <label for="Business Location"><?php if($logged_in_user_details->user_type == 2) {?>Business<?php } ?> Location</label>
                                 <input id="business_location" placeholder="Enter your address" type="text" class="form-control" name="business_location" value="<?=$userDetails->business_location ? $userDetails->business_location : "";?>"></input>
                               <div class="row">
                                  <div class="col-lg-6 col-md-6 col-sm-6" style="display: none;">

@@ -37,8 +37,8 @@
                
                <div class="col-md-5 col-sm-6 from-reg1">
                   <div class="reg-type">
-                     <a href="" class="active user-status" id="1">Individual</a> &nbsp; &nbsp;
-                     <a href="" class="user-status" id="2">Business</a>
+                     <a href="javascript:void(0);" class="active user-status" id="1">Individual</a> &nbsp; &nbsp;
+                     <a href="javascript:void(0);" class="user-status" id="2">Business</a>
                   </div>
                   <form class="form-horizontal" action="{{ url('api/registration-step1') }}" method="post" id="registration-form-one">
                      <input type="hidden" name="user_type" id="user_type" value="1">
@@ -59,6 +59,31 @@
                         <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
+
+                    <div id="owner_details" style="display:none;">
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
+                        <input type="text" class="form-control" placeholder="Owner Name" name="owner_full_name" id="owner_full_name" autocomplete="off">
+                        <div class="clearfix"></div>
+                     </div>
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/login-icon-email.png')}}">
+                        <input type="text" class="form-control" placeholder="Owner Email Address" name="owner_email" id="owner_email" autocomplete="off">
+                        <div class="clearfix"></div>
+                     </div>
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
+                        <input type="text" class="form-control" placeholder="Owner Username" name="owner_username" id="owner_username" autocomplete="off">
+                        <div class="clearfix"></div>
+                     </div>
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/reg-icon-pass.png')}}">
+                        <a><i class="fa fa-eye log-i toggle-password-owner" aria-hidden="true"></i></a>
+                        <input type="password" class="form-control" placeholder="Owner Password" name="owner_password" id="owner_password" autocomplete="off">
+                        <div class="clearfix"></div>
+                     </div>
+                    </div>
+
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-location.png')}}">
                          <select class="selectpicker required" data-show-subtext="true" data-live-search="true" name="country" id="country"> 
@@ -136,11 +161,13 @@
             $('#user_type').val(type);
             if($(this).text()=='Individual')
             {
-                $("#full_name").attr('placeholder', 'Personal name')
+                $("#full_name").attr('placeholder', 'Personal name');
+                $("#owner_details").hide();
             }
             else
             {
-                $("#full_name").attr('placeholder', 'Business name')
+                $("#full_name").attr('placeholder', 'Business name');
+                $("#owner_details").show();
             }
          });
          //================Tab select end ==================
@@ -151,7 +178,14 @@
               var input = $("#password");
               input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
           });
-      //================Show password end ==================
+
+          $(document).on('click', '.toggle-password-owner', function() {
+              $(this).toggleClass("fa-eye fa-eye-slash");
+              
+              var input = $("#owner_password");
+              input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+          });
+        //================Show password end ==================
 
       </script>
       <script type="text/javascript">
@@ -170,14 +204,16 @@
         return this.optional(element) && pwd.length > 8 && pwd.match(/^[ A-Za-z0-9_@./#&+-]*$/);
       }, "Password must be 8 character, alphaneumeric & one special character.");
       //================Password Check====================
-      </script>
 
-      <script type="text/javascript">
 		$.validator.addMethod("pwcheck", function(value) {
 			return /[a-zA-Z]+/.test(value) // consists of only these
 				&& /[0-9]+/.test(value) // has a digit
 				&& /[*@&%!#$]+/.test(value) // has a Special character
-		});
+		}, "Password must contain minimum 1 character, 1 digit and 1 special character.");
+
+        jQuery.validator.addMethod("alphanumeric", function(value, element) {
+            return this.optional(element) || /^\w+$/i.test(value);
+        }, "Letters, numbers, and underscores only please");
       //================Submit AJAX request ==================
       $('#registration-form-one').validate({
 
@@ -188,13 +224,38 @@
                     required: true
                 },
                 user_name: {
-                    required: true
+                    required: true,
+                    alphanumeric: true
                 },
                 password: {
                     required: true,
 					minlength: 8,
 					pwcheck: true
                     //passwordCk: true
+                },
+                owner_full_name :  {
+                    required : function(){
+                                        return $("#user_type").val() == 2;
+                                }
+                },
+                owner_email :  {
+                    required : function(){
+                                        return $("#user_type").val() == 2;
+                                },
+                    email : true
+                },
+                owner_username :  {
+                    required : function(){
+                                        return $("#user_type").val() == 2;
+                                },
+                    alphanumeric : true
+                },
+                owner_password :  {
+                    required : function(){
+                                        return $("#user_type").val() == 2;
+                                },
+                    minlength: 8,
+					pwcheck: true
                 },
                 phone: {
                     required: true,
@@ -220,6 +281,23 @@
 					minlength: 'Please enter minimum 8 character password',
 					pwcheck: 'Password must contain minimum 1 character, 1 digit and 1 special character.'
                 },
+
+                owner_full_name :  {
+                    required : 'Please enter owner name'
+                },
+                owner_email :  {
+                    required : 'Please enter owner email',
+                    email : 'Please enter valid email address'
+                },
+                owner_username :  {
+                    required : 'Please enter owner username'
+                },
+                owner_pssword :  {
+                    required : 'Please enter owner password',
+                    minlength: 'Please enter minimum 8 character password',
+					pwcheck: 'Password must contain minimum 1 character, 1 digit and 1 special character.'
+                },
+
                 phone: {
                     required: 'Please enter mobile'
                 },

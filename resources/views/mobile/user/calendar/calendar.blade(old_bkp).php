@@ -39,21 +39,14 @@ if(!empty($calendar_settings)){
 $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=>'JUN','6'=>'JUL','7'=>'AUG','8'=>'SEP','9'=>'OCT','10'=>'NOV','11'=>'DEC');
 ?>
 <header class="mobileHeader showMobile" id="divBh">
-<a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
+    <a class="showSidenav"><img src="{{asset('public/assets/mobile/images/menu-icon.png')}}" /> </a>
     <h1>Calendar</h1>
     <ul>
         <li>&nbsp;</li>
     </ul>
 </header>
-
-
-
-
 <main>
-<div class="container-fluid">
-<div class="row">
-<div class="col-xs-12 break20px">
-  <div class="rightpan full whitebox" style="width: 100% !important">
+  <div class="rightpan full" style="width: 100% !important">
    <!-- THE CALENDAR -->
    <div id="calendar"></div>
 
@@ -64,7 +57,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
          <div class="modal-content new-modalcustm">
             <div class="modal-header">
                <button type="button" class="close" data-dismiss="modal">×</button>
-               <h4 class="modal-title">Appointment Details dd</h4>
+               <h4 class="modal-title">Appointment Details</h4>
             </div>
             <div class="modal-body clr-modalbdy">
                <div class="notify" >
@@ -89,7 +82,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                      <div class="clearfix">&nbsp;</div>
                      <div id="appointmentDatetime">Booked: Aug 15th, 2018 </div>
                      <div id="rescheduledDatetime">Rescheduled: Aug 15th, 2018 </div>
-                     <br>
+                     <br> <br>
 
                       <div id="paymentSection">
                           <form name="update_note_form" id="update_note_form" method="post" action="{{url('api/update_appointment_note')}}">
@@ -102,7 +95,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                               <div class="clearfix">&nbsp;</div>
                               <br>
                               <!--<a href="#"><i class="fa fa-file-o"></i> Appointment Note</a>-->
-                              <textarea id="bookingNote" name="booking_note" rows="4" style="border-left:1px solid #ccc;width:100%;"></textarea>
+                              <textarea id="bookingNote" name="booking_note" rows="4"></textarea>
                               <br>
                               <div class="clearfix"></div>
                               <button type="submit" class="btn btn-primary butt-next break10px">Update Note</button>
@@ -342,9 +335,6 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
   </div>           
                    
 
-  </div>
-  </div>
-  </div>
 </div>
 </main>
 

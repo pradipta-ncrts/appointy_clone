@@ -469,11 +469,23 @@ class UsersController extends ApiController {
 			$country_code = $request->input('country_code');
 			$mobile = $country_code.$request->input('phone');
 			$profession = $request->input('profession');
-			$country = $request->input('country');  
+			$country = $request->input('country');
+			
+			$owner_full_name = $request->input('owner_full_name');
+			$owner_email = $request->input('owner_email');  
+			$owner_username = $request->input('owner_username');
+			$owner_password = $request->input('owner_password');
+			
 			$request_url = $request->input('request_url');
 			$email = Crypt::decrypt($request_url);
 
 			$api_key = $this->getToken(24);
+
+			if($user_type == 1){
+				$business_name = "";
+			} else {
+				$business_name = $full_name;
+			}
 
 			//Check duplicate email id
 			$condition = array(
@@ -483,84 +495,113 @@ class UsersController extends ApiController {
 
         	if(empty($checkEmail))
         	{
-        		//check profession 
-        		$profession_condition = array(
-								array('profession', '=', $profession), 
-								array('is_blocked', '=', '0'),
-							);
-				$check_profession = $this->common_model->fetchData($this->tableObj->tableNameProfession, $profession_condition);
-				if(!empty($check_profession))
-				{
-					$profession = $check_profession->profession_id;
-				}
-				else
-				{
-					$profession_param = array('profession' => $profession, 'is_blocked' => '1');
-					$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameProfession, $profession_param);
-					$profession = $profession_id;
-				}
-
-				$param = array(
-						'name' => $full_name,
-						'api_key' => $api_key,
-						'user_type' => $user_type,
-						'username' => $username,
-						'password' => md5($password),
-						'mobile' => $mobile,
-						'profession' => $profession,
-						'country' => $country,
-						'is_email_verified' => '1',
-						'email' => $email	
+				$condition = array(
+					'or' => array('email'=>$email,'username'=>$username)
 				);
+				$checkstaffEmail = $this->common_model->fetchData('staff',$condition);
+				  
+				if(empty($checkstaffEmail))
+				{
+					//check profession 
+					$profession_condition = array(
+									array('profession', '=', $profession), 
+									array('is_blocked', '=', '0'),
+								);
+					$check_profession = $this->common_model->fetchData($this->tableObj->tableNameProfession, $profession_condition);
+					if(!empty($check_profession))
+					{
+						$profession = $check_profession->profession_id;
+					}
+					else
+					{
+						$profession_param = array('profession' => $profession, 'is_blocked' => '1');
+						$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameProfession, $profession_param);
+						$profession = $profession_id;
+					}
 
-				$user_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameUser, $param);
-	            if($user_id > 0)
-	            {
-					// Registered as Stafff //
-					$token1 = md5($email);
-					$token2 = md5($username);
-					$token = $token1.$token2;
+					$param = array(
+							'name' => $full_name,
+							'api_key' => $api_key,
+							'user_type' => $user_type,
+							'username' => $username,
+							'password' => md5($password),
+							'mobile' => $mobile,
+							'profession' => $profession,
+							'country' => $country,
+							'is_email_verified' => '1',
+							'email' => $email,
+							'business_name' => $business_name
+					);
 
-					$staff_data['user_id'] = $user_id;
-					$staff_data['username'] = $username;
-					$staff_data['full_name'] = $full_name;
-					$staff_data['email'] = $email;
-					$staff_data['mobile'] = $mobile;
-					$staff_data['password'] = md5($password);
-					$staff_data['email_verification_code'] = $token;
-					$staff_data['is_email_verified'] = 1;
-					$staff_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
-					if($staff_id > 0){
-						//insert into terms & conndition
-						$terms_data['content'] = '';
-						$terms_data['type'] = '3';
-						$terms_data['user_id'] = $user_id;
-						$this->common_model->insert_data_get_id($this->tableObj->tableNameBookingPolicy,$terms_data);
-						
-						//if profession new update created by
-						$condition = array(
-							array('profession_id', '=', $profession),
-							array('is_blocked', '=', '1'),
-						);
-						
-						$update_data['created_by'] = $user_id;
+					$user_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameUser, $param);
+					if($user_id > 0)
+					{
+						// Registered as Stafff //
+						if($user_type == 1){
+							$token1 = md5($email);
+							$token2 = md5($username);
+							$token = $token1.$token2;
 	
-						$update = $this->common_model->update_data($this->tableObj->tableNameProfession,$condition,$update_data);
+							$staff_data['user_id'] = $user_id;
+							$staff_data['username'] = $username;
+							$staff_data['full_name'] = $full_name;
+							$staff_data['email'] = $email;
+							$staff_data['mobile'] = $mobile;
+							$staff_data['password'] = md5($password);
+							$staff_data['email_verification_code'] = $token;
+							$staff_data['is_email_verified'] = 1;
+						} else {
+							$token1 = md5($owner_email);
+							$token2 = md5($owner_username);
+							$token = $token1.$token2;
 	
-						$this->response_message = $request_url;
-						$this->response_status = '1';
+							$staff_data['user_id'] = $user_id;
+							$staff_data['username'] = $owner_username;
+							$staff_data['full_name'] = $owner_full_name;
+							$staff_data['email'] = $owner_email;
+							$staff_data['mobile'] = $mobile;
+							$staff_data['password'] = md5($owner_password);
+							$staff_data['email_verification_code'] = $token;
+							$staff_data['is_email_verified'] = 1;
+						}
+						
+						$staff_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaff,$staff_data);
+						if($staff_id > 0){
+							//insert into terms & conndition
+							$terms_data['content'] = '';
+							$terms_data['type'] = '3';
+							$terms_data['user_id'] = $user_id;
+							$this->common_model->insert_data_get_id($this->tableObj->tableNameBookingPolicy,$terms_data);
+							
+							//if profession new update created by
+							$condition = array(
+								array('profession_id', '=', $profession),
+								array('is_blocked', '=', '1'),
+							);
+							
+							$update_data['created_by'] = $user_id;
 
-					} else {
+							$update = $this->common_model->update_data($this->tableObj->tableNameProfession,$condition,$update_data);
+
+							$this->response_message = $request_url;
+							$this->response_status = '1';
+
+						} else {
+							$this->response_message="Somthing wrong.Try again later.";
+							$this->response_status='0';
+						}
+
+					}
+					else
+					{
 						$this->response_message="Somthing wrong.Try again later.";
 						$this->response_status='0';
 					}
-
-	            }
-	            else
-	            {
-	            	$this->response_message="Somthing wrong.Try again later.";
+				} else {
+					$this->response_message="This Owner Email/ Owner Username is already exist.";
 					$this->response_status='0';
-	            }
+				}
+
         	}
         	else
         	{
@@ -733,6 +774,7 @@ class UsersController extends ApiController {
 		$response_data=array();
 		$this->validate_parameter(1);
 
+		$user_type = $request->input('user_type');
 		$business_name = $request->input('business_name');
 		$business_location = $request->input('business_location');
 		$street_number = $request->input('street_number');
@@ -749,6 +791,15 @@ class UsersController extends ApiController {
 		$parking = $request->input('parking');
 		$country = $request->input('country');
 		$mobile = $request->input('country_code').$request->input('mobile');
+
+		$businessname = "";
+		$name = "";
+
+		if($user_type == 1){
+			$name = $business_name;
+		} else {
+			$businessname = $business_name;
+		}
 		
 
 		//find latitute & longitude
@@ -791,7 +842,8 @@ class UsersController extends ApiController {
 		//Notification Update End
 
 		$updateData = array(
-				'business_name' => $business_name,
+				'name' => $name,
+				'business_name' => $businessname,
 				'business_location' => $business_location,
 				'street_number' => $street_number,
 				'route' => $route,
