@@ -1338,6 +1338,10 @@ Squeedr
          <form name="area_code" id="area_code" method="post" action="{{ url('api/area_code') }}" enctype="multipart/form-data">
 
             <input type="hidden" name="staff_id" id="postal_code_staff_id" value="">
+            <input type="hidden" name="street_number" id="street_number" value="">
+            <input type="hidden" name="locality" id="locality" value="">
+            <input type="hidden" name="administrative_area_level_1" id="administrative_area_level_1" value="">
+            <input type="hidden" name="country" id="country" value="">
 
          <div class="modal-header">
 
@@ -1357,7 +1361,7 @@ Squeedr
 
                      <div class="input-group" id="area_error"> <span class="input-group-addon"><i class="fa fa-map-marker"></i></span>
 
-                        <input id="area" type="text" class="form-control" name="area" placeholder="Area name">
+                        <input id="business_location" type="text" class="form-control" name="area" placeholder="Area name">
 
                      </div>
 
@@ -1375,7 +1379,7 @@ Squeedr
 
                      <div class="input-group" id="pin_no_error"> <span class="input-group-addon"><i class="fa fa-thumb-tack"></i></span>
 
-                        <input id="pin_no" type="text" class="form-control" name="pin_no" placeholder="Postal Code">
+                        <input id="postal_code" type="text" class="form-control" name="pin_no" placeholder="Postal Code">
 
                      </div>
 

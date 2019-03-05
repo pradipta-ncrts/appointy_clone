@@ -10,7 +10,6 @@
       <link href="{{asset('public/assets/website/css/styles.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/mobile.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/custom-selectbox.css')}}" rel="stylesheet">
-      <link href="{{asset('public/assets/website/css/app.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/custom.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
       <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
@@ -34,66 +33,39 @@
                   <h2>Resource, Services <br> & Events passes </h2>
                </div>
                <div class="col-lg-5 col-md-6 col-sm-6 from-reg1">
-                  <!--<form class="form-horizontal" action="{{ url('api/registration-step2') }}" method="post" id="process-registration-step2">
+                  <form class="form-horizontal" action="{{ url('api/registration-step2') }}" method="post" id="process-registration-step2">
                      <input class="new_form_data" type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
-                     <div class="clone-div1 row-2">
+                     <div class="clone-div1">
                        <div class="row">
                          <div class="col-md-6">
                             <div class="from-group">
                                <div class="cln-dvbx">Select Category</div>
                             </div>
-                            
-             <div class="appointment mobSevices">
-               <div class="pull-left">
-                  <p>Service Name</p>
-                  <span>15 mins
-                  <label>$ 40</label>
-                  </span> 
-                 </div>
-               </div>
-  
                          </div>
                          <div class="col-md-6">
-                            <div class="appointment mobSevices">
-               <div class="pull-left">
-                  <p>Service Name</p>
-                  <span>15 mins
-                  <label>$ 40</label>
-                  </span> 
-               </div>
-               </div>
+                            <div class="from-group">
+                               <div class="cln-dvbx">Service Name</div>
+                            </div>
                          </div>
                         </div>
-                        
                         <div class="row">
-                        <div class="col-md-12">
+                           <div class="col-md-4">
+                              <div class="from-group">
+                                 <div class="cln-dvbx">Cost</div>
+                              </div>
+                           </div>
+                           <div class="col-md-4">
+                              <div class="from-group">
+                                 <div class="cln-dvbx">Select Currency</div>
+                              </div>
+                           </div>
+                           <div class="col-md-4">
+                              <div class="from-group">
+                                 <div class="cln-dvbx">Select Duration</div>
+                              </div>
+                           </div>
+                        </div>
                         <a href="" class="remvbtn"><i class="fa fa-minus"></i> Remove </a>
-                        </div>
-                        </div>
-                     </div>
-                  </form>-->
-                  <form class="form-horizontal">
-                     <div class="clone-div12 row-2">
-                       <div class="row">
-                         <div class="col-md-12">    
-             <div class="appointment mobSevices">
-             <div class="col-md-6">
-                  <p>Service Name</p>
-                  <span>15 mins
-                  <small>$ 40</small>
-                  </span> 
-              </div>
-			  <div class="col-md-6">
-                  <p>Service Category</p>
-                  <span>Capacity: 120</span> 
-			  </div>
-                        </div>
-                        
-                        <div class="row">
-                        <div class="col-md-12">
-                        <a href="" class="remvbtn"><i class="fa fa-minus"></i> Remove </a>
-                        </div>
-                        </div>
                      </div>
                   </form>
 
