@@ -2774,6 +2774,98 @@ class UsersController extends ApiController {
 		$this->json_output($response_data);
 
 	}
+
+
+	/**** Registration Process Step One****/
+	public function process_registration_step2(Request $request)
+	{
+		$response_data=array();
+		/*echo "<pre>";
+		print_r($request->all()); die();*/
+		$request_url = $request->input('request_url'); 
+		$email = Crypt::decrypt($request_url); 
+		$service_data = $request->input('service_data');
+		/*echo "<pre>"; 
+		print_r($service_data); die();*/
+
+		$emailCodtion = array(
+	                     array('email', '=', $email)
+	                    );
+	    $checkEmail = $this->common_model->fetchData($this->tableObj->tableNameUser,$emailCodtion);
+	    if(!empty($checkEmail))
+	    {
+	    	$count = 0;
+	    	for($i=0; $i<count($service_data); $i++)
+			{
+				$new_service_data = json_decode($service_data[$i]); 
+				$category = $new_service_data[0]->value; 
+				$new_category_name = $new_service_data[1]->value;
+				$service = $new_service_data[2]->value;
+				$cost = $new_service_data[3]->value;
+				$currency = $new_service_data[4]->value;
+				$duration = $new_service_data[5]->value;
+				$custom_duration = $new_service_data[6]->value;  
+				$capacity = $new_service_data[7]->value;
+
+
+				$service_link = str_replace("_"," ",$service).'_'.$count;
+		    	if($category=='new')
+		    	{
+		    		$param = array('category' => $new_category_name, 'created_by' =>$checkEmail->id,'is_blocked' => 1);
+		    		$category_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameCategory, $param);
+		    	}
+		    	else
+		    	{
+		    		$category_id = $category;
+		    	}
+
+		    	if($duration == "Custom")
+		    	{
+		    		$duration_new = $custom_duration;
+		    	}
+		    	else
+		    	{
+		    		$duration_new = $duration;
+		    	}
+
+		    	$param = array(
+		    			'user_id' => $checkEmail->id,
+						'category_id' => $category_id,
+						'service_name' => $service,
+						'cost' => $cost,
+						'currency_id' => $currency,
+						'duration' => $duration_new,
+						'capacity' => $capacity,
+						'service_link' => $service_link,
+				);
+
+		    	//inset into service table
+		    	$this->common_model->insert_data_get_id($this->tableObj->tableUserService, $param);
+		    	$count++;
+			}
+		    
+		    if($count > 0)
+		    {
+		    	$this->response_status='1';
+				$this->response_message="Verification link send to your email.";
+		    }
+		    else
+		    {
+		    	$this->response_message = "Somthing wrong try again later.";
+        		$this->response_status = '0';
+		    }
+			
+	    }
+	    else
+	    {
+	    	$this->response_message="Invalid url";
+        	$this->response_status='0';
+	    }
+	   
+
+		// generate the service / api response
+		$this->json_output($response_data);
+	}
 	
 	
 }
