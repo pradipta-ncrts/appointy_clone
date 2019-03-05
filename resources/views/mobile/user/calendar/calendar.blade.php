@@ -7,7 +7,15 @@ Squeedr
 <link rel="stylesheet" href="{{asset('public/assets/website/plugins/fullcalendar/scheduler/fullcalendar.min.css')}}">
 <link rel="stylesheet" href="{{asset('public/assets/website/plugins/fullcalendar/scheduler/fullcalendar.print.min.css')}}" media="print">
 <link rel="stylesheet" href="{{asset('public/assets/website/plugins/fullcalendar/scheduler/scheduler.min.css')}}">
+<style>
+.fc-today {
+        background-color: #ffffff !important;
+ }
 
+ .fc-future {
+        background-color: #ffffff !important;
+ }
+</style>
 @endsection
 @section('content')
 <?php 
@@ -368,6 +376,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
             selectable: true,
             eventLimit: true, // allow "more" link when too many events
             navLinks: true, // can click day/week names to navigate views
+            height: 650,
             
             customButtons: {
                 addButton: {
@@ -653,7 +662,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                 }
             })(),
 
-            /*eventResize: function(event, delta, revertFunc) {
+            eventResize: function(event, delta, revertFunc) {
                 var data = addCommonParams([]);
                 var appointment_id = event.appointment_id;
                 var start_time = event.start;

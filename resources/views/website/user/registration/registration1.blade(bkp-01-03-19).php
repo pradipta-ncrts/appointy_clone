@@ -313,12 +313,7 @@
                 lookup: countries,
             });
       </script>
-<style>
-.autocomplete-suggestions{background:#fff;padding:10px 0;border:1px solid #ccc;}
-.autocomplete-suggestion{padding:0 10px 10px;border-bottom:1px solid #ccc;margin:0 0 10px;}
-.autocomplete-suggestion:last-child{margin:0;border:0;padding:0 10px 0;}
-.log-i{margin-top: 13px;}
-</style>
+
    </body>
 </html>
 
