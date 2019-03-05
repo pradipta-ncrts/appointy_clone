@@ -491,14 +491,23 @@ class UsersController extends ApiController {
 			$condition = array(
                       'or' => array('email'=>$email,'username'=>$username)
                     );
-        	$checkEmail = $this->common_model->fetchData('user',$condition);
+        	$checkEmail = $this->common_model->fetchData($this->tableObj->tableNameUser,$condition);
 
         	if(empty($checkEmail))
         	{
-				$condition = array(
-					'or' => array('email'=>$email,'username'=>$username)
-				);
-				$checkstaffEmail = $this->common_model->fetchData('staff',$condition);
+				if($user_type == 1){
+					$condition = array(
+						'or' => array('email'=>$email,'username'=>$username)
+					);
+					$checkstaffEmail = $this->common_model->fetchData($this->tableObj->tableNameStaff,$condition);
+					
+				} else {
+					$condition = array(
+						'or' => array('email'=>$owner_email,'username'=>$owner_username)
+					);
+					$checkstaffEmail = $this->common_model->fetchData($this->tableObj->tableNameStaff,$condition);
+					
+				}
 				  
 				if(empty($checkstaffEmail))
 				{
@@ -791,15 +800,6 @@ class UsersController extends ApiController {
 		$parking = $request->input('parking');
 		$country = $request->input('country');
 		$mobile = $request->input('country_code').$request->input('mobile');
-
-		$businessname = "";
-		$name = "";
-
-		if($user_type == 1){
-			$name = $business_name;
-		} else {
-			$businessname = $business_name;
-		}
 		
 
 		//find latitute & longitude
@@ -842,8 +842,8 @@ class UsersController extends ApiController {
 		//Notification Update End
 
 		$updateData = array(
-				'name' => $name,
-				'business_name' => $businessname,
+				'name' => $business_name,
+				'business_name' => $business_name,
 				'business_location' => $business_location,
 				'street_number' => $street_number,
 				'route' => $route,
