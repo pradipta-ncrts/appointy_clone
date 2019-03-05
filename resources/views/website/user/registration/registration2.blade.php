@@ -34,27 +34,9 @@
                   <h2>Resource, Services <br> & Events passes </h2>
                </div>
                <div class="col-lg-5 col-md-6 col-sm-6 from-reg1">
-                  <form class="form-horizontal clearfix">
+                  <form class="form-horizontal clearfix" action="{{ url('api/process-registration-step2') }}" method="post" id="process-registration-step2">
                    <div class="clone-div12 row-2">
-                      <!-- <div class="row">
-                         <div class="col-md-10">
-                            <div class="appointment mobSevices">
-                               <div class="col-md-6">
-                                  <p>Service Name</p>
-                                  <span>15 mins
-                                  <small>$ 40</small>
-                                  </span> 
-                               </div>
-                               <div class="col-md-6">
-                                  <p>Service Category</p>
-                                  <span>Capacity: 120</span> 
-                               </div>
-                            </div>
-                         </div>
-                         <div class="col-md-2">
-                            <a href="" class="remvbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                         </div>
-                      </div> -->
+                      
                    </div>
                   </form>
 
@@ -152,7 +134,7 @@
                    </form>
                      <div class="row">
                         <div class="col-md-4"><button type="button" id="skip">Skip</button></div>
-                        <div class="col-md-4"> <button type="submit" id="submit" style="display: none;">Submit</button></div>
+                        <div class="col-md-4"> <button type="button" id="submit" style="display: none;">Submit</button></div>
                      </div>
                      <div class="clearfix"></div>
                </div>
@@ -366,6 +348,12 @@
             })
          });
 
+         $(document).on('click','#submit',function(event) {
+         event.preventDefault();
+         alert();
+         $("#process-registration-step2").submit();
+         
+         });
       </script>
       <script type="text/javascript">
       $(document).on('click','.remvbtn',function(event) {
