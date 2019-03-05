@@ -32,7 +32,7 @@ Squeedr
          {
          ?>
           <li class="<?=Request::segment(3) == $value->category_id ? 'active' : ''; ?>"><a class="<?=Request::segment(3) == $value->category_id ? 'active' : ''; ?>" id="" href="{{ url('services') }}/{{ Request::segment(2) }}/<?=$value->category_id;?>">
-            <?=$value->cat;?>
+            <?=$value->category;?>
             </a></li>
           <?php
          }

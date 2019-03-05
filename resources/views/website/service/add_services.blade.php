@@ -84,7 +84,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                               <label class="right35px">Display location only after confirmation</label>
                            </div>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                            <div class="row">
                               <div class="col-lg-3 col-md-3 col-sm-3">
                                   <label for="service_currency">Currency <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Select currency for your service." data-placement="right"></i> </label>
@@ -100,7 +100,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                  <input class="form-control" type="number" min="1" name="service_price" id="service_price">
                               </div>
                            </div>
-                        </div>
+                        </div>-->
                         <?php if($type == 'group') { ?>
                         <div class="form-group">
                            <div class="row">
