@@ -34,27 +34,9 @@
                   <h2>Resource, Services <br> & Events passes </h2>
                </div>
                <div class="col-lg-5 col-md-6 col-sm-6 from-reg1">
-                  <form class="form-horizontal clearfix">
+                  <form class="form-horizontal clearfix" action="{{ url('api/registration-step2') }}" method="post" id="process-registration-step2">
                    <div class="clone-div12 row-2">
-                      <!-- <div class="row">
-                         <div class="col-md-10">
-                            <div class="appointment mobSevices">
-                               <div class="col-md-6">
-                                  <p>Service Name</p>
-                                  <span>15 mins
-                                  <small>$ 40</small>
-                                  </span> 
-                               </div>
-                               <div class="col-md-6">
-                                  <p>Service Category</p>
-                                  <span>Capacity: 120</span> 
-                               </div>
-                            </div>
-                         </div>
-                         <div class="col-md-2">
-                            <a href="" class="remvbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                         </div>
-                      </div> -->
+                      
                    </div>
                   </form>
 
