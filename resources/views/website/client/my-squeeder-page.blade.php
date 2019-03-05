@@ -199,74 +199,28 @@
               
 
               <?php
+              if($user_details->user_type == 1){
+                  $image =  $user_details->profile_perosonal_image ? 'profile_perosonal_image/'.$user_details->profile_perosonal_image : asset('public/assets/website/images/user-img.png');
+              } else {
+                  $image = $user_details->profile_image ? 'profile_image/'.$user_details->profile_image : asset('public/assets/website/images/user-img.png');
+              }
 
-              if($user_details->user_type==1)
-
+              if($user_details->profile_perosonal_image || $user_details->profile_image)
               {
-
-                 $url = asset('public/').'/image/profile_perosonal_image/'.$user_details->profile_perosonal_image;
-
-                 if($user_details->profile_perosonal_image && file_exists($url))
-
-                 {
-
                  ?>
 
-              <img src="{{asset('public/')}}/image/profile_perosonal_image/<?=$user_details->profile_perosonal_image;?>" class="profilepic"/>
+              <img src="{{asset('public/image/')}}/<?=$image;?>" class="profilepic"/>
 
               <?php 
-
-               }
-
-               else
-
-               {
-
-               ?>
-
-              <img src="{{asset('public/assets/website/images/noimage1.png')}}" class="profilepic" />
-
-              <?php
-
               }
-
-              ?>
-
-              <?php
-
-              }
-
               else
-
               {
-
-                  if($user_details->profile_image)
-
-                  {
-
               ?>
-
-              <img src="{{asset('public/')}}/image/profile_perosonal_image/<?=$user_details->profile_image;?>" class="profilepic"/>
-
-              <?php 
-
-                  }
-
-                  else
-
-                  {
-
-               ?>
-
-              <img src="{{asset('public/assets/website/images/noimage1.png')}}" class="profilepic" />
-
+                <img src="{{asset('public/assets/website/images/noimage1.png')}}" class="profilepic" />
               <?php
-
-                  }
-
               }
-
               ?>
+             
 
               <ul class="profilelinks">
 

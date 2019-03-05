@@ -25,7 +25,7 @@ Squeedr
                <div class="settingslist"> <img src="{{asset('public/assets/mobile/images/mobile-services.png')}}" />
                   <label>Services</label>
                </div>
-               <a href="{{url('mobile/service-list')}}"><i class="fa fa-angle-right"></i></a>
+               <a href="{{url('mobile/service-list/all')}}"><i class="fa fa-angle-right"></i></a>
             </div>
             <div class="whitebox mobilesettings">
                <div class="settingslist"> <img src="{{asset('public/assets/mobile/images/mobile-business-hours.png')}}" />

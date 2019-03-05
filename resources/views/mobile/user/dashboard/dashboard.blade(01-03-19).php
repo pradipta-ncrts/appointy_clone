@@ -130,14 +130,13 @@ Squeedr
                                     <h3 id="total_customers">{{$total_customers}}</h3>
                                     <h4>New Customers(S)</h4>
                                     <p id="customers_difference"><span <?php if($customers_difference > 0) { ?> class="green" <?php } ?>>{{$customers_difference}}%</span> Form last month</p>
-                                <?php } ?>
-                                <?php /*} else if($report->report_id == '4') { ?>
+                                <?php } else if($report->report_id == '4') { ?>
 
                                 <?php } else if($report->report_id == '5') { ?>
 
                                 <?php } else if($report->report_id == '6') { ?>
 
-                                <?php } */?>
+                                <?php } ?>
                               
                            </div>
                         </div>
@@ -158,7 +157,9 @@ Squeedr
                             <li><input name="dashboard_reports[]" type="checkbox" value="1" <?=in_array('1', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Appointement Reports</li>
                             <li><input name="dashboard_reports[]" type="checkbox" value="2" <?=in_array('2', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Sales Reports</li>
                             <li><input name="dashboard_reports[]" type="checkbox" value="3" <?=in_array('3', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Clients Reports</li>
-                            
+                            <li><input name="dashboard_reports[]" type="checkbox" value="4" <?=in_array('4', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Cancellation Reports</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="5" <?=in_array('5', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Service Report</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="6" <?=in_array('6', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Credit Charges Reports</li>
                         </ul>
 
                         

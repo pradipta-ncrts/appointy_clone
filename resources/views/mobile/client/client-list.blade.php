@@ -47,7 +47,7 @@ Squeedr
                   </div>
                   <div class="cunotes">
                      <img src="{{asset('public/assets/mobile/images/customer-details/black-notes.png')}}"/>
-                     <label><a href="{{url('mobile/client-note')}}/<?=$value->client_id;?>">Notes</a></label>
+                     <label><a href="{{url('mobile/client-note')}}/<?=$value->client_id;?>" style="font-size:14px;color:#000;">Notes</a></label>
                   </div>
                </div>
             </div>

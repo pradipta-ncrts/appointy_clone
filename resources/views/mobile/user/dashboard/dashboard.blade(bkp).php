@@ -3,21 +3,13 @@
 Squeedr
 @endsection
 
-@section('custom_css')
-<style type="text/css">
-    @media (max-width: 767px){.mobileHeader ul li img {max-width: 23px;}}
-    .mbprof{    display: inline-block;color: #fff;position: absolute;bottom: 55px;right: 40px;font-size: 18px;background: #03A9F4;border-radius: 50px;width: 30px;height: 30px;line-height: 33px;}
-</style>
-@endsection
-
 @section('content')
-
 <header class="mobileHeader showMobile" id="divBh">
     <a class="showSidenav"><img src="{{asset('public/assets/mobile/images/menu-icon.png')}}" /> </a>
     <h1>Dashboard</h1>
     <ul>
-      <li><a href="{{url('mobile/calendar')}}"> <img src="{{asset('public/assets/mobile/images/calendar.png')}}" /></a> </li> 
-      <li><a> <img src="{{asset('public/assets/mobile/images/notification.png')}}" /></a> </li>
+        <li><a href="{{url('mobile/calendar')}}"> <img src="{{asset('public/assets/mobile/images/calendar.png')}}" /></a> </li> 
+        <li><a> <img src="{{asset('public/assets/mobile/images/notification.png')}}" /></a> </li>
     </ul>
 </header>
 
@@ -35,27 +27,26 @@ Squeedr
             else
             {
             ?>
-            <img src="{{asset('public/assets/mobile/images/sidenav/blue-user.png')}}" />
+            <img src="{{asset('public/assets/website/images/business-hours/blue-user.png')}}" />
             <?php
             }
             ?>
             </a>
-            <a href="{{url('mobile/my-profile')}}" class="mbprof"><i class="fa fa-pencil"></i></a>
             <span><?=$user_details->name;?></span>
         </div>
         <ul>
           
 
             <!-- <li><a href="{{url('mobile/calendar')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Calendar</span> </a> </li> -->
-            <li><a href="{{url('mobile/booking-list/all')}}"><img src="{{asset('public/assets/mobile/images/sidenav/calendar.png')}}" /> <span>Bookings</span> </a> </li>
-            <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Feedback</span> </a> </li>
+            <li><a href="{{url('mobile/booking-list/all')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Bookings</span> </a> </li>
+            <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/review.png')}}" /> <span>Feedback</span> </a> </li>
             <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Clients</span> </a> </li>
-            <!--<li><a href="{{url('mobile/my-profile')}}"><img src="{{asset('public/assets/mobile/images/sidenav/user.png')}}" /> <span>Profile Settings</span> </a> </li>-->
-            <li><a href="{{url('mobile/settings')}}"><img src="{{asset('public/assets/mobile/images/sidenav/settings.png')}}" /> <span>Settings</span> </a> </li>
+            <li><a href="{{url('mobile/my-profile')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Profile Settings</span> </a> </li>
+            <li><a href="{{url('mobile/settings')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Settings</span> </a> </li>
             <!-- <li><a><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Customers</span> </a> </li> -->
-            <li><a href="{{url('mobile/scan')}}"><img src="{{asset('public/assets/mobile/images/sidenav/qr-code.png')}}" /> <span>Scan </span> </a> </li>
-            <li><a href="{{url('mobile/membership')}}"><img src="{{asset('public/assets/mobile/images/sidenav/upgrade.png')}}" /> <span>Upgrade</span> </a> </li>
-            <li><a href="{{url('mobile/help')}}"><img src="{{asset('public/assets/mobile/images/sidenav/information.png')}}" /> <span>Help</span> </a> </li>
+            <li><a href="{{url('mobile/scan')}}"><img src="{{asset('public/assets/mobile/images/sidenav/background.png')}}" /> <span>Scan </span> </a> </li>
+            <li><a href="{{url('mobile/membership')}}"><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>Upgrade</span> </a> </li>
+            <li><a href="{{url('mobile/help')}}"><img src="{{asset('public/assets/mobile/images/sidenav/about.png')}}" /> <span>Help</span> </a> </li>
             <li><a href="{{url('mobile/logout')}}"><img src="{{asset('public/assets/mobile/images/sidenav/logout.png')}}" /> <span>Logout</span> </a> </li>
         </ul>
     </div>
@@ -130,14 +121,13 @@ Squeedr
                                     <h3 id="total_customers">{{$total_customers}}</h3>
                                     <h4>New Customers(S)</h4>
                                     <p id="customers_difference"><span <?php if($customers_difference > 0) { ?> class="green" <?php } ?>>{{$customers_difference}}%</span> Form last month</p>
-                                <?php } ?>
-                                <?php /*} else if($report->report_id == '4') { ?>
+                                <?php } else if($report->report_id == '4') { ?>
 
                                 <?php } else if($report->report_id == '5') { ?>
 
                                 <?php } else if($report->report_id == '6') { ?>
 
-                                <?php } */?>
+                                <?php } ?>
                               
                            </div>
                         </div>
@@ -158,7 +148,9 @@ Squeedr
                             <li><input name="dashboard_reports[]" type="checkbox" value="1" <?=in_array('1', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Appointement Reports</li>
                             <li><input name="dashboard_reports[]" type="checkbox" value="2" <?=in_array('2', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Sales Reports</li>
                             <li><input name="dashboard_reports[]" type="checkbox" value="3" <?=in_array('3', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Clients Reports</li>
-                            
+                            <li><input name="dashboard_reports[]" type="checkbox" value="4" <?=in_array('4', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Cancellation Reports</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="5" <?=in_array('5', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Service Report</li>
+                            <li><input name="dashboard_reports[]" type="checkbox" value="6" <?=in_array('6', array_column($dashboard_reports_array, 'report_id')) ? "checked" : ""; ?>/>Credit Charges Reports</li>
                         </ul>
 
                         
@@ -217,49 +209,48 @@ Squeedr
                   <h4 class="modal-title">Quick Guide</h4>
                </div>
                <div class="modal-body clr-modalbdy">
-               
-                                 
-                                   <a href="{{ url('mobile/calendar') }}"><h3>1. Sync Calendars</h3></a>
-                                   <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling conflicts when creating 
-                                       new events.
-                                   </p>
-                                   <a href=""><h5> 1.1 Personalize your email</h5></a>
-                                   <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
-                                   <hr >
-                                   <a href=""><h3>2. Manage your business hours</h3></a>
-                                   <p>Events types lets you create an event according to your availability, meeting duration, location, etc..., for meetings 
-                                       or for individual invitees.
-                                   </p>
-                                   <a href="{{ url('mobile/service-list/all') }}"><h5> 2.2 Setup your services, staff and location</h5></a>
-                                   <ul>
-                                       <li>Create events to define your services </li>
-                                       <li>Setup scheduling pages for individual team members </li>
-                                       <li>Create location-based events.</li>
-                                   </ul>
-                                   <hr >
-                                   <h3>3. Share your link</h3>
-                                   <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
-                                       <br><br>
-                                       <span class="cl-blue">
-                                       Subject: Lets connect,<br>
-                                       Hi matt,<br>
-                                       It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
-                                       <br>
-                                       Let's Chat soon!<br><br>
-                                       - Sam
-                                       </span>
-                                   </p>
-                                   <hr >
-                                   <h3>4. Customize your Squeedr page</h3>
-                                   <hr style="margin-top:10px; margin-top:5px;">
-                                   <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
-                                       Customize the page to align it with your brand and coporate indentity.
-                                   </p>
-                                   <a href=""><h5> 4.4 Business Details</h5></a>
-                                   <p></p>
-               
-                              </div>
-              
+
+                  
+                    <a href="{{ url('mobile/calendar') }}"><h3>1. Sync Calendars</h3></a>
+                    <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling conflicts when creating 
+                        new events.
+                    </p>
+                    <a href=""><h5> 1.1 Personalize your email</h5></a>
+                    <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
+                    <hr >
+                    <a href=""><h3>2. Manage your business hours</h3></a>
+                    <p>Events types lets you create an event according to your availability, meeting duration, location, etc..., for meetings 
+                        or for individual invitees.
+                    </p>
+                    <a href="{{ url('mobile/service-list/all') }}"><h5> 2.2 Setup your services, staff and location</h5></a>
+                    <ul>
+                        <li>Create events to define your services </li>
+                        <li>Setup scheduling pages for individual team members </li>
+                        <li>Create location-based events.</li>
+                    </ul>
+                    <hr >
+                    <h3>3. Share your link</h3>
+                    <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
+                        <br><br>
+                        <span class="cl-blue">
+                        Subject: Lets connect,<br>
+                        Hi matt,<br>
+                        It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
+                        <br>
+                        Let's Chat soon!<br><br>
+                        - Sam
+                        </span>
+                    </p>
+                    <hr >
+                    <h3>4. Customize your Squeedr page</h3>
+                    <hr style="margin-top:10px; margin-top:5px;">
+                    <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
+                        Customize the page to align it with your brand and coporate indentity.
+                    </p>
+                    <a href=""><h5> 4.4 Business Details</h5></a>
+                    <p></p>
+
+               </div>
               
             </div>
          </div>
