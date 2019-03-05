@@ -51,21 +51,6 @@ Squeedr
     .rb-email:checked ~ .email {display:inline;}
 
     .rb-phone:checked ~ .phone {display:inline;}
-	
-	.fc-icon, .fc-toolbar .fc-center {
-    display: inline-block;
-    text-align: center;
-    float: none;
-}
-.fc-icon, .fc-toolbar .fc-center div, .fc .fc-toolbar>*>:first-child{display: inline-block;
-    text-align: center;
-    width: 100%;
-    float: none;}
-	
-	.fc-toolbar .fc-next-button{float:right !important;}
-	.fc-toolbar h2{    display: inline-block;
-    width: auto;
-    float: none !important;}
 
 </style>
 
@@ -206,7 +191,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                         </div>
 
-                        <!--<div class="form-group">
+                        <div class="form-group">
 
                             <div class="row">
 
@@ -238,7 +223,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                             </div>
 
-                        </div>-->
+                        </div>
 
                         <?php if($service_details->capacity > 0) { ?>
 
@@ -278,7 +263,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                             </div>-->
 
-                            <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div class="col-lg-4 col-md-4 col-sm-4">
 
                                 <label for="service_link">Service Link <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Service URL is the link you can share with your invitees if you want them to bypass the 'Pick Service' step on your Squdeer page and go directly to the 'Pick Date & Time' step. "></i> </label>
 

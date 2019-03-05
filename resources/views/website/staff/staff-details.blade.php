@@ -1223,7 +1223,7 @@ Squeedr
 
                                     {
 
-                                        echo "<option value='".$value->category_id."'>".$value->cat."</option>";
+                                        echo "<option value='".$value->category_id."'>".$value->category."</option>";
 
                                     }
 
