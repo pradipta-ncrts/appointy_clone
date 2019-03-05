@@ -34,7 +34,7 @@
                   <h2>Resource, Services <br> & Events passes </h2>
                </div>
                <div class="col-lg-5 col-md-6 col-sm-6 from-reg1">
-                  <form class="form-horizontal clearfix" action="{{ url('api/registration-step2') }}" method="post" id="process-registration-step2">
+                  <form class="form-horizontal clearfix" action="{{ url('api/process-registration-step2') }}" method="post" id="process-registration-step2">
                    <div class="clone-div12 row-2">
                       
                    </div>
@@ -134,7 +134,7 @@
                    </form>
                      <div class="row">
                         <div class="col-md-4"><button type="button" id="skip">Skip</button></div>
-                        <div class="col-md-4"> <button type="submit" id="submit" style="display: none;">Submit</button></div>
+                        <div class="col-md-4"> <button type="button" id="submit" style="display: none;">Submit</button></div>
                      </div>
                      <div class="clearfix"></div>
                </div>
@@ -348,6 +348,12 @@
             })
          });
 
+         $(document).on('click','#submit',function(event) {
+         event.preventDefault();
+         alert();
+         $("#process-registration-step2").submit();
+         
+         });
       </script>
       <script type="text/javascript">
       $(document).on('click','.remvbtn',function(event) {
