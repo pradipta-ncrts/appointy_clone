@@ -85,12 +85,12 @@ class ProfileController extends ApiController {
 		$profession_id = $this->common_model->insert_data_get_id($this->tableObj->tableNameNotificationUpdates, $notification_data);
 		//Notification Update End
 		
+		$user_type = $request->input('user_type');
 		$name = $request->input('profile_name');
 		$profession = $request->input('profile_profession');
 		$presentation = $request->input('presentation');
 		$expertise = $request->input('expertise');
 		$branding = $request->input('branding');
-
 
 		$param = array(
 			'name' => $name,
@@ -98,6 +98,7 @@ class ProfileController extends ApiController {
 			'presentation' => $presentation,
 			'expertise' => $expertise,
 			'branding' => $branding,
+			'business_name' => $name
 		);
 		//now update service status 
 		$findCond = array(
