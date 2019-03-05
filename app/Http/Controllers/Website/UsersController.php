@@ -456,6 +456,10 @@ class UsersController extends ApiController {
 		$timezone_url_func_name="timezone_list";
 		$timezone_return = $this->curl_call($timezone_url_func_name,$timezone_post_data);*/
 
+		$cat_post_data = $authdata;
+		$cat_url_func_name="user_categories";
+		$return_category = $this->curl_call($cat_url_func_name,$cat_post_data);
+
 		$data = array();
         $zones_array = array();
         $timestamp = time();
@@ -472,7 +476,7 @@ class UsersController extends ApiController {
 			if($return->response_status == 1){
 				$data['client_list'] = $return->client_list;
 				$data['client_search_text'] = $client_search_text;
-				$data['category_list'] = $service_return->category_list;
+				$data['category_list'] = $return_category->category_list;
 				$data['timezone'] = $zones_array;
 			}
 			//echo '<pre>'; print_r($data); exit;
@@ -566,13 +570,17 @@ class UsersController extends ApiController {
 		$service_post_data = $authdata;
 		$service_url_func_name="service_list";
 		$service_return = $this->curl_call($service_url_func_name,$service_post_data);
+
+		$cat_post_data = $authdata;
+		$cat_url_func_name="user_categories";
+		$return_category = $this->curl_call($cat_url_func_name,$cat_post_data);
 		
 		// Check response status. If success return data //		
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['staff_list'] = $return->staff_list;
 				$data['staff_search_text'] = $staff_search_text;
-				$data['category_list'] = $service_return->category_list;
+				$data['category_list'] = $return_category->category_list;
 
 			}
 			//echo '<pre>'; print_r($data); exit;
@@ -675,6 +683,10 @@ class UsersController extends ApiController {
 		
 		$url_func_name="service_list";
 		$return = $this->curl_call($url_func_name,$post_data);
+
+		$cat_post_data = $authdata;
+		$cat_url_func_name="user_categories";
+		$return_category = $this->curl_call($cat_url_func_name,$cat_post_data);
 		
 		// Check response status. If success return data //		
 		if(isset($return->response_status))
@@ -682,7 +694,7 @@ class UsersController extends ApiController {
 			if($return->response_status == 1)
 			{
 				$data['service_list'] = $return->service_list;
-				$data['category_list'] = $return->category_list;
+				$data['category_list'] = $return_category->category_list;
 				$data['user_name'] = $return->user_name;
 			}
 			//echo '<pre>'; print_r($data); exit;
