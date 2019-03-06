@@ -121,7 +121,7 @@ class ClientsController extends ApiController {
                         $mail_body = str_replace('{header}', $templateHeader, $mail_body);
                         $mail_body = str_replace('{client_name}', $client_name, $mail_body);
                         $mail_body = str_replace('{user_id}', $client_email, $mail_body);
-                        $mail_body = str_replace('{password}', ' ', $mail_body);
+                        $mail_body = str_replace('{password}', 'Use your existing password', $mail_body);
                         $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
 
                         $emailData['subject'] = $email_template->subject ? $email_template->subject : 'Client Registration';
@@ -1003,7 +1003,9 @@ class ClientsController extends ApiController {
 
         $currency_field = array('currency');
 
-        $business_field = array('business_name','business_location','skype_id');
+        $business_field = array('business_name','business_location','skype_id','profile_perosonal_image', 'user_type', 'profile_image', 'latitute', 'logngitude', 'mobile as service_provider_mobile');
+
+        $profession_name = array('profession');
 
         $joins = array(
                     array(
@@ -1055,6 +1057,16 @@ class ClientsController extends ApiController {
                     'join_on_more'=>array(),
                     //'join_conditions' => array(array('transaction_no','=','invoice_no')),
                     'select_fields' => $business_field,
+                ),
+                array(
+                    'join_table'=>$this->tableObj->tableNameProfession,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameUser,
+                    'join_type'=>'left',
+                    'join_on'=>array('profession','=','profession_id'),
+                    'join_on_more'=>array(),
+                    //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                    'select_fields' => $profession_name,
                 ),
         );
         
@@ -1125,7 +1137,14 @@ class ClientsController extends ApiController {
                     "note" => $appoinment_details->note,
                     "business_name" => $appoinment_details->business_name,
                     "business_location" => $appoinment_details->business_location,
+                    "profile_perosonal_image" => $appoinment_details->profile_perosonal_image,
+                    "profession" => $appoinment_details->profession,
+                    "latitute" => $appoinment_details->latitute,
+                    "logngitude" => $appoinment_details->logngitude,
                     "skype_id" => $appoinment_details->skype_id,
+                    "user_type" => $appoinment_details->user_type,
+                    "profile_image" => $appoinment_details->profile_image,
+                    "service_provider_mobile" => $appoinment_details->service_provider_mobile,
                     "redirect_url" => $redirect_url,
             );
 
@@ -1236,6 +1255,7 @@ class ClientsController extends ApiController {
                 "total_payable_amount" => $appoinment_details->total_payable_amount,
                 "appoinment_raw_date" => date('m/d/Y',strtotime($appoinment_details->date)),
                 "appoinment_raw_time" => $appoinment_details->start_time,
+                "service_provider_mobile" => $appoinment_details->service_provider_mobile,
                 "staff_id" => $appoinment_details->staff_id,
                 "note" => $appoinment_details->note,
         );
