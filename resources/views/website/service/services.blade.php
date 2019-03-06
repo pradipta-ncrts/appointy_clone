@@ -86,10 +86,14 @@ Squeedr
                 <span>
                 <?=$details->duration;?>
                 min
+                
                 <label>
+                <?php if($details->payment_method != 4) { ?>
                   <?=$details->currency;?>
                   <?=$details->duration ? $details->cost : '';?>
+                  <?php } else { echo 'Free'; } ?>
                 </label>
+                
                 </span> </div>
               <ul class="pull-right">
                 <li onclick="showUl(this);"> <a> <img src="{{asset('public/assets/website/images/threeDots.png')}}"/> </a>

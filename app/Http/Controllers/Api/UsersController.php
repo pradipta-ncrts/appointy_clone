@@ -1575,8 +1575,10 @@ class UsersController extends ApiController {
 		$service_location = $request->input('service_location');
 		$service_timezone = $request->input('service_timezone');
 		$service_display_location = $request->input('service_display_location');
-		$service_currency = $request->input('service_currency');
-		$service_price = $request->input('service_price');  
+		//$service_currency = $request->input('service_currency');
+		//$service_price = $request->input('service_price');  
+		$service_currency = 5;
+		$service_price = 0;
 		$service_capacity = $request->input('service_capacity');
 		$service_description = $request->input('service_description');
 		$service_link = $request->input('service_link');
@@ -1784,6 +1786,17 @@ class UsersController extends ApiController {
 
 		$service_id = $request->input('service_id');
 		$payment_method = $request->input('payment_method');
+		$service_currency = $request->input('service_currency');
+		$service_price = $request->input('service_price');
+		$payment_terms = $request->input('payment_terms');
+
+		if($payment_method == 4){
+			$cost = 0;
+			$currency_id = 5;
+		} else {
+			$cost = $service_price;
+			$currency_id = $service_currency;
+		}
 
 		$userCond = array(
 			array('id', '=', $user_no),
@@ -1838,11 +1851,16 @@ class UsersController extends ApiController {
 			} else {
 				$this->response_message="You can't choose this payment collection method. Please integrate stripe for your account.";
 			}
+		} else {
+			$perform_update = true;
 		}
 
 		if($perform_update == true){
 			$updateData = array(
-				'payment_method' => $payment_method
+				'payment_method' => $payment_method,
+				'cost'=> $cost,
+				'currency_id' => $currency_id,
+				'payment_terms' => $payment_terms
 			);
 
 			$updateCond=array(

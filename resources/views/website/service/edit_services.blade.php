@@ -206,7 +206,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                         </div>
 
-                        <!--<div class="form-group">
+                        <div class="form-group">
 
                             <div class="row">
 
@@ -238,7 +238,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                             </div>
 
-                        </div>-->
+                        </div>
 
                         <?php if($service_details->capacity > 0) { ?>
 
@@ -1154,6 +1154,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                 <div class="headRow whitebox  dsinside p clearfix">
 
                     
+                    <form name="service_payment_form" id="service_payment_form" method="post" action="{{url('api/update-service-payment')}}">
 
                         <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
 
@@ -1162,6 +1163,11 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <div class="break20px"></div>
 
                         <div class="form-group">
+                            <input type="radio" name="payment_method" <?php if($service_details->payment_method == 4) { ?> checked="checked" <?php } ?> value="4" />
+
+                            <label class="right35px">Do not accept any payment</label>
+
+                            <div class="clearfix break10px"></div>
 
                             <input type="radio" name="payment_method" <?php if($service_details->payment_method == 1) { ?> checked="checked" <?php } ?> value="1" />
 
@@ -1184,36 +1190,39 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         <div class="break20px"></div>
                         
                         
-                        <div class="form-details">
-                        <div class="form-group">
-                            <div class="row">
-                            <div class="col-lg-12">
-                            <label>Amount to be Collected<sup>*</sup></label>
-                            </div>
+                        <div class="form-details" id="price_section" <?php if($service_details->payment_method == 4) { ?> style="display:none;" <?php } ?>>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <label>Amount to be Collected<sup>*</sup></label>
+                                    </div>
 
-                                <div class="col-lg-4 col-md-4 col-sm-5">
-                                   <input class="form-control" type="text" name="">
-                                </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-3">
+                                        <select name="service_currency" id="service_currency">
+                                            <option value="">Currency</option>
+                                            <?php if(!empty($currency_list['currency_list'])) { foreach($currency_list['currency_list'] as $currency) { ?>
+                                            <option <?php if($service_details->currency_id == $currency->currency_id) { ?> selected="selected" <?php } ?> value="{{$currency->currency_id}}">{{$currency->currency}}</option>
+                                            <?php } } ?>
+                                        </select>
+                                    </div>
 
-                                <div class="col-lg-2 col-md-2 col-sm-3">
-                                    <input class="form-control" type="text" name="">
-                                </div>
-                                <div class="col-lg-2 col-md-2 col-sm-3">
-                                    <span style="line-height:20px;text-align:left;font-size:15px;">USD</span>
+                                    <div class="col-lg-4 col-md-4 col-sm-5">
+                                        <input class="form-control" type="number" min="1" name="service_price" id="service_price" value="{{$service_details->cost}}" >
+                                    </div>
+                                    
                                 </div>
                             </div>
-                        </div>
                         
-                        <div class="form-group">
-                            <div class="row">
-                            <div class="col-lg-12">
-                            <label>Payment Terms<sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Enter a Payment Terms" data-placement="right"></i> </label></div>
+                            <div class="form-group">
+                                <div class="row">
+                                <div class="col-lg-12">
+                                <label>Payment Terms<sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" title="Enter a Payment Terms" data-placement="right"></i> </label></div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-12">
-                                   <textarea cols="4" rows="5"></textarea>
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <textarea name="payment_terms" id="payment_terms" cols="4" rows="5">{{$service_details->payment_terms}}</textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                         
                         
@@ -1919,19 +1928,6 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
            },
 
-           service_currency: {
-
-               required: true
-
-           },
-
-           service_price: {
-
-               required: true,
-
-               number: true
-
-           },
 
            service_link: {
 
@@ -1965,19 +1961,6 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
            },
 
-           service_currency: {
-
-               required: 'Please choose currency'
-
-           },
-
-           service_price: {
-
-               required: 'Please enter price',
-
-               number: 'Please enter proper price'
-
-           },
 
            service_link: {
 
@@ -2296,8 +2279,51 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
    });
 
    
-
+   var payment_method = $('[name="payment_method"]:checked');
    $('#service_payment_form').validate({
+
+    rules: {
+
+        service_currency: {
+
+               required: function(){
+                            return payment_method.val != 4;
+                        }
+
+           },
+
+           service_price: {
+
+               required: function(){
+                            return payment_method.val != 4;
+                        },
+
+               number: true
+
+           }
+
+    },
+
+   
+
+       messages: {
+
+           service_currency: {
+
+               required: 'Please choose currency'
+
+           },
+
+           service_price: {
+
+               required: 'Please enter price',
+
+               number: 'Please enter proper price'
+
+           }
+
+       },
+
 
        submitHandler: function(form) {
 
@@ -2306,6 +2332,8 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
            //data.push({name: 'device_type', value: 1});
 
            data = addCommonParams(data);
+
+           
 
            $.ajax({
 
@@ -3576,7 +3604,14 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
     });
 
 
-
+    $('input[type=radio][name=payment_method]').change(function() {
+        if (this.value == '4') {
+            $('#price_section').hide();
+        }
+        else {
+            $('#price_section').show();
+        }
+    });
 
 
     // Calendar //
