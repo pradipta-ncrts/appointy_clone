@@ -129,7 +129,9 @@ Squeedr
                <div class="pull-left">
                   <p>{{ucwords($service->service_name)}}</p>
                   <span>{{$service->duration}} mins
-                  <label>{{$service->currency}} {{$service->cost}}</label>
+                  <label><?php if($service->payment_method != 4) { ?>
+                  {{$service->currency}} {{$service->cost}}
+                  <?php } else { echo 'Free'; } ?></label>
                   </span> 
                </div>
                <ul class="pull-right">
