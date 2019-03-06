@@ -999,7 +999,7 @@ class ClientsController extends ApiController {
 
         $service_fields = array('service_name','category_id','cost','duration');
 
-        $stuff_fields = array('full_name','mobile','staff_profile_picture');
+        $stuff_fields = array('full_name','mobile','staff_profile_picture', 'expertise');
 
         $currency_field = array('currency');
 
@@ -1145,6 +1145,8 @@ class ClientsController extends ApiController {
                     "user_type" => $appoinment_details->user_type,
                     "profile_image" => $appoinment_details->profile_image,
                     "service_provider_mobile" => $appoinment_details->service_provider_mobile,
+                    "payment_method" => $appoinment_details->payment_method,
+                    "expertise" => $appoinment_details->expertise,
                     "redirect_url" => $redirect_url,
             );
 

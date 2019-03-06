@@ -74,7 +74,7 @@ class IntregrationController extends ApiController {
 
 			if(isset($resp['error']) && $resp['error'])
 			{
-				return redirect('/integration')->with('intregration_success','Already intregrated in stripe.');
+				return redirect('/integration')->with('intregration_success','Already integrated in stripe.');
 			}
 			else
 			{
@@ -106,7 +106,7 @@ class IntregrationController extends ApiController {
 					$insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStripeIntregration,$stripe_data);
 				}
 
-				return redirect('/integration')->with('intregration_success','Stripe successfully intregraeted.');
+				return redirect('/integration')->with('intregration_success','Stripe successfully integrated.');
 			}
         }
         else
