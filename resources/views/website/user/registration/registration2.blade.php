@@ -35,6 +35,7 @@
                </div>
                <div class="col-lg-5 col-md-6 col-sm-6 from-reg1">
                   <form class="form-horizontal clearfix" action="{{ url('api/process-registration-step2') }}" method="post" id="process-registration-step2">
+                  <input class="new_form_data" type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
                    <div class="clone-div12 row-2">
                       
                    </div>
@@ -349,10 +350,35 @@
          });
 
          $(document).on('click','#submit',function(event) {
-         event.preventDefault();
-         alert();
-         $("#process-registration-step2").submit();
-         
+              event.preventDefault();
+              var data = $("#process-registration-step2").serializeArray();
+              console.log(data);
+              $.ajax({
+                  url: js_base_url+'/api/process-registration-step2',
+                  type: 'POST',
+                  data:data ,
+                  dataType: "json",
+                  success: function(response) {
+                      if(response.response_status==1)
+                      {
+                          var login_url = js_base_url+'login';
+                          swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
+                          function(){ 
+                              window.location = login_url;
+                          });
+                      }
+                      else
+                      {
+                          swal({title: "Error", text: 'Try again later.', type: "error"});
+                      }
+                  },
+                  beforeSend: function(){
+                      $('.animationload').show();
+                  },
+                  complete: function(){
+                      $('.animationload').hide();
+                  }
+              });
          });
       </script>
       <script type="text/javascript">

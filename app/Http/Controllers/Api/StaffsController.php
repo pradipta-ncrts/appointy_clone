@@ -1295,8 +1295,10 @@ class StaffsController extends ApiController {
                 'postal_code' => $pin_no,
                 'area' => $area
             );
+
+            //print_r($param); die();
             $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameStaffPostalCode,$param);
-            if($insertdata > 0)
+            if($insertdata)
             {
                 $query = "select `squ_staff_postal_code`.`postal_code`, COUNT(*) as count from `squ_staff_postal_code` where `squ_staff_postal_code`.`is_deleted` = 0 and `squ_staff_postal_code`.`is_blocked` = 0 and `squ_staff_postal_code`.`user_id` = '".$user_id."' and `squ_staff_postal_code`.`is_deleted` = 0 group by `postal_code`";
 
