@@ -110,7 +110,7 @@ Squeedr
 
                                         ?>
 
-                                            <option value="<?=$value->profession_id;?>" <?=isset($user_details->profession) && $user_details->profession ? "selected" : '';?>><?=$value->profession;?></option>
+                                            <option value="<?=$value->profession_id;?>" <?=isset($user_details->profession) && $user_details->profession == $value->profession_id ? "selected" : '';?>><?=$value->profession;?></option>
 
                                         <?php
 

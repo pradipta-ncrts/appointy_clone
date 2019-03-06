@@ -206,7 +206,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                         </div>
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
 
                             <div class="row">
 
@@ -238,7 +238,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                             </div>
 
-                        </div>
+                        </div>-->
 
                         <?php if($service_details->capacity > 0) { ?>
 
@@ -282,7 +282,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                                 <label for="service_link">Service Link <sup>*</sup> <i class="fa fa-question" data-toggle="tooltip" data-placement="right" title="Service URL is the link you can share with your invitees if you want them to bypass the 'Pick Service' step on your Squdeer page and go directly to the 'Pick Date & Time' step. "></i> </label>
 
-                                <p style="color: #716C6C;font-size: 12px;width: 100%;float: left; word-wrap: break-word;"><?php echo url('client/service-details/');?></p>
+                                <p style="color: #716C6C;font-size: 13px;width: 100%;float: left; word-wrap: break-word;"><?php echo url('client/service-details/').'/';?></p>
 
                             </div>
 

@@ -50,10 +50,14 @@ class ProfileController extends ApiController {
 		
 		$user_details = $this->common_model->fetchData($this->tableObj->tableNameUser, $findCond, $selectFields);
 
-		$prof_conditions = array(
+		/*$prof_conditions = array(
             array('is_deleted','=','0'),
         );
-        $prof_data = $this->common_model->fetchDatas($this->tableObj->tableNameProfession, $prof_conditions);
+		$prof_data = $this->common_model->fetchDatas($this->tableObj->tableNameProfession, $prof_conditions);*/
+		
+		$find_query = "SELECT * FROM `squ_profession` WHERE (`squ_profession`.`created_by` = '".$user_no."' OR `squ_profession`.`created_by` = 0) AND `squ_profession`.`is_deleted` = 0 AND `squ_profession`.`is_blocked` = 0";
+		$prof_data = $this->common_model->customQuery($find_query,$query_type=1);
+		
 		
 		$response_data['user_details'] = $user_details;
 		$response_data['profession'] = $prof_data;
