@@ -1682,7 +1682,7 @@ class UsersController extends ApiController {
 		$service_id = $request->input('service_id');
 		$service_category = $request->input('service_category');
 		$service_name = $request->input('service_name');
-		$service_timezone = $request->input('service_timezone');
+		//$service_timezone = $request->input('service_timezone');
 		$service_location = $request->input('service_location');
 		$service_display_location = $request->input('service_display_location');
 		$service_currency = $request->input('service_currency');
@@ -1716,7 +1716,7 @@ class UsersController extends ApiController {
 				'service_name' => $service_name,
 				'cost' => $service_price,
 				'currency_id' => $service_currency,
-				'timezone' => $service_timezone,
+				//'timezone' => $service_timezone,
 				'location' => $service_location,
 				'display_location' => $service_display_location,
 				'capacity' => $service_capacity,
@@ -1746,6 +1746,7 @@ class UsersController extends ApiController {
 
 		$service_id = $request->input('service_id');
 		$service_duration = $request->input('service_duration');
+		$service_timezone = $request->input('service_timezone');
 		$availability_increments = $request->input('availability_increments');
 		$max_service = $request->input('max_service');
 		$minimum_scheduling_notice = $request->input('minimum_scheduling_notice');
@@ -1754,6 +1755,7 @@ class UsersController extends ApiController {
 		$is_secret = $request->input('is_secret');
 
 		$updateData = array(
+				'timezone' => $service_timezone,
 				'duration' => $service_duration,
 				'availability_increments' => $availability_increments,
 				'max_service' => $max_service,

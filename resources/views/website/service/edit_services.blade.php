@@ -1922,12 +1922,6 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
            },
 
-           service_timezone: {
-
-               required: true
-
-           },
-
 
            service_link: {
 
@@ -1952,12 +1946,6 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
            service_name: {
 
                required: 'Please enter service name'
-
-           },
-
-           service_timezone: {
-
-               required: 'Please enter service timezone'
 
            },
 
@@ -2070,6 +2058,12 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
                min: 1,
 
+           },
+
+           service_timezone: {
+
+               required: true
+
            }
 
        },
@@ -2083,6 +2077,12 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
                required: 'Please enter service questions',
 
                min: 'Please enter value',
+
+           },
+
+           service_timezone: {
+
+               required: 'Please enter service timezone'
 
            }
 

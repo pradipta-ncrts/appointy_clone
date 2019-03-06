@@ -56,7 +56,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                  <span class="specialnote">e.g. Joe's Coffee, I'll Call you, etc</span> 
                               </div>
                            </div>
-                           <div class="row">
+                           <!--<div class="row">
                               <div class="col-lg-6 col-md-6 col-sm-6">
                                  <label for="service_location">Timezone</label>
                                  <select data-live-search="true" name="service_timezone" id="service_timezone" >
@@ -74,7 +74,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                                   </select>
                               </div>
                            </div>
-                           <br>
+                           <br>-->
                            <div class="clearfix"></div>
                            <div class="form-group">
                               <input type="radio" checked="checked" name="service_display_location" id="booking" value="1" />
@@ -183,16 +183,6 @@ $(document).ready(function () {
             service_name: {
                 required: true
             },
-            service_timezone: {
-               required: true
-            },
-            service_currency: {
-                required: true
-            },
-            service_price: {
-                required: true,
-                number: true
-            },
             service_link: {
                 required: true,
                 alphanumeric: true
@@ -216,16 +206,6 @@ $(document).ready(function () {
         messages: {
             service_name: {
                 required: 'Please enter service name'
-            },
-            service_timezone: {
-                required: 'Please enter service timezone'
-            },
-            service_currency: {
-                required: 'Please choose currency'
-            },
-            service_price: {
-                required: 'Please enter price',
-                number: 'Please enter proper price'
             },
             service_link: {
                 required: 'Please enter service link',
