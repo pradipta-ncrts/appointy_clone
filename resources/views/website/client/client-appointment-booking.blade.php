@@ -106,7 +106,7 @@ Squeedr
 									<select name="user_id" id="user_id">
 										<option value="">Select Service Provider </option>
 										<?php if(!empty($business_provider_list)) { foreach($business_provider_list as $business_provider) { ?>
-										<option value="{{$business_provider->user_id}}"><?php if($business_provider->user_type == 1) echo $business_provider->name; else $business_provider->business_name; ?></option>
+										<option value="{{$business_provider->user_id}}"><?php if($business_provider->user_type == 1) echo $business_provider->name; else echo $business_provider->business_name; ?></option>
 										<?php } } ?>
 									</select>
 									<div class="clearfix"></div>

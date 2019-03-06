@@ -53,7 +53,7 @@ Squeedr
                      </div>
                   </div>
                   <div class="add-logo">
-                     <img src="<?=$profile_image;?>"><br>
+                     <img src="<?=$profile_image;?>" style="width: 100%"><br>
                      <input type="hidden" name="invoice_logo" value="<?=$profile_image;?>">
                      <span>Upload Logo</span>
                   </div>

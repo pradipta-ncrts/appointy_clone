@@ -98,7 +98,7 @@ Squeedr
 							{{$appoinment_details->appoinment_date}} - {{$appoinment_details->appoinment_raw_time}}
 						</div>
 						<div class="col-md-6">
-							<?php if($appoinment_details->staff_name != '') { ?>
+							<?php if($appoinment_details->staff_name) { ?>
 							<div class="user-pic">
 								<?php if($appoinment_details->staff_profile_picture != ""){ ?>
 									<img src="{{$appoinment_details->staff_profile_picture}}" width="60px" height="60px">
@@ -107,6 +107,45 @@ Squeedr
 								<?php } ?>
 								<h2>{{$appoinment_details->staff_name}}
 									<!--<span>Psychiatrist</span>-->
+								</h2>
+								<div class="clearfix"></div>
+							</div>
+							<?php } else { ?>
+							<div class="user-pic">
+								<?php
+								if($appoinment_details->user_type==1)
+								{
+									if($appoinment_details->profile_perosonal_image!="")
+									{
+									?>	
+										<img src="{{asset('public/image/profile_perosonal_image')}}/<?=$appoinment_details->profile_perosonal_image;?>" width="60px" height="60px">
+									<?php
+									}
+									else
+									{
+									?>
+										<img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}">
+									<?php
+									}
+								}
+								else
+								{
+									if($appoinment_details->profile_image!="")
+									{
+									?>
+										<img src="{{asset('public/image/profile_image')}}/<?=$appoinment_details->profile_image;?>" width="60px" height="60px">
+									<?php
+									}
+									else
+									{
+									?>
+										<img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}">
+									<?php
+									}
+								}
+								?>
+								<h2>{{$appoinment_details->business_name}}
+									<span>{{ $appoinment_details->profession }}</span>
 								</h2>
 								<div class="clearfix"></div>
 							</div>
@@ -126,7 +165,7 @@ Squeedr
 									<img src="{{asset('public/assets/website/images/profile-icon-phone.png')}}">
 									<h2>
 									Phone
-									<span id="view_staff_phone">{{$appoinment_details->staff_mobile}}</span> 
+									<span id="view_staff_phone"><?=$appoinment_details->staff_mobile ? $appoinment_details->staff_mobile : $appoinment_details->service_provider_mobile;?></span> 
 									</h2>
 								</div>
 								<div class="clearfix"></div>
@@ -165,7 +204,7 @@ Squeedr
 						</div>
 						<div class="col-md-6">
 							<!--Google map-->
-							<div id="map-container" class="z-depth-1" style="height: 475px"></div>
+							<div id="map" class="z-depth-1" style="height: 475px"></div>
 						</div>
 						<div class="clearfix"></div>
 						<a href="{{$appoinment_details->redirect_url}}"><button type="button" class="btn btn-primary butt-next" style="margin: 30px auto 0; display: block">Book another Appointment</button></a>
@@ -180,47 +219,36 @@ Squeedr
 
 
 @section('custom_js')
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBGNBMdy-f3Pj7GsshK8pYEfxn4H68c1EM&libraries=places&callback=initialize" async defer></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
-<script src="/assets/gmap3.js?body=1" type="text/javascript"></script>
 
 <script type="text/javascript">
+function initialize() {
+    initMap();
+    initAutocomplete();
+  }
+  var map, marker;
+function initMap() {
+      var myLatLng = {lat: <?=$appoinment_details->latitute ? $appoinment_details->latitute : "-34.397";?>,
+          lng: <?=$appoinment_details->logngitude ? $appoinment_details->logngitude : "-34.397";?>};
 
-	var geocoder = new google.maps.Geocoder();
-	var address = "<?php echo $appoinment_details->business_location;?>";
-	var latitude = "";
-	var longitude = "";
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: myLatLng
+      });
 
-	geocoder.geocode( { 'address': address}, function(results, status) {
-
-		if (status == google.maps.GeocoderStatus.OK) {
-			latitude = results[0].geometry.location.lat();
-			longitude = results[0].geometry.location.lng();
-			
-		} 
-	}); 
-
-	//alert(latitude);
-
-	// Regular map
-	function regular_map() {
-		var var_location = new google.maps.LatLng(latitude, longitude);
-		var var_mapoptions = {
-			center: var_location,
-			zoom: 14
-		};
-		var var_map = new google.maps.Map(document.getElementById("map-container"),
-			var_mapoptions);
-		var var_marker = new google.maps.Marker({
-			position: var_location,
-			map: var_map,
-			title: "<?php echo $appoinment_details->business_location;?>"
-		});
-	}
-
-	// Initialize maps
-	google.maps.event.addDomListener(window, 'load', regular_map);
-</script>
-
+      <?php
+      if($appoinment_details->business_location)
+      {
+      ?>
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: '<?=$appoinment_details->business_location;?>'
+      });
+      <?php
+      }
+      ?>
+    }
 </script>
 @endsection
