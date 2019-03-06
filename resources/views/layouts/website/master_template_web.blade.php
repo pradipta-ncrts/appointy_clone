@@ -114,7 +114,7 @@
                         if($inner_user_details->profile_perosonal_image || $inner_user_details->profile_image)
                         {
                         ?>
-                        <img class="user-pic" src="{{asset('public/image/')}}/<?=$image;?>">
+                        <img class="user-pic" src="<?=$image;?>">
                         <?php
                         }
                         else

@@ -106,7 +106,7 @@ Squeedr
 									<img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}">
 								<?php } ?>
 								<h2>{{$appoinment_details->staff_name}}
-									<!--<span>Psychiatrist</span>-->
+									<span>{{$appoinment_details->expertise}}</span>
 								</h2>
 								<div class="clearfix"></div>
 							</div>
@@ -185,7 +185,27 @@ Squeedr
 									<img src="{{asset('public/assets/website/images/profile-icon-payment.png')}}">
 									<h2>
 									Payment Mode
-									<span>Cash</span> 
+									<span>
+									<?php
+									if($appoinment_details->payment_method==10)
+									{
+										echo "Stripe";
+									}
+									else if($appoinment_details->payment_method==11)
+									{
+										echo "Paypal";
+									}
+									else if ($appoinment_details->payment_method==1)
+									{
+										echo "Cash";
+									}
+									else
+									{
+										echo "Cash";
+									}
+									?>
+
+									</span> 
 									</h2>
 								</div>
 								<div class="clearfix"></div>
