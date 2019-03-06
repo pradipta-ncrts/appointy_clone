@@ -471,7 +471,7 @@ Squeedr
 						console.log(response);
 						if(response.response_status==1)
 						{
-							if(response.payment_method == 1){
+							if(response.payment_method == 1 || response.payment_method == 4){
 								//swal('Success!',response.message,'success');
 								if(response.service_redirect_type == 1){
 									var url = '<?php echo url('/client/appointment-confirmation');?>'+'/'+response.parameter;

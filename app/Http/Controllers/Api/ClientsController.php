@@ -1728,7 +1728,7 @@ class ClientsController extends ApiController {
                     $reschedule_url = url('/client/booking-details/'.$parameter.'/'.$order_id);
                 }
 
-                if($service_payment_method == 1){
+                if($service_payment_method == 1 || $service_payment_method == 4){
                     
                     //send mail to client
                     $client_email = $client_details->client_email;
