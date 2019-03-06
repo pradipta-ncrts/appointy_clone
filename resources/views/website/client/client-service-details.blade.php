@@ -60,7 +60,11 @@ Squeedr
                                                     <?php } ?>
                                                     <p><i class="fa fa-clock-o" aria-hidden="true"></i> {{$service_details->duration}} mins</p>
                                                 </div>
-                                                <div class="col-sm-2"><button type="button" class="btn btn-default pull-right"> <!--<i class="fa fa-usd" aria-hidden="true"></i>-->{{$service_details->currency}} {{$service_details->cost}} </button></div>
+                                                <div class="col-sm-2"><button type="button" class="btn btn-default pull-right"> <!--<i class="fa fa-usd" aria-hidden="true"></i>-->
+                                                <?php if($service_details->payment_method != 4) { ?>
+                                                    {{$service_details->currency}} {{$service_details->cost}}
+                                                <?php } else { echo 'Free'; }  ?>
+                                                </button></div>
                                                 </div>
                                             </li>
                                             <li>
@@ -95,8 +99,7 @@ Squeedr
                                                     <?php } else if($service_details->payment_method == '3') { ?>
                                                         <img src="{{asset('public/assets/website/images/stripe-logo.png')}}"/>
                                                     <?php } else { ?>
-                                                        <img src="{{asset('public/assets/website/images/paypal.png')}}"/>
-                                                        <img src="{{asset('public/assets/website/images/stripe-logo.png')}}"/>
+                                                        Free
                                                     <?php } ?>
                                                     </div></p>
                                                 </div>
