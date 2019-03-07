@@ -107,20 +107,21 @@
                         <?php
                         //echo '<pre>'; print_r($inner_user_details); exit;
                         if($inner_user_details->user_type == 1){
-                            $image =  $inner_user_details->profile_perosonal_image ? 'profile_perosonal_image/'.$inner_user_details->profile_perosonal_image : asset('public/assets/website/images/user-img.png');
+                            $image =  $inner_user_details->profile_perosonal_image ? 'image/profile_perosonal_image/'.$inner_user_details->profile_perosonal_image : 'assets/website/images/user-img.png';
                         } else {
-                            $image = $inner_user_details->profile_image ? 'profile_image/'.$inner_user_details->profile_image : asset('public/assets/website/images/user-img.png');
+                            //$image = $inner_user_details->profile_image ? 'image/profile_image/'.$inner_user_details->profile_image : asset('public/assets/website/images/user-img.png');
+                            $image =  $inner_user_details->profile_perosonal_image ? 'image/profile_perosonal_image/'.$inner_user_details->profile_perosonal_image : 'assets/website/images/user-img.png';
                         }
                         if($inner_user_details->profile_perosonal_image || $inner_user_details->profile_image)
                         {
                         ?>
-                        <img class="user-pic" src="<?=$image;?>">
+                        <img class="user-pic" src="{{asset('public/'.$image)}}">
                         <?php
                         }
                         else
                         {
                         ?>
-                        <img class="user-pic" src="<?=$image;?>">
+                        <img class="user-pic" src="{{asset('public/'.$image)}}">
                         <?php
                         }
                         ?>
