@@ -35,7 +35,7 @@ Squeedr
                   <div class="headRow showDekstop clearfix">
                      <div class="col-md-12 inv-det">
                         <div class="col-sm-5 bill-to">
-                           <img src="<?=$profile_image;?>">
+                           <img style="width: 100%" src="<?=$profile_image;?>">
                            <h2><?=$provider_name;?></h2>
                            <p>
                               <?php
