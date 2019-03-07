@@ -138,7 +138,7 @@ class ClientsPaymentController extends ApiController {
         );
 
         $appoinment_details = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
-
+        //echo '<pre>'; print_r($appoinment_details); exit;
 
         //Appointment Data
         $details = $appoinment_details[0];

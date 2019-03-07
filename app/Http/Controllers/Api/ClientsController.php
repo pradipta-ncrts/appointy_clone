@@ -3080,18 +3080,24 @@ class ClientsController extends ApiController {
         $selectFields=array();
         $booking_rule_data = $this->common_model->fetchData($this->tableObj->tableNameBookingRule,$findCond,$selectFields);
 
-        if($booking_rule_data->recurring_booking == 1){
-            $category_html = "";
-            $category_html = '<select id="dropdown_change" name="recurring_booking_frequency">';
-            $category_html .= '<option value="0">Does not repeat</option>';
-            $category_html .= '<option value="1" data-text="Daily">Daily</option>';
-            $category_html .= '<option value="2" data-text="Weekly on '.$weekday.'">Weekly on '.$weekday.'</option>';
-            $category_html .= '<option value="3" data-text="'.$weekandday.' '.$weekday.'">Monthly on the '.$weekandday.' '.$weekday.'</option>';
-            $category_html .= '<option value="4" data-text="Every weekday">Every weekday(Monday to Friday)</option>';
-            /*$category_html .= '<option value="5">Custom...</option>';*/
-            $category_html .= '</select>';
-            return $category_html;
+        $category_html = "";
+        if(!empty($booking_rule_data)){
+            if($booking_rule_data->recurring_booking == 1){
+                
+                $category_html = '<select id="dropdown_change" name="recurring_booking_frequency">';
+                $category_html .= '<option value="0">Does not repeat</option>';
+                $category_html .= '<option value="1" data-text="Daily">Daily</option>';
+                $category_html .= '<option value="2" data-text="Weekly on '.$weekday.'">Weekly on '.$weekday.'</option>';
+                $category_html .= '<option value="3" data-text="'.$weekandday.' '.$weekday.'">Monthly on the '.$weekandday.' '.$weekday.'</option>';
+                $category_html .= '<option value="4" data-text="Every weekday">Every weekday(Monday to Friday)</option>';
+                /*$category_html .= '<option value="5">Custom...</option>';*/
+                $category_html .= '</select>';
+                
+            }
         }
+
+        return $category_html;
+        
     }
 
 
