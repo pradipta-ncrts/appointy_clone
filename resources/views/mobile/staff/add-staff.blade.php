@@ -5,7 +5,7 @@ Squeedr
 @section('content')
 <header class="mobileHeader showMobile" id="divBh">
    <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
-   <h1>Add Staff</h1>
+   <h1>Add Team</h1>
    <ul>
       <li>
          &nbsp;<!-- <img src="images/mobile-serach.png" /> --> 
@@ -22,6 +22,12 @@ Squeedr
          <div class="col-xs-12">
             <form name="add_team_member_form" id="add_team_member_form" method="post" action="{{url('api/add_staff')}}" enctype="multipart/form-data">
                <div class="whitebox mobile-control">
+                  <div class="customcontrol">
+                     <select class="form-control" name="staff_type" id="staff_type" >
+                        <option value="1">Manager</option>
+                        <option value="2">Staff</option>
+                     </select>
+                  </div>
                   <div class="input-group"> <span class="input-group-addon"><img src="{{asset('public/assets/mobile/images/mobile-control-icons/mobile-first-name.png')}}"/> </span>
                      <input id="staff_fullname" type="text" class="form-control" name="staff_fullname" placeholder="Full Name">
                   </div>

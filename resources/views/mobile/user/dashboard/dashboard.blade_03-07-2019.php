@@ -6,7 +6,7 @@ Squeedr
 @section('custom_css')
 <style type="text/css">
     @media (max-width: 767px){.mobileHeader ul li img {max-width: 23px;}}
-    .mbprof{display: inline-block;color: #fff;position: relative;bottom: 10px;right: 0;font-size: 14px;background: #3F526F;border-radius: 50px;width: 30px;height: 30px;line-height: 33px;}
+    .mbprof{    display: inline-block;color: #fff;position: absolute;bottom: 55px;right: 40px;font-size: 18px;background: #03A9F4;border-radius: 50px;width: 30px;height: 30px;line-height: 33px;}
 </style>
 @endsection
 

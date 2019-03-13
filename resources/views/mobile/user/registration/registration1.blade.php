@@ -86,6 +86,16 @@
 
                </div>
 
+               <div class="form-group" id="owner_details" style="display: none;">
+
+                  <img src="{{asset('public/assets/mobile/images/reg-icon-user.png')}}">
+
+                  <input type="text" class="form-control" placeholder="Owner Name" name="owner_full_name" id="owner_full_name">
+
+                  <div class="clearfix"></div>
+
+               </div>
+
                <div class="form-group">
 
                   <img src="{{asset('public/assets/mobile/images/reg-icon-phone.png')}}">
@@ -202,7 +212,8 @@
 
             {
 
-                $("#full_name").attr('placeholder', 'Personal name')
+                $("#full_name").attr('placeholder', 'Personal name');
+                $("#owner_details").hide();
 
             }
 
@@ -210,7 +221,8 @@
 
             {
 
-                $("#full_name").attr('placeholder', 'Business name')
+                $("#full_name").attr('placeholder', 'Business name');
+                $("#owner_details").show();
 
             }
 

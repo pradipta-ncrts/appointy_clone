@@ -472,12 +472,16 @@ class UsersController extends ApiController {
 			$country = $request->input('country');
 			
 			$owner_full_name = $request->input('owner_full_name');
-			$owner_email = $request->input('owner_email');  
-			$owner_username = $request->input('owner_username');
-			$owner_password = $request->input('owner_password');
-			
+			//$owner_email = $request->input('owner_email');  
+			//$owner_username = $request->input('owner_username');
+			//$owner_password = $request->input('owner_password');
+						
 			$request_url = $request->input('request_url');
 			$email = Crypt::decrypt($request_url);
+
+			$owner_email = $email;
+			$owner_username = $username;
+			$owner_password = $password;
 
 			$api_key = $this->getToken(24);
 
@@ -607,7 +611,7 @@ class UsersController extends ApiController {
 						$this->response_status='0';
 					}
 				} else {
-					$this->response_message="This Owner Email/ Owner Username is already exist.";
+					$this->response_message="Email/Username is already exist.";
 					$this->response_status='0';
 				}
 

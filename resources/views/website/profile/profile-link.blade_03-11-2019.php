@@ -36,17 +36,13 @@ Squeedr
                   </div>
                   <div class="col-sm-5">
                     <input type="text" class="form-control" id="profile_url" placeholder="Your Squdeer Link" name="profile_url" value="<?=$user_details->username;?>">
-                    <div style="width:100%;float:left;margin:5px 0;">
-                    <div id="show-icon-cross" style="margin:8px 0 0;display: none;float:right;"><font color="#D00">Unavailable</font>  <span style="float:left;background:#D00;border-radius:50%;padding:1px 5px;margin: -2px 5px 0 0;"><i class="fa fa-times" aria-hidden="true" style="color:#fff;font-size:13px;"></i></span> </div>
-                    
-                    <div id="show-icon-ok" style="margin:8px 0 0;display: none;float:right;"><font color="#090">Available</font> <span style="float:left;background:
-                    #090;border-radius:50%;padding:1px 5px;margin: -2px 5px 0 0;"><i class="fa fa-check" aria-hidden="true" style="color:#fff;font-size:13px;"></i></span></div>
-                  </div>
-                    
-                    <button type="submit" id="save-profile-url-button" class="btn btn-primary btn-md" style="display: none;margin-top:15px;">Save Changes</button>
+                    <button style="display: none;" type="submit" id="save-profile-url-button" class="btn btn-primary btn-md" style="margin-top:15px;">Save Changes</button>
                     <button type="submit" id="save-profile-url-button1" class="btn btn-primary btn-md" style="margin-top:15px;">Save Changes</button>
                   </div>
-                  
+                  <div class="col-sm-1">
+                    <div id="show-icon-cross" style="display: none;"><i class="fa fa-times" aria-hidden="true"></i></div>
+                    <div id="show-icon-ok" style="display: none;"><i class="fa fa-check" aria-hidden="true"></i></div>
+                  </div>
                 </form>
               </div>
             </div>

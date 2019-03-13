@@ -9,20 +9,12 @@ Squeedr
 <link rel="stylesheet" href="{{asset('public/assets/website/plugins/fullcalendar/scheduler/scheduler.min.css')}}">
 <style>
 .fc-today {
-        background-color: #f2efef !important;
- }
-.fc-today {
         background-color: #ffffff !important;
  }
 
  .fc-future {
         background-color: #ffffff !important;
  }
-.nice-select {border-left:0;}
-.input-group-addon {
-    padding: 6px 1px 6px 9px;
-}
-.nice-select .list{height: 173px;overflow-y: scroll;}
 </style>
 @endsection
 @section('content')
@@ -239,8 +231,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 
   <!-- Settings Modal -->
   <div class="modal fade" id="calendarsettingsModal" role="dialog">
-      <div class="modal-dialog">
-      <div class="modal-content new-modalcustm">
+      <div class="modal-dialog add-pop">
       <!-- Modal content--> 
       <div class="modal-content new-modalcustm">
           <form name="calendar_settings_form" id="calendar_settings_form" method="post" action="{{url('api/calendar_settings')}}">
@@ -254,7 +245,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                  
+                                  <div class="form-group nomarging color-b" >
                                       <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="show_from" id="show_from" >
                                       <option value="">Show from </option>
                                       <?php
@@ -276,7 +267,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                                       ?>
                                       </select>
                                       <div class="clearfix"></div>
-                                
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -286,7 +277,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                 
+                                  <div class="form-group nomarging color-b" >
                                       <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="show_till" id="show_till" >
                                       <option value="">Show till </option>
                                       <?php
@@ -308,7 +299,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                                       ?>
                                       </select>
                                       <div class="clearfix"></div>
-                                
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -318,7 +309,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                           <div class="form-group">
                               <div class="input-group">
                                   <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                 
+                                  <div class="form-group nomarging color-b" >
                                       <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="increment" id="increment" >
                                       <option value="">Increment </option>
                                       <?php
@@ -334,7 +325,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                                       ?>
                                       </select>
                                       <div class="clearfix"></div>
-                                 
+                                  </div>
                               </div>
                           </div>
                       </div>
@@ -346,7 +337,6 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                   </div>
               </div>
           </form>
-      </div>
       </div>
       </div>
   </div>           

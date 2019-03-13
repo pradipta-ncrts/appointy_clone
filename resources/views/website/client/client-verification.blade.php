@@ -7,7 +7,7 @@ Squeedr
 <div class="body-part">
 	<div class="container-custm">
 	   <div class="upper-cmnsection">
-	      <div class="heading-uprlft" id="sectionTitle">Book Your Appointment</div>
+	      <div class="heading-uprlft" id="sectionTitle">Verification</div>
 	      <div class="upr-rgtsec">
 	         <div class="col-sm-5">&nbsp;
 	            <!-- <div id="custom-search-input">

@@ -72,7 +72,7 @@ class UsersController extends ApiController {
 
 	public function registration_step(Request $data)
 	{
-		$email = $data->input('email');
+		$email = $data->input('email'); 
 		if($email)
 		{
 			$condition = array(
@@ -82,7 +82,7 @@ class UsersController extends ApiController {
         	if(!empty($checkEmail))
         	{
         		\Session::flash('error_message', "Email already exists."); 
-                return redirect('/mobile/registration_step/');
+                return redirect('/mobile/registration-step');
         	}
         	else
         	{
@@ -90,13 +90,53 @@ class UsersController extends ApiController {
         		$redirect_url = url('mobile/registration-step1/'.$redirect_url);
         		
 				//Send Verification Link
+				$content = '<style>
+					   body {margin:0; background:#eef2f6;}
+					</style>
+					<div style="max-width:650px; margin:20px auto; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif">
+					    <div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+					        <table width="100%">
+					          <tr>
+					            <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+					            <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+					          </tr>
+					        </table>
+					    </div>
+					   <div style="padding:20px; margin-top: 15px; background: #FFF; border-radius:8px;">
+					      <p style="text-align:center; font-size:18px; margin-top: 0 ">Welcome to squeedr!</p>
+					      <p style="text-align:center">Click the button below in order to activate your account.</p>
+					      <div style="text-align:center;">
+					         <a href="{verifiactinlink}" style="border-radius: 4px;background-color: #2ba2da; color: #FFF; padding: 10px 25px; width:150px; display:inline-block; text-decoration: none;">Verify Here!</a>  &nbsp;
+					      </div>
+					   </div>
+					   <br />
+						<em>- Squeedr, Your friendly Assistant</em><br />
+						<br />
+					   <div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+					      <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+					      <p style="text-align:center">For even easier management of your appointments.</p>
+					      <div style="text-align:center;">
+					         <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>
+					         <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+					      </div>
+					   </div>
+					   <div style="text-align:center">
+					      <a target="_blank" href="https://www.facebook.com/profile.php?id=1423240701" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+					      <a target="_blank" href="https://twitter.com/Squeed_r" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+					      <a target="_blank" href="https://www.instagram.com/squeedr/?hl=fr" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+					      <br><br>
+					      <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+					      <p>Copyright &copy; '.date('Y').'</p>
+					   </div>
+					</div>';
+				$emailData['content'] = str_replace('{verifiactinlink}', $redirect_url, $content);
 				$emailData['verify_link'] = $redirect_url;
 				$emailData['toName'] = '';
 
 				$this->sendmail(1,$email,$emailData);
 
         		\Session::flash('success_message', "A email sent to your mail.");
-        		return redirect('/mobile/registration_step/');
+        		return redirect('/mobile/registration-step/');
         	}
 		}
         return view('mobile.user.registration.registration');
@@ -710,6 +750,145 @@ class UsersController extends ApiController {
 		{
 			return $return;
 		}
+	}
+
+
+	public function forgot_password(Request $request, $user_data=false)
+	{
+		$data['user_data'] = $user_data;
+        return view('mobile.user.login.forgot-password', $data);
+	}
+
+	public function send_reset_password_link(Request $request, $user_data=false)
+	{
+
+		$user_type = $request->input('type');
+		$email = $request->input('email');
+		$password = $request->input('password');
+		$confirm_password = $request->input('confirm_password');
+		$user_id = $request->input('user_id');
+		if($user_type && $email)
+		{
+			if($user_type==1)
+			{
+				$findCond = array(
+					array('user_type','=', $user_type),
+					array('email','=', $email),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+					
+				$selectFields = array('id as user_id');
+				$user_data = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$selectFields);
+				$redirect_url = $user_data->user_id.'-'.$user_type;
+			}
+			else
+			{
+				$findCond = array(
+					//array('user_type','=', $user_type),
+					array('email','=', $email),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+					
+				$selectFields = array('staff_id as staff_id');
+				$user_data = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
+				$redirect_url = $user_data->staff_id.'-'.$user_type;
+			}
+			
+			if(!empty($user_data))
+			{
+	    		$redirect_url = Crypt::encrypt($redirect_url);
+	    		$redirect_url = url('mobile/forgot-password/'.$redirect_url);
+	    		
+				//Send Verification Link
+				$content = '<style>
+					   body {margin:0; background:#eef2f6;}
+					</style>
+					<div style="max-width:650px; margin:20px auto; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif">
+					    <div style="border-radius: 8px 8px 0 0; background-color: #2ba2da; padding:15px ">
+					        <table width="100%">
+					          <tr>
+					            <td><img src="'.asset('public/assets/website/images/logo-light-text.png').'" height="30"></td>
+					            <td style="color:#FFF; text-align: right; " >&nbsp;</td>
+					          </tr>
+					        </table>
+					    </div>
+					   <div style="padding:20px; margin-top: 15px; background: #FFF; border-radius:8px;">
+					      <p style="text-align:center; font-size:18px; margin-top: 0 ">Welcome to squeedr!</p>
+					      <p style="text-align:center">Click the button below to reset your password.</p>
+					      <div style="text-align:center;">
+					         <a href="{verifiactinlink}" style="border-radius: 4px;background-color: #2ba2da; color: #FFF; padding: 10px 25px; width:150px; display:inline-block; text-decoration: none;">Reset!</a>  &nbsp;
+					      </div>
+					   </div>
+					   <br />
+						<em>- Squeedr, Your friendly Assistant</em><br />
+						<br />
+					   <div style="padding:20px; margin-top: 15px; background: #ccecfa; border-radius:8px;">
+					      <p style="text-align:center; font-size:18px; margin-top: 0 ">Download the app!</p>
+					      <p style="text-align:center">For even easier management of your appointments.</p>
+					      <div style="text-align:center;">
+					         <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>
+					         <a href="#" style="color: #FFF; margin: 20px 5px 0;  display:inline-block; "><img src="'.asset('public/assets/website/images/android.png').'" style="width:150px"></a>  
+					      </div>
+					   </div>
+					   <div style="text-align:center">
+					      <a target="_blank" href="https://www.facebook.com/profile.php?id=1423240701" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/facebook.png').'" width="40px; "></a>
+					      <a target="_blank" href="https://twitter.com/Squeed_r" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/twitter.png').'"  width="40px; "></a>
+					      <a target="_blank" href="https://www.instagram.com/squeedr/?hl=fr" style="margin:15px 15px 5px; display:inline-block"><img src="'.asset('public/assets/website/images/instagram.png').'"  width="40px; "></a>
+					      <br><br>
+					      <a href="#" style="text-decoration: none;color:#000; margin: 0 15px; font-size: 14px;">CONTACT</a>  |     <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">ABOUT</a>    |   <a href="#" style=" font-size: 14px;text-decoration: none;color:#000; margin: 0 15px;">FAQ</a>
+					      <p>Copyright &copy; '.date('Y').'</p>
+					   </div>
+					</div>';
+				$emailData['content'] = str_replace('{verifiactinlink}', $redirect_url, $content);
+				$emailData['verify_link'] = $redirect_url;
+				$emailData['toName'] = '';
+
+				$this->sendmail(22,$email,$emailData);
+
+	    		\Session::flash('success_message', "A email sent to your mail.");
+	    		return redirect('mobile/forgot-password');
+			}
+			else
+			{
+				\Session::flash('error_message', "This mail id not register with squeedr.");
+	    		return redirect('mobile/forgot-password');
+			}
+		}
+		else if($user_id && $password && $confirm_password)
+		{
+			$user_data = Crypt::decrypt($user_id); 
+			$user_data = explode('-', $user_data);
+			$id = $user_data[0];
+			$type = $user_data[1];
+			$param['password'] = md5($password);
+
+			if($type==1)
+			{
+				$findCond = array(
+					array('id', '=', $id),
+				);
+				
+				$this->common_model->update_data($this->tableObj->tableNameUser, $findCond, $param);
+			}
+			else
+			{
+				$findCond = array(
+					array('staff_id', '=', $id),
+				);
+				
+				$this->common_model->update_data($this->tableObj->tableNameStaff, $findCond, $param);
+			}
+			
+			\Session::flash('success_message', "Password successfully reset.");
+	    	return redirect('mobile/forgot-password');
+
+		}
+		else
+		{
+			return redirect('mobile/forgot-password');
+		}	
 	}
 	
 }

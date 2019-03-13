@@ -135,6 +135,8 @@ class ProfileController extends ApiController {
 		
 		$param = array(
 			'status' => '1',
+			'is_deleted' => '1',
+			'deleted_on' => date('Y-m-d H:i:s'),
 		);
 		//now update service status 
 		$findCond = array(
@@ -194,26 +196,61 @@ class ProfileController extends ApiController {
 			$user_no = $this->logged_user_no;
 		}
 
-		$condition = array(
-                        array('id','=',$user_no),
-                    );
-		$selectFields = array('username');
-        $user_details = $this->common_model->fetchData($this->tableObj->tableNameUser,$condition,$selectFields);
-		
-		$prev_url = url('business-provider').'/'.$user_details->username;
+		$username =  $request->input('prof_url');
+		$query = "SELECT * FROM `squ_user` WHERE `username` = '".$username."' AND `id` NOT IN ('".$user_no."')";
+        $check_email = $this->common_model->customQuery($query,$query_type=1);
+        if(empty($check_email))
+        {
+        	$updateCond = array(
+						array('id','=',$user_no)
+					);
 
-		$main_url = $request->input('main_url');
-		$post_url = $request->input('profile_url');
-		$post_url = $main_url.$post_url;
+        	$param['username'] = $username;
 
-		if($prev_url==$post_url)
-		{
-			$this->response_status='1';
-			$this->response_message="Successfully updated.";
+			$this->common_model->update_data($this->tableObj->tableNameUser,$updateCond,$param);
+			$this->response_message = $username;
+        	$this->response_status = '1';
+        }
+        else
+        {
+        	$this->response_status = '0';
+        	$this->response_message = "Username already exist. Try again another username.";
+        }
+
+		$this->json_output($response_data);
+	}
+
+	public function check_service_provider_username(Request $request)
+	{
+		$response_data=array();
+		// validate the requested param for access this service api
+		$this->validate_parameter(1); // along with the user request key validation
+
+		if(!empty($other_user_no) && $other_user_no!=0){
+			$user_no = $other_user_no;
 		}
 		else
 		{
-			$this->response_message="Please enter valid profile url";
+			$user_no = $this->logged_user_no;
+		}
+
+		$username =  $request->input('profile_url');
+		if($username)
+		{
+			$query = "SELECT * FROM `squ_user` WHERE `username` = '".$username."' AND `id` NOT IN ('".$user_no."')";
+	        $check_email = $this->common_model->customQuery($query,$query_type=1);
+	        if($check_email)
+	        {
+	        	$this->response_status = '1';
+	        }
+	        else
+	        {
+	        	$this->response_status = '0';
+	        }
+		}
+		else
+		{
+			$this->response_status = '1';
 		}
 
 		$this->json_output($response_data);

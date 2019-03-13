@@ -39,7 +39,7 @@ Squeedr
 <div class="body-part">
 	<div class="container-custm">
 	   <div class="upper-cmnsection">
-	      <div class="heading-uprlft" id="sectionTitle">Book Your Date & Time</div>
+	      <div class="heading-uprlft" id="sectionTitle">Confirmation</div>
 	      <div class="upr-rgtsec">
 	         <div class="col-sm-5">&nbsp;
 	            <!-- <div id="custom-search-input">

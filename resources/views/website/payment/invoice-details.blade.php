@@ -31,7 +31,7 @@ Squeedr
                </div>
             </div>
             <div class="rightpan">
-               <div class="relativePostion">
+               <div class="relativePostion" id="DivIdToPrint">
                   <div class="headRow showDekstop clearfix">
                      <div class="col-md-12 inv-det">
                         <div class="col-sm-5 bill-to">
@@ -102,8 +102,9 @@ Squeedr
                                  <th width="15%" style="text-align: right"><strong><?=$total;?></strong></th>
                               </tr>
                            </table>
-                           <a class="btn btn-primary break20px">Pay Invoice</a>
-                           <a class="btn btn-default break20px">Print</a>
+                           <!-- <a class="btn btn-primary break20px">Pay Invoice</a> -->
+                           <!-- <a class="btn btn-default break20px">Print</a> -->
+                           <input type='button' id='btn' value='Print' onclick='printDiv();'>
                            <a class="btn btn-primary break20px pull-right">Download</a>
                         </div>
                         <div class="clearfix"></div>
@@ -123,4 +124,19 @@ Squeedr
             </div>
          </div>
       </div>
+@endsection
+
+@section('custom_js')
+
+<script type="text/javascript">
+function printDiv() 
+{
+  var divToPrint=document.getElementById('DivIdToPrint');
+  var newWin=window.open('','Print-Window');
+  newWin.document.open();
+  newWin.document.write('<html><body onload="window.print()">'+divToPrint.innerHTML+'</body></html>');
+  newWin.document.close();
+  setTimeout(function(){newWin.close();},10);
+}
+</script>
 @endsection

@@ -2473,7 +2473,8 @@ $("#delete-account").click(function (event) {
                     {
                         swal({title: "Success", text: response.message, type: "success"},
                          function(){ 
-                             location.reload();
+                             //location.reload();
+                             window.location.href = baseUrl+"/logout";
                          }
                       );
                     }
@@ -2542,41 +2543,54 @@ $('#update-profile-payment').validate({
     }
 });
 
+jQuery.validator.addMethod("alphanumeric", function(value, element) {
+    return this.optional(element) || /^[\w.]+$/i.test(value);
+}, "Letters, numbers, and underscores only please");
+
 $('#update-profile-url').validate({
     ignore: ":hidden:not(.selectpicker)",
     //ignore: [],
     rules: {
         'profile_url': {
-            required: true
+            required: true,
+            alphanumeric: true
         },
       },
 
     messages: {
         'profile_url': {
-            required: "Profile mode is required"
+            required: "This is required field",
+            alphanumeric: 'Letters, numbers, and underscores only please'
         },
     },
 
     submitHandler: function(form) {
       var data = $(form).serializeArray();
       data = addCommonParams(data);
-      console.log(data);
+      //console.log(data);
       $.ajax({
-          url: form.action,
-          type: form.method,
+          url: baseUrl+"/api/check_service_provider_username", 
+          type: "POST", 
           data:data ,
           dataType: "json",
           success: function(response) {
-               console.log(response);
+               //console.log(response);
                $('.animationload').hide();
                if(response.result=='1')
                {
-                  $('#myModalServices').modal('hide');
-                  swal({title: "Success", text: response.message, type: "success"});
+                  //swal({title: "Success", text: response.message, type: "success"});
+                  $("#show-icon-ok").hide();
+                  $("#show-icon-cross").show();
+                  $("#save-profile-url-button").hide();
+                  $("#save-profile-url-button1").hide();
                }
                else
                {
-                   swal("Error", response.message , "error");
+                  $("#show-icon-cross").hide();
+                  $("#show-icon-ok").show();
+                  $("#save-profile-url-button").hide();
+                  $("#save-profile-url-button1").show();
+                  //swal("Error", response.message , "error");
                }
           },
           beforeSend: function(){
@@ -2587,6 +2601,85 @@ $('#update-profile-url').validate({
           }
       });
     }
+});
+
+$("#profile_url").on('keyup',function(e){
+   e.preventDefault();
+   var prof_url = $(this).val();
+   $("#save-profile-url-button1").hide();
+   $("#save-profile-url-button").show();
+   if(prof_url)
+   {
+      $("#save-profile-url-button").trigger('click');
+   }
+   else
+   {
+      $("#show-icon-ok").hide();
+      $("#show-icon-cross").hide();
+      $("#save-profile-url-button").hide();
+      $("#save-profile-url-button").trigger('click');
+   }
+   
+});
+
+$("#save-profile-url-button1").on('click',function(e){
+    e.preventDefault();
+    var prof_url = $("#profile_url").val();
+    let data = addCommonParams([]);
+    //alert(id);
+    data.push({name:'prof_url',value:prof_url});
+    if(prof_url)
+    {
+      swal({
+          title: "Are you sure?",
+          text: "Once update profile link, your username will be updated!",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: '#DD6B55',
+          confirmButtonText: 'Yes, I am sure!',
+          cancelButtonText: "No, not now!",
+          closeOnConfirm: false,
+          closeOnCancel: true
+          },function(isConfirm){
+
+              if (isConfirm){
+                  $.ajax({
+                      url: baseUrl+"/api/profile-url", 
+                      type: "POST", 
+                      data: data, 
+                      dataType: "json",
+                      success: function(response) 
+                      {
+                          //console.log(response);
+                          $('.animationload').hide();
+                          if(response.result=='1')
+                          {
+                              swal("Success", "Your updated username : "+response.message, "success");  
+                              $("#show-icon-ok").hide();
+                          }
+                          else
+                          {
+                              swal("Error", response.message, "error");
+                          }
+                      },
+                      beforeSend: function()
+                      {
+                          $('.animationload').show();
+                      },
+                      complete: function()
+                      {
+                          //$('#myModalAppointmentContent').modal('hide');
+                          $('.animationload').hide();
+                      }
+                  });
+                  
+              }
+          });
+  }
+  else
+  {
+      swal("Error", response.message , "error");
+  }
 });
 
 

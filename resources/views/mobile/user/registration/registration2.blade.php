@@ -41,202 +41,108 @@
          <div class="login-form" >
 
             <div class="logo-login mb-version"> <img src="{{asset('public/assets/mobile/images/logo-login.png')}}"> </div>
-
-             <form class="form-horizontal" action="{{ url('api/registration-step2') }}" method="post" autocomplete="off" id="registration-form-two">
-
-               <input type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
-
-               <div class="clone-div">
-
-                  <div class="form-group">
-
-                     <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">
-
-                     <select class="form-control cust-select category" data-show-subtext="true" data-live-search="true"  name="category[]" >
-
-                        <option value="">Select Category </option>
-
-                        <?php
-
-                        foreach ($category as $key => $value)
-
-                        {
-
-                           echo "<option value='".$value->category_id."'>".$value->category."</option>";
-
-                        }
-
-                        ?>
-
-                        <option value="new">New Category </option>
-
-                     </select>
-
-                     <div class="clearfix"></div>
-
-                  </div>
-
-                  <div class="form-group new-category-name" style="display: none;">
-
-                     <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">
-
-                     <input type="text" class="form-control" placeholder="Category Name " name="new_category_name[]" >
-
-                     <div class="clearfix"></div>
-
-                  </div>
-
-                  <div class="form-group">
-
-                     <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">
-
-                     <input type="text" class="form-control" placeholder="Service Name " name="service[]" >
-
-                     <div class="clearfix"></div>
-
-                  </div>
-
-                 
-
-                  <div class="row">
-
-                     <div class="col-md-6">
-
-                        <div class="form-group">
-
-                           <img src="{{asset('public/assets/website/images/reg-icon-currency.png')}}">
-
-                           <input type="text" class="form-control" placeholder="Cost " name="cost[]" >
-
-                           <div class="clearfix"></div>
-
-                        </div>
-
-                     </div>
-
-                     <div class="col-md-6 drop-sm">
-
-                        <div class="form-group">
-
-                           <img src="{{asset('public/assets/website/images/reg-icon-currency.png')}}">
-
-                           <select class="form-control cust-select" data-show-subtext="true" data-live-search="true" name="currency[]"  >
-
-                              <option value="">Select Currency </option>
-
-                               <?php
-
-                                foreach ($currency as $key => $value)
-
-                                {
-
-                                   echo "<option value='".$value->currency_id."'>".$value->currency."</option>";
-
-                                }
-
-                                ?>
-
-                           </select>
-
-                           <div class="clearfix"></div>
-
-                        </div>
-
-                     </div>
-
-                  </div>
-
-                  <div class="form-group">
-
-                     <img src="{{asset('public/assets/website/images/reg-icon-duration.png')}}">
-
-                     <select class="form-control cust-select duration" data-show-subtext="true" data-live-search="true" name="duration[]" >
-
-                        <option value="">Select Duration </option>
-
-                        <option value="15">15 min </option>
-
-                        <option value="30">30 min </option>
-
-                        <option value="45">45 min </option>
-
-                        <option value="60">60 min </option>
-
-                        <option value="Custom">Custom min </option>
-
-                     </select>
-
-                     <div class="clearfix"></div>
-
-                  </div>
-
-                  <div class="form-group custom-duration" style="display: none;">
-
-                     <img src="{{asset('public/assets/website/images/reg-icon-duration.png')}}">
-
-                     <input type="text" class="form-control" placeholder="Custom duration " name="custom_duration[]" >
-
-                     <div class="clearfix"></div>
-
-                  </div>
-
-
-
-                  <div class="row">
-
-                     <div class="col-md-4 capacity">
-
-                        <a href="" class="tg-btn-ac user-status one-to-one">One to One</a>
-
-                     </div>
-
-                     <div class="col-md-3 capacity">
-
-                        <a href="" class="tg-btn user-status group">Group</a>
-
-                     </div>
-
-                     <div class="col-md-5 capacity" style="display: none;">
-
-                        <div class="form-group">
-
-                           <img src="{{asset('public/assets/website/images/reg-icon-capacity.png')}}">
-
-                           <input type="text" class="form-control" placeholder="Capacity " name="capacity[]">
-
-                           <div class="clearfix"></div>
-
-                        </div>
-
-                     </div>
-
-                  </div>
-
+              <form class="form-horizontal clearfix" action="{{ url('api/process-registration-step2') }}" method="post" id="process-registration-step2">
+              <input class="new_form_data" type="hidden" name="request_url" id="request_url" value="<?=$request_url;?>">
+               <div class="clone-div12 row-2">
+                  
                </div>
-
-               
-
-                  <div class="row">
-
-                     <div class="col-md-12">
-
-                        &nbsp;
-
-                     </div>
-
-                     <div class="col-md-4">
-
-                        <a href="" class="add-new"><i class="fa fa-plus"></i> Add New</a>
-
-                     </div>
-
+              </form>
+             <form class="form-horizontal" action="" method="post" autocomplete="off" id="registration-form-two">
+               <div class="clone-div">
+                  <div class="form-group">
+                     <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">
+                     <select class="category"  name="category" id="category" >
+                        <option value="">Select Category </option>
+                        <?php
+                         foreach ($category as $key => $value)
+                         {
+                            echo "<option value='".$value->category_id."'>".$value->category."</option>";
+                         }
+                         ?>                              
+                        <option value="new">New Category</option>
+                     </select>
+                     <div class="clearfix"></div>
                   </div>
-
-               <button type="submit" id="submit">Submit</button>
-
-               <div class="clearfix"></div>
-
-            </form>
+                  <div class="form-group new-category-name" style="display: none;">
+                     <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">
+                     <input type="text" class="form-control" placeholder="Category Name " name="new_category_name" id="new_category_name">
+                     <div class="clearfix"></div>
+                  </div>
+                  <div class="form-group">
+                     <img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">
+                     <input type="text" class="form-control" placeholder="Service Name " name="service" id="service">
+                     <div class="clearfix"></div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="form-group">
+                           <img src="{{asset('public/assets/website/images/reg-icon-currency.png')}}">
+                           <input type="text" class="form-control" placeholder="Cost" name="cost" id="cost">
+                           <div class="clearfix"></div>
+                        </div>
+                     </div>
+                     <div class="col-md-6 drop-sm">
+                        <div class="form-group">
+                           <img src="{{asset('public/assets/website/images/reg-icon-currency.png')}}">
+                           <select class="" data-show-subtext="true" data-live-search="true" name="currency" id="currency">
+                              <option value="">Select Currency </option>
+                              <?php
+                               foreach ($currency as $key => $value)
+                               {
+                                  echo "<option value='".$value->currency_id."'>".$value->currency_icon."</option>";
+                               }
+                               ?>
+                           </select>
+                           <div class="clearfix"></div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <img src="{{asset('public/assets/website/images/reg-icon-duration.png')}}">
+                     <select class="duration" name="duration" id="duration" >
+                        <option value="">Select Duration </option>
+                        <option value="15">15 min </option>
+                        <option value="30">30 min </option>
+                        <option value="45">45 min </option>
+                        <option value="60">60 min </option>
+                        <option value="Custom">Custom min</option>
+                     </select>
+                     <div class="clearfix"></div>
+                  </div>
+                  <div class="form-group custom-duration" style="display: none;">
+                     <img src="{{asset('public/assets/website/images/reg-icon-duration.png')}}">
+                     <input type="text" class="form-control" placeholder="Custom duration " name="custom_duration" id="custom_duration">
+                     <div class="clearfix"></div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-4 capacity">
+                        <a href="" class="tg-btn-ac user-status one-to-one">One to One</a>
+                     </div>
+                     <div class="col-md-3 capacity">
+                        <a href="" class="tg-btn user-status group">Group</a>
+                     </div>
+                     <div class="col-md-5 capacity" style="display: none;">
+                        <div class="form-group">
+                           <img src="{{asset('public/assets/website/images/reg-icon-capacity.png')}}">
+                           <input type="text" class="form-control" placeholder="Capacity " name="capacity" id="capacity">
+                           <div class="clearfix"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-md-12">
+                     &nbsp;
+                  </div>
+                  <div class="col-md-4">
+                     <a href="" class="add-new"><i class="fa fa-plus"></i> Add New</a>
+                  </div>
+               </div>
+             </form>
+               <div class="row">
+                  <div class="col-md-4"><button type="button" id="skip">Skip</button></div>
+                  <div class="col-md-4"> <button type="button" id="submit" style="display: none;">Submit</button></div>
+               </div>
 
          </div>
 
@@ -248,7 +154,7 @@
 
       <div id="category-html" style="display: none;">
 
-         <select class="form-control cust-select category" data-show-subtext="true" data-live-search="true"  name="category[]" >
+         <select class="form-control"  name="category[]" >
 
             <option value="">Select Category </option>
 
@@ -278,7 +184,7 @@
 
       <div id="currency-html" style="display: none;">
 
-        <select class="form-control cust-select" data-show-subtext="true" data-live-search="true" name="currency[]"  name="currency" >
+        <select class="form-control" name="currency[]"  name="currency" >
 
             <option value="">Select Currency </option>
 
@@ -304,7 +210,7 @@
 
       <div id="duration-html" style="display: none;">
 
-        <select class="form-control cust-select duration" data-show-subtext="true" data-live-search="true" name="duration[]" >
+        <select class="form-control" name="duration[]" >
 
             <option value="">Select Duration </option>
 
@@ -349,339 +255,241 @@
        <!--=================select box=========================-->
 
       <script type="text/javascript">
-
          //================catrgory select ==================
-
-            
-
-        // $(document).ready(function(){
-
+            //$(document).ready(function(){
             //$(document).find('select.category').on('change', function() {
-
-               $(document).on('change','.category',function() {
-
-               //$('.category').on('change', function(event){
-
-               let val = $(this).val();
-
+              $(document).on('change','.category',function() {
+              //$('.category').on('change', function(event){
+              let val = $(this).val();
                //alert(val);
-
                if(val=="new")
-
                {
-
                   $(this).parent().siblings(".new-category-name").show();
-
                }
-
                else
-
                {
-
                   $(this).parent().siblings(".new-category-name").hide();
-
                }
-
             });
-
          //});
-
          //================category select end ==================
-
-
-
          //================catrgory select ======================
-
-            //$(document).find('select.duration').on('change', function() {
-
-            $(document).on('change','.duration',function() {
-
-            let val = $(this).val();
-
-            if(val=="Custom")
-
-            {
-
-               $(this).parent().siblings(".custom-duration").show();
-
-            }
-
-            else
-
-            {
-
-               $(this).parent().siblings(".custom-duration").hide();
-
-            }
-
+         //$(document).find('select.duration').on('change', function() {
+         $(document).on('change','.duration',function() {
+               let val = $(this).val();
+               if(val=="Custom")
+               {
+                  $(this).parent().siblings(".custom-duration").show();
+               }
+               else
+               {
+                  $(this).parent().siblings(".custom-duration").hide();
+               }
          });
-
+         
          //================category select end ==================
-
-
-
          //================Tab select ==================
-
          $(document).on('click','.user-status',function(event) {
-
          //$('.user-status').click(function(event) {
-
             event.preventDefault(); 
-
             //capacity
-
             var val = $(this).text();
-
-            if(val=="One to One")
-
+            if(val=="One to One")         
             {
-
                $(this).parent().next().next(".capacity").hide();
-
                $(this).parent().next(".capacity").find(".group").removeClass('tg-btn-ac');
-
                $(this).parent().next(".capacity").find(".group").addClass('tg-btn');
-
                $(this).addClass('tg-btn-ac');
-
-               
-
+               $("#capacity").val('');
             }
-
             else if(val=="Group")
-
             {
-
                $(this).parent().siblings(".capacity").show();
-
                $(this).addClass('tg-btn-ac');
-
                $(this).parent().prev(".capacity").find(".one-to-one").removeClass('tg-btn-ac');
-
                $(this).parent().prev(".capacity").find(".one-to-one").addClass('tg-btn');
-
             }
-
+         });
+       
+         //================Tab select end ==================      
+         //================Submit AJAX request ==================
+         $(".add-new").bind('click',function(e){
+           e.preventDefault();
+           $('#registration-form-two').submit();
          });
 
-         //================Tab select end ==================
-
-         //================Add more category================
-
-         $('.add-new').click(function(event) {
-
-            event.preventDefault(); 
-
-
-
-            let category = $("#category-html").html();
-
-            let currency = $("#currency-html").html();
-
-            let duration = $("#duration-html").html();
-
-            //let imgurl = "{{asset('public/assets/website/images/reg-icon-category.png')}}";
-
-            let html = '<div class="clone-div"><div class="form-group"><img src="{{asset('public/assets/website/images/reg-icon-category.png')}}">'+category+'<div class="clearfix"></div></div><div class="form-group new-category-name" style="display: none;"><img src="{{asset('public/assets/website/images/reg-icon-category.png')}}"><input type="text" class="form-control" placeholder="Category Name " name="new_category_name[]" ><div class="clearfix"></div></div><div class="form-group"><img src="{{asset('public/assets/website/images/reg-icon-category.png')}}"><input type="text" class="form-control" placeholder="Service Name " name="service[]" ><div class="clearfix"></div></div><div class="row"><div class="col-md-6"><div class="form-group"><img src="{{asset('public/assets/website/images/reg-icon-currency.png')}}"><input type="text" class="form-control" placeholder="Cost " name="cost[]" ><div class="clearfix"></div></div></div><div class="col-md-6 drop-sm"><div class="form-group"><img src="{{asset('public/assets/website/images/reg-icon-currency.png')}}">'+currency+'<div class="clearfix"></div></div></div></div><div class="form-group"><img src="{{asset('public/assets/website/images/reg-icon-duration.png')}}">'+duration+'<div class="clearfix"></div></div><div class="form-group custom-duration" style="display: none;"><img src="{{asset('public/assets/website/images/reg-icon-duration.png')}}"><input type="text" class="form-control" placeholder="Custom duration " name="custom_duration[]" ><div class="clearfix"></div></div><div class="row"><div class="col-md-4 capacity"><a href="" class="tg-btn-ac user-status one-to-one">One to One</a></div><div class="col-md-3 capacity"><a href="" class="tg-btn user-status group">Group</a></div><div class="col-md-5 capacity" style="display: none;"><div class="form-group"><img src="{{asset('public/assets/website/images/reg-icon-capacity.png')}}"><input type="text" class="form-control" placeholder="Capacity " name="capacity[]"><div class="clearfix"></div></div></div></div><div class="row"><div class="col-md-12">&nbsp;</div><div class="col-md-4"><a href="" class="remove-new"><i class="fa fa-minus"></i> Remove</a></div></div></div>';
-
-            $(".clone-div").last().after(html);
-
-
-
-            //$('.clone-div').find('select').addClass('form-control cust-select');
-
-            //$('.form-control cust-select').form-control cust-select('refresh');
-
-            //$('.form-control cust-select').form-control cust-select('render');
-
-
-
-
-
-         });
-
-         //================Add more category================
-
-         //================add more remove==================
-
-         $(document).on('click','.remove-new',function(event) {
-
-           event.preventDefault();
-
-           $(this).parents('.clone-div').remove();
-
-         });
-
-         //================add more remove==================
-
-      //================Submit AJAX request ==================
-
-      $("#submit").bind('click',function(e){
-
-         e.preventDefault();
-
-         $('#registration-form-two').submit();
-
-      });
-
-
-
-
-
-
-
-      $('#registration-form-two').validate({
-
-            ignore: ":hidden:not(.form-control cust-select)",
-
+         $('#registration-form-two').validate({
+            ignore: ":hidden:not(.selectpicker)",
             //ignore: [],
-
             rules: {
-
-                'category[]': {
-
+                'category': {
                     required: true
-
                 },
-
-                'service[]': {
-
+                'service': {
                     required: true
-
                 },
-
-                'cost[]': {
-
+                'cost': {
+                    required: true,
+                    number: true
+                },
+                'currency': {
                     required: true
-
                 },
-
-                'currency[]': {
-
+                'duration': {
                     required: true
-
                 },
-
-                'duration[]': {
-
-                    required: true
-
+                'custom_duration': {
+                    required: true,
+                    number: true
                 },
-
-                
-
-                
-
+                'capacity': {
+                    required: true,
+                    number: true
+                },
             },
-
-            
-
             messages: {
-
-                'category[]': {
-
+                'category': {
                     required: 'Please select category'
-
                 },
-
-                'service[]': {
-
+                'service': {
                     required: 'Please enter service'
-
                 },
-
-                'cost[]': {
-
-                    required: 'Please enter cost'
-
+                'cost': {
+                    required: 'Please enter cost'         
                 },
-
-                'currency[]': {
-
-                    required: 'Please enter currency'
-
+                'currency': {
+                    required: 'Please enter currency'         
                 },
-
-                'duration[]': {
-
+                'duration': {
                     required: 'Please enter duration'
-
                 },
-
+                'custom_duration': {
+                    required: 'Please enter duration'
+                },
+                'capacity': {
+                    required: 'Please enter capacity'
+                },
             },
-
-
-
             submitHandler: function(form) {
-
               var data = $(form).serializeArray();
-
-              console.log(data);
-
-              $.ajax({
-
-                  url: form.action,
-
-                  type: form.method,
-
-                  data:data ,
-
-                  dataType: "json",
-
-                  success: function(response) {
-
-                       console.log(response);
-
-                       if(response.result=='1')
-
-                       {
-
-                           window.location = js_base_url+'mobile/login';
-
-                       }
-
-                       else
-
-                       {
-
-                           swal("Error", response.message , "error");
-
-                           setTimeout(function(){ 
-
-
-
-                              window.location = js_base_url+'mobile/login';
-
-
-
-                           }, 3000);
-
-                           
-
-                       }
-
-                  },
-
-                  beforeSend: function(){
-
-                      $('.animationload').show();
-
-                  },
-
-                  complete: function(){
-
-                      $('.animationload').hide();
-
+              data = JSON.stringify(data);
+              var html = "<input type='hidden' class='service_data' name='service_data[]' value='"+data+"'>";
+              //$(".new_form_data").last().after(html);
+              
+              var preview_data = JSON.parse(data);
+              
+              var category = $("#category option:selected").text();
+              if(category=="New Category")
+              {
+                  category = $("#new_category_name").val();
+              }
+              else
+              {
+                  category = $("#category option:selected").text();
+              }
+              var service = $("#service").val();
+              var cost = $("#cost").val();
+              var currency = $("#currency").val();
+              var currency_array = '<?=json_encode($currency);?>';
+              var currency_array = JSON.parse(currency_array);
+              for (var i=0;i<currency_array.length;i++)
+              {
+                  if(currency_array[i].currency_id==currency)
+                  {
+                    var currency_icon = currency_array[i].currency;
                   }
+              }
+              var duration = $("#duration option:selected").text();
+              if(duration=="Custom min")
+              {
+                  duration = $("#custom_duration").val()+' min';
+              }
+              else
+              {
+                 duration = $("#duration option:selected").text();
+              }
 
-              });
+              var capacity = $("#capacity").val();
+              if(capacity)
+              {
+                  capacity = capacity;
+              }
+              else
+              {
+                  capacity = 0;
+              }
 
+
+              var preview_html = '<div class="clone-div12 row-2">'+html+'<div class="row"><div class="col-md-10"><div class="appointment mobSevices"><div class="col-md-6"><p>'+service+'</p><span>'+duration+'<small>'+currency_icon+' '+cost+'</small></span> </div><div class="col-md-6"><p>'+category+'</p><span>Capacity: '+capacity+'</span> </div></div></div><div class="col-md-2"><a href="" class="remvbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div></div></div>';
+
+              $(".clone-div12.row-2").last().after(preview_html);
+              $("#registration-form-two").trigger('reset');
+              $("#category").val('default');
+              $("#category").selectpicker("refresh");
+              $(".new-category-name").hide();
+              $("#currency").val('default');
+              $("#currency").selectpicker("refresh");
+              $("#duration").val('default');
+              $("#duration").selectpicker("refresh");
+              $(".custom-duration").hide();
+              $("#submit").show();
+
+
+              
             }
+         });
 
-        });
+         //================Submit AJAX request ==================
+         $("#skip").click(function(){
+            var login_url = js_base_url+'login';
+            swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
+            function(){ 
+                window.location = login_url;
+            })
+         });
 
-      //================Submit AJAX request ==================
-
+         $(document).on('click','#submit',function(event) {
+              event.preventDefault();
+              var data = $("#process-registration-step2").serializeArray();
+              console.log(data);
+              $.ajax({
+                  url: js_base_url+'/api/process-registration-step2',
+                  type: 'POST',
+                  data:data ,
+                  dataType: "json",
+                  success: function(response) {
+                      if(response.response_status==1)
+                      {
+                          var login_url = js_base_url+'login';
+                          swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
+                          function(){ 
+                              window.location = login_url;
+                          });
+                      }
+                      else
+                      {
+                          swal({title: "Error", text: 'Try again later.', type: "error"});
+                      }
+                  },
+                  beforeSend: function(){
+                      $('.animationload').show();
+                  },
+                  complete: function(){
+                      $('.animationload').hide();
+                  }
+              });
+         });
+      </script>
+      <script type="text/javascript">
+      $(document).on('click','.remvbtn',function(event) {
+         event.preventDefault();
+         var count = $('.clone-div12.row-2').length;
+         if(count==2)
+         {
+            $("#submit").hide();
+         }
+         $(this).parents('.clone-div12.row-2').remove();
+      });
       </script>
 
    </body>

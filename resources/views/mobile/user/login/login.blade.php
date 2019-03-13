@@ -47,7 +47,7 @@
                   <tr>
                      <td>Admin Login</td>
                      <td><label class="switch-m">
-                        <input type="checkbox" name="type" id="type">
+                        <input type="checkbox" name="type" id="type" value="1">
                         <span class="slider-m round-m"></span> </label>
                      </td>
                      <td>Team Login</td>
@@ -76,7 +76,7 @@
                      <input type="checkbox">
                      Keep me signed in <span class="checkmark"></span></label>
                   </div>
-                  <a href="#" class="forgot-pass">Forgot your password?</a>
+                  <a href="{{ url('mobile/forgot-password') }}" class="forgot-pass">Forgot your password?</a>
                   <div class="clearfix"></div>
                </div>
             </form>

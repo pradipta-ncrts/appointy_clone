@@ -217,6 +217,8 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/delete_client','Api\ClientsController@delete_client');
     Route::post('/update_guide_value','Api\UsersController@update_guide_value');
     Route::any('/process-registration-step2','Api\UsersController@process_registration_step2');
+    Route::any('/check_service_provider_username','Api\ProfileController@check_service_provider_username');
+
 
     
 
@@ -395,6 +397,8 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::any('/calendar','Mobile\UsersController@calendar');
     Route::any('/scan','Mobile\ScanController@scan');
     Route::any('/help','Mobile\helpController@help');
+    Route::any('/forgot-password/{user_data?}','Mobile\UsersController@forgot_password');
+    Route::any('/send_reset_password_link','Mobile\UsersController@send_reset_password_link');
 
 
 });

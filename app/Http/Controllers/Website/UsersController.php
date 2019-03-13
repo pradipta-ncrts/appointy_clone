@@ -1140,27 +1140,45 @@ class UsersController extends ApiController {
 
 	public function send_reset_password_link(Request $request, $user_data=false)
 	{
-		$user_type = $request->input('user_type');
+
+		$user_type = $request->input('type');
 		$email = $request->input('email');
 		$password = $request->input('password');
 		$confirm_password = $request->input('confirm_password');
 		$user_id = $request->input('user_id');
 		if($user_type && $email)
 		{
-			$findCond = array(
-				array('user_type','=', $user_type),
-				array('email','=', $email),
-				array('is_deleted','=','0'),
-				array('is_blocked','=','0'),
-			);
-				
-			$selectFields = array('id as user_id');
-			$user_data = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$selectFields);
-
+			if($user_type==1)
+			{
+				$findCond = array(
+					array('user_type','=', $user_type),
+					array('email','=', $email),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+					
+				$selectFields = array('id as user_id');
+				$user_data = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$selectFields);
+				$redirect_url = $user_data->user_id.'-'.$user_type;
+			}
+			else
+			{
+				$findCond = array(
+					//array('user_type','=', $user_type),
+					array('email','=', $email),
+					array('is_deleted','=','0'),
+					array('is_blocked','=','0'),
+				);
+					
+				$selectFields = array('staff_id as staff_id');
+				$user_data = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
+				$redirect_url = $user_data->staff_id.'-'.$user_type;
+			}
+			
 			if(!empty($user_data))
 			{
-	    		$redirect_url = Crypt::encrypt($user_data->user_id);
-	    		$redirect_url = url('forgot-password/'.$redirect_url);
+	    		$redirect_url = Crypt::encrypt($redirect_url);
+	    		$redirect_url = url('mobile/forgot-password/'.$redirect_url);
 	    		
 				//Send Verification Link
 				$content = '<style>
@@ -1209,32 +1227,46 @@ class UsersController extends ApiController {
 				$this->sendmail(22,$email,$emailData);
 
 	    		\Session::flash('success_message', "A email sent to your mail.");
-	    		return redirect('/forgot-password');
+	    		return redirect('mobile/forgot-password');
 			}
 			else
 			{
 				\Session::flash('error_message', "This mail id not register with squeedr.");
-	    		return redirect('/forgot-password');
+	    		return redirect('mobile/forgot-password');
 			}
 		}
 		else if($user_id && $password && $confirm_password)
 		{
-			$user_id = Crypt::decrypt($user_id); 
+			$user_data = Crypt::decrypt($user_id); 
+			$user_data = explode('-', $user_data);
+			$id = $user_data[0];
+			$type = $user_data[1];
 			$param['password'] = md5($password);
 
-			$findCond = array(
-				array('id', '=', $user_id),
-			);
+			if($type==1)
+			{
+				$findCond = array(
+					array('id', '=', $id),
+				);
+				
+				$this->common_model->update_data($this->tableObj->tableNameUser, $findCond, $param);
+			}
+			else
+			{
+				$findCond = array(
+					array('staff_id', '=', $id),
+				);
+				
+				$this->common_model->update_data($this->tableObj->tableNameStaff, $findCond, $param);
+			}
 			
-			$this->common_model->update_data($this->tableObj->tableNameUser, $findCond, $param);
-
 			\Session::flash('success_message', "Password successfully reset.");
-	    	return redirect('/forgot-password');
+	    	return redirect('mobile/forgot-password');
 
 		}
 		else
 		{
-			return redirect('/forgot-password');
+			return redirect('mobile/forgot-password');
 		}	
 	}
 

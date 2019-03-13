@@ -92,7 +92,7 @@
 
             </form> -->
 
-            <form action="" method="post" autocomplete="off" id="registration">
+            <form action="{{ url('mobile/registration-step') }}" method="post" autocomplete="off" id="registration">
 
               <div class="form-group"> <img src="{{asset('public/assets/website/images/login-icon-email.png')}}">
 

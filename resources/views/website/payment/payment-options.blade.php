@@ -21,7 +21,7 @@ Squeedr
             <ul>
                <li><a href="{{ url('payment-options') }}" class="active"> Payment Options</a></li>
                <li><a href="{{ url('invoice') }}"> Invoice </a> </li>
-               <li><a href="{{ url('create-invoice') }}"> Create invoice <br>(Issued/Pending Template)</a></li>
+               <!-- <li><a href="{{ url('create-invoice') }}"> Create invoice <br>(Issued/Pending Template)</a></li> -->
             </ul>
          </div>
       </div>

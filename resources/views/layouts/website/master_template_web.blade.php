@@ -2073,7 +2073,7 @@
                   <li>Create location-based events.</li>
                </ul>
                <hr >
-               <h3>3. Share your link</h3>
+               <a href="" id="share-your-link"><h3>3. Share your link</h3></a>
                <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
                   <br><br>
                   <span class="cl-blue">
@@ -2673,6 +2673,17 @@
                     $('.animationload').hide();
                 }
             });
+      });
+
+      //Share your link popup
+      $(document).ready(function() {
+        $("#share-your-link").click(function(e) {
+          e.preventDefault();
+          $('.animationload').show();
+          $("#myModalQuickGuide").modal('hide');
+          $("#myModalsharelinks").modal('show');
+          $('.animationload').hide();
+        });
       });
       </script>
       

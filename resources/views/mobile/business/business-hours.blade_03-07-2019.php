@@ -3,14 +3,6 @@
 Squeedr
 @endsection
 @section('content')
-<style>
-.nav>li>a {
-    position: relative;
-    display: block;
-    padding: 4px 12px;
-    margin: 20px 0 0;
-}
-</style>
 <header class="mobileHeader showMobile" id="divBh">
    <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
    <h1>Business Hours</h1>
@@ -45,7 +37,7 @@ Squeedr
                               <div class="panel-heading">
                                  <h4 class="panel-title">
                                     <div class="bhInside"> <img src="{{asset('public/assets/mobile/images/business-hours/blue-user.png')}}" />
-                                       <label id="name" style="font-weight:normal;"><?=$value->full_name;?></label>
+                                       <label id="name"><?=$value->full_name;?></label>
                                     </div>
                                     <!-- <div class="time-slot">30 mins - 1 hr</div> -->
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$value->staff_id;?>"><i class="fa fa-angle-down"></i></a> 
@@ -61,7 +53,7 @@ Squeedr
                                        <h2><?=$srv_lst->service_name;?></h2>
                                        <p><span>Duration</span>: <?=$srv_lst->duration;?> mins</p>
                                     </div>
-                                    <div class="custm-tab team-memtab">
+                                    <div class="">
                                        <ul class="nav nav-tabs">
                                           <li class="active"><a data-toggle="tab" href="#home">Current Schedule</a></li>
                                        </ul>
@@ -89,17 +81,17 @@ Squeedr
                                                             {
                                                             ?>
                                                             <ul>
-                                                               <li>from: <?=$avability_list->start_time;?></li>
-                                                               <li>to: <?=$avability_list->end_time;?></li>
+                                                               <li>from: <strong><?=$avability_list->start_time;?></strong></li>
+                                                               <li>to: <strong> <?=$avability_list->end_time;?></strong></li>
                                                             </ul>
-                                                            <a href="" class="update_user_shedule" data-staff-id="<?=$value->staff_id;?>" data-service-id = "<?=$srv_lst->service_id;?>" data-day-no = "<?=$day_no;?>" data-start-date = "<?=$avability_list->start_time;?>" data-end-date = "<?=$avability_list->end_time;?>" style="float:right;"><img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" height="14"/></a>
+                                                            <a href="" class="update_user_shedule" data-staff-id="<?=$value->staff_id;?>" data-service-id = "<?=$srv_lst->service_id;?>" data-day-no = "<?=$day_no;?>" data-start-date = "<?=$avability_list->start_time;?>" data-end-date = "<?=$avability_list->end_time;?>"><img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" /></a>
                                                             <div class="clearfix"></div>
                                                             <?php
                                                             }
                                                             else
                                                             {
                                                             ?>
-                                                            <a href="" class="update_user_shedule" data-staff-id="<?=$value->staff_id;?>" data-service-id = "<?=$srv_lst->service_id;?>" data-day-no = "<?=$day_no;?>" style="float:right;"><img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" /></a>
+                                                            <a href="" class="update_user_shedule" data-staff-id="<?=$value->staff_id;?>" data-service-id = "<?=$srv_lst->service_id;?>" data-day-no = "<?=$day_no;?>"><img src="{{asset('public/assets/mobile/images/business-hours/tbl-edit.png')}}" /></a>
                                                             <div class="clearfix"></div>
                                                             <?php
                                                             }

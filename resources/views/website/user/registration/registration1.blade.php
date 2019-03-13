@@ -66,7 +66,7 @@
                         <input type="text" class="form-control" placeholder="Owner Name" name="owner_full_name" id="owner_full_name" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
-                     <div class="form-group">
+                     <!-- <div class="form-group">
                         <img src="{{asset('public/assets/website/images/login-icon-email.png')}}">
                         <input type="text" class="form-control" placeholder="Owner Email Address" name="owner_email" id="owner_email" autocomplete="off">
                         <div class="clearfix"></div>
@@ -81,7 +81,7 @@
                         <a><i class="fa fa-eye log-i toggle-password-owner" aria-hidden="true"></i></a>
                         <input type="password" class="form-control" placeholder="Owner Password" name="owner_password" id="owner_password" autocomplete="off">
                         <div class="clearfix"></div>
-                     </div>
+                     </div> -->
                     </div>
 
                      <div class="form-group">

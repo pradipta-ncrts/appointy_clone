@@ -6,18 +6,14 @@ Squeedr
 @section('content')
 <header class="mobileHeader showMobile" id="divBh"> 
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
-  <h1>Team List</h1>
+  <h1>Staff List</h1>
   <ul>
-   <!-- <li><a href="{{url('mobile/add-staff')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>-->
-    <li><a href="{{url('mobile/add-staff')}}"><img src="{{asset('public/assets/mobile/images/add-user-staff.png')}}" /></a> </li>
-    <li><a href="#"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li>
-    
+    <li><a href="{{url('mobile/add-staff')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
   </ul>
 </header>
 <main>
    <div class="container-fluid">
       <div class="row">
-      <div class="col-md-12">
          <div class="mobileStaff break10px showMobile" >
             <?php
             if(!empty($staff_list))
@@ -29,15 +25,15 @@ Squeedr
                <h2><?=$value->full_name;?></h2>
                <span><?=$value->expertise;?></span>
                <ul>
-                  <li><img src="{{asset('public/assets/mobile/images/customer-details/mail.png')}}" height="11"/><p><?=$value->email;?></p></li>
-                  <li><img src="{{asset('public/assets/mobile/images/customer-details/mobile.png')}}" height="15"/><p><?=$value->mobile ? $value->mobile : 'NIL'; ?></p></li>
+                  <li><i class="fa fa-envelope"></i><?=$value->email;?></li>
+                  <li><i class="fa fa-phone"></i><?=$value->mobile ? $value->mobile : 'NIL'; ?></li>
                </ul>
+               <a href="javascript:void(0);" class="editStaff" data-staff-id="<?=$value->staff_id;?>" style=" position: absolute;  right: 17px;  bottom: 13px;"><i class="fa fa-pencil"></i> </a>
                <ol>
                   <li><?=$value->addess;?></li>
                   <!-- <li>Sleep Medicine</li>
                   <li><a>More </a></li> -->
                </ol>
-               <a href="javascript:void(0);" class="editStaff" data-staff-id="<?=$value->staff_id;?>" style=" float:right;font-size: 13px;"><!--<i class="fa fa-pencil"></i>--> more </a>
             </div>
             <?php
                 }
@@ -52,16 +48,13 @@ Squeedr
             }
             ?>
          </div>
-         </div>
       </div>
    </div>
 </main>
-
-
 <div class="modal fade" id="myModaleditstaff" role="dialog">
-    <div class="modal-dialog ">
+    <div class="modal-dialog add-pop">
         <!-- Modal content-->
-        <div class="modal-content new-modalcustm" style="float: none;">
+        <div class="modal-content new-modalcustm">
             <form name="edit_team_member_form" id="edit_team_member_form" method="post" action="{{url('api/edit_staff')}}" enctype="multipart/form-data">
                 <input type="hidden" name="staff_id" id="edit_staff_id" value="">
                 <div class="modal-header">
@@ -72,23 +65,7 @@ Squeedr
                     <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group" id="edit_category_error">
-                                 
-                                <div class="form-group nomarging color-b" >
-                                    <select class="" name="staff_type" id="staff_type" >
-                                        <option value="1">Manager</option>
-                                        <option value="2">Staff</option>
-                                    </select>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                        <div class="form-group">
-                            <div class="input-group" id="edit_fullname_error"> <span class="input-group-addon"></span>
+                            <div class="input-group" id="edit_fullname_error"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                 <input id="edit_staff_fullname" type="text" class="form-control" name="staff_fullname" placeholder="Full Name" >
                             </div>
                         </div>
@@ -97,7 +74,7 @@ Squeedr
                     <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group" id="edit_username_error">  <span class="input-group-addon"></span>
+                            <div class="input-group" id="edit_username_error"> <span class="input-group-addon"><i class="fa fa-user"></i></span>
                                 <input id="edit_staff_username" type="text" class="form-control" name="staff_username" placeholder="Username" disabled="">
                             </div>
                         </div>
@@ -106,7 +83,7 @@ Squeedr
                     <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group" id="edit_email_error">  <span class="input-group-addon"></span>
+                            <div class="input-group" id="edit_email_error"> <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
                                 <input id="edit_staff_email" type="text" class="form-control" name="staff_email" placeholder="Email Address" disabled="">
                             </div>
                         </div>
@@ -115,7 +92,7 @@ Squeedr
                     <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group" id="edit_mobile_error">  <span class="input-group-addon"></span>
+                            <div class="input-group" id="edit_mobile_error"> <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                                 <input id="edit_staff_mobile" type="text" class="form-control" name="staff_mobile" placeholder="Mobile" style="width: 92%;">               
                             </div>
                             <a style="position: absolute; right:15px; top:8px; font-size: 18px" role="button" data-toggle="collapse" data-target="#edit_other_phone" id="edit_more_phone"><i class="fa fa-plus"></i></a>
@@ -125,14 +102,14 @@ Squeedr
                     <div class="row collapse" id="edit_other_phone" >
                         <div class="col-md-12">
                         <div class="form-group" id="edit_home_phone_error">
-                            <div class="input-group">  <span class="input-group-addon"></span>
+                            <div class="input-group"> <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                                 <input id="edit_staff_home_phone" type="text" class="form-control" name="staff_home_phone" placeholder="Home Phone">
                             </div>
                         </div>
                         </div>
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group" id="edit_work_phone_error">  <span class="input-group-addon"></span>
+                            <div class="input-group" id="edit_work_phone_error"> <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                                 <input id="edit_staff_work_phone" type="text" class="form-control" name="staff_work_phone" placeholder="Work Phone">
                             </div>
                         </div>
@@ -143,7 +120,7 @@ Squeedr
                         <div class="col-md-12">
                         <div class="form-group">
                             <div class="input-group" id="edit_category_error">
-                                 
+                                <span class="input-group-addon"><i class="fa fa-file-text"></i></span>
                                 <div class="form-group nomarging color-b" >
                                     <select class="selectpicker" data-show-subtext="true" data-live-search="true" name="staff_category" id="edit_staff_category" >
                                     <option value="">Select Category </option>
@@ -164,7 +141,7 @@ Squeedr
                     <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group textarea-md" id="edit_expertise_error">  <span class="input-group-addon"></span>
+                            <div class="input-group textarea-md" id="edit_expertise_error"> <span class="input-group-addon"><i class="fa fa-flask"></i></span>
                                 <textarea style="width: 100%" name="staff_expertise" id="edit_staff_expertise" placeholder="Expertise (i.e. Insomnia, Sleep disorder, Hyperactivity,...)"></textarea>
                             </div>
                         </div>
@@ -173,7 +150,7 @@ Squeedr
                     <div class="row">
                         <div class="col-md-12">
                         <div class="form-group">
-                            <div class="input-group textarea-md" id="edit_description_error">  <span class="input-group-addon"></span>
+                            <div class="input-group textarea-md" id="edit_description_error"> <span class="input-group-addon"><i class="fa fa-file"></i></span>
                                 <textarea style="width: 100%" name="staff_description" id="edit_staff_description" placeholder="Description"></textarea>
                             </div>
                         </div>
@@ -187,7 +164,7 @@ Squeedr
                             <div class="add-gly">
                                 <div class="add-picture"><img id="edit_staff_image" src="#" alt="" width="60px" height="60px" /></div>
                                 <!--<div class="add-picture-text">UPLOAD PICTURE</div>-->
-                                <input type="file" name="staff_profile_picture" id="edit_staff_profile_picture" style="margin: 0px 0; padding: 0 4px;" accept="image/*">
+                                <input type="file" name="staff_profile_picture" id="edit_staff_profile_picture" style="margin: 30px 0; padding: 0 4px;" accept="image/*">
                             </div>
                         </div>
                         </div>
@@ -221,7 +198,7 @@ $('.editStaff').click(function(e){
           dataType: "json",
           success: function(response) 
           {
-              console.log(response);
+              //console.log(response);
               $('.animationload').hide();
               if(response.result=='1')
               {
@@ -231,7 +208,6 @@ $('.editStaff').click(function(e){
                       profile_picture = "<?php echo asset('public/assets/website/images/business-hours/blue-user.png');?>";
                   }
                   $('#modalTitle').text('Update '+response.staff_details.full_name);
-                  $('#staff_type').val(response.staff_details.staff_type);
                   $('#edit_staff_fullname').val(response.staff_details.full_name);
                   $('#edit_staff_username').val(response.staff_details.username);
                   $('#edit_staff_email').val(response.staff_details.email);
