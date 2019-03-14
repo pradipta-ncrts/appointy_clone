@@ -20,6 +20,10 @@ Squeedr
       <li><a> <img src="{{asset('public/assets/mobile/images/notification.png')}}" /></a> </li>
     </ul>
 </header>
+<?php
+$mysquder_page_inner = App\Http\Controllers\BaseApiController::mysquder_page_inner();
+$inner_user_details = $mysquder_page_inner['inner_user_details'];
+?>
 
 <div class="menuoverlay">
     <div class="sideNavbar sideToggle">
@@ -56,7 +60,7 @@ Squeedr
             <li><a href="{{url('mobile/scan')}}"><img src="{{asset('public/assets/mobile/images/sidenav/qr-code.png')}}" /> <span>Scan </span> </a> </li>
             <li><a href="{{url('mobile/membership')}}"><img src="{{asset('public/assets/mobile/images/sidenav/upgrade.png')}}" /> <span>Upgrade</span> </a> </li>
             <li><a href="{{url('mobile/help')}}"><img src="{{asset('public/assets/mobile/images/sidenav/information.png')}}" /> <span>Help</span> </a> </li>
-            <li><a href="{{url('mobile/logout')}}"><img src="{{asset('public/assets/mobile/images/sidenav/logout.png')}}" /> <span>Logout</span> </a> </li>
+            <li><a href="" id="logout"><img src="{{asset('public/assets/mobile/images/sidenav/logout.png')}}" /> <span>Logout</span> </a> </li>
         </ul>
     </div>
 </div>
@@ -217,8 +221,9 @@ Squeedr
                   <h4 class="modal-title">Quick Guide</h4>
                </div>
                <div class="modal-body clr-modalbdy">
-               
-                                 
+                             <div style="margin-bottom: 10px;">
+                                <input type="checkbox" name="show_user_guide" id="show_user_guide" <?=$inner_user_details->login_counter==2 || $inner_user_details->login_counter==1 ? "checked" : ""; ?>> Always show user guide.
+                             </div>    
                                    <a href="{{ url('mobile/calendar') }}"><h3>1. Sync Calendars</h3></a>
                                    <p>Squeedr works in sync with Google Calendar, Office 365, Outlook or iCloud to avoid scheduling conflicts when creating 
                                        new events.
@@ -226,7 +231,7 @@ Squeedr
                                    <a href=""><h5> 1.1 Personalize your email</h5></a>
                                    <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
                                    <hr >
-                                   <a href=""><h3>2. Manage your business hours</h3></a>
+                                   <a href="{{ url('mobile/business-hours') }}"><h3>2. Manage your business hours</h3></a>
                                    <p>Events types lets you create an event according to your availability, meeting duration, location, etc..., for meetings 
                                        or for individual invitees.
                                    </p>
@@ -250,7 +255,7 @@ Squeedr
                                        </span>
                                    </p>
                                    <hr >
-                                   <h3>4. Customize your Squeedr page</h3>
+                                   <a href="{{ url('mobile/my-profile') }}"><h3>4. Customize your Squeedr page</h3></a>
                                    <hr style="margin-top:10px; margin-top:5px;">
                                    <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
                                        Customize the page to align it with your brand and coporate indentity.
@@ -406,8 +411,75 @@ $(document).ready(function(){
         }
         
     });
-})
-    
+});
+ 
+</script>
+
+<?php
+  if($inner_user_details->login_counter==1 || $inner_user_details->login_counter==2)
+  {
+  ?>
+  <script type="text/javascript">
+     $(document).ready(function() { 
+        var a = localStorage.getItem("showPopup");
+        if(a!="Yes")
+        {
+           $("#myModalQuickGuide").modal("show");
+           localStorage.setItem("showPopup", "Yes");
+        }
+     });
+  </script>
+  <?php
+  }
+  else
+  {
+  ?>
+  <script type="text/javascript">
+     localStorage.removeItem("showPopup");
+  </script>
+  <?php
+  }
+  ?>
+
+<script type="text/javascript">
+  $('#logout').click(function(e){
+      e.preventDefault();
+      localStorage.removeItem("showPopup");
+      window.location.replace(baseUrl+"logout");
+  });
+  
+</script>
+
+<script type="text/javascript">
+   $('#show_user_guide').click(function(e){
+      e.preventDefault();
+      var user_guide_value = $(this).val();
+      var data = addCommonParams([]);
+      data.push({name:'user_guide_value',value:user_guide_value});
+      $.ajax({
+          url: "<?php echo url('api/update_guide_value');?>",
+          type: "POST",
+          data:data ,
+          dataType: "json",
+          success: function(response) {
+              //console.log(response);
+              if(response.result=='1')
+              {
+                  swal("Success", response.message, "success");
+              }
+              else
+              {
+                  swal("Error", response.message , "error");
+              }
+          },
+          beforeSend: function(){
+              $('.animationload').show();
+          },
+          complete: function(){
+              $('.animationload').hide();
+          }
+      });
+});
 </script>
 
 @endsection

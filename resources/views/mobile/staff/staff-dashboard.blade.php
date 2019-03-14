@@ -11,6 +11,7 @@ Squeedr
         <li>&nbsp;</li>
         <!-- <li><a> <img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>
         <li><a> <img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li> -->
+        <li><a href="{{url('mobile/staff_calendar')}}"> <img src="{{asset('public/assets/mobile/images/calendar.png')}}" /></a> </li>
     </ul>
 </header>
 

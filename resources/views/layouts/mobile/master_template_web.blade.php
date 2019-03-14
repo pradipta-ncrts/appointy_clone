@@ -160,7 +160,7 @@
 
             <li><a href="{{url('mobile/service-list/all')}}">Services <img src="{{asset('public/assets/mobile/images/add-menu/services.png')}}"/></a></li>
 
-            <li><a href="{{url('mobile/staff-list')}}">Staff <img src="{{asset('public/assets/mobile/images/add-menu/staff.png')}}"/></a></li>
+            <li><a href="{{url('mobile/staff-list')}}">Team <img src="{{asset('public/assets/mobile/images/add-menu/staff.png')}}"/></a></li>
 
             <li><a href="{{url('mobile/add-client')}}">Add Clients <img src="{{asset('public/assets/mobile/images/add-menu/clients.png')}}"/></a></li>
 

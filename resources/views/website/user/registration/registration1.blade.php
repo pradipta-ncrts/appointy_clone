@@ -48,19 +48,7 @@
                         <input type="text" class="form-control" placeholder="Personal Name" name="full_name" id="full_name" autocomplete="off">
                         <div class="clearfix"></div>
                      </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
-                        <input type="text" class="form-control" placeholder="Username" name="user_name" id="user_name" autocomplete="off">
-                        <div class="clearfix"></div>
-                     </div>
-                     <div class="form-group">
-                        <img src="{{asset('public/assets/website/images/reg-icon-pass.png')}}">
-                        <a><i class="fa fa-eye log-i toggle-password" aria-hidden="true"></i></a>
-                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
-                        <div class="clearfix"></div>
-                     </div>
-
-                    <div id="owner_details" style="display:none;">
+                     <div id="owner_details" style="display:none;">
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
                         <input type="text" class="form-control" placeholder="Owner Name" name="owner_full_name" id="owner_full_name" autocomplete="off">
@@ -83,6 +71,17 @@
                         <div class="clearfix"></div>
                      </div> -->
                     </div>
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/reg-icon-username.png')}}">
+                        <input type="text" class="form-control" placeholder="Username" name="user_name" id="user_name" autocomplete="off">
+                        <div class="clearfix"></div>
+                     </div>
+                     <div class="form-group">
+                        <img src="{{asset('public/assets/website/images/reg-icon-pass.png')}}">
+                        <a><i class="fa fa-eye log-i toggle-password" aria-hidden="true"></i></a>
+                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" autocomplete="off">
+                        <div class="clearfix"></div>
+                     </div>
 
                      <div class="form-group">
                         <img src="{{asset('public/assets/website/images/reg-icon-location.png')}}">
