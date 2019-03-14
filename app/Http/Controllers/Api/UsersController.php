@@ -1611,7 +1611,7 @@ class UsersController extends ApiController {
 		$selectField = array('service_link');
 		$check_service_link = $this->common_model->fetchDatas($this->tableObj->tableUserService,$condition,$selectField);
 		if(!empty($check_service_link)){
-			$this->response_message="Service Link has already been taken.";
+			$this->response_message="Service Link has already been taken. Please use another service link name.";
 		} else {
 			$serviceData = array(
     			'user_id' => $user_no,
@@ -1633,7 +1633,7 @@ class UsersController extends ApiController {
 			{
 				$response_data['service_id'] = Crypt::encrypt($service_id);
 				$this->response_status='1';
-				$this->response_message="Service added successfully.";
+				$this->response_message="Service added successfully. Please update service details.";
 			}
 			else
 			{

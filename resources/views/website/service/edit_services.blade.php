@@ -350,7 +350,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                             <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
 
-                            <input type="submit" class="btn btn-primary" value="Next" />
+                                    <input type="submit" class="btn btn-primary" <?php if($service_details->timezone == '') { ?> value="Next" <?php } else { ?> value="Save &amp; Close" <?php } ?>  />
 
                         </div>
 
@@ -366,31 +366,31 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
             <div class="cust-box">
 
-                <form name="servie_duration_form" id="servie_duration_form" method="post" action="{{url('api/update-service-duration')}}">
+                <div class="headRow whitebox ds  clearfix ">
 
-                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
+                    <div class="leftbar">
 
-                    <div class="headRow whitebox ds  clearfix ">
-
-                        <div class="leftbar">
-
-                        <h5><i class="fa fa-history"></i> When can people book this service?</h5>
-
-                        </div>
-
-                        <div class="rightbar">
-
-                        <ul>
-
-                            <li><a onclick="slideDiv(this);"><i class="fa fa-custom fa-angle-down"></i></a></li>
-
-                        </ul>
-
-                        </div>
+                    <h5><i class="fa fa-history"></i> When can people book this service?</h5>
 
                     </div>
 
-                    <div class="headRow whitebox dsinside clearfix" <?php if($service_details->duration == '0') { ?> style="display:block" <?php } ?> >
+                    <div class="rightbar">
+
+                    <ul>
+
+                        <li><a onclick="slideDiv(this);"><i class="fa fa-custom fa-angle-down"></i></a></li>
+
+                    </ul>
+
+                    </div>
+
+                </div>
+
+                <div class="headRow whitebox dsinside clearfix" <?php if($service_details->timezone == '') { ?> style="display:block" <?php } ?> >
+
+                    <form name="servie_duration_form" id="servie_duration_form" method="post" action="{{url('api/update-service-duration')}}">
+
+                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
 
                         <div class="form-details">
 
@@ -455,11 +455,11 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
                         
                         <div class="row">
 
-                              <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
 
-                                 <label for="service_location">Timezone</label>
+                                    <label for="service_location">Timezone</label>
 
-                                 <select data-live-search="true" name="service_timezone" id="service_timezone" >
+                                    <select data-live-search="true" name="service_timezone" id="service_timezone" >
 
                                     <option value="">Select Timezone </option>
 
@@ -473,7 +473,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                                     <option <?php if(!empty($service_details->timezone) && $service_details->timezone == $tzone['zone']) { ?> selected="" <?php } ?> value="<?=$tzone['zone'] ?>">
 
-                                      <?=$tzone['diff_from_GMT'] . ' - ' . $tzone['zone'] ?>
+                                        <?=$tzone['diff_from_GMT'] . ' - ' . $tzone['zone'] ?>
 
                                     </option>
 
@@ -483,13 +483,13 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                                     ?>
 
-                                  </select>
+                                    </select>
 
-                              </div>
+                                </div>
 
                             </div>
 
-                         
+                            
 
                         <!--<div class="form-details break20px">
 
@@ -725,19 +725,18 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                         <div class="text-right">
 
-                        <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
+                            <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
 
-                        <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
+                            <input type="submit" class="btn btn-primary" <?php if($service_details->timezone == '') { ?> value="Next" <?php } else { ?> value="Save &amp; Close" <?php } ?> />
 
                         </div>
 
-                    </div>
-
-                </form>
+                    </form>
+                </div>
 
             </div>
 
-            <?php if($service_details->duration > '0') { ?>
+            <?php if($service_details->timezone != '') { ?>
 
             <div class="break20px hidden-xs"></div>
 
@@ -907,81 +906,81 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                 <div class="headRow whitebox dsinside   clearfix ">
 
-                <form name="service_invitee_notifications_form" id="service_invitee_notifications_form" method="post" action="{{url('api/update-service-invitee-notifications')}}">
+                    <form name="service_invitee_notifications_form" id="service_invitee_notifications_form" method="post" action="{{url('api/update-service-invitee-notifications')}}">
 
-                    <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
+                        <input type="hidden" name="service_id" value="{{$service_details->service_id}}">
 
-                    <div class="form-details break20px">
+                        <div class="form-details break20px">
 
-                        <div>
+                            <div>
 
-                        <label>Email Confirmations <i class="fa fa-question"></i> </label>
+                            <label>Email Confirmations <i class="fa fa-question"></i> </label>
 
-                        <p>Your invitee will receive an email confirmation with links to create their own calender Service <a href="{{url('email-customisation')}}"> Personalize</a> </p>
+                            <p>Your invitee will receive an email confirmation with links to create their own calender Service <a href="{{url('email-customisation')}}"> Personalize</a> </p>
 
-                        </div>
-
-                    </div>
-
-                    <div class="form-details break20px">
-
-                        <div>
-
-                        <label>Email Cancellations </label>
-
-                        <p>Email notifications will be sent to your invitee if you cancel the service.<a href="{{url('email-customisation')}}"> Personalize</a> </p>
+                            </div>
 
                         </div>
 
-                    </div>
+                        <div class="form-details break20px">
 
-                    <!--<div class="form-details break20px">
+                            <div>
 
-                        <div>
+                            <label>Email Cancellations </label>
 
-                        <label>Text reminders <i class="fa fa-question"></i> </label>
+                            <p>Email notifications will be sent to your invitee if you cancel the service.<a href="{{url('email-customisation')}}"> Personalize</a> </p>
 
-                        <div class="clearfix"></div>
-
-                        <p class="inlineBlock">Your invitees will have the option to send text reminders. <a> Inactive</a> </p>
-
-                        <a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a> 
+                            </div>
 
                         </div>
 
-                        </div>-->
+                        <!--<div class="form-details break20px">
 
-                    <div class="form-details break20px">
+                            <div>
 
-                        <div>
-
-                            <label>Email reminders <i class="fa fa-question"></i> </label>
+                            <label>Text reminders <i class="fa fa-question"></i> </label>
 
                             <div class="clearfix"></div>
 
-                            <p class="inlineBlock">Your invitees will have the option to receive a reminder email. </p>
+                            <p class="inlineBlock">Your invitees will have the option to send text reminders. <a> Inactive</a> </p>
 
-                            <!--<a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a>-->
+                            <a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a> 
 
-                            <button type="button" id="invitee_notification" class="isBlocked btn btn-sm btn-toggle pull-right <?php if($service_details->email_notification == 1) echo 'active'; ?>" data-toggle="button" <?php if($service_details->email_notification == 1) { ?> aria-pressed="true" <?php } else { ?> aria-pressed="false" <?php } ?> autocomplete="off">
+                            </div>
 
-                                <div class="handle"></div>
+                            </div>-->
 
-                            </button>
+                        <div class="form-details break20px">
 
-                            <input type="hidden" name="email_notification" id="email_notification" value="{{$service_details->email_notification}}">
+                            <div>
+
+                                <label>Email reminders <i class="fa fa-question"></i> </label>
+
+                                <div class="clearfix"></div>
+
+                                <p class="inlineBlock">Your invitees will have the option to receive a reminder email. </p>
+
+                                <!--<a class="toggle" onclick="toggleButton(this);"><i class="fa fa-toggle-off"></i></a>-->
+
+                                <button type="button" id="invitee_notification" class="isBlocked btn btn-sm btn-toggle pull-right <?php if($service_details->email_notification == 1) echo 'active'; ?>" data-toggle="button" <?php if($service_details->email_notification == 1) { ?> aria-pressed="true" <?php } else { ?> aria-pressed="false" <?php } ?> autocomplete="off">
+
+                                    <div class="handle"></div>
+
+                                </button>
+
+                                <input type="hidden" name="email_notification" id="email_notification" value="{{$service_details->email_notification}}">
+
+                            </div>
 
                         </div>
 
-                    </div>
+                        <div class="text-right break20px">
 
-                    <div class="text-right break20px">
+                            <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
 
-                        <input type="button" class="btn btn-grey" onclick="slideDiv(this);" value="Cancel" />
+                            <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
 
-                        <input type="submit" class="btn btn-primary" value="Save &amp; Close" />
-
-                    </div>
+                        </div>
 
                     </form>
 
@@ -2809,7 +2808,11 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
             var end_date = result[1];
 
+            var enddate = new Date(end_date);
 
+            enddate.setDate(enddate.getDate() + 1);
+            console.log(enddate);
+            
 
             // Update Values //
 
@@ -2857,12 +2860,13 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
 
             } else if(service_schedule_type == 2){
 
-                validRange = {
+                validRange = function(){
 
-                    start: start_date,
+                    return {
+                        start: start_date,
 
-                    end: end_date
-
+                        end: enddate
+                    }
                 }
 
             }
@@ -2874,6 +2878,8 @@ jQuery.validator.addMethod("alphanumeric", function(value, element) {
             $('#calendar').hide();
 
             $('#updated_calendar').show();
+
+            $('#updated_calendar').fullCalendar( 'destroy' );
 
             const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
