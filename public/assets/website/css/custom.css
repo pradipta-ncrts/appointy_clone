@@ -816,7 +816,7 @@ padding-right: 32px;
 	-webkit-border-radius: 50px;
 	-moz-border-radius: 50px;
 	-ms-border-radius: 50px;
-	-o-border-radius: 50px;
+	-o-border-radius: 50px; padding: 0 10px;
 }
 .new-modalcustm .btn-default:hover, .new-modalcustm .btn-default.focus, .new-modalcustm .btn-default:focus {
 	color: #333;
@@ -2142,9 +2142,8 @@ to {
 .yurpage-social ul li a.fa-twitter{color: #52cbff;}
 .yurpage-social ul li a.fa-instagram{color: #e7002d;}
 .yurpage-social ul li a.fa-skype{color: #5FD0FB;}
-.prof .prof-cont .inf{font-size:16px;}
-
-
+.prof .prof-cont .inf{font-size:16px;display: inline-flex;word-break: break-all;}
+.mysl-drp{margin: -52px 18px 0 0;float: right;}
 
 .datetime-nadd{width:100%;float:left;font-size:13px;line-height: 17px;margin: 4px 0 0 0;}
 
@@ -2179,7 +2178,20 @@ to {
 .addReadMore .readMore, .addReadMore .readLess {margin-left: 2px;color: blue;cursor: pointer;}
 .addReadMoreWrapTxt.showmorecontent .SecSec, .addReadMoreWrapTxt.showmorecontent .readLess {display: block;}
 .recuring-bookingtble{width:100%;margin:10px 0 20px;}
+.opacitybx{float: right;position: absolute;z-index: 5;right: 15px;top: 10px;}
+.opacitybx .breadcrumb{background: rgba(255, 255, 255, 0.9)}
 
+
+.clone-div12{width:100%;float:left;margin:15px 0;color:#fff;}
+.clone-div12 .from-group{width:100%;float:left;margin:15px 0;}
+.cln-dvbx{border-bottom: 1px solid #d7dadf;width:100%;float:left;}
+.clone-div12 .remvbtn{color:#F00;font-size:14px;font-weight:500;}
+.clone-div12 p{width:100%;font-size:16px;color:#fff;}
+.clone-div12 span{font-size:14px;color:#fff;}
+.clone-div12 small{margin:0 0 0 15px;font-size:14px;color:#fff;display: inline-block;}
+.clone-div12 .appointment{background:none;width:100%;display:inline-block;cursor:auto;}
+.clone-div12 .appointment:hover{background:none;}
+.clone-div12 .remvbtn{font-size:28px; margin: 16px 0 0; display: inline-block;font-weight:bold;}
 
 
 /****** responsive ******/

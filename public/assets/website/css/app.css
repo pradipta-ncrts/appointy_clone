@@ -859,7 +859,36 @@ ul.menuList li a:focus {
 	right: 15px;
 
 }
-
+#row2 .appointment {
+	padding: 13px 15px;
+	background: #fff;
+	cursor: pointer;
+	flex-grow: 4;
+	border: 0px solid #FFF;
+	box-shadow: 0px 0px 5px 0px #e6e4e4;
+	margin: 0px 0px 20px 0
+}
+#row2 .appointment:hover {
+	background: #efefef;
+	transition: all 0.2s ease-in-out;
+}
+#row2 .appointment.select {
+	background: #bbe5ff;
+}
+#row2 .appointment p {
+	font-size: 16px;
+	padding-bottom: 2px;
+	font-weight:400;
+}
+#row2 .appointment .pull-right {
+	color: #2ba2da; font-size: 14px; font-weight: 400;
+}
+#row2 .appointment span {
+	font-size: 14px;
+}
+#row2 .appointment:last-child {
+	margin-right: 0;
+}
 .pagination {
 
 	margin: 0;
@@ -3862,15 +3891,13 @@ a.gear {
 
 	display: block;
 
-	font-size: 14px;
+	font-size: 11px;
 
-	text-align: left;
+	text-align: right;
 
 	color: #666;
 
-	padding: 5px 0 15px 17px;
-
-	cursor: pointer;
+	padding: 5px 0 15px 0;
 
 }
 
@@ -4250,7 +4277,8 @@ position: absolute;right: 16px;top: 36px;}
 
 .custm-share .dropdown .dropdown-menu-right li:last-child{border:0;}
 
-
+.mysquder-fxd{width:820px;float:left;}
+.mysqdr-tlbx{width:100%;float:left;margin:325px 0 30px;}
 
 /********end New css added by Sharmistha*******/
 
@@ -6996,7 +7024,7 @@ ul.clientSchedule li a {
 
     background:none;
 
-    padding: 10px 23px;
+    padding: 4px 23px;
 
 }
 
