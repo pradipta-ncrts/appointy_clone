@@ -68,7 +68,7 @@ Squeedr
                <div class="form-group">
                   <ul class="clin-ln">
                      <li style="border-bottom:0;margin-bottom:0;">
-                        <input type="radio" checked="checked" name="client_name" id="clpopupall" value="1">
+                        <input type="radio" <?=Request::segment(3)=='' ? 'checked="checked"' : ""; ?> name="client_name" id="clpopupall" value="1">
                         <label class="right35px">All Clients</label>
                         <div class="clearfix break10px"></div>
                      </li>
@@ -91,11 +91,11 @@ Squeedr
                <div class="form-group">
                   <ul class="clin-ln">
                      <?php
-                     foreach ($client_list as $key => $value)
+                     foreach ($mobile_filter_client_list as $key => $value)
                      {
                      ?>
                      <li class="customers-filter">
-                        <input type="radio" name="client_name" class="checked" value="<?=$value->client_name;?>">
+                        <input type="radio" name="client_name" class="checked" value="<?=$value->client_name;?>" <?=Request::segment(3)==$value->client_name ? 'checked="checked"' : ""; ?>>
                         <label class="right35px"><?=$value->client_name;?></label>
                      </li>
                      <div class="clearfix break10px"></div>

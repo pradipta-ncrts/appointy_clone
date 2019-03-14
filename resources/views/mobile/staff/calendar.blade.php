@@ -23,15 +23,35 @@ Squeedr
     padding: 6px 1px 6px 9px;
 }
 .nice-select .list{height: 173px;overflow-y: scroll;}
+.fc-addButton-button.fc-button.fc-state-default.fc-corner-left
+{
+   display: none !important;
+}
 </style>
 @endsection
 @section('content')
 <?php 
+$show_from = "07:00:00";
+$show_till = "21:00:00";
+$increment = "00:15:00";
+$sel_increment = "15";
+if(!empty($calendar_settings)){
+    if(isset($calendar_settings->show_from) && $calendar_settings->show_from!=''){
+        $show_from = $calendar_settings->show_from;
+    }
+    if(isset($calendar_settings->show_till) && $calendar_settings->show_till!=''){
+        $show_till = $calendar_settings->show_till;
+    }
+    if(isset($calendar_settings->increment) && $calendar_settings->increment!=''){
+        $sel_increment = $calendar_settings->increment;
+        $increment = "00:".$calendar_settings->increment.":00";
+    }
+}
 //echo $show_from."<<>>".$show_till."<<>>".$increment; exit;
 $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=>'JUN','6'=>'JUL','7'=>'AUG','8'=>'SEP','9'=>'OCT','10'=>'NOV','11'=>'DEC');
 ?>
 <header class="mobileHeader showMobile" id="divBh">
-<a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
+<a href="{{url('mobile/staff-dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
     <h1>Calendar</h1>
     <ul>
         <li>&nbsp;</li>
@@ -56,7 +76,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
          <div class="modal-content new-modalcustm">
             <div class="modal-header">
                <button type="button" class="close" data-dismiss="modal">×</button>
-               <h4 class="modal-title">Appointment Details dd</h4>
+               <h4 class="modal-title">Appointment Details</h4>
             </div>
             <div class="modal-body clr-modalbdy">
                <div class="notify" >
@@ -83,7 +103,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                      <div id="rescheduledDatetime">Rescheduled: Aug 15th, 2018 </div>
                      <br>
 
-                      <div id="paymentSection">
+                      <div id="paymentSection" style="display: none;">
                           <form name="update_note_form" id="update_note_form" method="post" action="{{url('api/update_appointment_note')}}">
                               <div class="link-e">
                                       <a href="JavaScript:Void(0);" class="cancel-appoinment"><i class="fa fa-times"></i> Cancel</a>
@@ -166,39 +186,15 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                 <div class="modal-body clr-modalbdy">
                    <div class="notify" >
                       <input type="text" id="myInput" class="input-block-level form-control search-ap" placeholder="Search Staff" >
+                      
                       <?php
-                      $staff_id = array();                    
-                      //print_r($staff_id);
-                      foreach ($staff_list_filter as $key => $value)
-                      {   
-                      ?>
-                          <div class="user-bkd break20px">
-                           <?php
-                            if($value->staff_profile_picture)
-                            {
-                            ?>
-                                <img src="<?=$value->staff_profile_picture;?>" class="thumbnail rounded">
-                            <?php
-                            }
-                            else
-                            {
-                            ?>
-                                <img src="{{asset('public/assets/website/images/user-pic-sm-default.png')}}" class="thumbnail rounded">
-                            <?php
-                            }
-                            ?>
-                           <h2 id="clientDetails"><?=$value->full_name;?>
-                              <br><a href="mailto:<?=$value->email;?>"><i class="fa fa-envelope-o"></i> <?=$value->email;?></a>
-                           </h2>
-                           <div class="row" id="apoinment-mail-notification">
-                              <div class="check-ft">
-                                 <div class="form-group"> 
-                                  <input name="appoinmnet_filter_stuff_id[]" class="calender-inpt" type="checkbox" value="<?=$value->staff_id;?>" <?=in_array($value->staff_id, $staff_id) ? "checked" : ""; ?>>
-                                </div>
-                              </div>
-                           </div>
-                         </div>
-                      <?php
+                      $staff_id = array();
+                      if(!empty($filter_data))
+                      {
+                          foreach ($staff_list as $key => $value)
+                          {
+                              $staff_id[] = $value->staff_id;
+                          }
                       }
                       ?>
                    </div>
@@ -213,10 +209,10 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
   </div>
 
   <!-- Settings Modal -->
-  <div class="modal fade" id="calendarsettingsModal" role="dialog">
+  <!-- <div class="modal fade" id="calendarsettingsModal" role="dialog">
       <div class="modal-dialog">
       <div class="modal-content new-modalcustm">
-      <!-- Modal content--> 
+     
       <div class="modal-content new-modalcustm">
           <form name="calendar_settings_form" id="calendar_settings_form" method="post" action="{{url('api/calendar_settings')}}">
               <div class="modal-header">
@@ -324,7 +320,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
       </div>
       </div>
       </div>
-  </div>           
+  </div>  -->          
                    
 
   </div>
@@ -439,26 +435,6 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
                     backgroundColor: "<?=$value->colour_code;?>",
                     borderColor: "<?=$value->colour_code;?>",
                     appointment_id: '<?=$value->appointment_id;?>',
-                },
-               <?php
-                }
-               ?>
-                <?php
-                foreach ($block_date_time as $key => $value)
-                {
-                ?>
-                { 
-                    id: '0',
-                    resourceId : '<?=$value->block_staff_id;?>',
-                    title: 'Blocked for <?=$value->block_reasons;?>',
-                    start: '<?=$value->block_start_time;?>',
-                    end: '<?=$value->block_end_time;?>',
-                    //allDay: false,
-                    backgroundColor: "#fad6d6",
-                    borderColor: "#fad6d6",
-                    textColor: "#000",
-                    className: "blockedSection",
-                    appointment_id: '0',
                 },
                <?php
                 }

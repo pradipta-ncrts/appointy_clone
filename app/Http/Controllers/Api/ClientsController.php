@@ -309,7 +309,17 @@ class ClientsController extends ApiController {
                 
             }
         }
+
+
         $response_data['client_list']=$client_list;
+        //For only mobile part
+        $mobile_filter_condition = array(
+                    array('user_id','=',$user_no),
+                    array('is_deleted','=','0'),
+                    array('is_blocked','=','0'),
+        );
+        $mobile_filter_client_list = $this->common_model->fetchDatas($this->tableObj->tableNameUserClient,$mobile_filter_condition,$selectFields=array('user_client_id','created_on'),$joins,$groupBy);
+        $response_data['mobile_filter_client_list']=$mobile_filter_client_list;
 
 		$this->response_status='1';
 		// generate the service / api response

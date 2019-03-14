@@ -66,6 +66,7 @@ class ClientsController extends ApiController {
 		if(isset($return->response_status)){
 			if($return->response_status == 1){
 				$data['client_list'] = $return->client_list;
+				$data['mobile_filter_client_list'] = $return->mobile_filter_client_list;
 				$data['client_search_text'] = $client_search_text;
 				$data['category_list'] = $service_return->category_list;
 				$data['timezone'] = $zones_array;

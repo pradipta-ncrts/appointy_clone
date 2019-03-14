@@ -66,6 +66,16 @@
 
                </div>
 
+               <div class="form-group" id="owner_details" style="display: none;">
+
+                  <img src="{{asset('public/assets/mobile/images/reg-icon-user.png')}}">
+
+                  <input type="text" class="form-control" placeholder="Owner Name" name="owner_full_name" id="owner_full_name">
+
+                  <div class="clearfix"></div>
+
+               </div>
+
                <div class="form-group">
 
                   <img src="{{asset('public/assets/mobile/images/reg-icon-user.png')}}">
@@ -81,16 +91,6 @@
                   <img src="{{asset('public/assets/mobile/images/reg-icon-pass.png')}}">
 
                   <input type="password" class="form-control" placeholder="Password" name="password" id="password">
-
-                  <div class="clearfix"></div>
-
-               </div>
-
-               <div class="form-group" id="owner_details" style="display: none;">
-
-                  <img src="{{asset('public/assets/mobile/images/reg-icon-user.png')}}">
-
-                  <input type="text" class="form-control" placeholder="Owner Name" name="owner_full_name" id="owner_full_name">
 
                   <div class="clearfix"></div>
 

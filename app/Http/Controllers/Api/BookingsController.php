@@ -6047,6 +6047,118 @@ class BookingsController extends ApiController {
     }
 
 
+    public function appoinment_list_staff_mobile(Request $request)
+    {
+        //date_default_timezone_set('Asia/Kolkata');
+        // Check User Login. If not logged in redirect to login page /
+        $response_data = array(); 
+        // validate the requested param for access this service api
+        $this->validate_parameter(1); // along with the user request key validation
+        if(!empty($other_user_no) && $other_user_no!=0){
+            $user_no = $other_user_no;
+        }
+        else{
+            $user_no = $this->logged_user_no;
+        }
+
+        //print_r($request->all()); die();
+
+        $staff_id = $request->input('staff_id');
+
+        //'in'=>array('grade_no'=>$garde_arr)
+        $staffFields = array('staff_id', 'staff_type', 'user_id');
+        $staff_conditions = array(
+            array('staff_id', '=', $staff_id),
+            array('is_deleted','=','0'),
+            //'in'=>array('staff_id' => $filter_data)
+        );
+        $staff_details = $this->common_model->fetchData($this->tableObj->tableNameStaff,$staff_conditions,$staffFields);
+
+
+        if($staff_details->staff_type=="1")
+        {
+            //appoinment data using id
+            $appoinment_condition = array(
+                array('user_id', '=', $staff_details->user_id),
+                array('status', '!=', 2),
+                array('is_deleted','=','0'),
+                //'in'=>array('staff_id' => $filter_data)
+            );
+
+            $findCond = array(
+                array('user_id','=',$staff_details->user_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+                //'in'=>array('staff_id' => $filter_data)
+            );
+        }
+        else
+        {
+            //appoinment data using id
+            $appoinment_condition = array(
+                array('staff_id', '=', $staff_id),
+                array('status', '!=', 2),
+                array('is_deleted','=','0'),
+                //'in'=>array('staff_id' => $filter_data)
+            );
+
+            $findCond = array(
+                array('staff_id','=',$staff_id),
+                array('is_deleted','=','0'),
+                array('is_blocked','=','0'),
+                //'in'=>array('staff_id' => $filter_data)
+            );
+        }
+
+        
+
+        // Appoinment section //
+        $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
+        $stuff_fields = array('full_name');
+        $joins = array(
+                    array(
+                    'join_table'=>$this->tableObj->tableNameStaff,
+                    //'join_table_alias'=>'invItemTb',
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+                    'join_type'=>'left',
+                    'join_on'=>array('staff_id','=','staff_id'),
+                    'join_on_more'=>array(),
+                    'join_conditions' => array(array('is_deleted','=','0')),
+                    'select_fields' => $stuff_fields,
+                ),
+        );
+
+        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+        $appoinment_array = array();
+        foreach ($appoinment_list as $key => $value)
+        {
+            $appoinment_array[] = array(
+                    'service_name' => $value->full_name,
+                    'appointment_id' => $value->appointment_id,
+                    'start_date' => date('D d, M Y H:i:s e', strtotime($value->date.' '.$value->start_time)),
+                    'end_time' => date('D d, M Y H:i:s e', strtotime($value->date.' '.$value->end_time)),
+                    'colour_code' => $value->colour_code,
+                    'staff_id' => $value->staff_id,
+            );
+        }
+
+        // Staff Section //
+        $selectFields = array('staff_id','full_name','email', 'staff_profile_picture');
+        $staff_list = $this->common_model->fetchDatas($this->tableObj->tableNameStaff,$findCond,$selectFields);
+
+
+        $response_data['staff_list'] = $staff_list;
+        $response_data['appoinment_list'] = $appoinment_array;
+        //$response_data['staff_list_filter'] = $staff_list_filter;
+        //$response_data['calendar_settings'] = $calendar_settings;
+        //$response_data['filter_data'] = $filter_data;
+        //$response_data['block_date_time'] = $block_date_array;
+        $this->response_status='1';
+        // generate the service / api response
+        $this->json_output($response_data);
+    }
+
+
 
 
 
