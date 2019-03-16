@@ -49,7 +49,7 @@
                             <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}"></a> 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
                                 <a class="dropdown-item" href="javascript:void(0);" id="profileSettings"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> 
-                                <a class="dropdown-item" href="{{ url('client/login') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> 
+                                <a class="dropdown-item" href="{{ url('client/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> 
                             </div>
                         </div>
                         <div class="main-nav">

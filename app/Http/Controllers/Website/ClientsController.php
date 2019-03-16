@@ -293,16 +293,65 @@ class ClientsController extends ApiController {
 
 	function client_login($parameter=NULL)
 	{
+		$authdata = $this->client_login_checked();
+		//echo '<pre>'; print_r($authdata); exit;
+		if((!empty($authdata['client_id']) || ($authdata['client_id'] > 0))){
+			$parameter = [
+				'client_id' => $authdata['client_id'],
+				];
+			$parameter = Crypt::encrypt($parameter);
+
+			if($authdata['is_email_verified'] == 1){
+				return redirect('/client/appointment-booking/'.$parameter);
+			} else {
+				return redirect('/client/client-dashboard/'.$parameter);
+			}
+		}
+
 		return view('website.client.client-login');
 	}
 
 	function client_registration($parameter=NULL)
 	{
+		$authdata = $this->client_login_checked();
+		if((!empty($authdata['client_id']) || ($authdata['client_id'] > 0))){
+			$parameter = [
+				'client_id' => $authdata['client_id'],
+				];
+			$parameter= Crypt::encrypt($parameter);
+           if($authdata['is_email_verified'] == 1){
+				return redirect('/client/appointment-booking',$parameter);
+		   } else {
+				return redirect('/client/client-dashboard',$parameter);
+		   }
+		}
+
 		return view('website.client.client-registration');
 	}
 
+
+	function client_logout(){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+		
+		// Remove Coockie //
+		$this->remove_client_cookies();
+		return redirect('client/login');
+	}
+
+
+
 	function client_dashboard($parameter=NULL)
 	{
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 
@@ -368,6 +417,13 @@ class ClientsController extends ApiController {
 
 	function client_appointment_booking($parameter=NULL)
 	{
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 
@@ -614,6 +670,13 @@ class ClientsController extends ApiController {
 
 
 	function client_booking_list($parameter=NULL,$duration){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+		
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 
@@ -656,6 +719,13 @@ class ClientsController extends ApiController {
 	}
 
 	function client_recurring_booking_list($parameter=NULL,$duration){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 
@@ -698,6 +768,13 @@ class ClientsController extends ApiController {
 	}
 
 	function client_booking_details($parameter=NULL,$order_id){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 			
@@ -740,6 +817,13 @@ class ClientsController extends ApiController {
 
 
 	function client_profile_settings($parameter=NULL){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 
@@ -771,6 +855,13 @@ class ClientsController extends ApiController {
 	}
 
 	function client_profile_picture_settings($parameter=NULL){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 
@@ -801,6 +892,13 @@ class ClientsController extends ApiController {
 	}
 
 	function client_login_settings($parameter=NULL){
+		$authdata = $this->client_login_checked();
+		if((empty($authdata['client_id']) || ($authdata['client_id']<=0))){
+           return redirect('client/login');
+		}
+
+		$client_id = $authdata['client_id'];
+
 		if($parameter!=NULL){
 			$param_data = Crypt::decrypt($parameter);
 

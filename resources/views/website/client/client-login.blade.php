@@ -115,7 +115,22 @@ $('#clientloginform').validate({
                 console.log(response);
                 if(response.result==1)
                 {
-                    var url = response.message;
+                    var client_id = response.client_id;
+                    var is_email_verified = response.is_email_verified;
+                    // get the client id for farther service calls
+                    if($('input[name="remember_me"]').is(':checked')){
+                        $.cookie("UserEmail", data['0'].value, { expires: 365 });
+                        $.cookie("UserPassword", data['1'].value, { expires: 365 });
+                    } else {
+                        $.cookie("UserEmail", '');
+                        $.cookie("UserPassword", '');
+                    }
+
+                    $.cookie("sqd_client_id", client_id, { expires: 30, path:'/' });
+                    $.cookie("is_email_verified", is_email_verified, { expires: 30, path:'/' });
+                    
+
+                    var url = response.redirect_url;
                     console.log(url);
                     //alert(url);
                     window.location=url;

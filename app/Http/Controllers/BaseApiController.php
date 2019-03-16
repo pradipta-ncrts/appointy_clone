@@ -359,6 +359,33 @@ class BaseApiController extends BaseController
         return $authdata;
     }
 
+
+    public function client_login_checked()
+    {
+        // Check & Set Coockie //
+        $client_id=(isset($_COOKIE['sqd_client_id']))?$_COOKIE['sqd_client_id']:0;
+        $is_email_verified=(isset($_COOKIE['is_email_verified']))?$_COOKIE['is_email_verified']:0;
+        // Create Authentication Data//
+        $authdata=array(
+            'client_id'=>$client_id,
+            'is_email_verified'=>$is_email_verified
+        );
+        return $authdata;
+    }
+
+
+    public function remove_client_cookies()
+    {
+        $cookie_params=array('sqd_client_id','is_email_verified');
+        foreach($cookie_params as $cookie_name)
+        {
+            if(isset($_COOKIE[$cookie_name])){
+                unset($_COOKIE[$cookie_name]);
+                setcookie($cookie_name,'',time()-3600,'/');
+            }
+        }
+    }
+
     //***** Get Base URL *****//
 
     public function base_url($path=''){

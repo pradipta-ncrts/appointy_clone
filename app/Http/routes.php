@@ -418,6 +418,7 @@ Route::group(['prefix'=>'mobile'],function(){
 Route::group(['prefix'=>'client'],function(){
     Route::get('/login','Website\ClientsController@client_login');
     Route::get('/registration','Website\ClientsController@client_registration');
+    Route::get('/logout','Website\ClientsController@client_logout');
     Route::get('/cancel_appointent/{parameter?}','Website\ClientsController@cancel_appointment');
     Route::get('/reschedule-appointment/{parameter?}','Website\ClientsController@reschedule_appointment');
     Route::get('/client-dashboard/{parameter?}','Website\ClientsController@client_dashboard');

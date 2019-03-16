@@ -133,7 +133,7 @@ Squeedr
 								<div class="col-sm-6">
 									<div class="next-available">
 										<a onclick="get_availibility_calender(2)">Check Availability</a>
-										<h3></h3>
+										<h3 id="next_availability"></h3>
 									</div>
 									
 									<div class="reshedule" id="recurring_booking_section" style="display:none;">
@@ -576,6 +576,7 @@ Squeedr
 						//$('#verification_section').hide();
 						//$('#verification_success_section').show();
 						$('#current_month').text(response.current_month);
+						$('#next_availability').text(response.nearest_available_date);
 						var date_array_header = Object.keys(response.date_array_header);
 						//console.log(date_array_header);
 						html = "<tr>";

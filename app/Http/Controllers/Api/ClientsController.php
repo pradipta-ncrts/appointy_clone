@@ -2317,11 +2317,32 @@ class ClientsController extends ApiController {
         }
         //exit;
         //echo '<pre>'; print_r($date_array); exit;
+        $nearest_available_date = "Not Available";
+        $is_found = false;
+        if(!empty($date_array)){
+            foreach($date_array as $date=>$time_array){
+                $is_found = false;
+                if(!empty($time_array)){
+                    foreach($time_array as $time=>$avail_array){
+                        if(strtotime(date('Y-m-d')) <= strtotime($avail_array['date']) && $avail_array['blocked'] == 0 && $avail_array['booked'] == 0){
+                            $nearest_available_date = $avail_array['date_time_formatted'];
+                            $is_found = true;
+                            break;
+                        }
+                    }
+                    if($is_found == true){
+                        break;
+                    }
+                }
+            }
+        }
 
+        //echo $nearest_available_date; exit;
         $response_data['calendar_availability_list'] = $date_array;
         $response_data['date_array_header'] = $date_array_header;
         $response_data['current_month'] = $current_month;
-        $response_data['current_date'] = date('Y-m-d');            
+        $response_data['current_date'] = date('Y-m-d');    
+        $response_data['nearest_available_date'] = $nearest_available_date;         
         $this->response_status='1';
         $this->response_message="Available Calendar List";
 
@@ -2368,9 +2389,13 @@ class ClientsController extends ApiController {
                 } else {
                     $redirect_url = url('/client/appointment-booking',$parameter);
                 }
-                
+
+                $response_data['client_id']=$user->client_id;
+                $response_data['is_email_verified']=$user->is_email_verified;
+                $response_data['redirect_url']=$redirect_url;
+
                 $this->response_status='1';
-                $this->response_message = $redirect_url;
+                $this->response_message = 'Login Successfull';
             }
         }
         else
