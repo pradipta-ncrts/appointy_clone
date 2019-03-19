@@ -63,7 +63,7 @@ Squeedr
 	   <div class="clearfix"></div>
 	   <div class="rightpan full">
 			<div class="container">
-				<div class="booking-steps ">
+				<div class="booking-steps" style="display:none;">
 				<hr>
 				<div class="step">
 					<a id="step1" href="javascript:void(0);" class="active">1</a>

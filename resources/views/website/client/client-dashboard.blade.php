@@ -7,7 +7,7 @@ Squeedr
     <div class="body-part">
         <div class="container-custm">
             <div class="upper-cmnsection">
-                <div class="heading-uprlft">Book Your Appointment</div>
+                <div class="heading-uprlft">Client Info.</div>
                 <div class="upr-rgtsec">
                     <div class="col-sm-5">
                     <!-- <div id="custom-search-input">
@@ -31,7 +31,7 @@ Squeedr
             <div class="clearfix"></div>
             <div class="rightpan full">
                 <div class="container">
-                    <div class="booking-steps">
+                    <div class="booking-steps" style="display:none;">
                     <hr>
                     <div class="step">
                         <a href="" class="active">1</a>

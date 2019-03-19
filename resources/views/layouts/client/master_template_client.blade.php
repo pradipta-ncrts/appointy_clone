@@ -25,6 +25,13 @@
    </head>
    
    <body class="dashboard-bg">
+    <?php 
+      $logged_client = App\Http\Controllers\BaseApiController::logged_client();
+      $inner_client_details = $logged_client['inner_client_details'];
+      /*echo "<pre>";
+      print_r($inner_client_details); die();*/
+    ?> 
+
       <div>
         <div class="animationload" style="display: none;">
             <div class="osahanloading"></div>
@@ -43,10 +50,29 @@
                   </div> -->
                </div>
                <div class="rightpan">
+                    <?php if(!empty($inner_client_details)) { ?>
                     <div class="top-nav">
                         
                         <div class="dropdown prof-menu" href="#">
-                            <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}"></a> 
+                            <a href="#" class=" dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+                                <!--<img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}">-->
+                                <?php
+                                //echo '<pre>'; print_r($inner_client_details); exit;
+                                if($inner_client_details->client_profile_picture != '')
+                                {
+                                    $image =  $inner_client_details->client_profile_picture ? 'image/profile_perosonal_image/'.$inner_client_details->client_profile_picture : 'assets/website/images/user-img.png';
+                                ?>
+                                <img class="user-pic" src="{{asset('public/'.$image)}}">
+                                <?php
+                                }
+                                else
+                                {
+                                ?>
+                                <img class="user-pic" src="{{asset('public/'.$image)}}">
+                                <?php
+                                }
+                                ?>
+                            </a> 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
                                 <a class="dropdown-item" href="javascript:void(0);" id="profileSettings"> <i class="fa fa-cog" aria-hidden="true"></i> Profile settings</a> 
                                 <a class="dropdown-item" href="{{ url('client/logout') }}"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a> 
@@ -57,6 +83,7 @@
                         <a href="javascript:void(0);" id="clientBookingService"><i class="flaticon-calendar"></i><span> <span>Calendar</span></span></a> 
                         </div>
                     </div>
+                    <?php } ?>
                </div>
             </div>
          </header>

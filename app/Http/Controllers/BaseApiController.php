@@ -472,9 +472,11 @@ class BaseApiController extends BaseController
 
                 break;
                 case 9: // appontment booking mail for stuff 
-                    $mail_subject = "Verification code for appointment booking.";
+                    /*$mail_subject = "Verification code for appointment booking.";
                     $mail_body = $emailData['verification_code'];
-                    $emailData['mailBody']=$mail_body;
+                    $emailData['mailBody']=$mail_body;*/
+                    $mail_subject = $emailData['email_subject'];
+                    $mailTemplateName="emails/verification-code";
                 break;
                 case 10: // Stuff username & password
                     $mail_subject = "You have registered as Staff";
@@ -884,6 +886,26 @@ class BaseApiController extends BaseController
         $stuff_list = $ci->common_model->fetchDatas($table, $conditions);
         $data = array('stuff_list'=>$stuff_list);
         //echo '<pre>'; print_r($data); exit;
+        return $data;
+    }
+
+
+    public static function logged_client()
+    {
+        $data = array();
+        $obj = new Request();
+        $ci = new BaseApiController($obj);
+        $client_id = $_COOKIE['sqd_client_id'];
+        $findCond = array(
+            array('client_id','=',$client_id),
+            array('is_blocked','=','0'),
+            array('is_deleted','=','0'),
+        );
+        $selectFields = array();
+        $joins = array();
+        $client_details = $ci->common_model->fetchData($ci->tableObj->tableNameClient, $findCond, $selectFields,$joins);
+
+        $data['inner_client_details'] = $client_details;
         return $data;
     }
 

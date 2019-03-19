@@ -130,7 +130,7 @@ Squeedr
 
 			<div class="container">
 
-				<div class="booking-steps ">
+				<div class="booking-steps" style="display:none;">
 
 				<hr>
 
@@ -831,6 +831,8 @@ Squeedr
 						if(response.is_exist == 1){
 
 							$('#select_date_section').hide();
+
+							$('#sectionTitle').text('Questionnaire');
 
 							$('#question_answer_section').html(response.html);
 

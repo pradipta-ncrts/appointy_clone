@@ -2078,8 +2078,8 @@ class ClientsController extends ApiController {
             array('is_deleted', '=', 0),
             array('is_blocked', '=', 0)
         );
-
-		$check_client = $this->common_model->row_present_check($this->tableObj->tableNameClient,$chkCond);
+        $fields = array();
+		$check_client = $this->common_model->fetchData($this->tableObj->tableNameClient,$chkCond,$fields);
         if($check_client){
             $updateCond=array(
                 array('client_id','=',$client_id),
@@ -2089,6 +2089,8 @@ class ClientsController extends ApiController {
             $data['last_verification_code'] = $verification_code;	
             $update = $this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$data);
             // Send Mail //
+            $emailData['email_subject']="Verification code for appointment booking.";
+            $emailData['client_name']=$check_client->client_name;
             $emailData['verification_code']=$verification_code;
             $this->sendmail(9,$client_email,$emailData);
     
