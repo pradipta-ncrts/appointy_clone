@@ -2670,8 +2670,10 @@ class ClientsController extends ApiController {
                         'select_fields' => $serviceFields,
                     ),
             );
+        
+        $orderBy = array('created_on' => 'DESC');
 
-        $appoinment_list = $this->common_model->fetchDatas($tableAppointement,$condition,$appointmentFields, $joins);
+        $appoinment_list = $this->common_model->fetchDatas($tableAppointement,$condition,$appointmentFields, $joins, $orderBy);
         $html = '';
         if(!empty($appoinment_list))
         {
