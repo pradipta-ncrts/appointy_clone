@@ -26,10 +26,12 @@
    
    <body class="dashboard-bg">
     <?php 
-      $logged_client = App\Http\Controllers\BaseApiController::logged_client();
-      $inner_client_details = $logged_client['inner_client_details'];
-      /*echo "<pre>";
-      print_r($inner_client_details); die();*/
+    if(isset($_COOKIE['sqd_client_id']) && $_COOKIE['sqd_client_id'] > 0){
+        $logged_client = App\Http\Controllers\BaseApiController::logged_client();
+        $inner_client_details = $logged_client['inner_client_details'];
+        /*echo "<pre>";
+        print_r($inner_client_details); die();*/
+    }
     ?> 
 
       <div>
