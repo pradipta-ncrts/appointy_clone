@@ -34,7 +34,8 @@ Squeedr
             }
             ?>
           </a>
-            <span><?=$staff_details->full_name;?></span>
+          <a href="javascript:void(0);" class="mbprof editStaff" data-staff-id="3" style=" position: absolute;  right: 17px;  bottom: 13px;"><i class="fa fa-pencil"></i> </a><!-- <a href="{{url('mobile/my-profile')}}" class="mbprof"><i class="fa fa-pencil"></i></a> -->
+          <span><?=$staff_details->full_name;?></span>
         </div>
         <ul>
             <li><a href="{{url('mobile/staff-dashboard')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Profile</span> </a> </li>
