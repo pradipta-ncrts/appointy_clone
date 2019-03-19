@@ -3031,6 +3031,28 @@ class ClientsController extends ApiController {
         } 
     }
 
+
+    public function service_payment_terms(Request $request)
+	{
+
+		$service_id = $request->input('service_id');
+
+		$findCond = array(
+	        array('service_id','=',$service_id),
+		);
+		
+		$selectFields = array();
+
+		$service_details = $this->common_model->fetchData($this->tableObj->tableUserService, $findCond, $selectFields);
+
+		$response_data['service_details'] = $service_details;
+		$this->response_status='1';
+		$this->response_message="Service Details.";
+		
+
+		$this->json_output($response_data);
+	}
+
     
     public function client_appointment_status(Request $request)
     {
