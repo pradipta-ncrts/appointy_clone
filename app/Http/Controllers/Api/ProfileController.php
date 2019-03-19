@@ -133,17 +133,17 @@ class ProfileController extends ApiController {
 			$user_no = $this->logged_user_no;
 		}
 		
-		$param = array(
+		/*$param = array(
 			'status' => '1',
 			'is_deleted' => '1',
 			'deleted_on' => date('Y-m-d H:i:s'),
-		);
+		);*/
 		//now update service status 
 		$findCond = array(
 			array('id', '=', $user_no),
 		);
 		
-		$this->common_model->update_data($this->tableObj->tableNameUser,$findCond,$param);
+		$this->common_model->delete_data($this->tableObj->tableNameUser,$findCond);
 
 		$this->response_status='1';
 		$this->response_message="Successfully deleted.";

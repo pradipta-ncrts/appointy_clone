@@ -183,6 +183,16 @@ class ClientsController extends ApiController {
 		}
 	}
 
+	public function add_client_notes($client_search_text="")
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('mobile/login');
+		}
+		$data['add_client'] = array();
+		return view('mobile.client.add-client-note')->with($data);
+	}
+
 	
 
 	

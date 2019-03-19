@@ -403,6 +403,7 @@ Route::group(['prefix'=>'mobile'],function(){
     Route::any('/forgot-password/{user_data?}','Mobile\UsersController@forgot_password');
     Route::any('/send_reset_password_link','Mobile\UsersController@send_reset_password_link');
     Route::get('/staff_calendar/{duration?}/','Mobile\StaffController@staff_calendar');
+    Route::any('/add-client-notes','Mobile\ClientsController@add_client_notes');
 
 });
 

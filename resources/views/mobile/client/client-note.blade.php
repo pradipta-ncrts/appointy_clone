@@ -8,7 +8,7 @@ Squeedr
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
   <h1>Client Note</h1>
   <ul>
-    <li>&nbsp;<!-- <img src="images/mobile-serach.png" /> --> </li>
+    <li><a href="{{url('mobile/add-client-notes')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}"></a></li>
   </ul>
 </header>
 <main>

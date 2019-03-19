@@ -106,7 +106,9 @@ Squeedr
 
              <p> <?=date("h:i A", strtotime($created_on));?>   <?=date("M d, Y", strtotime($created_on));?></p>
 
-             <label class="pull-right"><a href="{{url('mobile/client-booking-list/all')}}/<?=$client_details->client_id;?>"> Bookings</a> </label>
+             <!-- <label class="pull-right"><a href="{{url('mobile/client-booking-list/all')}}/<?=$client_details->client_id;?>"> Bookings</a> </label> -->
+
+             <label class="pull-right"><a href="{{url('mobile/client-note')}}/<?=$client_details->client_id;?>"> All Notes</a> </label>
 
           </div>
 

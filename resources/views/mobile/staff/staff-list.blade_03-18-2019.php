@@ -4,19 +4,13 @@ Squeedr
 @endsection
 
 @section('content')
-<style>
-.mb-custmmodal .user-bkd h2{margin: 11px 0 0 8px;}
-.new-modalcustm .modal-footer{border:0;}
-.mb-custmmodal .user-bkd{border-bottom: 1px solid #ccc;padding:10px;margin:0;}
-.mb-custmmodal .user-bkd:hover{padding: 10px;background: #E9FCFF;margin: 0;}
-</style>
 <header class="mobileHeader showMobile" id="divBh"> 
   <a href="{{url('mobile/dashboard')}}"><img src="{{asset('public/assets/mobile/images/mobile-back.png')}}" /> </a>
   <h1>Team List</h1>
   <ul>
    <!-- <li><a href="{{url('mobile/add-staff')}}"><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}" /></a> </li>-->
     <li><a href="{{url('mobile/add-staff')}}"><img src="{{asset('public/assets/mobile/images/add-user-staff.png')}}" /></a> </li>
-    <li><a data-toggle="modal" data-target="#myModalsearch"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li>
+    <li><a href="#"><img src="{{asset('public/assets/mobile/images/mobile-serach.png')}}" /></a> </li>
     
   </ul>
 </header>
@@ -208,48 +202,6 @@ Squeedr
             </form>
         </div>
     </div>
-</div>
-
-<div class="modal fade mb-custmmodal" id="myModalsearch" role="dialog">
-    <div class="modal-dialog ">
-        <!-- Modal content-->
-        <div class="modal-content new-modalcustm " style="float: none;border:0;">
-        <div class="popupInside new-modalcustm">
-         <form name="edit_team_member_form" id="edit_team_member_form" method="post" action="{{url('api/edit_staff')}}" enctype="multipart/form-data">
-                <input type="hidden" name="staff_id" id="edit_staff_id" value="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" id="modalTitle">Select Staff</h4>
-                </div>
-                <div class="modal-body">
-        			 <div class="user-bkd">
-                      <img src="http://runmobileapps.com/squeedr_appointment/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded"> 
-                      <h2> Janice D</h2>
-                      ​<div class="check-ft"><input name="filter_stuff_id_time" class="calender-inpt" type="checkbox" value="3"></div>
-                     </div>
-                     
-                     <div class="user-bkd">
-                      <img src="http://runmobileapps.com/squeedr_appointment/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded"> 
-                      <h2> Douglas N </h2>
-                      <div class="check-ft"><input name="filter_stuff_id_time" class="calender-inpt" type="checkbox" value="3"></div>
-                     </div>
-                     
-                     <div class="user-bkd">
-                      <img src="http://runmobileapps.com/squeedr_appointment/public/assets/website/images/user-pic-sm-default.png" class="thumbnail rounded"> 
-                      <h2> Mark M. Henry </h2>
-                      <div class="check-ft"><input name="filter_stuff_id_time" class="calender-inpt" type="checkbox" value="3"></div>
-                     </div>
-                    
-        		 </div>
-                <div class="modal-footer">
-                    <div class="col-md-12 text-center">
-                        <button class="btn btn-primary butt-next" type="submit" style="margin: 0px auto 0; width: 150px; display: block">Submit</button>
-                    </div>
-                </div>
-            </form>
-            </div>
-       </div>
-</div>
 </div>
 @endsection
 
