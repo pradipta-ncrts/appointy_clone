@@ -7,7 +7,17 @@ Squeedr
 <style type="text/css">
     @media (max-width: 767px){.mobileHeader ul li img {max-width: 23px;}}
     .mbprof{display: inline-block;color: #fff;position: relative;bottom: 10px;right: 0;font-size: 14px;background: #3F526F;border-radius: 50px;width: 30px;height: 30px;line-height: 33px;}
-</style>
+
+  .offscreen {
+   position: absolute;
+   left: -999em;
+   }
+   .filter-option{margin-top:14px 0 0 0;}
+
+   .pac-container {
+        z-index: 10000 !important;
+    }
+ </style>
 @endsection
 
 @section('content')
@@ -17,7 +27,7 @@ Squeedr
     <h1>Dashboard</h1>
     <ul>
       <li><a href="{{url('mobile/calendar')}}"> <img src="{{asset('public/assets/mobile/images/calendar.png')}}" /></a> </li> 
-      <li><a> <img src="{{asset('public/assets/mobile/images/notification.png')}}" /></a> </li>
+      <li><a href="{{url('mobile/review-list')}}"> <img src="{{asset('public/assets/mobile/images/notification.png')}}" /></a> </li>
     </ul>
 </header>
 <?php
@@ -52,7 +62,8 @@ $inner_user_details = $mysquder_page_inner['inner_user_details'];
 
             <!-- <li><a href="{{url('mobile/calendar')}}"><img src="{{asset('public/assets/mobile/images/sidenav/bookings.png')}}" /> <span>Calendar</span> </a> </li> -->
             <li><a href="{{url('mobile/booking-list/all')}}"><img src="{{asset('public/assets/mobile/images/sidenav/calendar.png')}}" /> <span>Bookings</span> </a> </li>
-            <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Feedback</span> </a> </li>
+            <!-- <li><a href="{{url('mobile/review-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Feedback</span> </a> </li> -->
+            <li><a href="#" data-toggle="modal" data-target="#myModalsharelinks" id="openModalShareLink"><img src="{{asset('public/assets/mobile/images/sidenav/feedback.png')}}" /> <span>Share your link</span> </a> </li>
             <li><a href="{{url('mobile/client-list')}}"><img src="{{asset('public/assets/mobile/images/sidenav/customers.png')}}" /> <span>Clients</span> </a> </li>
             <!--<li><a href="{{url('mobile/my-profile')}}"><img src="{{asset('public/assets/mobile/images/sidenav/user.png')}}" /> <span>Profile Settings</span> </a> </li>-->
             <li><a href="{{url('mobile/settings')}}"><img src="{{asset('public/assets/mobile/images/sidenav/settings.png')}}" /> <span>Settings</span> </a> </li>
@@ -242,7 +253,7 @@ $inner_user_details = $mysquder_page_inner['inner_user_details'];
                                        <li>Create location-based events.</li>
                                    </ul>
                                    <hr >
-                                   <h3>3. Share your link</h3>
+                                   <a href="" id="share-your-link"><h3>3. Share your link</h3></a>
                                    <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
                                        <br><br>
                                        <span class="cl-blue">
@@ -269,6 +280,88 @@ $inner_user_details = $mysquder_page_inner['inner_user_details'];
             </div>
          </div>
       </div>
+
+<!--=============================Modal area start ====================================-->
+<div class="modal fade" id="myModalsharelinks" role="dialog">
+   <div class="modal-dialog add-pop">
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm new-modalcustm1">
+         <form name="share_link_form" id="share_link_form" method="post" action="">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal">&times;</button>
+               <h4 class="modal-title">Share Links</h4>
+            </div>
+            <div class="modal-body clr-modalbdy">
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="form-group">
+                        <span>Copy Your Link</span>
+                        <div class="input-group" id="">
+                           <input id="copy_link_url" type="text" class="form-control" name="copy_link_url" value="{{ url('business-provider') }}/<?php echo $inner_user_details->username;?>">
+                           <button type="button" class="shl-btns" data-url="{{ url('business-provider') }}/<?=$inner_user_details->username;?>" id="copy-link"><i class="fa fa-link"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="form-group">
+                        <span>Email Your Link</span>
+                        <div class="input-group" id="clientname_error">
+                           <input id="client_name" type="text" class="form-control" name="client_name" value="{{ url('business-provider') }}/<?php echo $inner_user_details->username;?>">
+                           <button type="button" class="shl-btns" id="email_your_link"><i class="fa fa-envelope-o"></i></button>
+                           <a style="display: none;" href="mailto:?subject=Link&body={{ url('business-provider') }}/<?=$inner_user_details->username;?>" target="_top" id="email_your_link_click">Click Here</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-md-12">
+                     <div class="form-group">
+                        <span>Embed on Your Website</span>
+                        <div class="input-group" id="clientname_error">
+                           <input id="client_name" type="text" class="form-control" name="client_name" value="{{ url('business-provider') }}/<?=$inner_user_details->username;?>">
+                           <button type="button" class="shl-btns" data-url="{{ url('business-provider') }}/<?=$inner_user_details->username;?>" id="embed-link"><i class="fa fa-code"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="modalEmbed" role="dialog">
+    <div class="modal-dialog add-pop"> 
+      <!-- Modal content-->
+      <div class="modal-content new-modalcustm">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Embed Link</h4>
+        </div>
+        <div class="modal-body clr-modalbdy">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="niceditor">
+                  <textarea style="width: 100%" id="embed_code" placeholder=""></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col-md-12 text-center">
+            <input id="copy-embed-link" type="submit" value="copy" class="btn btn-primary butt-next" style="margin: 0px auto 0; width: 150px; display: block">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--===========================Modal area End ========================================-->
+
+<input type="text" id="offscreen" class="offscreen" value="">
 @endsection
 
 
@@ -479,6 +572,69 @@ $(document).ready(function(){
               $('.animationload').hide();
           }
       });
+});
+</script>
+<script type="text/javascript">
+$('#openModalShareLink').click(function(e){
+    e.preventDefault();
+    $("#myModalsharelinks").modal('show');
+});
+
+$("#copy-link").click(function (event) {
+  event.preventDefault();
+  $('.animationload').show();
+  let url = $(this).data('url');
+  $('#offscreen').val(url);
+  var copyTextarea = document.querySelector('.offscreen');
+  copyTextarea.focus();
+  copyTextarea.select();
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    //console.log('Copying text command was ' + msg);
+    swal("Success!", "Successfully copied link", "success");
+    $('.animationload').hide();
+  } catch (err) {
+    //console.log('Oops, unable to copy');
+    swal("Error!", "Oops, unable to copy", "errro");
+    $('.animationload').hide();
+  }
+});
+
+$("#embed-link").click(function (event) {
+  event.preventDefault();
+  let url = $(this).data('url');
+  $("#modalEmbed").modal('show');
+  var ifrm = '<iframe src="'+url+'"></iframe>';
+  $("#embed_code").val(ifrm);
+});
+
+$("#copy-embed-link").click(function (event) {
+  event.preventDefault();
+  var copyTextarea = document.querySelector('#embed_code');
+  copyTextarea.focus();
+  copyTextarea.select();
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Copying text command was ' + msg);
+    /*swal("Success!", "Successfully copied link", "success");
+    $('.animationload').hide();*/
+  } catch (err) {
+    console.log('Oops, unable to copy');
+    /*swal("Error!", "Oops, unable to copy", "errro");
+    $('.animationload').hide();*/
+  }
+});
+//Share your link popup
+$(document).ready(function() {
+  $("#share-your-link").click(function(e) {
+    e.preventDefault();
+    $('.animationload').show();
+    $("#myModalQuickGuide").modal('hide');
+    $("#myModalsharelinks").modal('show');
+    $('.animationload').hide();
+  });
 });
 </script>
 

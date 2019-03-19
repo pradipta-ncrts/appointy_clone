@@ -4609,7 +4609,7 @@ class BookingsController extends ApiController {
 
                       <img src="'.$client_profile_picture.'" class="thumbnail rounded"> 
 
-                      <h2> '.$value->client_name.' <br> <a href="mailto:'.$value->client_email.'"><i class="fa fa-envelope-o"></i> '.$value->client_email.'</a> </h2>
+                      <h2> '.$value->client_name.' <div class="datetime position"> '.date('d, M Y', strtotime($value->date)).' </div><br> <a href="mailto:'.$value->client_email.'"><i class="fa fa-envelope-o"></i> '.$value->client_email.'</a> </h2>
 
                    </div>
 
@@ -4641,7 +4641,7 @@ class BookingsController extends ApiController {
 
                          <div class="name"> <i class="fa fa-circle-o "></i> '.$value->service_name.' ('.$value->currency.' '.$value->total_payable_amount.') <br> <i class="fa fa-user-o "></i> '.$value->full_name.' </div>
 
-                         <div class="datetime"> '.$value->start_time.' - '.$value->end_time.' <br> '.date('d, M Y', strtotime($value->date)).' </div>
+                         <div class="datetime"> '.$value->start_time.' - '.$value->end_time.'  </div>
 
                       </div>
 
