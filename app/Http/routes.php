@@ -158,6 +158,7 @@ Route::group(['prefix'=>'api'],function(){
     Route::post('/client_info','Api\ClientsController@client_info');
     Route::post('/service_provicer_category_list','Api\ClientsController@service_provicer_category_list');
     Route::post('/service_invitee_question','Api\ClientsController@service_invitee_question');
+    Route::any('/service_payment_terms','Api\ClientsController@service_payment_terms');
     Route::post('/client_appointment_booking_process','Api\ClientsController@client_appointment_booking_process');
     Route::post('/get_booking_rule','Api\ClientsController@get_booking_rule');
     Route::post('/client_profile_picture_upload','Api\ClientsController@client_profile_picture_upload');
