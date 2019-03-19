@@ -933,13 +933,14 @@ Squeedr
 			var service_id = $('#service_id').val();
 			
 			if(service_id > 0){
+				//alert(service_id);
 				$.ajax({
 
 					url: '<?php echo url("api/service_payment_terms")?>',
 
 					type: "POST",
 
-					data: {user_no:user_id,service_id:service_id},
+					data: {service_id:service_id},
 
 					dataType: "json",
 
