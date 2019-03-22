@@ -286,9 +286,10 @@ class ClientsController extends ApiController {
 			);
 	
 			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.client-service-details',$data);
 		}
 
-		return view('website.client.client-service-details',$data);
+		
 	}
 
 	function client_login($parameter=NULL)
@@ -625,9 +626,10 @@ class ClientsController extends ApiController {
 			);
 	
 			//echo '<pre>'; print_r($data); exit;
+			return view('website.client.view-staff-list',$data);
 		}
 
-		return view('website.client.view-staff-list',$data);
+		
 	}
 
 	

@@ -107,7 +107,7 @@ Squeedr
                                 <li><a data-toggle="tab" href="#tab1" id="detailsTab" class="active">Info </a></li>
                                 <li><a data-toggle="tab" href="#tab2" id="appointments">Appointments </a></li>
                                 <li><a data-toggle="tab" href="#tab3">Give as a gift </a></li>
-                                <li><a data-toggle="tab" href="#tab4">Payments</a></li>
+                                <li><a data-toggle="tab" href="#tab4" id="payments">Payments</a></li>
                                 <li><a data-toggle="tab" href="#tab5">Feedback</a></li>
                                 <li><a data-toggle="tab" href="#tab6">Journey</a></li>
                                 <li><a data-toggle="tab" href="#tab7">Notes</a></li>
@@ -249,15 +249,15 @@ Squeedr
                                         <table id="example" class="table table-striped app" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th >Date</th>
-                                                    <th >Type</th>
-                                                    <th align="center" style="text-align: center;">Amount</th>
-                                                    <th>Tip</th>
+                                                    <th>Date</th>
+                                                    <th>Type</th>
+                                                    <th>Amount</th>
                                                     <th>Mode</th>
                                                     <th>&nbsp;</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="get-payment-data">
+                                            <!--<tbody>
                                                 <tr>
                                                     <td>Sep 12, 2018  07:00am </td>
                                                     <td>Membership</td>
@@ -269,13 +269,13 @@ Squeedr
                                                     <a href="#"><i class="fa fa-print"></i></a>
                                                     </td>
                                                 </tr>
-                                            </tbody>
+                                            </tbody>-->
                                         </table>
-                                        <div class="discount-innertabbx break20px">
+                                        <!--<div class="discount-innertabbx break20px">
                                             <p><i class="fa fa-file-text-o" aria-hidden="true"></i><br>
                                                 Customer has no payments
                                             </p>
-                                        </div>
+                                        </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -936,6 +936,38 @@ $('#appointments').click(function(e){
     });
     
 });
+
+
+$('#payments').click(function(e){
+    var client_id = $("#global_client_id").val();
+    var data = addCommonParams([]);
+    data.push({name:'client_id', value:client_id});
+    $.ajax({
+        url: baseUrl+"/api/client_payment_list", 
+        type: "POST", 
+        data: data, 
+        dataType: "json",
+        success: function(response) 
+        {
+            console.log(response);
+            $('.animationload').hide();
+            if(response.result=='1')
+            {
+                $("#get-payment-data").html(response.message);
+            }
+            else
+            {
+                swal("Error", response.message , "error");
+            }
+        },
+        beforeSend: function()
+        {
+            $('.animationload').show();
+        }
+    });
+    
+});
+
 $(document).on('click','.change-status',function(e){
 //$('.change-status').click(function(e){
     var appointment_id = $(this).data('id');

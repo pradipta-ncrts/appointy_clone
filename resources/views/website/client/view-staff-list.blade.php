@@ -4,11 +4,7 @@
 Squeedr
 @endsection
 @section('custom_css')
-<style type="text/css">
-    #clientBookingList, #dropdownMenuButton {
-        display: none;
-    }
-</style>
+
 @endsection
 @section('content')
 <div class="body-part">

@@ -26,10 +26,12 @@
    
    <body class="dashboard-bg">
     <?php 
-      $logged_client = App\Http\Controllers\BaseApiController::logged_client();
-      $inner_client_details = $logged_client['inner_client_details'];
-      /*echo "<pre>";
-      print_r($inner_client_details); die();*/
+    if(isset($_COOKIE['sqd_client_id']) && $_COOKIE['sqd_client_id'] > 0){
+        $logged_client = App\Http\Controllers\BaseApiController::logged_client();
+        $inner_client_details = $logged_client['inner_client_details'];
+        /*echo "<pre>";
+        print_r($inner_client_details); die();*/
+    }
     ?> 
 
       <div>
@@ -60,15 +62,14 @@
                                 //echo '<pre>'; print_r($inner_client_details); exit;
                                 if($inner_client_details->client_profile_picture != '')
                                 {
-                                    $image =  $inner_client_details->client_profile_picture ? 'image/profile_perosonal_image/'.$inner_client_details->client_profile_picture : 'assets/website/images/user-img.png';
                                 ?>
-                                <img class="user-pic" src="{{asset('public/'.$image)}}">
+                                <img class="user-pic" src="{{asset('public/image/profile_perosonal_image/'.$inner_client_details->client_profile_picture)}}">
                                 <?php
                                 }
                                 else
                                 {
                                 ?>
-                                <img class="user-pic" src="{{asset('public/'.$image)}}">
+                                <img class="user-pic" src="{{asset('public/assets/website/images/user-img.png')}}">
                                 <?php
                                 }
                                 ?>
