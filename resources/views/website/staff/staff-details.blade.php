@@ -3156,7 +3156,7 @@ $('#area_code').validate({
 
             digits: true,
 
-            phoneUS: true
+            //phoneUS: true
 
         },
 

@@ -2449,6 +2449,7 @@ class UsersController extends ApiController {
 
             $exist = 0;
             $notExit = 0;
+            $emailData['subject'] = "Invite";
 			if(!empty($excelData) && count($excelData) > 0)
 			{
 				$excel_rows = $excelData->toArray();
@@ -2468,6 +2469,7 @@ class UsersController extends ApiController {
 							
 							$updateData=array(
 								'discount' => $discount,
+								'is_send_invitation' => 1,
 								'updated_on' => $this->date_format
 							);
 							$updateCond=array(
@@ -2498,15 +2500,23 @@ class UsersController extends ApiController {
 							$client_data['password'] = md5($password);
 							$client_data['email_verification_code'] = $token;
 							$client_data['discount'] = $discount;
+							$client_data['is_send_invitation'] = 1;
+
+							//print_r($client_data); die();
 
 							$insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameClient,$client_data);
 							if($insertdata > 0)
 							{
+								//User client relation
+								$user_client_data['user_id'] = $user_no;
+			                    $user_client_data['client_id'] = $insertdata;
+			                    $insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserClient,$user_client_data);
+
 								$emailData['username'] = $client_email;
 								$emailData['password'] = $password;
 								$emailData['toName'] = $client_name;
 
-								$this->sendmail(6,$client_email,$emailData);
+								$this->sendmail(12,$client_email,$emailData);
 
 							}
 
@@ -2520,7 +2530,7 @@ class UsersController extends ApiController {
 
 			$total = $exist + $notExit;
 			$this->response_status = '1';
-			$this->response_message = $total." Mial send successfully.";
+			$this->response_message = $total." email send successfully.";
         }
         else
         {
@@ -2890,6 +2900,56 @@ class UsersController extends ApiController {
 		// generate the service / api response
 		$this->json_output($response_data);
 	}
+
+
+	public function remove_invitee(Request $request)
+	{
+		$response_data=array();
+		$this->validate_parameter(1);
+		$user_no = $this->logged_user_no;
+
+		$response_data=array();
+		$client_id = $request->input('client_id'); 
+
+		$conditions = array(
+			array('client_id','=',$client_id),
+		);
+
+		$param['is_send_invitation'] = 0;
+
+		$this->common_model->update_data($this->tableObj->tableNameClient, $conditions, $param);
+		
+		$this->response_status='1';
+		$this->response_message="Successfully removed.";
+		$this->json_output($response_data);
+
+	}
+
+	public function resend_invitee(Request $request)
+	{
+		$response_data=array();
+		$this->validate_parameter(1);
+		$user_no = $this->logged_user_no;
+
+		$response_data=array();
+		$client_id = $request->input('client_id'); 
+		$client_name = $request->input('client_name'); 
+		$client_email = $request->input('client_email'); 
+		$discount = $request->input('discount'); 
+
+		$emailData['username'] = $client_email;
+		//$emailData['password'] = $password;
+		$emailData['toName'] = $client_name;
+
+		$emailData['discount'] = $discount;
+		$this->sendmail(11,$client_email,$emailData);
+
+		$this->response_status='1';
+		$this->response_message="Successfully send.";
+		$this->json_output($response_data);
+
+	}
+
 	
 	
 }

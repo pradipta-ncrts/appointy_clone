@@ -951,9 +951,47 @@ class UsersController extends ApiController {
 	}
 
 	
-	
+	public function invitees($type="",$search_text="")
+	{
+		// Check User Login. If not logged in redirect to login page //
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+		// Call API //
+		$post_data = $authdata;
+		$post_data['page_no']=1;
+		//$post_data['staff_search_text'] = $search_text;
 
-	public function invitees()
+		$data=array(
+			'staff_list'=>array(),
+			'authdata'=>$authdata
+		);
+		$url_func_name="client_list";
+		$return = $this->curl_call($url_func_name,$post_data);
+
+		/*echo "<pre>"; 
+		print_r($return); die();*/
+		
+		// Check response status. If success return data //		
+		if(isset($return->response_status)){
+			if($return->response_status == 1){
+				$data['client_list'] = $return->client_list;
+				/*$data['staff_search_text'] = $search_text;
+				$data['service_list'] = $service_return->service_list;
+				$data['type'] = $type;*/
+
+			}
+			//echo '<pre>'; print_r($data); exit;
+			return view('website.invitees')->with($data);
+		}
+		else{
+			return $return;
+		}
+		//return view('website.settings-business-hours');
+	}
+
+	/*public function invitees()
 	{
 		if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'])
 		{
@@ -961,7 +999,7 @@ class UsersController extends ApiController {
 		}
 
 		return view('website.invitees');
-	}
+	}*/
 
 
 	public function payment_options()

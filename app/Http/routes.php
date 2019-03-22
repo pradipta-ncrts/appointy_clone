@@ -221,6 +221,11 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/process-registration-step2','Api\UsersController@process_registration_step2');
     Route::any('/check_service_provider_username','Api\ProfileController@check_service_provider_username');
     Route::any('/appoinment_list_staff_mobile','Api\BookingsController@appoinment_list_staff_mobile');
+
+    Route::any('/remove_invitee','Api\UsersController@remove_invitee');
+    Route::any('/resend_invitee','Api\UsersController@resend_invitee');
+
+    
     
 
 

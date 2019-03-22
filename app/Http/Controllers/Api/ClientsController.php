@@ -282,7 +282,7 @@ class ClientsController extends ApiController {
 			$findCond[]=array($this->tableObj->tableNameClient.'.client_name','like','%'.$search_text.'%');
         }
         
-        $client_select_field = array('client_id','client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','client_profile_picture','email_verification_code');
+        $client_select_field = array('client_id','client_name','client_email','client_mobile','client_home_phone','client_work_phone','client_address','client_timezone','client_note','client_dob','is_login_allowed','is_email_verified','client_profile_picture','email_verification_code','is_send_invitation','discount');
 		$joins = array(
                     array(
                     'join_table'=>$this->tableObj->tableNameClient,
