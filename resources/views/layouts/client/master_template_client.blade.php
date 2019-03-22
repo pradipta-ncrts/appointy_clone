@@ -18,6 +18,12 @@
       <link href="{{asset('public/assets/website/css/ncrts.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
       <link rel="stylesheet" href="{{asset('public/assets/website/css/bootstrap-timepicker.min.css')}}" />
+      <style type="text/css">
+        .offscreen {
+                position: absolute;
+                left: -999em;
+        }
+      </style>
       <script type="text/javascript">
 		  var baseUrl ="<?php echo url('')?>"; 
 	  </script>
@@ -91,6 +97,7 @@
         <div id="content"> @yield('content') </div> 
       </div>
       <div id="c-mask" class="c-mask"></div>
+      <input type="text" id="offscreen" class="offscreen" value="">
       <!-- /c-mask -->
       <!-- <script src="js/bootstrap.min.js"></script> -->
       <script src="{{asset('public/assets/website/js/jquery.min.js')}}"></script>

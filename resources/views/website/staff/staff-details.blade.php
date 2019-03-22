@@ -318,13 +318,13 @@ Squeedr
 
                                                 <h4>Booking URL</h4>
 
-                                                <p id="bookingUrl">https://booking.appointy.com/</p>
-
+                                                <p id="bookingUrl"></p>
+                                                <input type="hidden" id="booking_url" value="">
                                             </div>
 
                                             <div class="col-sm-2">
 
-                                                <button type="button" class="btn btn-default pull-right"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>
+                                                <button type="button" class="btn btn-default pull-right copy-booking-url"> <i class="fa fa-files-o" aria-hidden="true"></i> COPY </button>
 
                                             </div>
 
@@ -1457,9 +1457,10 @@ $('.stafflistitem').click(function(){
 
     $('#bookingUrl').html("");
 
-    if(data.booking_url !== undefined){
+    if(data.username !== undefined){
 
-        $('#bookingUrl').html(data.booking_url);
+        $('#bookingUrl').html(baseUrl+"/client/view-staffs/"+data.username);
+        $('#booking_url').val(baseUrl+"/client/view-staffs/"+data.username);
 
     }
 
@@ -1586,6 +1587,27 @@ $('.stafflistitem').click(function(){
 });
 
 
+$(".copy-booking-url").click(function (event) {
+    event.preventDefault();
+    $('.animationload').show();
+    let url = $("#booking_url").val();
+    //alert(url);
+    $('#offscreen').val(url);
+    var copyTextarea = document.querySelector('.offscreen');
+    copyTextarea.focus();
+    copyTextarea.select();
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copying text command was ' + msg);
+        swal("Success!", "Successfully copied link", "success");
+        $('.animationload').hide();
+    } catch (err) {
+        console.log('Oops, unable to copy');
+        swal("Error!", "Oops, unable to copy", "errro");
+        $('.animationload').hide();
+    }
+});
 
     
 

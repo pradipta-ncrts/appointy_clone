@@ -225,12 +225,12 @@ class ClientsPaymentController extends ApiController {
                 if ($avaialable_currency_list[$payable_currency] < ($payble_amount * 100)) {
                     // Error Message //
                     //\Session::flash('payment_error_status', 'You have insufficient balance for this transaction.');
-                    return redirect(url('client_payment_status/'))->with('payment_error','You have insufficient balance for this transaction.');
+                    return redirect(url('client_payment_status/'.$order_id))->with('payment_error','You have insufficient balance for this transaction.');
                 }
             } else {
                 // Error Message //
                 //\Session::flash('payment_error_status', 'This card does not support this currency.');
-                return redirect(url('client_payment_status/'))->with('payment_error','This card does not support this currency.');
+                return redirect(url('client_payment_status/'.$order_id))->with('payment_error','This card does not support this currency.');
             }
 
             // Charge Payment //
@@ -381,8 +381,22 @@ class ClientsPaymentController extends ApiController {
                     }
                     else
                     {
-                    	return redirect(url('client_payment_status/'))->with('payment_error','This card does not support this currency.');
+                    	return redirect(url('client_payment_status/'.$order_id))->with('payment_error','This card does not support this currency.');
                     }
+                }
+                else
+                {
+                    // Stripe Payment Cancelled / Failed //
+                    $updateCond = array(
+		                array('order_id','=',$order_id),
+		            );
+
+                    $data_array = array(
+                  			'is_deleted' => 1
+                  	);
+                    
+                      // Update status //
+                    $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data_array);
                 }
 
             } catch (\Exception $e) {
@@ -392,7 +406,7 @@ class ClientsPaymentController extends ApiController {
                 //print_r($body); exit;
 				$err = $body['error'];
 				$msg = $err['message'];
-                return redirect(url('client_payment_status/'))->with('payment_error',$msg);
+                return redirect(url('client_payment_status/'.$order_id))->with('payment_error',$msg);
                 
             }
         } else {
@@ -726,14 +740,28 @@ class ClientsPaymentController extends ApiController {
                     }
                     else
                     {
-                    	return redirect(url('client_payment_status/'))->with('payment_error','Payment not complete successfully.');
+                    	return redirect(url('client_payment_status/'.$order_id))->with('payment_error','Payment not complete successfully.');
                     }
+                }
+                else
+                {
+                    // Paypal Payment Cancelled / Failed //
+                    $updateCond = array(
+		                array('order_id','=',$order_id),
+		            );
+
+                    $data_array = array(
+                  			'is_deleted' => 1
+                  	);
+                    
+                      // Update status //
+                    $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data_array);
                 }
 
             } catch (\Exception $e) {
                 // Error Message //
 
-                return redirect(url('client_payment_status/'))->with('payment_error','Payment not complete successfully.');
+                return redirect(url('client_payment_status/'.$order_id))->with('payment_error','Payment not complete successfully.');
 
             }
         } else {
@@ -758,9 +786,23 @@ class ClientsPaymentController extends ApiController {
         }
 	}
 
-	public function client_payment_status($parameter=NULL)
+	public function client_payment_status($order_id=NULL)
 	{
-		$data = array();
+        $data = array();
+        if($order_id != NULL){
+            $updateCond = array(
+                array('order_id','=',$order_id),
+            );
+    
+            $data_array = array(
+                      'is_deleted' => 1
+              );
+            
+              // Update status //
+            $update = $this->common_model->update_data($this->tableObj->tableNameAppointment,$updateCond,$data_array);
+    
+        }
+        
 		return view('website.client.client_payment_status')->with($data);
 	}
 
