@@ -214,7 +214,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 
                         <div class="user-bkd">
 
-                           <img id="clientImg" src="" class="thumbnail rounded">
+                           <img id="clientImg" src="{{asset('public/assets/website/images/user-img.png')}}" class="thumbnail rounded" >
 
                            <h2 id="clientDetails">Client Name
 
@@ -1194,7 +1194,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 
                             {
 
-                                $('#clientImg').attr('src',"{{asset('public/assets/website/images/user-pic-sm-default.png')}}");
+                                $('#clientImg').attr('src',"{{asset('public/assets/website/images/user-img.png')}}");
 
                             }
 
@@ -1202,7 +1202,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 
                             {
 
-                                $('#clientImg').attr('src',result.appoinment_details.client_image);
+                                $('#clientImg').attr('src',"{{asset('public/image/profile_perosonal_image/')}}"+"/"+result.appoinment_details.client_image);
 
                             }
 

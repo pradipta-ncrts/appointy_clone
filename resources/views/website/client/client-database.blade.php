@@ -243,7 +243,7 @@ Squeedr
                                         <div class="col-md-12">
                                         <div class="custm-linkedt1" >
                                             <ul >
-                                                <li><a class="dropdown-item" data-toggle="modal" data-target="#myModaladdappoinment" style="cursor:pointer"><i class="fa fa-plus" aria-hidden="true"></i> Add Payment</a></li>
+                                                <li><a class="dropdown-item" data-toggle="modal" data-target="" style="cursor:pointer"><i class="fa fa-plus" aria-hidden="true"></i> Add Payment</a></li>
                                             </ul>
                                         </div>
                                         <table id="example" class="table table-striped app" style="width:100%">

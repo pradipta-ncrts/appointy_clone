@@ -2002,10 +2002,13 @@ class ClientsController extends ApiController {
                                 );  
                                 if($payment_method == 1){
                                     $param['payment_method'] = 1;
+                                    $param['is_deleted'] = 0;
                                 } else if($payment_method == 2){
                                     $param['payment_method'] = 11;
+                                    $param['is_deleted'] = 1;
                                 } else if($payment_method == 3){
                                     $param['payment_method'] = 10;
+                                    $param['is_deleted'] = 1;
                                 }
                                 
                             } else {
@@ -2043,10 +2046,13 @@ class ClientsController extends ApiController {
                     );  
                     if($payment_method == 1){
                         $param['payment_method'] = 1;
+                        $param['is_deleted'] = 0;
                     } else if($payment_method == 2){
                         $param['payment_method'] = 11;
+                        $param['is_deleted'] = 1;
                     } else if($payment_method == 3){
                         $param['payment_method'] = 10;
+                        $param['is_deleted'] = 1;
                     }
                 }
                 
@@ -2721,6 +2727,7 @@ class ClientsController extends ApiController {
 
         $appointmentFields = array('appointment_id','order_id','date','start_time','created_on','total_payable_amount','payment_method');
         $serviceFields = array('service_name');
+        $currency_field = array('currency');
 
         $tableUserService = $this->tableObj->tableUserService;
         $tableAppointement = $this->tableObj->tableNameAppointment;
@@ -2735,12 +2742,23 @@ class ClientsController extends ApiController {
                         //'join_conditions' => array(array('is_blocked','=','0')),
                         'select_fields' => $serviceFields,
                     ),
+                    array(
+                        'join_table'=>$this->tableObj->tableNameCurrency,
+                        //'join_table_alias'=>'invItemTb',
+                        'join_with'=>$this->tableObj->tableUserService,
+                        'join_type'=>'left',
+                        'join_on'=>array('currency_id','=','currency_id'),
+                        'join_on_more'=>array(),
+                        //'join_conditions' => array(array('transaction_no','=','invoice_no')),
+                        'select_fields' => $currency_field,
+                    ),
             );
         
         $orderBy = array('created_on' => 'DESC');
 
         $appoinment_list = $this->common_model->fetchDatas($tableAppointement,$condition,$appointmentFields, $joins, $orderBy);
         $html = '';
+        
         if(!empty($appoinment_list))
         {
             foreach ($appoinment_list as $key => $value)
@@ -2758,7 +2776,7 @@ class ClientsController extends ApiController {
                 }
                 $create_date = date('d M, Y h:i A', strtotime($value->created_on)); 
                 $type = $value->service_name." Booking";
-                $amount = $value->total_payable_amount;
+                $amount = $value->currency." ".$value->total_payable_amount;
                 $order_id = $value->order_id;
 
                 $html .= '<tr>
