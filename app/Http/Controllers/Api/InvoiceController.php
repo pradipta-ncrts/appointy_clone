@@ -57,7 +57,7 @@ class InvoiceController extends ApiController {
 
         $appoinment_fields = array();
         $client_fields = array('client_name','client_email');
-        $service_fields = array('service_name','cost','duration');
+        $service_fields = array('service_name','cost','duration','description as service_description');
         $stuff_fields = array('full_name');
         $currency_field = array('currency');
         $user_data = array('name', 'business_location', 'email', 'mobile', 'profile_image');

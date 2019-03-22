@@ -86,7 +86,7 @@ Squeedr
                         {
                         ?>
                         <tr>
-                           <td colspan="5" align="">No data found.</td>
+                           <!-- <td colspan="5" align="">No data found.</td> -->
                         </tr>
                         <?php
                         }

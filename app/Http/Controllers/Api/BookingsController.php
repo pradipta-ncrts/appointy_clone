@@ -4587,7 +4587,7 @@ class BookingsController extends ApiController {
 
                 {
 
-                    $client_profile_picture = $value->client_profile_picture;
+                    $client_profile_picture = asset("public/image/profile_perosonal_image/").'/'.$value->client_profile_picture;
 
                 }
 

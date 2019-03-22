@@ -2447,6 +2447,8 @@ class UsersController extends ApiController {
             	$exist_client_array[] = $value->client_email;
             }
 
+            //print_r($excelData); die();
+
             $exist = 0;
             $notExit = 0;
             $emailData['subject'] = "Invite";

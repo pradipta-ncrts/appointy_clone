@@ -114,7 +114,7 @@ class InvoiceController extends ApiController {
 				$data['total_unit_price'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
 				$data['sub_total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
 				$data['total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
-				$data['note'] = $appoinment_details->note;
+				$data['note'] = $appoinment_details->service_description;
 				$data['terms_condition'] = $appoinment_details->terms_condition;
 				$data['service_provider_name'] = $appoinment_details->name;
 				$data['service_provider_address'] = $appoinment_details->business_location;
@@ -363,7 +363,7 @@ class InvoiceController extends ApiController {
 				$data['total_unit_price'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
 				$data['sub_total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
 				$data['total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
-				$data['note'] = $appoinment_details->note;
+				$data['note'] = $appoinment_details->service_description;
 				$data['terms_condition'] = $appoinment_details->terms_condition;
 				$data['service_provider_name'] = $appoinment_details->name;
 				$data['service_provider_address'] = $appoinment_details->business_location;

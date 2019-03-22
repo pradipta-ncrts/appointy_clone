@@ -1318,6 +1318,15 @@ class UsersController extends ApiController {
         return view('website.user.registration.privacy_policy');
 	}
 
+	public function calendar_connections(Request $data)
+	{
+		$authdata = $this->website_login_checked();
+		if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+		}
+        return view('website.calendar-connections');
+	}
+
 	
 
 }

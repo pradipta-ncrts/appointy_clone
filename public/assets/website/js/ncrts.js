@@ -2289,11 +2289,11 @@ $("#invite_without_dicount").on('click', (function(e) {
         },
         beforeSend: function()
         {
-            //$('.animationload').show();
+            $('.animationload').show();
         },
         complete: function()
         {
-            //$('.animationload').hide();
+            $('.animationload').hide();
         }
     });
 }));
@@ -2346,11 +2346,11 @@ $("#invite_with_dicount").on('click', (function(e) {
         },
         beforeSend: function()
         {
-            //$('.animationload').show();
+            $('.animationload').show();
         },
         complete: function()
         {
-            //$('.animationload').hide();
+            $('.animationload').hide();
         }
     });
 }));

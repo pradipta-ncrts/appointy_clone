@@ -353,6 +353,8 @@ Route::group(['prefix'=>''],function(){
 
     Route::get('/privacy-policy','Website\UsersController@privacy_policy');
     Route::any('/staff-verification-link/{staff_id}','Website\StaffController@staff_verification_link');
+    Route::get('/calendar-connections','Website\UsersController@calendar_connections');
+
 
     
        
