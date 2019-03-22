@@ -2446,7 +2446,7 @@ $("#delete-account").click(function (event) {
   let serviceid = '';
   swal({
     title: "Are you sure?",
-    text: "Once cancelled, you will loose all the details of the appointment!",
+    text: "Once deleted you wont be able to retrieve your records!",
     type: "warning",
     showCancelButton: true,
     confirmButtonColor: '#DD6B55',

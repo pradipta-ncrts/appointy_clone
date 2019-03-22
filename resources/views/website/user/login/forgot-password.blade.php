@@ -49,8 +49,8 @@
     {
     ?>
     <div class="login-type">
-      <a href="" class="active user-status" id="1">Admin Login</a> &nbsp; &nbsp;
-      <a href="" class="user-status" id="2">Team Login</a>
+      <a href="" class="active user-status" id="1">Admin</a> &nbsp; &nbsp;
+      <a href="" class="user-status" id="2">Team</a>
     </div>
     <?php
     }

@@ -2219,6 +2219,17 @@ class ClientsController extends ApiController {
             //echo '<pre>'; print_r($service_avalibility_date); exit;
             /************Get service availability************* */
 
+            /************Get booked time************* */
+            $appoinment_condition = array(
+                array('staff_id','=',$staff_id),
+                array('date','=',$next_date),
+                array('is_deleted','=','0'),
+            );
+            $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
+            $joins = array();
+            $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+            /***************get booked time************************** */
+
             if($staff_id != ''){
                 /************Get service staff availability************* */
                 $ser_staff_ava_condition = array(
@@ -2245,17 +2256,7 @@ class ClientsController extends ApiController {
                 $blockDateTime = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$blockCondition,$blockFields);     
                 /***************get blocked time************************** */
 
-                /************Get booked time************* */
-                $appoinment_condition = array(
-                    array('staff_id','=',$staff_id),
-                    array('date','=',$next_date),
-                    array('is_deleted','=','0'),
-                );
-                $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
-                $joins = array();
-                $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
-                /***************get booked time************************** */
-
+                
             }
             
             for($j = strtotime($time_slot_start); $j < strtotime($time_slot_end); ){
@@ -2698,6 +2699,88 @@ class ClientsController extends ApiController {
         $this->response_message = $html;
         $this->json_output($response_data);
     }  
+
+    public function client_payment_list(Request $request)
+    {
+        $authdata = $this->website_login_checked();
+        if((empty($authdata['user_no']) || ($authdata['user_no']<=0)) || (empty($authdata['user_request_key']))){
+           return redirect('/login');
+        }
+        //echo '<pre>'; print_r($request->all()); exit;
+        $response_data=array();
+        $this->validate_parameter(1);
+        $user_id = $this->logged_user_no;
+        $client_id = $request->input('client_id');
+        
+
+        $condition = array(
+            array('client_id', '=', $client_id),
+            array('user_id', '=', $user_id),
+            //array('is_deleted', '=', '0'),
+        );
+
+        $appointmentFields = array('appointment_id','order_id','date','start_time','created_on','total_payable_amount','payment_method');
+        $serviceFields = array('service_name');
+
+        $tableUserService = $this->tableObj->tableUserService;
+        $tableAppointement = $this->tableObj->tableNameAppointment;
+
+        $joins = array(
+                    array(
+                        'join_table'=>$tableUserService,
+                        'join_with'=>$tableAppointement,
+                        'join_type'=>'left',
+                        'join_on'=>array('service_id','=','service_id'),
+                        'join_on_more'=>array(),
+                        //'join_conditions' => array(array('is_blocked','=','0')),
+                        'select_fields' => $serviceFields,
+                    ),
+            );
+        
+        $orderBy = array('created_on' => 'DESC');
+
+        $appoinment_list = $this->common_model->fetchDatas($tableAppointement,$condition,$appointmentFields, $joins, $orderBy);
+        $html = '';
+        if(!empty($appoinment_list))
+        {
+            foreach ($appoinment_list as $key => $value)
+            {
+                if($value->payment_method == 1){
+                    $mode = 'Cash';
+                } else if($value->payment_method == 2){
+                    $mode = 'Debit Card';
+                } else if($value->payment_method == 10){
+                    $mode = 'Stripe';
+                } else if($value->payment_method == 11){
+                    $mode = 'Paypal';
+                } else {
+                    $mode = 'Online';
+                }
+                $create_date = date('d M, Y h:i A', strtotime($value->created_on)); 
+                $type = $value->service_name." Booking";
+                $amount = $value->total_payable_amount;
+                $order_id = $value->order_id;
+
+                $html .= '<tr>
+                    <td>'.$create_date.'</td>
+                    <td>'.$type.'</td>
+                    <td>'.$amount.'</td>
+                    <td>'.$mode.'</td>
+                    <td  style="text-align: center;">
+                    <a href="'.url("invoice-details/".$order_id).'"><i class="fa fa-print"></i></a>
+                    </td>
+                </tr>';
+            }
+        }
+        else
+        {
+            $html .= '<tr><td colspan="5">No data found</td></tr>';
+        }
+
+        $this->response_status='1';
+        $this->response_message = $html;
+        $this->json_output($response_data);
+    } 
 
     public function client_update_profile_settings(Request $request){
         $response_data = array(); 
