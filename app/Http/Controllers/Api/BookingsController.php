@@ -4471,10 +4471,6 @@ class BookingsController extends ApiController {
 
 
 
-        $stuff_fields = array('full_name', 'email');
-
-
-
         $client_fields = array('client_name', 'client_email', 'client_profile_picture');
 
 
@@ -4484,26 +4480,6 @@ class BookingsController extends ApiController {
 
 
         $joins = array(
-
-                    array(
-
-                    'join_table'=>$this->tableObj->tableNameStaff,
-
-                    //'join_table_alias'=>'invItemTb',
-
-                    'join_with'=>$this->tableObj->tableNameAppointment,
-
-                    'join_type'=>'left',
-
-                    'join_on'=>array('staff_id','=','staff_id'),
-
-                    'join_on_more'=>array(),
-
-                    'join_conditions' => array(array('is_deleted','=','0')),
-
-                    'select_fields' => $stuff_fields,
-
-                ),
 
                 array(
 
@@ -4565,136 +4541,131 @@ class BookingsController extends ApiController {
 
                 ),
 
+                /*array(
+
+                    'join_table'=>$this->tableObj->tableNameStaff,
+
+                    //'join_table_alias'=>'invItemTb',
+
+                    'join_with'=>$this->tableObj->tableNameAppointment,
+
+                    'join_type'=>'left',
+
+                    'join_on'=>array('staff_id','=','staff_id'),
+
+                    'join_on_more'=>array(),
+
+                    'join_conditions' => array(array('is_deleted','=','0')),
+
+                    'select_fields' => $stuff_fields,
+
+                ),*/
+
         );
 
-        
 
-        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+        $order_by = array('appointment_id' => 'DESC');
 
 
+        $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins,$order_by, $groupBy='order_id');
+
+        //print_r($appoinment_list); die();
 
         $html = '';
 
         if(!empty($appoinment_list))
-
         {
-
             foreach ($appoinment_list as $key => $value)
-
             {
+                if($value->staff_id)
+                {
+                    $stuff_fields = array('full_name', 'email');
+                    $staff_condition = array(
+                        array('staff_id', '=', $value->staff_id),
+                    );
+
+                    $staff_data = $this->common_model->fetchData($this->tableObj->tableNameStaff,$staff_condition,$stuff_fields);
+
+                    if($staff_data)
+                    {
+                        $stuff_name = $staff_data->full_name;
+                    }
+                    else
+                    {
+                        $stuff_name = "Not assigned";
+                    }
+                }
+                else
+                {
+                    $stuff_name = "Not assigned";
+                }
+
+                if($value->total_payable_amount > 1)
+                {
+                    $service_charge = $value->currency.' '.$value->total_payable_amount;
+                }
+                else
+                {
+                    $service_charge = "Free";
+                }
+
 
                 if($value->client_profile_picture)
-
                 {
-
                     $client_profile_picture = asset("public/image/profile_perosonal_image/").'/'.$value->client_profile_picture;
-
                 }
-
                 else
-
                 {
-
                     //$client_profile_picture = "http://localhost/squder/public/assets/website/images/user-pic-sm-default.png";
-
                     $client_profile_picture = asset('public/assets/website/images/user-pic-sm-default.png');
-
                 }
-
                 $html .='<div class="notify">
-
                    <a onClick="slideDiv(this);" data-toggle="collapse" data-parent="#accordion" href="#collapse_'.$value->appointment_id.'" style="cursor: pointer;"> <b class="fa fa-custom fa-caret-down show-arrow" ></b></a> 
-
                    <div class="user-bkd">
-
                       <img src="'.$client_profile_picture.'" class="thumbnail rounded"> 
-
                       <h2> '.$value->client_name.' <div class="datetime position"> '.date('d, M Y', strtotime($value->date)).' </div><br> <a href="mailto:'.$value->client_email.'"><i class="fa fa-envelope-o"></i> '.$value->client_email.'</a> </h2>
-
                    </div>
-
                    <div id="collapse_'.$value->appointment_id.'" class="panel-collapse collapse">
-
                       <div class="usr-bkd-dt">
-
                          <div class="notify-drops">
-
                             <div class="dropdown custm-uperdrop">
-
                                <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">Check In <img src="'.asset('public/assets/website/images/arrow.png').'" alt=""/></button> 
-
                                <ul class="dropdown-menu st-p">
-
                                   <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="As Scheduled">As Scheduled</a></li>
-
                                   <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="Arrived Late">Arrived Late</a></li>
-
                                   <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="No Show">No Show</a></li>
-
                                   <li><a class="appointment_status" href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" data-value="Gift Certificates">Gift Certificates</a></li>
-
                                </ul>
-
                             </div>
-
                          </div>
-
-                         <div class="name"> <i class="fa fa-circle-o "></i> '.$value->service_name.' ('.$value->currency.' '.$value->total_payable_amount.') <br> <i class="fa fa-user-o "></i> '.$value->full_name.' </div>
-
+                         <div class="name"> <i class="fa fa-circle-o "></i> '.$value->service_name.' (' .$service_charge. ') <br> <i class="fa fa-user-o "></i> Team : '.$stuff_name.' </div>
                          <div class="datetime"> '.$value->start_time.' - '.$value->end_time.'  </div>
-
                       </div>
-
                       <div class="clearfix">&nbsp;</div>
-
                       Booked: '.date('d, M Y', strtotime($value->created_on)).' <br> <br> 
-
                       <div class="link-e"> <a href="#" class="cancel-appoinment-notification" id="'.$value->appointment_id.'"><i class="fa fa-times"></i> Cancel</a> <a href="JavaScript:Void(0);" class="reschedule-appoinment" id="'.$value->appointment_id.'"><i class="fa fa-repeat"></i> Reschedule</a> <a href="JavaScript:Void(0);" data-id="'.$value->appointment_id.'" class="request-for-review"><i class="fa fa-star-half-o "></i> Request a review</a> </div>
-
                       <div class="clearfix">&nbsp;</div>
-
                       <br>
-
                       <form name="update_note_form" method="post" action="'.url('api/update_appointment_note').'">
-
                       <textarea id="update_note_'.$value->appointment_id.'" name="booking_note" rows="4" placeholder="Write here..">'.$value->note.'</textarea>
-
                       <br> 
-
                       <div class="clearfix"></div>
-
                       <button type="submit" class="btn btn-primary butt-next break10px saveNoteForNotification" id="'.$value->appointment_id.'">Save</button> 
-
                       </form>
-
                       <button type="button" class="btn btn-success butt-next break10px pull-right addPayment" data-payment-amount="'.$value->payment_amount.'" data-additional-amount="'.$value->additional_amount.'" data-discount-amount="'.$value->discount_amount.'" data-total-payable-amount="'.$value->total_payable_amount.'" data-paid-amount="'.$value->paid_amount.'" data-remaining-balance="'.$value->remaining_balance.'" data-payment-note="'.$value->payment_note.'" data-currency="'.$value->currency.'" data-appointment-id="'.$value->appointment_id.'">Add Payment</button> 
-
                    </div>
-
                    <div class="clearfix"></div>
-
                 </div>
-
                 <hr class="notify-sep">';
-
             }
-
         }
-
         else
-
         {
-
             $html = '<div class="noappointment">No appointment found</div>';
-
         }
-
         $response_data['html'] = $html;
-
         $this->response_status='1';
-
         // generate the service / api response
-
         $this->json_output($response_data);
 
     }

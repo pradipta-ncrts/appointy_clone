@@ -141,7 +141,7 @@
          <div class="slide-rgt"><img src="{{asset('public/assets/website/images/settings-icon-rgt.png')}}" alt=""> Settings</div>
          <button class="c-menu__close"><img src="{{asset('public/assets/website/images/cross-slide.png')}}" alt="" /></button> 
          <ul class="c-menu__items" style="overflow-y: auto; height: 80%;">
-            <li class="c-menu__item"><a href="{{ url('staff-details') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/staff.png')}}" alt=""> Staff</a> <span>Add, edit or delete staff</span> </li>
+            <li class="c-menu__item"><a href="{{ url('staff-details') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/staff.png')}}" alt=""> Team</a> <span>Add, edit or delete team</span> </li>
             <!--<li class="c-menu__item"><a href="#" class="c-menu__link"><img src="images/settings-icon/rooms.png" alt=""> Room, Services and Packs</a> <span>Add, update, disable a service </span> </li>--> 
             <li class="c-menu__item"><a href="{{ url('booking-options') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/booking.png')}}" alt=""> Booking Options </a> <span> Add, edit or disable booking</span> </li>
             <li class="c-menu__item"><a href="{{ url('settings-membership') }}" class="c-menu__link"><img src="{{asset('public/assets/website/images/settings-icon/membership.png')}}" alt=""> Membership</a> <span>Add, edit or disable booking...</span> </li>
@@ -2086,7 +2086,7 @@
                   </span>
                </p>
                <hr >
-               <h3>4. Customize your Squeedr page</h3>
+               <a href="{{ url('profile-settings') }}"><h3>4. Customize your Squeedr page</h3></a>
                <hr style="margin-top:10px; margin-top:5px;">
                <p>Your personal Squeedr page lists all available events on a single page making it easier for invitees to schedule appointments.
                   Customize the page to align it with your brand and coporate indentity.
