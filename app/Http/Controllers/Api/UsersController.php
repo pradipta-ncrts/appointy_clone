@@ -2447,6 +2447,17 @@ class UsersController extends ApiController {
             	$exist_client_array[] = $value->client_email;
             }
 
+            //Service Provider Data
+            $service_prov_condition = array(
+            	array('id', '=', $user_no),
+            );
+            $service_provider_field = array('name as service_provider_name', 'email as service_provider_email', 'username as service_provider_username');
+            $service_prov_data = $this->common_model->fetchData($this->tableObj->tableNameUser,$service_prov_condition,$service_provider_field);
+
+            $service_provider_name = $service_prov_data->service_provider_name;
+            $service_provider_username = $service_prov_data->service_provider_username;
+            //$service_provider_name = $service_prov_data->service_provider_username;
+
             //print_r($excelData); die();
 
             $exist = 0;
@@ -2468,6 +2479,29 @@ class UsersController extends ApiController {
 
 						if(in_array($val['email'],$exist_client_array))
 						{
+							//Get Client ID
+							$cliant_condition = array(
+								array('client_email', '=', $client_email),
+							);
+
+							$client_field = array('client_id', 'client_email');
+            				$client_data = $this->common_model->fetchData($this->tableObj->tableNameClient,$cliant_condition,$client_field);
+
+            				//Service provider client data
+            				$srv_client_cond = array(
+								array('user_id', '=', $user_no),
+								array('client_id', '=', $client_data->client_id),
+							);
+            				$srv_client_field = array();
+
+            				$srv_client_data = $this->common_model->fetchData($this->tableObj->tableNameUserClient,$srv_client_cond,$srv_client_field);
+            				if(empty($srv_client_data))
+            				{
+            					$user_client_data['user_id'] = $user_no;
+		                    	$user_client_data['client_id'] = $client_data->client_id;
+		                    	$insertdata = $this->common_model->insert_data_get_id($this->tableObj->tableNameUserClient,$user_client_data);
+            				}
+
 							
 							$updateData=array(
 								'discount' => $discount,
@@ -2479,12 +2513,13 @@ class UsersController extends ApiController {
 							);
 							$this->common_model->update_data($this->tableObj->tableNameClient,$updateCond,$updateData);
 
-							
-							$emailData['username'] = $client_email;
-							//$emailData['password'] = $password;
-							$emailData['toName'] = $client_name;
-
+							$emailData['email_subject'] = "Invite for discount";
+							$emailData['client_email'] = $client_email;
+							$emailData['client_name'] = $client_name;
 							$emailData['discount'] = $discount;
+							$emailData['service_provider_name'] = $service_provider_name;
+							$emailData['service_provider_username'] = $service_provider_username;
+
 							$this->sendmail(11,$client_email,$emailData);
 
 							$exist++;
@@ -2522,7 +2557,12 @@ class UsersController extends ApiController {
 
 							}
 
+							$emailData['email_subject'] = "Invite for discount";
+							$emailData['client_email'] = $client_email;
+							$emailData['client_name'] = $client_name;
 							$emailData['discount'] = $discount;
+							$emailData['service_provider_name'] = $service_provider_name;
+							$emailData['service_provider_username'] = $service_provider_username;
 							$this->sendmail(11,$client_email,$emailData);
 							$notExit++;
 						}

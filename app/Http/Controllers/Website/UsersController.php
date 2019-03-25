@@ -1327,6 +1327,20 @@ class UsersController extends ApiController {
         return view('website.calendar-connections');
 	}
 
+	public function send_sms(Request $data)
+	{
+		//require_once __DIR__.'/vendor/autoload.php';
+		require_once "php-rest-api-master/vendor/autoload.php";
+		$messagebird = new MessageBirdClient('WnxFl66XScm7tpGnMUFMDmgKa');
+		$message = new MessageBirdObjectsMessage;
+		$message->originator = '+91977551529';
+		$message->recipients = [ '+91977551529' ];
+		$message->body = 'Hi! This is your first message';
+		$response = $messagebird->messages->create($message);
+		var_dump($response);
+		//echo "good"; die();
+	}
+
 	
 
 }

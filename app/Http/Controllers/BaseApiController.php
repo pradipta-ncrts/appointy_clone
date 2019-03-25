@@ -484,10 +484,12 @@ class BaseApiController extends BaseController
                     $emailData['mailBody']=$mail_body;
                 break;
                 case 11: // client discount email
-                    $mail_subject = "Discount";
+                    //$mail_subject = "Discount";
                     //$link = url('/client-login');
-                    $mail_body="Dear ".$emailData['toName'].' You are eligble for discount.';
-                    $emailData['mailBody']=$mail_body;
+                    //$mail_body="Dear ".$emailData['toName'].' You are eligble for discount.';
+                    //$emailData['mailBody']=$mail_body;
+                    $mail_subject = $emailData['email_subject'];
+                    $mailTemplateName="emails/invite-discount";
                 break;
                 case 12: // Client username & password
                     $mail_subject = "You have registered as Client";

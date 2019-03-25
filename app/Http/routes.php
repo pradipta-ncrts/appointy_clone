@@ -355,6 +355,7 @@ Route::group(['prefix'=>''],function(){
     Route::any('/staff-verification-link/{staff_id}','Website\StaffController@staff_verification_link');
     Route::get('/calendar-connections','Website\UsersController@calendar_connections');
 
+    Route::any('/send_sms','Website\UsersController@send_sms');
 
     
        
