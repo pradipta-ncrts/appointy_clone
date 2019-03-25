@@ -112,7 +112,9 @@ Squeedr
 
 	            <div class="full-rgt">
 
-	               <a class="btn btn-primary butt-next1" id="next1">Next</a>
+	               <a class="btn btn-primary butt-next1" id="next0">Next</a>
+
+				   <a class="btn btn-primary butt-next1" id="next1" style="display:none;">Next</a>
 
 				   <a class="btn btn-primary butt-next1" id="next2" style="display:none;">Next</a>
 
@@ -335,6 +337,22 @@ Squeedr
 								</div>
 
 								<!--<a href="#" class="view-more-schedule">View More Schedules</a>-->
+
+							</div>
+
+						</div>
+
+						<div id="note_section" style="display:none;">					
+
+							<div class="book-cal col-sm-12 cust-box mb-20">
+
+								<div class="reschedule-qus">
+
+									<span>Special Note</span>
+
+									<textarea rows="4" cols="3" name="note" id="note"></textarea>
+
+								</div>
 
 							</div>
 
@@ -793,7 +811,28 @@ Squeedr
 		});
 
 		
+		$('#next0').on('click', function() {
+			var user_id = $("#user_id").val();
+			var category_id = $("#category_id").val();
+			var service_id = $("#service_id").val();
+			var client_id = $("#client_id").val();
+			var booking_date = $("#booking_date").val();
+			var booking_time = $("#booking_time").val();
 
+			if(user_id > 0 && category_id > 0 && service_id > 0 && client_id > 0 && booking_date != '' && booking_time != ''){
+				$('#select_date_section').hide();
+				$('#question_answer_section').hide();
+				$('#note_section').show();
+
+				$('#next0').hide();
+				$('#next1').show();
+				$('#next2').hide();
+			} else {
+				swal('Sorry!','Please choose booking date and time ','error');
+			}
+			
+
+		});
 
 
 		$("#next1").on("click", function(){
@@ -832,11 +871,16 @@ Squeedr
 
 							$('#select_date_section').hide();
 
+							$('#note_section').hide();
+
 							$('#sectionTitle').text('Questionnaire');
 
 							$('#question_answer_section').html(response.html);
 
 							$('#question_answer_section').show();
+
+							
+							$('#next0').hide();
 
 							$('#next1').hide();
 
@@ -1115,7 +1159,12 @@ Squeedr
 
 						else{
 
-							swal('Sorry!',response.message,'error');
+							//swal('Sorry!',response.message,'error');
+							swal({title: "Sorry!", text: response.message, type: "error"},
+								function(){ 
+									location.reload();
+								}
+							);
 
 						}
 

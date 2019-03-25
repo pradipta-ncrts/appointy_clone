@@ -215,8 +215,8 @@ Squeedr
 									<img src="{{asset('public/assets/website/images/profile-icon-sp-notes.png')}}">
 									<h2>
 									Special Notes 
-									<span id="special_notes_section"></span>
-									<textarea style="margin-top: 10px" id="special_notes" name="special_notes" rows="4"></textarea>
+									<span id="special_notes_section">{{$appoinment_details->note}}</span>
+									<!--<textarea style="margin-top: 10px" id="special_notes" name="special_notes" rows="4"></textarea>-->
 									</h2>
 								</div>
 								<div class="clearfix"></div>
