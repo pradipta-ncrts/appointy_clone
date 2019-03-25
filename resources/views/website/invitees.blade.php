@@ -67,7 +67,7 @@ Squeedr
                         ?>
                         <tr class="searchResult" id="tableRemove_<?=$value->client_id;?>">
                            <td><?=$value->client_email;?></td>
-                           <td>Pending</td>
+                           <td>Mail Sent</td>
                            <td>&nbsp;</td>
                            <td align="right"><?=date('M, d Y', strtotime($value->created_on));?></td>
                            <td align="center"  class="dropdown">
