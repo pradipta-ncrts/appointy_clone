@@ -1419,6 +1419,7 @@ class ClientsController extends ApiController {
             $date = $request->input('booking_date');
             $formatted_date = date('Y-m-d',strtotime($date));
             $appointmenttime = $request->input('booking_time');
+            $note = $request->input('note');
             $numeric_day = date('N', strtotime($date));
             $order_id = 'SQU'.time().mt_rand().$user_id;
             $recurring_booking_frequency = $request->input('recurring_booking_frequency');
@@ -1586,7 +1587,7 @@ class ClientsController extends ApiController {
                         //$formatted_date_array[] = date( 'Y-m-d', $i );
                         $formatted_date = date( 'Y-m-d', $i );
                         $numeric_day = date( 'N', $i );
-                        $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                        $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date,$note);
                         if(empty($return_array)){
                             $unavailable++;
                             //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
@@ -1622,7 +1623,7 @@ class ClientsController extends ApiController {
                             //$formatted_date_array[] = date('Y-m-d', $i );
                             $formatted_date = date( 'Y-m-d', $i );
                             $numeric_day = date( 'N', $i );
-                            $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                            $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date,$note);
                             if(empty($return_array)){
                                 $unavailable++;
                                 //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
@@ -1662,7 +1663,7 @@ class ClientsController extends ApiController {
                             //$formatted_date_array[] = date('Y-m-d', strtotime($recurring_booking_text.''. date('Y-m',$i)));
                             $formatted_date = date('Y-m-d', strtotime($recurring_booking_text.''. date('Y-m',$i)));
                             $numeric_day = date( 'N', $i );
-                            $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                            $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date,$note);
                             if(empty($return_array)){
                                 $unavailable++;
                                 //$this->response_message = "Service is not availble for daily, please try again with other time slots.";
@@ -1694,7 +1695,7 @@ class ClientsController extends ApiController {
                                 //$formatted_date_array[] = date('Y-m-d', $i );
                                 $formatted_date = date('Y-m-d', $i );
                                 $numeric_day = date( 'N', $i );
-                                $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date);
+                                $return_array = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date,$note);
                                 if(empty($return_array)){
                                     $unavailable++;
                                     //$this->response_message = "Service is not availble for weekday, please try again with other time slots.";
@@ -1713,7 +1714,7 @@ class ClientsController extends ApiController {
                     // Custom Settings //
                 } else {
     
-                    $insert_data = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date='');
+                    $insert_data = $this->findRecurringAvailibility($order_id,$user_id,$staff,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date='',$note);
                     //echo '<pre>'; print_r($insert_data); exit;
                     if(!empty($insert_data)){
                         $appointemnt_qty = 1;
@@ -1883,7 +1884,7 @@ class ClientsController extends ApiController {
                     ];
                     $parameter= Crypt::encrypt($parameter);*/
                     $this->response_status='0';
-                    $this->response_message = "Appointment can not be booked.";
+                    $this->response_message = "Service is not availble for selected date / time slots. Please try again with other date / time slots.";
                 }
             } 
             else 
@@ -1898,7 +1899,7 @@ class ClientsController extends ApiController {
     }
 
 
-    private function findRecurringAvailibility($order_id,$user_id,$staff=0,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date=''){
+    private function findRecurringAvailibility($order_id,$user_id,$staff=0,$client,$appoinment_service,$formatted_date,$numeric_day,$appointmenttime,$endTime,$recurring_booking_frequency,$formatted_end_date='',$note){
         
         
         //Service details
@@ -1998,6 +1999,7 @@ class ClientsController extends ApiController {
                                     'total_payable_amount' => $service_price,
                                     'appointment_type' => $recurring_booking_frequency,
                                     'recurring_booking_ends_on' => $formatted_end_date,
+                                    'note' => $note,
                                     'created_on' => date('Y-m-d H:i:s'),
                                 );  
                                 if($payment_method == 1){
@@ -2042,6 +2044,7 @@ class ClientsController extends ApiController {
                         'total_payable_amount' => $service_price,
                         'appointment_type' => $recurring_booking_frequency,
                         'recurring_booking_ends_on' => $formatted_end_date,
+                        'note' => $note,
                         'created_on' => date('Y-m-d H:i:s'),
                     );  
                     if($payment_method == 1){
