@@ -1178,8 +1178,9 @@ class UsersController extends ApiController {
 
 	public function send_reset_password_link(Request $request, $user_data=false)
 	{
-
-		$user_type = $request->input('type');
+		/*echo "<pre>";
+		print_r($request->all()); die();*/
+		$user_type = $request->input('user_type');
 		$email = $request->input('email');
 		$password = $request->input('password');
 		$confirm_password = $request->input('confirm_password');
@@ -1216,7 +1217,7 @@ class UsersController extends ApiController {
 			if(!empty($user_data))
 			{
 	    		$redirect_url = Crypt::encrypt($redirect_url);
-	    		$redirect_url = url('mobile/forgot-password/'.$redirect_url);
+	    		$redirect_url = url('forgot-password/'.$redirect_url);
 	    		
 				//Send Verification Link
 				$content = '<style>
@@ -1265,12 +1266,12 @@ class UsersController extends ApiController {
 				$this->sendmail(22,$email,$emailData);
 
 	    		\Session::flash('success_message', "A email sent to your mail.");
-	    		return redirect('mobile/forgot-password');
+	    		return redirect('forgot-password');
 			}
 			else
 			{
 				\Session::flash('error_message', "This mail id not register with squeedr.");
-	    		return redirect('mobile/forgot-password');
+	    		return redirect('forgot-password');
 			}
 		}
 		else if($user_id && $password && $confirm_password)
@@ -1299,12 +1300,12 @@ class UsersController extends ApiController {
 			}
 			
 			\Session::flash('success_message', "Password successfully reset.");
-	    	return redirect('mobile/forgot-password');
+	    	return redirect('forgot-password');
 
 		}
 		else
 		{
-			return redirect('mobile/forgot-password');
+			return redirect('forgot-password');
 		}	
 	}
 

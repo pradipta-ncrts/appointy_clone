@@ -1556,7 +1556,7 @@ $month_array = array('0'=>'JAN','1'=>'FEB','2'=>'MAR','3'=>'APR','4'=>'MAY','5'=
 
                     closeOnConfirm: false,
 
-                    closeOnCancel: false
+                    closeOnCancel: true
 
                     },function(isConfirm){
 

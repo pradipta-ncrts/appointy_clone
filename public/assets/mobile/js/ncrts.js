@@ -1754,7 +1754,7 @@ $(".delete-srvice").click(function (event) {
    }).then(
          function () { 
           let data = addCommonParams([]);
-            alert(serviceid);
+            //alert(serviceid);
             data.push({name:'service_id', value:serviceid});
             $.ajax({
                 url: baseUrl2+"/api/delete-service", 

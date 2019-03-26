@@ -9,7 +9,7 @@ Squeedr
    <ul>
     <li><img src="{{asset('public/assets/mobile/images/chng-pass.png')}}" data-toggle="modal" data-target="#change-password" /></li>
     <li><img src="{{asset('public/assets/mobile/images/mobile-notes.png')}}"/></li>
-    <li><img src="{{asset('public/assets/mobile/images/mobile-calender.png')}}"/></li>
+    <li><a href="{{ url('mobile/calendar') }"><img src="{{asset('public/assets/mobile/images/mobile-calender.png')}}"/></li>
    </ul>
 </header>
 <style type="text/css">
