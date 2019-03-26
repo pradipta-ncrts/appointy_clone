@@ -30,7 +30,7 @@ Squeedr
                <div class="staffDetail">
                   <span>Booking Id: <?=$appointment_details->order_id;?></span>
                   <p><label>With:</label> <?php if($appointment_details->staff_name!='') echo $appointment_details->staff_name; else echo 'Not Assigned'; ?></p>
-                  <span class="bluetxt"><?=$appointment_details->currency;?> <?=$appointment_details->cost;?></span>
+                  <span class="bluetxt"><?=$appointment_details->currency;?> <?=$appointment_details->total_payable_amount;?></span>
                </div>
                <div class="staffInside">
                   <h3><strong><?=$appointment_details->service_name;?></strong></h3>

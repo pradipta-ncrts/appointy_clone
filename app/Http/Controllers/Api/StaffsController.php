@@ -1752,7 +1752,7 @@ class StaffsController extends ApiController {
 
         for ($i=0; $i < count($day) ; $i++)
         { 
-            if($start_time[$i] && $end_time[$i])
+            if(strtotime($start_time[$i]) < strtotime($end_time[$i]))
             {
                 $param = array(
                     'staff_id' => $staff_id,

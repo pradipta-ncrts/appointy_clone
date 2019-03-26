@@ -61,7 +61,7 @@ Squeedr
                             <a class="badge assign_staff" data-order-id="<?=$value->order_id;?>" >Assign Staff <i class="fa fa-plus" aria-hidden="true"></i></a>
                           <?php } ?>
                         </p>
-                        <span class="bluetxt"><?=$value->currency;?> <?=$value->cost;?></span>
+                        <span class="bluetxt"><?=$value->currency;?> <?=$value->total_payable_amount;?></span>
                       </div>
                       <div class="staffInside">
                         <h6>Service Time: <?=$value->start_time;?> - <?=$value->end_time;?></h6>
