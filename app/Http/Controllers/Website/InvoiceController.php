@@ -108,12 +108,20 @@ class InvoiceController extends ApiController {
 				$data['due_date'] = strtotime($appoinment_details->due_date)>0 ? date('Y-m-d', strtotime($appoinment_details->due_date)) : date('Y-m-d');
 				$data['client_name'] = $appoinment_details->client_name;
 				$data['client_email'] = $appoinment_details->client_email;
-				$data['qty'] = count($appoinmens);
+
+				//get appointment quentity
+				$qty_condition = array(
+	                array('order_id', '=', $appoinment_details->order_id)
+	            );
+	            $qty_fields = array();
+	            $qty = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$qty_condition,$qty_fields);
+
+				$data['qty'] = count($qty);
 				$unit_price = $appoinment_details->cost;
 				$data['unit_price'] = $appoinment_details->currency.' '.$unit_price;
-				$data['total_unit_price'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
-				$data['sub_total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
-				$data['total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
+				$data['total_unit_price'] = $appoinment_details->currency.' '.($unit_price*count($qty));
+				$data['sub_total'] = $appoinment_details->currency.' '.($unit_price*count($qty));
+				$data['total'] = $appoinment_details->currency.' '.($unit_price*count($qty));
 				$data['note'] = $appoinment_details->service_description;
 				$data['terms_condition'] = $appoinment_details->terms_condition;
 				$data['service_provider_name'] = $appoinment_details->name;
@@ -357,12 +365,19 @@ class InvoiceController extends ApiController {
 				$data['due_date'] = strtotime($appoinment_details->due_date)>0 ? date('Y-m-d', strtotime($appoinment_details->due_date)) : date('Y-m-d');
 				$data['client_name'] = $appoinment_details->client_name;
 				$data['client_email'] = $appoinment_details->client_email;
-				$data['qty'] = count($appoinmens);
+				//get appointment quentity
+				$qty_condition = array(
+	                array('order_id', '=', $appoinment_details->order_id)
+	            );
+	            $qty_fields = array();
+	            $qty = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$qty_condition,$qty_fields);
+
+				$data['qty'] = count($qty);
 				$unit_price = $appoinment_details->cost;
 				$data['unit_price'] = $appoinment_details->currency.' '.$unit_price;
-				$data['total_unit_price'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
-				$data['sub_total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
-				$data['total'] = $appoinment_details->currency.' '.($unit_price*count($appoinmens));
+				$data['total_unit_price'] = $appoinment_details->currency.' '.($unit_price*count($qty));
+				$data['sub_total'] = $appoinment_details->currency.' '.($unit_price*count($qty));
+				$data['total'] = $appoinment_details->currency.' '.($unit_price*count($qty));
 				$data['note'] = $appoinment_details->service_description;
 				$data['terms_condition'] = $appoinment_details->terms_condition;
 				$data['service_provider_name'] = $appoinment_details->name;
