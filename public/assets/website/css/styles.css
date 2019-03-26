@@ -208,18 +208,7 @@ a { outline: none !important; text-decoration: none  !important;}
 
 #web .login-webview {width:360px; margin: 0 auto !important;}
 
-#web .login-webview input { background: none !important;}
-
-
-
-
-
-
-
-
-
-
-
+#web .login-webview input { background: none !important;color: #fff !important;}
 .dashboard-bg { background: #fff;}
 
 
@@ -2011,11 +2000,15 @@ Added by Debalina
 
 
 
-.from-reg1 input[type=email], .from-reg1 input[type=password], .from-reg1 input[type=text] { background:none; background-color:rgba(201, 76, 76, 0) !important; border:0;  width:80%; color: #fff; 
+.from-reg1 input[type=email], .from-reg1 input[type=password], 
+.from-reg1 input[type=text]
+{background:none; background-color:rgba(201, 76, 76, 0) !important; border:0;  width:80%; color: #fff; padding: 23px 10px; font-size: 16px; }
 
-
-
-	padding: 23px 10px; font-size: 16px; }
+.from-reg1 input:-webkit-autofill,
+.from-reg1 input:-webkit-autofill:hover,
+.from-reg1 input:-webkit-autofill:focus,
+.from-reg1 input:-webkit-autofill:active 
+{transition: background-color 5000s ease-in-out 0s;background-clip: content-box;-webkit-text-fill-color: #fff !important;}
 
 
 
@@ -3509,7 +3502,7 @@ Added by Debalina
 
 
 
-.add-new { margin:10px 0px 0 0; padding:10px; color: #FFF; text-align: center; display: block; border: 1px solid #9cafcb; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; }
+.add-new { margin:10px 0px 0 0; padding:10px; color: #FFF !important; text-align: center; display: block; border: 1px solid #9cafcb; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; }
 
 .add-new:hover { color: #1cbbff}
 
@@ -3807,7 +3800,7 @@ Added by Debalina
 
    .upload-logo span { text-align: center !important; font-size: 14px !important; margin-top: 10px;}
 
-
+.upload-logo img{border-radius:50%;}
 
 #custom-search-input .search-query {border-bottom: 2px solid #d0d0d0 !important; margin-bottom: -2px !important;height: 48px !important;}
 

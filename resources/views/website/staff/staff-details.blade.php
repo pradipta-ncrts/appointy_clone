@@ -3012,7 +3012,7 @@ $(document).on('click','.delete_availability',function(e){
 
         title: "Are you sure?",
 
-        text: "Once deleted, you will never access this blocked date/time!",
+        text: "Once deleted, you will never access the service availability.",
 
         type: "warning",
 
