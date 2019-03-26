@@ -1165,7 +1165,7 @@ class StaffsController extends ApiController {
                     $this->response_message="Required field is missing.";
                 }
             } else {
-                $this->response_message="Nothing to update. Please enter required fileds";
+                $this->response_message="Nothing to update. Please enter required fields";
             }
         } else {
             $this->response_message="No service found. Please add a service first.";
