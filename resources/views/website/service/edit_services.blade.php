@@ -1689,7 +1689,7 @@ $timezone = App\Http\Controllers\BaseApiController::time_zone();
 
                             <div class="col-md-12">
 
-                                <button class="btn btn-default" style="width: 100%">Unavailable</button>
+                                <button class="btn btn-default" style="width: 100%" disabled="disabled">Unavailable</button>
 
                             </div>
 

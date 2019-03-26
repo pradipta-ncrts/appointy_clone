@@ -2060,7 +2060,7 @@
                   new events.
                </p>
                <a href="{{ url('email-customisation') }}"><h5> 1.1 Personalize your email</h5></a>
-               <p>Customize your e-mails. Set-up e-mal tempates that reflect your brand's identity and tone.</p>
+               <p>Customize your e-mails. Set-up e-mail templates that reflect your brand's identity and tone.</p>
                <hr >
                <a href="{{ url('settings-business-hours/services') }}"><h3>2. Manage your business hours</h3></a>
                <p>Events types lets you create an event according to your availability, meeting duration, location, etc..., for meetings 
@@ -2074,11 +2074,11 @@
                </ul>
                <hr >
                <a href="" id="share-your-link"><h3>3. Share your link</h3></a>
-               <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet linke this:
+               <p>Share your link and let invitees schedule the meeting from the available slots. Email the link in a short snippet like this:
                   <br><br>
                   <span class="cl-blue">
                   Subject: Lets connect,<br>
-                  Hi matt,<br>
+                  Hi Matt,<br>
                   It would be lovely if we could chat. Why don't you go ahead and decide the time at (insert dummy Squeedr link)?<br>
                   <br>
                   Let's Chat soon!<br><br>

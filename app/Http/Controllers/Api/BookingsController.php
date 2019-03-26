@@ -1639,6 +1639,18 @@ class BookingsController extends ApiController {
             $service_avalibility_date = $this->common_model->fetchDatas($this->tableObj->tableNameServiceAvailability,$ser_ava_condition, $ser_ava_fields);
             //echo '<pre>'; print_r($service_avalibility_date); exit;
 
+            /************Get booked time************* */
+            $appoinment_condition = array(
+                array('appointment_id', '!=', $reshedule_appointment_id),
+                //array('staff_id','=',$reshedule_staff_id),
+                array('date','=',$reshedule_date),
+                array('is_deleted','=','0'),
+            );
+            $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
+            $joins = array();
+            $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+            //echo '<pre>'; print_r($appoinment_list); die();
+
             if(isset($reshedule_staff_id) && $reshedule_staff_id > 0){
                 /*$condition = array(
                     array('block_date', '=', date('Y-m-d', strtotime($reshedule_date))),
@@ -1676,6 +1688,7 @@ class BookingsController extends ApiController {
                 
                 /************Get booked time************* */
                 $appoinment_condition = array(
+                    array('appointment_id', '!=', $reshedule_appointment_id),
                     array('staff_id','=',$reshedule_staff_id),
                     array('date','=',$reshedule_date),
                     array('is_deleted','=','0'),

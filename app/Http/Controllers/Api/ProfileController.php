@@ -453,7 +453,7 @@ class ProfileController extends ApiController {
 				$end_date = date('Y-m-d', strtotime($result[1]));
 			} else {
 				$start_date = date('Y-m-d');
-				$end_date = "";
+				$end_date = "0000-00-00";
 			}
 		} else if($from_submit == 2){
 			$start_date = date('Y-m-d', strtotime($apply_day));

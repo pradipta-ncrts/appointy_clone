@@ -2230,7 +2230,7 @@ class ClientsController extends ApiController {
 
             /************Get booked time************* */
             $appoinment_condition = array(
-                array('staff_id','=',$staff_id),
+                //array('staff_id','=',$staff_id),
                 array('date','=',$next_date),
                 array('is_deleted','=','0'),
             );
@@ -2265,7 +2265,16 @@ class ClientsController extends ApiController {
                 $blockDateTime = $this->common_model->fetchDatas($this->tableObj->tableNameBlockDateTime,$blockCondition,$blockFields);     
                 /***************get blocked time************************** */
 
-                
+                /************Get booked time************* */
+                $appoinment_condition = array(
+                    array('staff_id','=',$staff_id),
+                    array('date','=',$next_date),
+                    array('is_deleted','=','0'),
+                );
+                $appoinment_fields = array('appointment_id', 'staff_id', 'start_time', 'end_time', 'date','colour_code');
+                $joins = array();
+                $appoinment_list = $this->common_model->fetchDatas($this->tableObj->tableNameAppointment,$appoinment_condition,$appoinment_fields,$joins);
+                /***************get booked time************************** */
             }
             
             for($j = strtotime($time_slot_start); $j < strtotime($time_slot_end); ){
