@@ -1190,7 +1190,7 @@ class UsersController extends ApiController {
 			if($user_type==1)
 			{
 				$findCond = array(
-					array('user_type','=', $user_type),
+					//array('user_type','=', $user_type),
 					array('email','=', $email),
 					array('is_deleted','=','0'),
 					array('is_blocked','=','0'),
@@ -1198,7 +1198,15 @@ class UsersController extends ApiController {
 					
 				$selectFields = array('id as user_id');
 				$user_data = $this->common_model->fetchData($this->tableObj->tableNameUser,$findCond,$selectFields);
-				$redirect_url = $user_data->user_id.'-'.$user_type;
+				if($user_data)
+				{
+					$redirect_url = $user_data->user_id.'-'.$user_type;
+				}
+				else
+				{
+					\Session::flash('error_message', "This mail id not register with squeedr.");
+	    			return redirect('forgot-password');
+				}
 			}
 			else
 			{
@@ -1211,7 +1219,15 @@ class UsersController extends ApiController {
 					
 				$selectFields = array('staff_id as staff_id');
 				$user_data = $this->common_model->fetchData($this->tableObj->tableNameStaff,$findCond,$selectFields);
-				$redirect_url = $user_data->staff_id.'-'.$user_type;
+				if($user_data)
+				{
+					$redirect_url = $user_data->staff_id.'-'.$user_type;
+				}
+				else
+				{
+					\Session::flash('error_message', "This mail id not register with squeedr.");
+	    			return redirect('forgot-password');
+				}
 			}
 			
 			if(!empty($user_data))
@@ -1300,7 +1316,7 @@ class UsersController extends ApiController {
 			}
 			
 			\Session::flash('success_message', "Password successfully reset.");
-	    	return redirect('forgot-password');
+	    	return redirect('login');
 
 		}
 		else

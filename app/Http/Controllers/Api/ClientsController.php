@@ -35,6 +35,10 @@ class ClientsController extends ApiController {
         $this->validate_parameter(1);
         $user_id = $this->logged_user_no;
 
+        //$user_details = $this->common_model->fetchData($this->tableObj->tableNameUser,$conditions = array(array('id', '=', $user_id)));
+
+        $login_link = url('client/login');
+
         $validate = Validator::make($request->all(),[
                                  'client_name'=>'required',
                                  'client_email'=>'required|email',
@@ -120,6 +124,7 @@ class ClientsController extends ApiController {
 
                         $mail_body = str_replace('{header}', $templateHeader, $mail_body);
                         $mail_body = str_replace('{client_name}', $client_name, $mail_body);
+                        $mail_body = str_replace('{login_link}', $login_link, $mail_body);
                         $mail_body = str_replace('{user_id}', $client_email, $mail_body);
                         $mail_body = str_replace('{password}', 'Use your existing password', $mail_body);
                         $mail_body = str_replace('{footer}', $templateFooter, $mail_body);
@@ -220,6 +225,7 @@ class ClientsController extends ApiController {
 
                             $mail_body = str_replace('{header}', $templateHeader, $mail_body);
                             $mail_body = str_replace('{client_name}', $client_name, $mail_body);
+                            $mail_body = str_replace('{login_link}', $login_link, $mail_body);
                             $mail_body = str_replace('{user_id}', $client_email, $mail_body);
                             $mail_body = str_replace('{password}', $password, $mail_body);
                             $mail_body = str_replace('{footer}',$templateFooter, $mail_body);
