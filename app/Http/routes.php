@@ -1,36 +1,22 @@
 <?php
 /*
 |--------------------------------------------------------------------------
-
 | Application Routes
-
 |--------------------------------------------------------------------------
-
 |
-
 | Here is where you can register all of the routes for an application.
-
 | It's a breeze. Simply tell Laravel the URIs it should respond to
-
 | and give it the controller to call when that URI is requested.
-
 |
 */
-
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-
-
 /*
 |-------------------------------------------------------------------------
-
 |API Routes
-
 |------------------------------------------------------------------------
 */
 Route::group(['prefix'=>'api'],function(){
@@ -225,13 +211,6 @@ Route::group(['prefix'=>'api'],function(){
     Route::any('/remove_invitee','Api\UsersController@remove_invitee');
     Route::any('/resend_invitee','Api\UsersController@resend_invitee');
 
-    
-    
-
-
-    
-
-
 
     
 });
@@ -239,13 +218,9 @@ Route::group(['prefix'=>'api'],function(){
 
 
 /*
-
 |-------------------------------------------------------------------------
-
 |Website Routes
-
 |------------------------------------------------------------------------
-
 */
 
 Route::group(['prefix'=>''],function(){
@@ -364,13 +339,9 @@ Route::group(['prefix'=>''],function(){
 
 
 /*
-
 |-------------------------------------------------------------------------
-
 |Mobile Routes
-
 |------------------------------------------------------------------------
-
 */
 
 Route::group(['prefix'=>'mobile'],function(){
@@ -419,11 +390,8 @@ Route::group(['prefix'=>'mobile'],function(){
 
 /*
 |-------------------------------------------------------------------------
-
 |Client Routes
-
 |------------------------------------------------------------------------
-
 */
 
 Route::group(['prefix'=>'client'],function(){
@@ -455,13 +423,9 @@ Route::group(['prefix'=>'client'],function(){
     
 
 /*
-
 |--------------------------------------------------------------------------
-
 | Admin Routes
-
 |--------------------------------------------------------------------------
-
 */
 
 Route::group(['middleware'=>'auth', 'prefix'=>'admin'],function(){ 
