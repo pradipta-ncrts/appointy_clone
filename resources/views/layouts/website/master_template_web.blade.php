@@ -1561,7 +1561,7 @@
                               <span>Email Your Link</span>
                               <div class="input-group" id="clientname_error">
                                  <input id="client_name" type="text" class="form-control" name="client_name" value="{{ url('business-provider') }}/<?php echo $inner_user_details->username;?>">
-                                 <button type="button" class="shl-btns" id="email_your_link"><i class="fa fa-envelope-o"></i></button>
+                                 <a href="mailto:?subject=My Squeedr page &body=You can easily see my team & service real time availability and schedule time at {{ url('business-provider') }}/<?php echo $inner_user_details->username;?>" class="shl-btns" id="email_your_link"><i class="fa fa-envelope-o"></i></a>
                                  <a style="display: none;" href="mailto:?subject=Link&body={{ url('business-provider') }}/<?=$inner_user_details->username;?>" target="_top" id="email_your_link_click">Click Here</a>
                               </div>
                            </div>

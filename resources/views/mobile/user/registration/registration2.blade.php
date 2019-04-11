@@ -24,6 +24,8 @@
 
       <link href="{{asset('public/assets/mobile/css/ncrts.css')}}" rel="stylesheet">
 
+      <link href="{{asset('public/assets/website/plugins/sweetalert/sweetalert.css')}}" rel="stylesheet">
+
       <script type="text/javascript"> var js_base_url = '<?=url('');?>/';</script>
 
    </head>
@@ -250,7 +252,7 @@
 
       <!--==================Sweetalert=========================-->
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+      <script src="{{asset('public/assets/website/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
        <!--=================select box=========================-->
 
@@ -441,11 +443,17 @@
 
          //================Submit AJAX request ==================
          $("#skip").click(function(){
-            var login_url = js_base_url+'login';
-            swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
+            var login_url = js_base_url+'mobile/login';
+            /*swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
             function(){ 
                 window.location = login_url;
-            })
+            })*/
+
+            swal({title: "Success", text: "Thank you for registering with us. Please login to continue", type: "success"},
+               function(){ 
+                   window.location.href=login_url;
+               }
+            );
          });
 
          $(document).on('click','#submit',function(event) {
@@ -460,7 +468,7 @@
                   success: function(response) {
                       if(response.response_status==1)
                       {
-                          var login_url = js_base_url+'login';
+                          var login_url = js_base_url+'mobile/login';
                           swal({title: "Success", text: "Thank you for registering with us. Please login to continue.", type: "success"},
                           function(){ 
                               window.location = login_url;
